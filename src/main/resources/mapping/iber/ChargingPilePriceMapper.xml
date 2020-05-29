@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.charging.ChargingPilePriceMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.charging.ChargingPilePrice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="charging_price" property="chargingPrice" jdbcType="INTEGER" />
+    <result column="service_price" property="servicePrice" jdbcType="INTEGER" />
+    <result column="other_price" property="otherPrice" jdbcType="INTEGER" />
+    <result column="discount" property="discount" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="update_create" property="updateCreate" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="equipment_type" property="equipmentType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_code, park_id, equipment_type, charging_price, service_price, other_price, discount, 
+    status, create_time, create_id, update_create, update_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from c_charging_pile_price
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from c_charging_pile_price
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.charging.ChargingPilePrice" >
+    insert into c_charging_pile_price (id, city_code, park_id, 
+      equipment_type, charging_price, service_price, 
+      other_price, discount, status, 
+      create_time, create_id, update_create, 
+      update_id)
+    values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{parkId,jdbcType=INTEGER}, 
+      #{equipmentType,jdbcType=INTEGER}, #{chargingPrice,jdbcType=INTEGER}, #{servicePrice,jdbcType=INTEGER}, 
+      #{otherPrice,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createId,jdbcType=INTEGER}, #{updateCreate,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.charging.ChargingPilePrice" >
+    insert into c_charging_pile_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="equipmentType != null" >
+        equipment_type,
+      </if>
+      <if test="chargingPrice != null" >
+        charging_price,
+      </if>
+      <if test="servicePrice != null" >
+        service_price,
+      </if>
+      <if test="otherPrice != null" >
+        other_price,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="updateCreate != null" >
+        update_create,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentType != null" >
+        #{equipmentType,jdbcType=INTEGER},
+      </if>
+      <if test="chargingPrice != null" >
+        #{chargingPrice,jdbcType=INTEGER},
+      </if>
+      <if test="servicePrice != null" >
+        #{servicePrice,jdbcType=INTEGER},
+      </if>
+      <if test="otherPrice != null" >
+        #{otherPrice,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateCreate != null" >
+        #{updateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.ChargingPilePrice" >
+    update c_charging_pile_price
+    <set >
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentType != null" >
+        equipment_type = #{equipmentType,jdbcType=INTEGER},
+      </if>
+      <if test="chargingPrice != null" >
+        charging_price = #{chargingPrice,jdbcType=INTEGER},
+      </if>
+      <if test="servicePrice != null" >
+        service_price = #{servicePrice,jdbcType=INTEGER},
+      </if>
+      <if test="otherPrice != null" >
+        other_price = #{otherPrice,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateCreate != null" >
+        update_create = #{updateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.charging.ChargingPilePrice" >
+    update c_charging_pile_price
+    set city_code = #{cityCode,jdbcType=VARCHAR},
+      park_id = #{parkId,jdbcType=INTEGER},
+      equipment_type = #{equipmentType,jdbcType=INTEGER},
+      charging_price = #{chargingPrice,jdbcType=INTEGER},
+      service_price = #{servicePrice,jdbcType=INTEGER},
+      other_price = #{otherPrice,jdbcType=INTEGER},
+      discount = #{discount,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_id = #{createId,jdbcType=INTEGER},
+      update_create = #{updateCreate,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(1) from (
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select name from x_park b where b.id = t.park_id) name
+    from c_charging_pile_price t ) x
+    where 1=1 
+    <if test="equipmentType != null and equipmentType != '' " >
+        and x.equipment_type LIKE CONCAT(CONCAT('%', #{equipmentType,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="name != null and name != '' " >
+        and x.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and x.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select * from (
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select name from x_park b where b.id = t.park_id) name
+    from c_charging_pile_price t ) x
+    where 1=1 
+    <if test="equipmentType != null and equipmentType != '' " >
+        and x.equipment_type LIKE CONCAT(CONCAT('%', #{equipmentType,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="name != null and name != '' " >
+        and x.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and x.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+     order by x.create_time desc 
+     <if test="from != null and to != null">
+     limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+     </if>
+  </select>
+</mapper>

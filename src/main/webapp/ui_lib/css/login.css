@@ -1,0 +1,46 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td { padding:0; margin:0; font-size:12px; line-height:100%; font-family:"微软雅黑"; }
+
+ul, ol { list-style:none;}
+img { border:0;}
+a{ text-decoration:none; color:#333;}
+i{ font-weight:normal; font-style:normal;}
+
+html,body{height:100%; width:100%; overflow:hidden; font-family:verdana, Simsun, STXihei;}
+body{ position:relative; color:#464646;}
+
+.clearfix{ display:block;}
+.clearfix:after{ clear:both; content:""; display:block; font-size:0; height:0; visibility:hidden;}
+
+/*--login样式--*/
+body{ background:#fff;}
+.logo_big{ background-image:url(../../images/logo_big.png); width:500px; height:156px; margin:0 auto;}
+.login_content{ background:#fff; height:240px; margin-top:30px;}
+.lock{ width:86px; height:128px; margin:50px 40px 0 0; float:left; }
+.loginIpt{border:solid 1px #e0e0e0; -moz-border-radius:4px;/* FF3.5 */border-radius:4px;  height:38px; padding-right:2px;}
+.loginIpt input{ vertical-align:middle; height:38px; border:none; font-size:16px;  font-family:"微软雅黑"; padding:0 4px; width:250px;}
+.login-but { display:block; width:332px; height:40px; line-height: 40px; font-size: 16px; text-align: center; background: #0172ff; color:#fff;  border-radius:4px;}
+.login-but:hover { background: #015fd5;}
+
+
+.dl{ float:left; margin-top:30px;}
+.loginIpt .login_user{ display:block; float:left; background:#eee; font-size:16px; height:38px; line-height:38px; color:#a0a0a0; font-family:"微软雅黑"; padding:0 10px; width:50px;}
+.dl_btn{ border:0 none; background:url(../../images/dl_btn.png); background-color:none; width:124px; height:118px; cursor:pointer;}
+.dl_btn:hover{background:url(../../images/dl_btn_hover.png);}
+.remember{ margin-top:6px; color:#323a4d; font-family:"微软雅黑";}
+.remember input{ vertical-align:middle;}
+.foot{ position:absolute; bottom:60px; height:24px; line-height:24px; width:100%; text-align:center; color:#6a8ebb; font-size: 14px;}
+.foot a { color:#6a8ebb;}
+
+
+
+

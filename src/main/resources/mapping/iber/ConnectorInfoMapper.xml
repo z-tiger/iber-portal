@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.charging.ConnectorInfoMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.charging.ConnectorInfo" >
+	<result column="id" property="id"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="connector_code" property="connectorCode"/>
+	<result column="connector_no" property="connectorNo"/>
+	<result column="connector_name" property="connectorName"/>
+	<result column="connector_type" property="connectorType"/>
+	<result column="voltage_upper_limits" property="voltageUpperLimits"/>
+	<result column="voltage_lower_limits" property="voltageLowerLimits"/>
+	<result column="current" property="current"/>
+	<result column="power" property="power"/>
+	<result column="park_no" property="parkNo"/>
+	<result column="equipment_id" property="equipmentId" />
+	<result column="create_name" property="createName"  />
+	<result column="update_name" property="updateName" />
+	<result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR" />
+	<result column="city_code" property="cityCode"/>
+	<result column="lock_code" property="lockCode" jdbcType="VARCHAR" />
+	<result column="lock_status" property="lockStatus" />
+</resultMap>
+
+<resultMap id="queryResultMap" type="com.iber.portal.vo.charging.ConnectorInfoVo" >
+	<result column="id" property="id"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="connector_code" property="connectorCode"/>
+	<result column="connector_no" property="connectorNo"/>
+	<result column="connector_name" property="connectorName"/>
+	<result column="connector_type" property="connectorType"/>
+	<result column="voltage_upper_limits" property="voltageUpperLimits"/>
+	<result column="voltage_lower_limits" property="voltageLowerLimits"/>
+	<result column="current" property="current"/>
+	<result column="power" property="power"/>
+	<result column="park_no" property="parkNo"/>
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+	<result column="status" property="status"/>
+	<result column="current_a" property="currentA"/>
+	<result column="current_b" property="currentB"/>
+	<result column="current_c" property="currentC"/>
+	<result column="voltage_a" property="voltageA"/>
+	<result column="voltage_b" property="voltageB"/>
+	<result column="voltage_c" property="voltageC"/>
+	<result column="park_status" property="parkStatus"/>
+	<result column="lock_status" property="lockStatus"/>
+	<result column="soc" property="soc"/>
+	<result column="equipment_id" property="equipmentId"/>
+</resultMap>
+
+<resultMap id="monitorResultMap" type="com.iber.portal.vo.charging.ChargingMonitorVo" >
+	<result column="id" property="id"/>
+	<result column="cityName" property="cityName"/>
+	<result column="parkName" property="parkName"/>
+	<result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR" />
+	<result column="parkNo" property="parkNo"/>
+	<result column="connectorNo" property="connectorNo"/>
+	<result column="status" property="status"/>
+	<result column="lock_status" property="lockStatus"/>
+	<result column="connector_number" property="connectorNumber"/>
+	<result column="equipment_type" property="equipmentType"/>
+	<result column="cooperation_type" property="cooperationType"/>
+	<result column="parkId" property="parkId"/>
+	<result column="faultCode" property="faultCode"/>
+</resultMap>
+
+
+  
+<!-- c_connector_info table all fields -->
+<sql id="Base_Column_List" >
+	 id,create_time,create_id,update_time,update_id,connector_code,connector_no,connector_name,connector_type,voltage_upper_limits,voltage_lower_limits,current,power,park_no,equipment_id
+</sql>
+<sql id="query_Column_List" >
+	 c.id,c.create_time,c.create_id,c.update_time,c.update_id,c.connector_code,c.connector_no,c.connector_name,c.connector_type,c.voltage_upper_limits,c.voltage_lower_limits,c.current,c.power,c.park_no,c.equipment_id,c.lock_code
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.charging.ConnectorInfo" useGeneratedKeys="true" keyProperty="id" >
+  insert into c_connector_info(id,create_time,create_id,connector_no,connector_name,connector_type,voltage_upper_limits,voltage_lower_limits,current,power,park_no,equipment_id,connector_code)
+ values(#{id},#{createTime},#{createId},#{connectorNo},#{connectorName},#{connectorType},#{voltageUpperLimits},#{voltageLowerLimits},#{current},#{power},#{parkNo},#{equipmentId},#{connectorCode})
+</insert>
+<insert id="insertSelective" parameterType="com.iber.portal.model.charging.ConnectorInfo"  keyProperty="id"
+     keyColumn="id" useGeneratedKeys="true">
+		insert into c_connector_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="connectorCode != null">
+				connector_code,
+			</if>
+			<if test="connectorNo != null">
+				connector_no,
+			</if>
+			<if test="connectorName != null">
+				connector_name,
+			</if>
+			<if test="connectorType != null">
+				connector_type,
+			</if>
+			<if test="voltageUpperLimits != null">
+				voltage_upper_limits,
+			</if>
+			<if test="voltageLowerLimits != null">
+				voltage_lower_limits,
+			</if>
+			<if test="current != null">
+				current,
+			</if>
+			<if test="power != null">
+				power,
+			</if>
+			<if test="parkNo != null">
+				park_no,
+			</if>
+			<if test="equipmentId != null">
+				equipment_id,
+			</if>
+			<if test="lockCode != null">
+				lock_code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="connectorCode != null">
+				#{connectorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="connectorNo != null">
+				#{connectorNo,jdbcType=VARCHAR},
+			</if>
+			<if test="connectorName != null">
+				#{connectorName,jdbcType=VARCHAR},
+			</if>
+			<if test="connectorType != null">
+				#{connectorType,jdbcType=INTEGER},
+			</if>
+			<if test="voltageUpperLimits != null">
+				#{voltageUpperLimits,jdbcType=INTEGER},
+			</if>
+			<if test="voltageLowerLimits != null">
+				#{voltageLowerLimits,jdbcType=INTEGER},
+			</if>
+			<if test="current != null">
+				#{current,jdbcType=INTEGER},
+			</if>
+			<if test="power != null">
+				#{power,jdbcType=VARCHAR},
+			</if>
+			<if test="parkNo != null">
+				#{parkNo,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentId != null">
+				#{equipmentId,jdbcType=INTEGER},
+			</if>
+			<if test="lockCode != null">
+				#{lockCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	 <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.ConnectorInfo" >
+    update c_connector_info
+    <set >
+      <if test="connectorCode != null" >
+        connector_code = #{connectorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="connectorName != null" >
+        connector_name = #{connectorName,jdbcType=VARCHAR},
+      </if>
+      <if test="connectorType != null" >
+        connector_type = #{connectorType,jdbcType=INTEGER},
+      </if>
+      <if test="voltageUpperLimits != null" >
+        voltage_upper_limits = #{voltageUpperLimits,jdbcType=INTEGER},
+      </if>
+      <if test="voltageLowerLimits != null" >
+        voltage_lower_limits = #{voltageLowerLimits,jdbcType=INTEGER},
+      </if>
+      <if test="current != null" >
+        current = #{current,jdbcType=INTEGER},
+      </if>
+      <if test="power != null" >
+        power = #{power,jdbcType=VARCHAR},
+      </if>
+      <if test="parkNo != null" >
+        park_no = #{parkNo,jdbcType=VARCHAR},
+      </if>
+      <if test="equipmentId != null" >
+        equipment_id = #{equipmentId,jdbcType=INTEGER},
+      </if>
+      <if test="connectorNo != null" >
+        connector_no = #{connectorNo,jdbcType=BIT},
+      </if>
+      <if test="lockCode != null" >
+        lock_code = #{lockCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from c_connector_info where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.charging.ConnectorInfo">
+	update c_connector_info set update_time=#{updateTime},update_id=#{updateId},connector_no=#{connectorNo},connector_name=#{connectorName},connector_type=#{connectorType},voltage_upper_limits=#{voltageUpperLimits},voltage_lower_limits=#{voltageLowerLimits},current=#{current},power=#{power},
+	park_no=#{parkNo}, connector_code=#{connectorCode} where id=#{id}
+</update>
+
+<!-- 根据id查询 充电设备接口信息 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from c_connector_info where id = #{id}
+</select>
+
+<!-- 充电设备接口信息 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from c_connector_info c where 1=1
+	<if test="cityCode != null and cityCode != ''" >
+    	and  c.equipment_id in(select q.id from c_equipment_info q where  q.station_id in (select s.id from x_park s where s.city_code=#{cityCode}))
+    </if>
+	<if test="connectorName != null and connectorName != '' " >
+        and c.connector_name LIKE CONCAT('%',#{connectorName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test=" equipmentCode != null and equipmentCode != '' " >
+      and c.equipment_id in(select e.id from c_equipment_info e where e.equipment_code  LIKE CONCAT('%',#{equipmentCode,jdbcType=VARCHAR},'%'))
+    </if> 
+ 
+ 
+</select>
+  	
+<!-- 查询充电设备接口信息列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="query_Column_List"/>,
+	(select u.name from x_sys_user u where u.id = c.create_id) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id) update_name,
+	(select e.equipment_code from c_equipment_info e where e.id = c.equipment_id) equipment_code,
+	(select s.lock_status from c_connector_status_info s where s.connector_id = c.id) lock_status
+	from c_connector_info c where 1=1
+	<if test="cityCode != null and cityCode != ''" >
+    	and  c.equipment_id in(select q.id from c_equipment_info q where  q.station_id in (select s.id from x_park s where s.city_code=#{cityCode}))
+    </if>
+	<if test="connectorName != null and connectorName != '' " >
+        and c.connector_name LIKE CONCAT('%',#{connectorName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="equipmentCode != null and equipmentCode != '' " >
+       and c.equipment_id in(select e.id from c_equipment_info e where e.equipment_code  LIKE CONCAT('%',#{equipmentCode,jdbcType=VARCHAR},'%'))
+    </if> 
+	<if test="from != null and to != null">
+	   limit  #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</if>
+	 
+</select>
+  <select id="queryAttachmentList" resultMap="queryResultMap" parameterType="java.lang.Integer">
+  	select 
+  	<include refid="query_Column_List"/>,s.status status ,s.current_a current_a,s.current_b current_b,s.current_c current_c,s.voltage_a voltage_a,s.voltage_b voltage_b,s.voltage_c voltage_c,s.park_status park_status,s.lock_status lock_status,s.soc soc,
+  	(select u.name from x_sys_user u where u.id = c.create_id) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id) update_name
+	from c_connector_info c ,c_connector_status_info s  where  c.equipment_id=#{id} and s.connector_id =c.id 
+  </select>
+  <!-- 根据充电桩id删除 接口 -->
+  <delete id="deleteByEquipmentId" parameterType="java.lang.Integer">
+	delete 	 from c_connector_info where equipment_id = #{id}
+  </delete>
+  
+  
+  <!-- 根据cityCode、网点名、枪状态查询充电桩与枪的状态信息  -->
+  <select id="queryConnectorStatusByCityParkAndStatus" resultMap="monitorResultMap"  parameterType="java.util.Map">
+  	SELECT c.id, ct.`name` cityName, p.`name` parkName, e.equipment_code,e.equipment_type,
+		c.park_no parkNo, c.connector_no connectorNo, cs.`status`,e.connector_number,cs.lock_status
+		 FROM c_connector_info c 
+		INNER JOIN c_connector_status_info cs ON c.id = cs.connector_id
+		<if test="connectorStatus != null">
+			AND cs.`status` = #{connectorStatus}
+		</if>
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id 
+		INNER JOIN x_park p ON p.id = e.station_id 
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="parkName != null and parkName != '' ">
+			AND p.name LIKE CONCAT('%', #{parkName},'%')
+		</if>
+		<if test="offset != null and rows != null">
+			limit #{offset,jdbcType=INTEGER} ,  #{rows,jdbcType=INTEGER}
+		</if>
+  </select>
+  
+  <!-- 根据cityCode、网点名、枪状态查询充电桩与枪的数量，用于分页  -->
+  <select id="queryConnectorRecordsByCityParkAndStatus" resultType="int"  parameterType="java.util.Map">
+  	SELECT COUNT(c.id)
+		 FROM c_connector_info c 
+		INNER JOIN c_connector_status_info cs ON c.id = cs.connector_id
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id 
+		INNER JOIN x_park p ON p.id = e.station_id 
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		<if test="connectorStatus != null">
+			AND cs.`status` = #{connectorStatus}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="parkName != null and parkName != '' ">
+			AND p.name LIKE CONCAT('%', #{parkName},'%')
+		</if>
+	</select>
+  	
+  	<select id="selectOrderedOrderByConnectorId" resultType="java.lang.Integer">
+  		select count(1) from c_connector_status_info where connector_id = #{connectorId} and status = 4
+  	</select>
+  	
+  	<!-- 查询只有电桩的网点信息及电桩信息 ,把没有电桩的网点过滤掉-->
+    <select id="queryConnectorStatusAndParkInfo" parameterType="java.util.Map" resultMap="monitorResultMap">
+      	SELECT c.id, ct.`name` cityName, p.`name` parkName, e.equipment_code,e.equipment_type,
+		c.park_no parkNo, c.connector_no connectorNo, cs.`status`,e.connector_number,cs.lock_status,p.id parkId,cs.faultCode
+		 FROM c_connector_info c 
+		INNER JOIN c_connector_status_info cs ON c.id = cs.connector_id
+		<if test="connectorStatus != null">
+			AND cs.`status` = #{connectorStatus}
+		</if>
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id 
+		INNER JOIN x_park p ON p.id = e.station_id 
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="parkName != null and parkName != '' ">
+			AND p.name LIKE CONCAT('%', #{parkName},'%')
+		</if>
+		<if test="offset != null and rows != null">
+			limit #{offset,jdbcType=INTEGER} ,  #{rows,jdbcType=INTEGER}
+		</if>
+    </select>
+    
+    <select id="queryConnectorStatusAndParkInfoRecords" parameterType="java.util.Map" resultType="int">
+    
+        select count(1) from x_park park inner join 
+           c_equipment_info info on info.station_id = park.id and park.operatorId not like ('EAST_%') 
+           inner join 
+           (select c.id, cinfo.status,c.equipment_id from c_connector_status_info cinfo inner join 
+           c_connector_info c on c.id = cinfo.connector_id) con 
+           on info.id = con.equipment_id 
+           <if test="connectorStatus!=null">
+               and con.status = #{connectorStatus,jdbcType=VARCHAR}
+           </if>
+           inner join x_city ct on ct.`code` = park.city_code 
+           	<if test="cityCode != null and cityCode != '' ">
+			AND park.city_code = #{cityCode}
+		  </if>
+		  <if test="parkName != null and parkName != '' ">
+			  AND park.name LIKE CONCAT('%', #{parkName},'%')
+		  </if>
+    </select>
+    
+    <select id="queryPartnerConnectorAndParkInfo" parameterType="java.util.Map" resultMap="monitorResultMap">
+      	SELECT DISTINCT c.id, ct.`name` cityName, p.`name` parkName, e.equipment_code,e.equipment_type,
+		c.park_no parkNo, c.connector_no connectorNo,e.connector_number,p.cooperation_type,p.id parkId
+		 FROM c_connector_info c  
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id 
+		INNER JOIN x_park p ON p.id = e.station_id and p.operatorId like 'EAST_%'
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="parkName != null and parkName != '' ">
+			AND p.name LIKE CONCAT('%', #{parkName},'%')
+		</if>
+		<if test="offset != null and rows != null">
+			limit #{offset,jdbcType=INTEGER} ,  #{rows,jdbcType=INTEGER}
+		</if>
+    </select>
+        <select id="queryPartnerConnectorAndParkInfoRecords" parameterType="java.util.Map" resultType="int">
+      	SELECT count(c.id) 
+		 FROM c_connector_info c 
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id 
+		INNER JOIN x_park p ON p.id = e.station_id and p.operatorId like 'EAST_%'
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="parkName != null and parkName != '' ">
+			AND p.name LIKE CONCAT('%', #{parkName},'%')
+		</if>
+    </select>
+    
+</mapper>   

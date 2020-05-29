@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.charging.EquipmentBrandRelationMapper">
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.charging.EquipmentBrandRelation">
+    <id column="id" property="id"  jdbcType="INTEGER"/>
+    <result column="equipment_id" property="equipmentId" jdbcType="INTEGER"/>
+    <result column="brand_id" property="brandId"  jdbcType="INTEGER"/>
+    <result column="create_id" property="createId"  jdbcType="INTEGER"/>
+    <result column="update_id" property="updateId" jdbcType="INTEGER"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime"  jdbcType="TIMESTAMP"/>
+    <result column="brand_name" property="brandName"  jdbcType="VARCHAR"/>
+    <result column="brand_images" property="images"  jdbcType="VARCHAR"/>
+  </resultMap>
+  	<sql id="Base_Column_List">
+    c.id, c.equipment_id, c.brand_id, c.create_id, c.update_id, c.create_time,c.update_time
+  	</sql>
+	<!-- 通过设备id查询支持的品牌信息 -->
+	<select id="selectByEquipmentId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>,b.brand_name,b.images
+		from c_equipment_brand_relation c,x_car_brand b
+		where c.brand_id = b.id  and c.equipment_id = #{equipmentId}
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	<!-- 查询总数 -->
+	<select id="selectAll" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1)
+		 from c_equipment_brand_relation
+		where equipment_id = #{equipmentId}
+		
+	</select>
+	
+	<!-- 根据设备id,车辆品牌id插入记录 -->
+	<insert id="insertRecords" parameterType="java.util.Map">
+		insert into c_equipment_brand_relation(equipment_id,brand_id,create_id,create_time)
+		values(#{equipmentId},#{brandId},#{createId},now())
+	</insert>
+	
+	<!-- 取消支持品牌-->
+  	<delete id="deleteRecords" parameterType="java.util.Map">
+		delete from c_equipment_brand_relation 
+        where id =#{id}	
+	</delete>
+	
+	<!-- 通过equipmentId取消支持品牌-->
+  	<delete id="deleteRecordsByEquipmentId" parameterType="java.util.Map">
+		delete from c_equipment_brand_relation 
+        where equipment_id =#{id}	
+	</delete>
+	
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sms.DefenseParamMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sms.DefenseParam" >
+    <id column="SMS_DEFENSE_PARAM_SEQ" property="smsDefenseParamSeq" jdbcType="INTEGER" />
+    <result column="PARAM_CODE" property="paramCode" jdbcType="VARCHAR" />
+    <result column="PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SMS_DEFENSE_PARAM_SEQ, PARAM_CODE, PARAM_VALUE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sms_defense_param
+    where SMS_DEFENSE_PARAM_SEQ = #{smsDefenseParamSeq,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sms_defense_param
+    where SMS_DEFENSE_PARAM_SEQ = #{smsDefenseParamSeq,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sms.DefenseParam" >
+    insert into sms_defense_param (SMS_DEFENSE_PARAM_SEQ, PARAM_CODE, PARAM_VALUE
+      )
+    values (#{smsDefenseParamSeq,jdbcType=INTEGER}, #{paramCode,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sms.DefenseParam" >
+    insert into sms_defense_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="smsDefenseParamSeq != null" >
+        SMS_DEFENSE_PARAM_SEQ,
+      </if>
+      <if test="paramCode != null" >
+        PARAM_CODE,
+      </if>
+      <if test="paramValue != null" >
+        PARAM_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="smsDefenseParamSeq != null" >
+        #{smsDefenseParamSeq,jdbcType=INTEGER},
+      </if>
+      <if test="paramCode != null" >
+        #{paramCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paramValue != null" >
+        #{paramValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sms.DefenseParam" >
+    update sms_defense_param
+    <set >
+      <if test="paramCode != null" >
+        PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paramValue != null" >
+        PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SMS_DEFENSE_PARAM_SEQ = #{smsDefenseParamSeq,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sms.DefenseParam" >
+    update sms_defense_param
+    set PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+      PARAM_VALUE = #{paramValue,jdbcType=VARCHAR}
+    where SMS_DEFENSE_PARAM_SEQ = #{smsDefenseParamSeq,jdbcType=INTEGER}
+  </update>
+</mapper>

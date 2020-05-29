@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.qrtz.BlobTriggersMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.qrtz.BlobTriggers" >
+    <id column="TRIGGER_NAME" property="triggerName" jdbcType="VARCHAR" />
+    <id column="TRIGGER_GROUP" property="triggerGroup" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.iber.portal.model.qrtz.BlobTriggers" extends="BaseResultMap" >
+    <result column="BLOB_DATA" property="blobData" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TRIGGER_NAME, TRIGGER_GROUP
+  </sql>
+  <sql id="Blob_Column_List" >
+    BLOB_DATA
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.iber.portal.model.qrtz.BlobTriggersKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from qrtz_blob_triggers
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.iber.portal.model.qrtz.BlobTriggersKey" >
+    delete from qrtz_blob_triggers
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.qrtz.BlobTriggers" >
+    insert into qrtz_blob_triggers (TRIGGER_NAME, TRIGGER_GROUP, BLOB_DATA
+      )
+    values (#{triggerName,jdbcType=VARCHAR}, #{triggerGroup,jdbcType=VARCHAR}, #{blobData,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.qrtz.BlobTriggers" >
+    insert into qrtz_blob_triggers
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="triggerName != null" >
+        TRIGGER_NAME,
+      </if>
+      <if test="triggerGroup != null" >
+        TRIGGER_GROUP,
+      </if>
+      <if test="blobData != null" >
+        BLOB_DATA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="triggerName != null" >
+        #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerGroup != null" >
+        #{triggerGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="blobData != null" >
+        #{blobData,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.qrtz.BlobTriggers" >
+    update qrtz_blob_triggers
+    <set >
+      <if test="blobData != null" >
+        BLOB_DATA = #{blobData,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.iber.portal.model.qrtz.BlobTriggers" >
+    update qrtz_blob_triggers
+    set BLOB_DATA = #{blobData,jdbcType=LONGVARBINARY}
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </update>
+</mapper>

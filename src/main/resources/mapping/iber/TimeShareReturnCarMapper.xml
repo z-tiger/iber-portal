@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.timeShare.TimeShareReturnCarMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.timeShare.TimeShareReturnCar" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="beg_dateTime" property="begDatetime" jdbcType="TIMESTAMP" />
+    <result column="end_dateTime" property="endDatetime" jdbcType="TIMESTAMP" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="total_mileage" property="totalMileage" jdbcType="DOUBLE" />
+    <result column="total_minute" property="totalMinute" jdbcType="DOUBLE" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="balance" property="balance" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, park_id, lpn, member_id, beg_dateTime, end_dateTime, describe, total_mileage, 
+    total_minute, pay_money, balance, city_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_time_share_return_car
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_time_share_return_car
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.timeShare.TimeShareReturnCar" >
+    insert into x_time_share_return_car (id, order_id, park_id, 
+      lpn, member_id, beg_dateTime, 
+      end_dateTime, describe, total_mileage, 
+      total_minute, pay_money, balance, 
+      city_code)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{parkId,jdbcType=INTEGER}, 
+      #{lpn,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{begDatetime,jdbcType=TIMESTAMP}, 
+      #{endDatetime,jdbcType=TIMESTAMP}, #{describe,jdbcType=VARCHAR}, #{totalMileage,jdbcType=DOUBLE}, 
+      #{totalMinute,jdbcType=DOUBLE}, #{payMoney,jdbcType=INTEGER}, #{balance,jdbcType=INTEGER}, 
+      #{cityCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.timeShare.TimeShareReturnCar" >
+    insert into x_time_share_return_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="begDatetime != null" >
+        beg_dateTime,
+      </if>
+      <if test="endDatetime != null" >
+        end_dateTime,
+      </if>
+      <if test="describe != null" >
+        describe,
+      </if>
+      <if test="totalMileage != null" >
+        total_mileage,
+      </if>
+      <if test="totalMinute != null" >
+        total_minute,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="begDatetime != null" >
+        #{begDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDatetime != null" >
+        #{endDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMileage != null" >
+        #{totalMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="totalMinute != null" >
+        #{totalMinute,jdbcType=DOUBLE},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.timeShare.TimeShareReturnCar" >
+    update x_time_share_return_car
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="begDatetime != null" >
+        beg_dateTime = #{begDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDatetime != null" >
+        end_dateTime = #{endDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="describe != null" >
+        describe = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMileage != null" >
+        total_mileage = #{totalMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="totalMinute != null" >
+        total_minute = #{totalMinute,jdbcType=DOUBLE},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.timeShare.TimeShareReturnCar" >
+    update x_time_share_return_car
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      park_id = #{parkId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      beg_dateTime = #{begDatetime,jdbcType=TIMESTAMP},
+      end_dateTime = #{endDatetime,jdbcType=TIMESTAMP},
+      describe = #{describe,jdbcType=VARCHAR},
+      total_mileage = #{totalMileage,jdbcType=DOUBLE},
+      total_minute = #{totalMinute,jdbcType=DOUBLE},
+      pay_money = #{payMoney,jdbcType=INTEGER},
+      balance = #{balance,jdbcType=INTEGER},
+      city_code = #{cityCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

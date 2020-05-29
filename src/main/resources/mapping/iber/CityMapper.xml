@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.CityMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.City" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="INTEGER" />
+    <result column="layer" property="layer" jdbcType="INTEGER" />
+    <!-- 上下班时间 -->
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMap" type="com.iber.portal.vo.city.CityVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="p_id" property="pid" jdbcType="INTEGER" />
+    <result column="cityCarSum" property="cityCarSum" jdbcType="INTEGER" />
+    <result column="provinceCarSum" property="provinceCarSum" jdbcType="INTEGER" />
+    <result column="areaCarSum" property="areaCarSum" jdbcType="INTEGER" />
+    <result column="carTotal" property="carTotal" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.vo.city.ExtendCity" id="ExtendCityResultMap" extends="BaseResultMap">
+  	<result column="park_latitude" property="parkLatitude"/>
+  	<result column="park_longitude" property="parkLongitude"/>
+  	<result column="park_name" property="parkName"/>
+  	<result column="category" property="category"/>
+  	<result column="cooperation_type" property="cooperationType"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, code, latitude, longitude, create_time, status,p_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_city 
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllCity" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_city where  status = 1
+    order by code
+  </select>
+  <select id="selectAllCityPagelist" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />
+    from x_city where  status = 1 and code  like "%00" and code not in ('00')  
+    order by code 
+    limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllCityPagelistRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select 
+    count(1)
+    from x_city where  status = 1 and code not in('00')
+    order by code
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_city
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.City" >
+    insert into x_city (id, name, code, 
+      latitude, longitude, create_time, 
+      status)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.City" >
+    insert into x_city
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.City" >
+    update x_city
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <!-- 添加上下班时间 -->
+       <if test="startTime!= null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if> <if test="endTime!= null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.City" >
+    update x_city
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryCityCarNum" resultMap="ResultMap" >
+    select ct.* , (select count(1)  from  x_car_run where city_code = ct.code ) num from x_city ct where ct.code != '00' and layer = 3 and status = 1;
+  </select>
+  
+   <select id="queryCityParkNum" resultMap="ResultMap" >
+    select ct.* , (select count(1)  from  x_park where city_code = ct.code ) num from x_city ct where ct.code != '00' and layer = 3 and status = 1 ;
+  </select>
+  
+  <select id="queryCityByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_city 
+    where code = #{cityCode,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="queryCityPileParkNum" resultMap="ResultMap" >
+    select ct.* , (select count(1)  from  x_charging_pile where city_code = ct.code ) num from x_city ct where ct.code != '00' and layer = 3 and status = 1;
+  </select>
+  
+   <select id="queryCityAreaByCode" resultMap="ResultMap" parameterType="java.util.Map">
+   	SELECT
+		*
+	FROM
+		x_city
+	WHERE
+	p_id = (select id from x_city where code = #{cityCode,jdbcType=VARCHAR})
+	
+  </select>
+  
+   <select id="selectAllCityList" resultMap="BaseResultMap" >
+  	select 
+    id, name, code, latitude, longitude, create_time, status,p_id,start_time,end_time, layer
+    from x_city where  code = '00' or p_id is not NULL 
+	order by code
+  </select>
+  
+  
+  <!-- 查询网点所在城市的上一级城市，及其城市下的网点总数 -->
+   <select id="queryProvinceList" resultMap="ResultMap" >
+   	SELECT cp.id, cp.`name`, cp.`code`, child.parkCnt num 
+   		FROM x_city cp 
+			INNER JOIN 
+				(SELECT cc.p_id pid, COUNT(p.id) parkCnt FROM x_city cc 
+					INNER JOIN x_park p ON cc.`code` = p.city_code 
+						WHERE cc.code != '00' and cc.layer = 3 and cc.status = 1) child
+			ON cp.id = child.pid
+  </select>
+  
+  <!-- 根据上一级城市ID，查城市列表和网点数 -->
+	<select id="queryCityList" resultMap="ResultMap" parameterType="java.lang.Integer">
+		select ct.* , (select count(1) from x_park where city_code = ct.code ) num from x_city ct
+		where
+		<if test="pid != null and pid != '' ">
+			ct.p_id = #{pid} and
+		</if>
+		ct.code != '00' and ct.layer = 3 and ct.status = 1
+	</select>
+	
+	<!-- 获取已开通的、有网点的城市 -->
+	<select id="getOpenedCityList" resultMap="ResultMap" >
+		SELECT c.*, SUM(IF(c.`code` = p.city_code AND p.cooperation_type = 0, 1, 0)) selfBuiltParkNum,
+			SUM(IF(c.`code` = p.city_code AND p.cooperation_type = 1, 1, 0)) cooperationParkNum 
+			FROM x_city c INNER JOIN x_park p ON c.`code` = p.city_code 
+			WHERE c.layer = 3 AND c.`status` = 1 
+ 			GROUP BY c.id
+	</select>
+	
+    <select id="queryCode"  resultMap="ResultMap" >
+		SELECT name,code FROM x_city where code not in('00') 
+	</select>
+	
+	 <!-- 获取数据库中全国省下级城市信息 -->
+	 <select id="cityAreaMapStatistics" parameterType="java.lang.String" resultMap="ResultMap" >
+		SELECT a.NAME,a.CODE,(SELECT COUNT(1) FROM x_car_run b WHERE b.city_code = a.code)cityCarSum 
+		FROM x_city a WHERE a.layer=3
+		<if test="name != null and name !=''" >
+       	 and a.name = #{name,jdbcType=VARCHAR}
+      </if>
+	</select>
+	
+	<!-- 获取数据库中全国省级城市信息 -->
+	 <select id="provinceAreaMapStatistics"  parameterType="java.lang.String"   resultMap="ResultMap" >
+		SELECT g.name,g.code,f.provinceCarSum FROM 
+		(SELECT e.p_id AS p_id ,SUM(e.cityCarSum) provinceCarSum FROM(SELECT a.NAME,a.CODE ,(SELECT COUNT(1) FROM x_car_run b WHERE b.city_code = a.code )cityCarSum ,a.p_id 
+	  FROM x_city a WHERE a.layer=3 AND p_id NOT IN (1))e GROUP BY p_id)f,x_city g WHERE f.p_id =g.id
+	  <if test="name != null and name !=''" >
+        and g.name = #{name,jdbcType=VARCHAR}
+      </if>
+	</select> 
+	
+	<!-- 获取数据库中全国地区车辆信息 -->
+	 <select id="areaMapStatistics"  resultMap="ResultMap" >
+		SELECT d.code,IF(c.areaCarSum IS NULL,0,c.areaCarSum)areaCarSum,d.name 
+		FROM  (SELECT a.name,a.code FROM x_city a WHERE a.layer=4)d LEFT JOIN (SELECT b.area_code,COUNT(1) areaCarSum FROM x_park b ,
+		x_car_run a  WHERE  b.id =a.park_id  GROUP BY b.area_code,b.area_name)c ON d.code=c.area_code
+	</select> 
+	
+	<!-- 获取数据库中全国车辆总数信息 -->
+	 <select id="chinaCarStatistics"  resultMap="ResultMap" >
+		SELECT count(1) carTotal FROM x_car_run
+	</select> 
+	
+	<select id="queryNameByCode" parameterType="java.lang.String"  resultType="java.lang.String" >
+		SELECT name from x_city where layer=3 and code=#{cityCode}
+	</select> 
+	
+	<select id="selectLocationByCityCode" resultMap="ExtendCityResultMap">
+		select 
+			c.id, c.name, c.code, c.latitude, c.longitude, c.create_time, c.status,c.p_id,p.latitude park_latitude,p.longitude park_longitude,p.name park_name, p.category,p.cooperation_type
+		from x_city c LEFT JOIN x_park p on c.code = p.city_code where c.code = #{cityCode} 
+	</select>
+	
+	<select id="selectByLocation" resultMap="ExtendCityResultMap">
+		select 
+			c.id, c.name, c.code, c.latitude, c.longitude, c.create_time, c.status,c.p_id,p.latitude park_latitude,p.longitude park_longitude,p.name park_name, p.category,p.cooperation_type
+		from x_city c LEFT JOIN x_park p on c.code = p.city_code where c.latitude = #{latitude} and c.longitude = #{longitude} 
+	</select>
+	
+	<!--  查询车辆所属城市  -->
+	<select id="queryAllCarCity" resultMap="BaseResultMap">
+		SELECT city.`code`, city.`name` FROM x_city city 
+			INNER JOIN x_car c ON c.city_code = city.`code` 
+			GROUP BY city.id
+	</select>
+	
+	<select id="selectCityByLayer" resultMap="BaseResultMap">
+	  	select 
+	   	  <include refid="Base_Column_List" /> 
+	    from x_city   where layer = #{layer} 
+	</select>
+	
+	<select id="queryCityByParentCodeAndLayer" resultMap="BaseResultMap">
+	  	select 
+	   	  <include refid="Base_Column_List" /> 
+	    from x_city   
+	    <choose>
+	    	<when test="layer == 2">
+	    		where `code` like concat(SUBSTR(#{parentCode} FROM 1 FOR 2),"%00") and `code` !=  concat(SUBSTR(#{parentCode} FROM 1 FOR 2),"0000") 
+	    	</when>
+	    	<otherwise>
+	    		where `code` like concat(SUBSTR(#{parentCode} FROM 1 FOR 4),"%") and `code` !=  concat(SUBSTR(#{parentCode} FROM 1 FOR 4),"00") 
+	    	</otherwise>
+	    </choose>
+	</select>
+	
+</mapper>

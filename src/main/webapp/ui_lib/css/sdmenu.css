@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* sdmenu */
+div.sdmenu div{background:url(../../images/menu-bg.png) repeat-x;overflow:hidden;}
+/*div.sdmenu div:hover {background:url(../../images/menu-bg2.png) repeat-x;}*/
+div.sdmenu div.collapsed{height:48px;}
+div.sdmenu div span{ display:block; height:46px; line-height:46px; overflow:hidden; padding:0px 30px; font-size:14px;border-bottom:1px solid #ccc; border-top:1px solid #ccc; color:#666; font-weight:bold;background:url(../../images/expanded.gif) no-repeat 10px center #e4e9ea; cursor:pointer;}
+div.sdmenu div.collapsed span{background-image:url(../../images/collapsed.gif);}
+
+#Down-arrow{background-image:url(../../images/Down-arrow-2@2x.png);}
+
+div.sdmenu div a {display:block; height:40px; line-height:40px; padding-left:30px; border-left:4px solid #ebeced; color:#000; font-size:14px; font-weight:normal; background:url(../../images/submenu.png) repeat-x;}
+/*div.sdmenu div a:hover { color:#ff4200; background:url(../../images/submenu2.png) repeat-x; border-left:4px solid #ff4200;}*/
+div.sdmenu div a.current {  background:url(../../images/1@2x3.png) ; background-repeat:no-repeat; border-left:4px; margin-left:8px; color: white;}
+
+#side-menu2 { width:220px; background:#fff; float:left; border-right:1px solid #abafb8;}

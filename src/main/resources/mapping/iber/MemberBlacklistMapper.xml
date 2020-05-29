@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.member.MemberBlacklistMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberBlacklist" >
+	<result column="id" property="id"/>
+	<result column="member_id" property="memberId"/>
+	<result column="create_id" property="createId"/>
+	<result column="create_time" property="createTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="reason" property="reason"/>
+	<result column="is_auto" property="isAuto"/>
+	<result column="city_name" property="cityName"/>
+	<result column="name" property="name"/>
+	<result column="phone" property="phone"/>
+	<result column="sex" property="sex"/>
+	<result column="idCard" property="idCard"/>
+	<result column="accout_status" property="accoutStatus"/>
+	<result column="level_code" property="levelCode"/>
+	<result column="contributedVal" property="contributedVal"/>
+	<result column="creator" property="creator"/>
+</resultMap>
+       
+<!-- member_blacklist table all fields -->
+<sql id="Base_Column_List" >
+	 id,member_id,create_id,create_time,update_id,update_time,is_auto,creator
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.member.MemberBlacklist" >
+  insert into x_member_blacklist(id,member_id,reason,create_id,create_time,update_id,update_time,is_auto)
+ values(#{id},#{memberId},#{reason},#{createId},#{createTime},#{updateId},#{updateTime},#{isAuto})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	from x_member_blacklist where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_member_blacklist set member_id=#{memberId},create_id=#{createId},create_time=#{createTime},update_id=#{updateId},update_time=#{updateTime},is_auto = #{isAuto} where id=#{id}
+</update>
+
+<!-- 根据id查询 会员黑名单 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_member_blacklist where id = #{id}
+</select>
+
+<!-- 会员黑名单 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_member_blacklist mb join x_member m on mb.member_id = m.id
+	 <trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+					and m.city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and m.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and m.phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test=" bt != null and bt!='' and et != null and et !=''">
+					and mb.create_time between #{bt} and #{et}
+				</if>
+			</where>
+		</trim>
+</select>
+  	
+<!-- 查询会员黑名单列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	SELECT mb.id,mb.member_id,
+	(SELECT name FROM x_city WHERE code = m.city_code) city_name,mb.is_auto,(SELECT name from x_sys_user WHERE id = mb.create_id) creator,
+	m.name,m.sex,m.phone,m.idCard,m.accout_status,m.level_code,mc.contributedVal,mb.reason,mb.create_time from x_member_blacklist mb JOIN x_member m on mb.member_id = m.id 
+	join x_member_card mc on m.id = mc.member_id
+	 <trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+					and m.city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and m.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and m.phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test=" bt != null and bt!='' and et != null and et !=''">
+					and mb.create_time between #{bt} and #{et}
+				</if>
+			</where>
+		</trim>
+		<if test="offset != null and rows != null">
+	 	limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+		</if>
+	 
+</select>
+ <select id="getRecordsByMemberId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	select count(1) from x_member_blacklist where  member_id = #{memberId}
+</select> 	
+</mapper>   

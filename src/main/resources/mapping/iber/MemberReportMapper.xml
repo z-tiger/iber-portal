@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.member.MemberReportMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberReport" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="reported_member_id" property="reportedMemberId" jdbcType="INTEGER" />
+    <result column="behavior_parent_id" property="behaviorParentId" jdbcType="INTEGER" />
+    <result column="behavior_children_id" property="behaviorChildrenId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="is_member_complain" property="isMemberComplain" jdbcType="INTEGER" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="park_id" property="parkId" jdbcType="VARCHAR" />
+    <result column="park_no" property="parkNo" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="last_order_id" property="lastOrderId" jdbcType="VARCHAR" />
+    <result column="last_car_type" property="lastCarType" jdbcType="VARCHAR" />
+    <result column="audit_id" property="auditId" jdbcType="INTEGER" />
+    <result column="audit_explain" property="auditExplain" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="BaseVoResultMap" type="com.iber.portal.vo.member.MemberReportVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="reported_member_id" property="reportedMemberId" jdbcType="INTEGER" />
+    <result column="behavior_parent_id" property="behaviorParentId" jdbcType="INTEGER" />
+    <result column="behavior_children_id" property="behaviorChildrenId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="is_member_complain" property="isMemberComplain" jdbcType="INTEGER" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="park_id" property="parkId" jdbcType="VARCHAR" />
+    <result column="park_no" property="parkNo" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="last_order_id" property="lastOrderId" jdbcType="VARCHAR" />
+    <result column="last_car_type" property="lastCarType" jdbcType="VARCHAR" />
+    <result column="audit_id" property="auditId" jdbcType="INTEGER" />
+    <result column="audit_explain" property="auditExplain" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+    <result column="reportedMemberName" property="reportedMemberName" jdbcType="VARCHAR" />
+    <result column="reportedPhone" property="reportedPhone" jdbcType="VARCHAR" />
+    <result column="parkName" property="parkName" jdbcType="VARCHAR" />
+    <result column="behaviorType" property="behaviorType" jdbcType="VARCHAR" />
+    <result column="behaviorName" property="behaviorName" jdbcType="VARCHAR" />
+    <result column="createName" property="createName" jdbcType="VARCHAR" />
+    <result column="typeCode" property="typeCode" jdbcType="VARCHAR" />
+    <result column="auditName" property="auditName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap type="com.iber.portal.vo.member.MemberLastOrderVo" id="lastCarOrderMap">
+  	<result column="orderId" property="orderId"/>
+  	<result column="lpn" property="lpn"/>
+  	<result column="memberId" property="memberId"/>
+  	<result column="name" property="name"/>
+  	<result column="carType" property="carType"/>
+  	<result column="phone" property="phone"/>
+  	<result column="parkId" property="parkId"/>
+  	<result column="parkNo" property="parkNo"/>
+  	<result column="parkName" property="parkName"/>
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.vo.member.MemberReportRelationVo" id="ResultRelationVoMap">
+  		<result column="memberId" property="memberId"/>
+  		<result column="memberName" property="memberName"/>
+  		<result column="memberPhone" property="memberPhone"/>
+  		<result column="parkId" property="parkId"/>
+  		<result column="parkName" property="parkName"/>
+  		<result column="lpn" property="lpn"/>
+  		<result column="orderId" property="orderId"/>
+  		<result column="orderType" property="orderType"/>
+  		<result column="parkNo" property="parkNo"/>
+  		<result column="createTime" property="createTime"/>
+  </resultMap>
+  
+  <select id="selectDetailById" resultMap="BaseVoResultMap" parameterType="java.lang.Integer">
+  	select 
+	  	   <include refid="Base_Column_List" />,
+	  	   (select c.name from x_city c where r.city_code = c.code )cityName,
+	  	   (select m.name from x_member m where r.reported_member_id=m.id) reportedMemberName,
+	  	   (select m.phone from x_member m where r.reported_member_id=m.id ) reportedPhone,
+	  	   (select p.name from x_park p where p.id = r.park_id) parkName,
+	  	   (select t.behavior_name from x_member_behavior_type t where r.behavior_parent_id = t.id) behaviorType,
+	  	   (select b.name from x_member_behavior b where b.id = behavior_children_id)behaviorName,
+	  	   (select b.type from x_member_behavior b where b.id = behavior_children_id)typeCode,
+	  	   (select b.name from x_sys_user b where b.id = audit_id)auditName,
+	  	   (
+	  	   	case is_member_complain 
+	  	   	when 0 then ( select m.name from x_member m where r.create_id=m.id 	)
+	  	   	else (select i.name from e_employee_info i where i.id = r.create_id)
+	  	   	end 
+	  	   )createName
+	    from x_member_report r
+	    where r.id=#{id}
+  	
+  </select>
+  	
+  <sql id="Base_Column_List" >
+    id, create_id, reported_member_id, behavior_parent_id, behavior_children_id, create_time, 
+    lpn, status, is_member_complain, update_id, update_time, park_id, park_no, city_code, 
+    last_order_id, last_car_type, audit_id, audit_explain, remark,audit_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_report
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_report
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.member.MemberReport"  useGeneratedKeys="true" keyProperty="id">
+    insert into x_member_report (id, create_id, reported_member_id, 
+      behavior_parent_id, behavior_children_id, create_time, 
+      lpn, status, is_member_complain, 
+      update_id, update_time, park_id, 
+      park_no, city_code, last_order_id, 
+      last_car_type, audit_id, audit_explain,audit_time, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{createId,jdbcType=INTEGER}, #{reportedMemberId,jdbcType=INTEGER}, 
+      #{behaviorParentId,jdbcType=INTEGER}, #{behaviorChildrenId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lpn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{isMemberComplain,jdbcType=INTEGER}, 
+      #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{parkId,jdbcType=VARCHAR}, 
+      #{parkNo,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{lastOrderId,jdbcType=VARCHAR}, 
+      #{lastCarType,jdbcType=VARCHAR}, #{auditId,jdbcType=INTEGER}, #{auditExplain,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.member.MemberReport" >
+    insert into x_member_report
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="reportedMemberId != null" >
+        reported_member_id,
+      </if>
+      <if test="behaviorParentId != null" >
+        behavior_parent_id,
+      </if>
+      <if test="behaviorChildrenId != null" >
+        behavior_children_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isMemberComplain != null" >
+        is_member_complain,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="parkNo != null" >
+        park_no,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="lastOrderId != null" >
+        last_order_id,
+      </if>
+      <if test="lastCarType != null" >
+        last_car_type,
+      </if>
+      <if test="auditId != null" >
+        audit_id,
+      </if>
+      <if test="auditExplain != null" >
+        audit_explain,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="reportedMemberId != null" >
+        #{reportedMemberId,jdbcType=INTEGER},
+      </if>
+      <if test="behaviorParentId != null" >
+        #{behaviorParentId,jdbcType=INTEGER},
+      </if>
+      <if test="behaviorChildrenId != null" >
+        #{behaviorChildrenId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isMemberComplain != null" >
+        #{isMemberComplain,jdbcType=INTEGER},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkNo != null" >
+        #{parkNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastOrderId != null" >
+        #{lastOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastCarType != null" >
+        #{lastCarType,jdbcType=VARCHAR},
+      </if>
+      <if test="auditId != null" >
+        #{auditId,jdbcType=INTEGER},
+      </if>
+      <if test="auditExplain != null" >
+        #{auditExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.member.MemberReport" >
+    update x_member_report
+    <set >
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="reportedMemberId != null" >
+        reported_member_id = #{reportedMemberId,jdbcType=INTEGER},
+      </if>
+      <if test="behaviorParentId != null" >
+        behavior_parent_id = #{behaviorParentId,jdbcType=INTEGER},
+      </if>
+      <if test="behaviorChildrenId != null" >
+        behavior_children_id = #{behaviorChildrenId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isMemberComplain != null" >
+        is_member_complain = #{isMemberComplain,jdbcType=INTEGER},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkNo != null" >
+        park_no = #{parkNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastOrderId != null" >
+        last_order_id = #{lastOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastCarType != null" >
+        last_car_type = #{lastCarType,jdbcType=VARCHAR},
+      </if>
+      <if test="auditId != null" >
+        audit_id = #{auditId,jdbcType=INTEGER},
+      </if>
+      <if test="auditExplain != null" >
+        audit_explain = #{auditExplain,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.member.MemberReport" >
+    update x_member_report
+    set create_id = #{createId,jdbcType=INTEGER},
+      reported_member_id = #{reportedMemberId,jdbcType=INTEGER},
+      behavior_parent_id = #{behaviorParentId,jdbcType=INTEGER},
+      behavior_children_id = #{behaviorChildrenId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      is_member_complain = #{isMemberComplain,jdbcType=INTEGER},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      park_id = #{parkId,jdbcType=VARCHAR},
+      park_no = #{parkNo,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      last_order_id = #{lastOrderId,jdbcType=VARCHAR},
+      last_car_type = #{lastCarType,jdbcType=VARCHAR},
+      audit_id = #{auditId,jdbcType=INTEGER},
+      audit_explain = #{auditExplain,jdbcType=VARCHAR},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryPageList" parameterType="java.util.Map" resultMap="BaseVoResultMap">
+	  	select 
+	  	   <include refid="Base_Column_List" />,
+	  	   (select c.name from x_city c where r.city_code = c.code )cityName,
+	  	   (select m.name from x_member m where r.reported_member_id=m.id
+	  	   		<if test="reportedMemberName != null and reportedMemberName != '' ">
+	  	   			and m.name like concat('%',#{reportedMemberName,jdbcType=VARCHAR},'%') 
+	  	   		</if>
+	  	    ) reportedMemberName,
+	  	   (select m.phone from x_member m where r.reported_member_id=m.id ) reportedPhone,
+	  	   (select p.name from x_park p where p.id = r.park_id) parkName,
+	  	   (select t.behavior_name from x_member_behavior_type t where r.behavior_parent_id = t.id) behaviorType,
+	  	   (select b.name from x_member_behavior b where b.id = behavior_children_id)behaviorName,
+	  	   (select b.type from x_member_behavior b where b.id = behavior_children_id)typeCode,
+	  	   (select b.name from x_sys_user b where b.id = audit_id)auditName,
+	  	   (
+	  	   	case is_member_complain 
+	  	   	when 0 then ( select m.name from x_member m where r.create_id=m.id 	)
+	  	   	else (select i.name from e_employee_info i where i.id = r.create_id)
+	  	   	end 
+	  	   )createName
+	    from x_member_report r
+	    where 1=1 
+	    <if test="cityCode != null and cityCode != '' ">
+	    	and city_code = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="behaviorParentId != null and behaviorParentId != '' and  behaviorParentId != '-1' ">
+	    	and behavior_parent_id = #{behaviorParentId,jdbcType=INTEGER}
+	    </if>
+	    <if test="lpn != null and lpn != '' ">
+	    	and lpn like CONCAT("%",#{lpn,jdbcType=INTEGER},"%") 
+	    </if>
+	    <if test="status != null and status != '' ">
+	    	and status = #{status,jdbcType=INTEGER}
+	    </if>
+	    <if test="createName != null and createName != '' ">
+   			and case is_member_complain 
+	  	   	when 0 then create_id in ( select m.id from x_member m where m.name like CONCAT('%',#{createName,jdbcType=VARCHAR},'%') )
+	  	   	else create_id in (select i.id from e_employee_info i where  i.name like CONCAT('%',#{createName,jdbcType=VARCHAR},'%') )
+	  	   	end 
+   		</if>
+   		<if test="reportedMemberName != null and reportedMemberName != '' ">
+   			and  reported_member_id in ( select id from x_member m where  m.name like CONCAT('%',#{reportedMemberName,jdbcType=VARCHAR},'%') ) 
+   		</if>
+	    <!--  反馈人姓名  追究人姓名-->
+	    order by create_time desc 
+	    <if test="from != null and to != null">
+	    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	    </if>
+  </select>
+  <select id="getRecordNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+  		select   count(1)  from x_member_report
+	    where 1=1 
+	    <if test="cityCode != null and cityCode != '' ">
+	    	and city_code = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="behaviorParentId != null and behaviorParentId != ''  and  behaviorParentId != '-1'  ">
+	    	and behavior_parent_id = #{behaviorParentId,jdbcType=INTEGER}
+	    </if>
+	    <if test="lpn != null and lpn != '' ">
+	    	and lpn like CONCAT("%",#{lpn,jdbcType=INTEGER},"%") 
+	    </if>
+	    <if test="status != null and status != '' ">
+	    	and status = #{status,jdbcType=INTEGER}
+	    </if>
+	    <if test="createName != null and createName != '' ">
+   			and case is_member_complain 
+	  	   	when 0 then create_id in ( select m.id from x_member m where m.name like CONCAT('%',#{createName,jdbcType=VARCHAR},'%') )
+	  	   	else create_id in (select i.id from e_employee_info i where  i.name like CONCAT('%',#{createName,jdbcType=VARCHAR},'%') )
+	  	   	end 
+   		</if>
+   		<if test="reportedMemberName != null and reportedMemberName != '' ">
+   			and  reported_member_id in ( select id from x_member m where  m.name like CONCAT('%',#{reportedMemberName,jdbcType=VARCHAR},'%') ) 
+   		</if>
+  </select>
+  
+  <select id="getLastCarOrderInfo" parameterType="java.lang.String" resultMap="lastCarOrderMap">
+  	select 
+  		a.order_id orderId,a.lpn lpn,a.member_id memberId,a.carType
+  	from (
+  		(select order_id,begin_time,end_time ,member_id , order_time, lpn, 'TS' carType from x_time_share_order
+  		 where`status` = 'finish' and lpn  = #{lpn}  )
+		UNION ALL
+		( select order_id, CASE (latest_changed_car_time is null ) when  1  then  begin_time  else latest_changed_car_time end as  begin_time,end_time,member_id ,create_time , lpn ,'DR' carType from x_long_rent_order 
+		where   pay_status  = 'finish' and order_status ='finish' and lpn  = #{lpn}  )
+		UNION ALL
+		(select _log.order_id,_log.begin_time,_log.end_time,_order.member_id ,_log.create_time , _log.before_lpn ,'DR' carType  from x_long_rent_exchange_car_log _log
+			INNER JOIN x_long_rent_order _order on _log.order_id = _order.order_id
+		 where _log.before_lpn = #{lpn})
+	) a where EXISTS ( select 1 from x_member where id = a.member_id and phone = #{memberPhone} and name =#{memberName})
+	ORDER BY a.order_time DESC limit 0 ,1
+  </select>
+  
+  <select id="getLastChargingOrderInfo" parameterType="java.lang.String" resultMap="lastCarOrderMap">
+  		select 
+  			c.chargeSeq orderId, c.lpn lpn, c.member_id memberId,c.station_id parkId,c.park_no parkNo
+  		 from 	c_charging_order c where c.charging_status = 'finish' and 
+				c.park_no = #{parkNo} and c.station_id = #{parkId}
+				and EXISTS(select 1 from x_member where id = c.member_id and phone = #{phone} and name =#{memberName} )
+		order by create_time desc limit 0 ,1 
+  </select>
+  
+  <sql id="OrderRelationSql">
+  <choose>
+		 <when test="lpn != null and  lpn !='' ">
+		  			select
+		  				memberId,memberName,memberPhone,parkId,parkName,lpn,orderId,orderType,'' parkNo, create_time createTime
+		  			from
+		  			( 
+			  				select 
+			  					 memberId, memberName, memberPhone, parkId, parkName, lpn, orderId, orderType, create_time 
+			  			    from 
+			  				 (
+				  				select
+				  					member_id memberId,
+					  				(select name from x_member  where id = c.member_id)memberName,
+					  				(select phone from x_member  where id = c.member_id)memberPhone,
+					  				'' parkId,
+					  				'' parkName,
+					  				lpn,
+					  				order_id orderId,
+					  				'TS' orderType,
+				  				  	order_time create_time 
+				  				from x_time_share_order c where `status` ='finish'  and lpn = #{lpn}
+				  				<if test="createId  != null and  createId != '' ">
+				  					 and  member_id <![CDATA[<>]]> #{createId}
+				  				</if>
+				  				<if test="createTime != null and createTime != '' ">
+			  						and order_time <![CDATA[<=]]>#{createTime}
+			  					</if>
+				  				ORDER BY order_time  desc
+			  				) b group by memberId
+		  				union all
+			  				select 
+			  					 memberId,	memberName, memberPhone, parkId, parkName, lpn, orderId, orderType, create_time 
+			  				from 
+			  				(
+			  				   select     
+									member_id memberId,
+									(select name from x_member  where id = _order.member_id)memberName,
+									(select phone from x_member  where id = _order.member_id)memberPhone,
+									'' parkId, '' parkName,  lpn,  order_id orderId, 'DR' orderType, CASE (latest_changed_car_time is null ) when  1  then  _order.create_time  else latest_changed_car_time end as create_time
+								from
+									x_long_rent_order  _order
+								where 
+									_order.order_status = 'finish' and _order.pay_status ='finish'  and lpn = #{lpn}
+			  					<if test="createId  != null and  createId != '' ">
+				  					 and  _order.member_id <![CDATA[<>]]> #{createId}
+				  				</if>
+				  				<if test="createTime != null and createTime != '' ">
+			  						and _order.create_time <![CDATA[<=]]>#{createTime}
+			  					</if>
+			  					ORDER BY create_time  desc
+			  				) c  group by memberId
+			  			union all
+			  				select 
+			  					 memberId,	memberName, memberPhone, parkId, parkName, lpn, orderId, orderType, create_time 
+			  				from 
+			  				(
+								select 
+									member_id memberId,
+									(select name from x_member  where id = _order.member_id)memberName,
+									(select phone from x_member  where id = _order.member_id)memberPhone,
+									'' parkId, '' parkName,  _log.before_lpn lpn,  _order.order_id orderId, 'DR' orderType,  _log.begin_time as create_time
+								 from
+									x_long_rent_exchange_car_log  _log INNER JOIN x_long_rent_order  _order  ON _log.order_id = _order.order_id
+								where 
+									_order.order_status = 'finish' and _order.pay_status ='finish'  and _log.before_lpn = #{lpn}
+								<if test="createId  != null and  createId != '' ">
+				  					 and  _order.member_id <![CDATA[<>]]> #{createId}
+				  				</if>
+				  				<if test="createTime != null and createTime != '' ">
+			  						and  _log.begin_time <![CDATA[<=]]>#{createTime}
+			  					</if>
+			  					ORDER BY  _log.begin_time  desc
+			  				)d  group by memberId
+			  				
+		  			) a ORDER BY a.create_time DESC  
+		  		</when>
+		  		<otherwise>
+		  		 select 
+		  				memberId, memberName, memberPhone, parkId, parkName, lpn, orderId, orderType, parkNo, create_time createTime  
+		  		 from (
+		  			select 
+		  				member_id memberId,
+		  				(select name from x_member  where id = c.member_id)memberName,
+		  				(select phone from x_member  where id = c.member_id)memberPhone,
+		  				station_id parkId,
+		  				(select name from x_park where id = c.station_id)parkName,
+		  				'' lpn,
+		  				chargeSeq orderId,
+		  				'CH' orderType,
+		  				park_no parkNo,create_time
+		  			 from c_charging_order c where charging_status = 'finish'
+		  				<if test="createId  != null and  createId != '' ">
+		  				 	and  member_id <![CDATA[<>]]> #{createId}
+		  				</if>
+		  				<if test="parkName != null and  parkName != '' ">
+		  					and station_id in(select id from  x_park where name = #{parkName})
+		  				</if>
+		  				<if test="parkNo != null and  parkNo != '' ">
+		  					and park_no = #{parkNo}
+		  				</if>
+		  				<if test="createTime != null and createTime != '' ">
+		  					and create_time <![CDATA[<=]]>#{createTime}
+		  				</if>
+		  			 ORDER BY create_time DESC ) b  group by memberId
+		  		</otherwise>
+		  	</choose>
+  </sql>
+	<select id="getRelationVoNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) 
+		 from (
+		  		<include refid="OrderRelationSql"/>
+		  	) a
+	</select>  
+  <select id="getRelationVo" parameterType="java.util.Map" resultMap="ResultRelationVoMap">
+  	select 
+  		memberId,memberName,memberPhone,parkId,parkName,lpn,orderId,orderType,parkNo ,createTime
+  	from (
+  		<include refid="OrderRelationSql"/>
+  	) a ORDER BY a.createTime DESC limit #{from},#{to}
+  </select>
+  <select id="getMemberRecords" resultType="java.lang.Integer">
+	select count(1) from x_member where name=#{name} and phone = #{phone}  	
+  </select>
+  <select id="selectByOrderId"  parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(*) from  (select id from x_member_report where last_order_id=#{orderId} and `status` = 1
+  	union all
+  	select id from  x_wz_query where order_id =#{orderId})a
+  </select>
+
+  <select id="selectByOrderIds"  parameterType="java.util.List" resultType="java.lang.Integer">
+      select count(*) from (select id from x_member_report where last_order_id IN
+      <foreach collection="list" item="orderId" separator="," open="(" close=")">
+          #{orderId}
+      </foreach>
+      limit 1
+      union all
+      select id from x_wz_query where order_id IN
+      <foreach collection="list" item="orderId" separator="," open="(" close=")">
+          #{orderId}
+      </foreach>
+      limit 1 ) a
+  </select>
+
+</mapper>

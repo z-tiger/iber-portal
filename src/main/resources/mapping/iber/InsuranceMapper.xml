@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.insurance.InsuranceMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.insurance.Insurance" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="insurance_no" property="insuranceNo" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="insurance_range" property="insuranceRange" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="insurance_company" property="insuranceCompany" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="insurance_holder" property="insuranceHolder" jdbcType="VARCHAR" />
+    <result column="insurance_holder_idcard" property="insuranceHolderIdcard" jdbcType="VARCHAR" />
+    <result column="insurance_money" property="insuranceMoney" jdbcType="INTEGER" />
+    <result column="insurance_type" property="insuranceType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="is_attachment" property="isAttachment" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="BaseResultMapLpn" type="com.iber.portal.model.insurance.Insurance" >
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, insurance_no, start_time, end_time, insurance_range, remark, insurance_company, 
+    lpn, insurance_holder, insurance_holder_idcard, insurance_money, insurance_type, 
+    create_time, create_user, update_time, update_user, is_attachment,status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_insurance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_insurance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.insurance.Insurance" useGeneratedKeys="true" keyProperty="id">
+    insert into x_insurance (id, insurance_no, start_time, 
+      end_time, insurance_range, remark, 
+      insurance_company, lpn, insurance_holder, 
+      insurance_holder_idcard, insurance_money, 
+      insurance_type, create_time, create_user, 
+      update_time, update_user, is_attachment,status
+      )
+    values (#{id,jdbcType=INTEGER}, #{insuranceNo,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{insuranceRange,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{insuranceCompany,jdbcType=VARCHAR}, #{lpn,jdbcType=VARCHAR}, #{insuranceHolder,jdbcType=VARCHAR}, 
+      #{insuranceHolderIdcard,jdbcType=VARCHAR}, #{insuranceMoney,jdbcType=INTEGER}, 
+      #{insuranceType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{isAttachment,jdbcType=INTEGER},#{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.insurance.Insurance" useGeneratedKeys="true" keyProperty="id">
+    insert into x_insurance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="insuranceNo != null" >
+        insurance_no,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="insuranceRange != null" >
+        insurance_range,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="insuranceCompany != null" >
+        insurance_company,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="insuranceHolder != null" >
+        insurance_holder,
+      </if>
+      <if test="insuranceHolderIdcard != null" >
+        insurance_holder_idcard,
+      </if>
+      <if test="insuranceMoney != null" >
+        insurance_money,
+      </if>
+      <if test="insuranceType != null" >
+        insurance_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="isAttachment != null" >
+        is_attachment,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceNo != null" >
+        #{insuranceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insuranceRange != null" >
+        #{insuranceRange,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceCompany != null" >
+        #{insuranceCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceHolder != null" >
+        #{insuranceHolder,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceHolderIdcard != null" >
+        #{insuranceHolderIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceMoney != null" >
+        #{insuranceMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceType != null" >
+        #{insuranceType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isAttachment != null" >
+        #{isAttachment,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.insurance.Insurance" >
+    update x_insurance
+    <set >
+      <if test="insuranceNo != null" >
+        insurance_no = #{insuranceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insuranceRange != null" >
+        insurance_range = #{insuranceRange,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceCompany != null" >
+        insurance_company = #{insuranceCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceHolder != null" >
+        insurance_holder = #{insuranceHolder,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceHolderIdcard != null" >
+        insurance_holder_idcard = #{insuranceHolderIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceMoney != null" >
+        insurance_money = #{insuranceMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceType != null" >
+        insurance_type = #{insuranceType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isAttachment != null" >
+        is_attachment = #{isAttachment,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.insurance.Insurance" >
+    update x_insurance
+    set insurance_no = #{insuranceNo,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      insurance_range = #{insuranceRange,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      insurance_company = #{insuranceCompany,jdbcType=VARCHAR},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      insurance_holder = #{insuranceHolder,jdbcType=VARCHAR},
+      insurance_holder_idcard = #{insuranceHolderIdcard,jdbcType=VARCHAR},
+      insurance_money = #{insuranceMoney,jdbcType=INTEGER},
+      insurance_type = #{insuranceType,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      is_attachment = #{isAttachment,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_insurance where 1=1 
+    <if test="insuranceNo != null and insuranceNo != '' " >
+        and insurance_no = #{insuranceNo,jdbcType=VARCHAR} 
+    </if>
+    <if test="lpn != null and lpn != '' " >
+        and lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="insuranceCompany != null and insuranceCompany != '' " >
+        and insurance_company LIKE CONCAT(CONCAT('%', #{insuranceCompany,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="insuranceHolder != null and insuranceHolder != '' " >
+        and insurance_holder LIKE CONCAT(CONCAT('%', #{insuranceHolder,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="insuranceType != null and insuranceType != '' " >
+        and insurance_type = #{insuranceType,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null and status != '' " >
+        and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+     <if test="checkDateFrom != null and checkDateFrom != '' " >
+       and end_time &gt;= #{checkDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="checkDateTo != null and checkDateTo != '' " >
+       and end_time &lt;= #{checkDateTo,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+     and    EXISTS (select 1 from x_car where  x_car.lpn = x_insurance.lpn and x_car.city_code= #{cityCode,jdbcType=VARCHAR}  )
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> 
+    from x_insurance where 1=1 
+    <if test="insuranceNo != null and insuranceNo != '' " >
+        and insurance_no = #{insuranceNo,jdbcType=VARCHAR} 
+    </if>
+    <if test="lpn != null and lpn != '' " >
+        and lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="insuranceCompany != null and insuranceCompany != '' " >
+        and insurance_company LIKE CONCAT(CONCAT('%', #{insuranceCompany,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="insuranceHolder != null and insuranceHolder != '' " >
+        and insurance_holder LIKE CONCAT(CONCAT('%', #{insuranceHolder,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="insuranceType != null and insuranceType != '' " >
+        and insurance_type = #{insuranceType,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null and status != '' " >
+        and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+    <if test="checkDateFrom != null and checkDateFrom != '' " >
+       and end_time &gt;= #{checkDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="checkDateTo != null and checkDateTo != '' " >
+       and end_time &lt;= #{checkDateTo,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+     and    EXISTS (select 1 from x_car where  x_car.lpn = x_insurance.lpn and x_car.city_code= #{cityCode,jdbcType=VARCHAR}  ) 
+    </if>
+     order by create_time desc 
+     <if test="from != null and to != null">
+		limit #{from}, #{to}  
+	</if>
+  </select>
+  
+  <select id="selectByNextMonthDate" resultMap="BaseResultMapLpn" parameterType="java.util.Map">
+    SELECT lpn FROM x_insurance GROUP BY lpn
+  </select>
+  <select id="selectLpn" resultMap="BaseResultMapLpn" parameterType="java.util.Map">
+    SELECT lpn FROM x_insurance GROUP BY lpn
+  </select>
+  
+  <select id="selectByLpnAndType" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> 
+    from x_insurance where lpn = #{lpn,jdbcType=VARCHAR}
+    <if test="myId != null and myId != '' " >
+       and id != #{myId,jdbcType=VARCHAR}
+    </if>
+       and insurance_type = #{insuranceType,jdbcType=VARCHAR}
+       and ((end_time &gt;= #{startTime,jdbcType=VARCHAR} and start_time &lt;= #{startTime,jdbcType=VARCHAR})
+       or (end_time &gt;= #{endTime,jdbcType=VARCHAR} and start_time &lt;= #{endTime,jdbcType=VARCHAR})
+       or (#{startTime,jdbcType=VARCHAR} &lt;= start_time and #{endTime,jdbcType=VARCHAR} &gt;= end_time)
+       )
+  </select>
+  <select id="selectByLpn" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> 
+    from x_insurance where 1=1
+    <if test="lpn != null and lpn != '' " >
+       and lpn = #{lpn,jdbcType=VARCHAR}
+    </if>
+    <if test="occurTime != null and occurTime != '' " >
+       and end_time &gt;= #{occurTime,jdbcType=VARCHAR} and start_time &lt;= #{occurTime,jdbcType=VARCHAR}
+    </if>
+    order by end_time asc
+  </select>
+  
+  
+</mapper>

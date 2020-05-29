@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.finance.AccountCheckMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.vo.finance.AccountCheckVo">
+		<result column="id" property="id"  />
+		<result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="memberId" property="memberId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="chargeMoney" property="chargeMoney" jdbcType="DOUBLE" />
+		<result column="chargeCategory" property="chargeCategory"
+			jdbcType="VARCHAR" />
+		<result column="chargeTime" property="chargeTime" jdbcType="TIMESTAMP" />
+
+		<result column="consumptionMoney" property="consumptionMoney"
+			jdbcType="DOUBLE" />
+		<result column="payType" property="payType" jdbcType="VARCHAR" />
+		<result column="consumptionType" property="consumptionType"
+			jdbcType="VARCHAR" />
+		<result column="consumptionTime" property="consumptionTime"
+			jdbcType="TIMESTAMP" />
+		<result column="refundMoney" property="refundMoney" jdbcType="DOUBLE" />
+		<result column="balance" property="balance" jdbcType="BIGINT" />
+		<result column="deposit" property="deposit" jdbcType="BIGINT" />
+		<result column="lpn" property="lpn"/>
+		<result column="brandName" property="brandName"/>
+		<result column="cityCode" property="cityCode"/>
+		<result column="cityName" property="cityName"/>
+		<result column="payMoney" property="payMoney"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		endTime, memberId, name, phone, chargeMoney,
+		consumptionMoney, consumptionType,
+		refundMoney, balance
+	</sql>
+
+	<!-- 查询会员押金充值情况 -->
+	<sql id="sql_queryCharge">
+		SELECT c.create_time endTime, c.member_id memberId,
+		ROUND(c.money / 100, 2) payMoney,
+		 '押金充值' consumptionType,
+		 c.charge_category
+		chargeCategory,NULL payType,null brandName,null lpn
+		FROM x_member_charge_log c WHERE c.trade_status = '0' and c.charge_category='D'
+	</sql>
+
+    <!-- 查询会员余额充值情况 -->
+    <sql id="sql_queryBalanceCharge">
+        SELECT c.create_time endTime, c.member_id memberId,
+        ROUND(c.money / 100, 2) payMoney,
+        '余额充值' consumptionType,
+         c.charge_category
+        chargeCategory,NULL payType ,null brandName ,null lpn
+        FROM x_member_charge_log c WHERE c.trade_status = '0' and c.charge_category='B'
+    </sql>
+	<!-- 查询时租 -->
+	<sql id="sql_queryTS">
+		SELECT p.end_time endTime, p.member_id memberId,
+		ROUND(p.pay_money / 100, 2) payMoney, '时租' consumptionType,
+		NULL chargeCategory,p.pay_type payType ,c.brand_name brandName,c.lpn
+		FROM x_time_share_pay p
+		INNER JOIN x_member m ON m.id = p.member_id
+		INNER JOIN x_car c ON c.lpn = p.lpn
+		INNER JOIN x_time_share_rate r ON r.id = p.rate_id
+		INNER JOIN x_city city ON city.`code` = p.city_code
+		WHERE p.pay_status = 'finish'
+		AND p.total_pay_money > 0
+	</sql>
+		<!-- 查询x_money_log ,众泰车型订单有返现项,该项仅针对众泰车订单返现  -->
+	<sql id="sql_queryMoneyLog">
+      SELECT ml.create_time endTime, ml.member_id memberId, ROUND(ml.money / 100, 2) payMoney,
+        '返余额' consumptionType,
+        'B' chargeCategory, NULL payType ,null brandName ,null lpn
+		FROM x_money_log ml
+		left JOIN x_time_share_pay  p on p.order_id = ml.obj_id 
+		where ml.category = 'zotye_cash_returned'
+	</sql>
+	<!-- 查询日租 -->
+	<sql id="sql_queryDR">
+		SELECT log.pay_time endTime, o.member_id
+		memberId,
+		ROUND(o.pay_money / 100,
+		2) payMoney, '日租' consumptionType,
+		NULL chargeCategory,o.pay_type payType ,car.brand_name brandName ,car.lpn
+		FROM x_long_rent_order o
+		INNER JOIN x_member m ON o.member_id = m.id
+		INNER JOIN x_car car ON car.lpn = o.lpn
+		INNER JOIN x_city city ON  city.code = o.city_code
+		INNER JOIN x_time_share_pay_log log ON log.order_id = o.order_id
+		WHERE o.pay_status= 'finish'
+		and log.pay_status = '1'
+		and o.order_status ='finish'
+		AND o.order_money>0
+
+
+		/*FROM x_day_rent_order o
+		INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+		INNER JOIN x_day_rent_order_pay_log p ON o.order_id = p.order_id
+		AND p.pay_status = '1'
+		INNER JOIN x_member m ON m.id = o.member_id
+		INNER JOIN x_car c ON c.lpn = o.lpn
+		INNER JOIN x_day_rent_price r ON r.model_id = o.model_id
+		INNER JOIN x_city city ON city.`code` = o.city_code
+		WHERE o.pay_status = 'finish'
+		AND o.order_status = 'finish'
+		AND e.order_money > 0*/
+	</sql>
+	<!-- 查询充电 -->
+	<sql id="sql_queryCharging">
+	    SELECT p.pay_time endTime, p.member_id memberId,
+		ROUND(p.pay_money / 100, 2) payMoney, '充电' consumptionType,
+		NULL chargeCategory,p.pay_type payType ,null brandName ,null lpn
+		FROM c_charging_order_pay_log p WHERE p.pay_status = '1'
+	</sql>
+	<!-- 统计退款 -->
+	<sql id="sql_queryRefund">
+        SELECT last_handle_time endTime, member_id memberId,
+		ROUND(log.money / 100, 2) payMoney, '押金退款' consumptionType,NULL chargeCategory,NULL payType
+		 ,null brandName ,null lpn
+		FROM x_member_refund_log log
+		 WHERE `status` = 3
+	</sql>
+    <!-- 统计违章事故 -->
+    <sql id="sql_attached">
+        SELECT pl.pay_time endTime, pl.member_id memberId,
+        ROUND(sum(d.money) / 100, 2) payMoney, '违章事故' consumptionType,NULL chargeCategory,pl.pay_type payType
+        ,car.brand_name brandName ,car.lpn
+        FROM x_time_share_order_attached_pay_log pl
+        LEFT JOIN x_time_share_order_attached a ON pl.order_id = a.id
+        LEFT JOIN x_time_share_order o ON o.order_id = a.order_id
+        JOIN x_time_share_order_attached_detail d ON d.attached_id = a.id
+        JOIN  x_car car  ON car.lpn = o.lpn
+        WHERE a.pay_status=1 and to_user=1
+        GROUP BY a.id
+    </sql>
+
+    <sql id="sql_page">
+        WHERE 1 = 1
+        <if test="name != null and name !='' ">
+            AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="brandName != null and brandName !='' ">
+            AND c.brandName =#{brandName}
+        </if>
+        <if test="payType != null and payType !='' ">
+            AND payType= #{payType}
+        </if>
+        <if test="cityName != null and cityName !='' ">
+            AND city.name = #{cityName}
+        </if>
+        <if test="consumptionType != null and consumptionType !='' ">
+            AND consumptionType = #{consumptionType}
+        </if>
+        <if test="begin != null and begin !='' ">
+            <![CDATA[ AND c.endTime >= #{begin,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="end != null and end !='' ">
+            <![CDATA[ AND c.endTime < #{end,jdbcType=TIMESTAMP} ]]>
+        </if>
+    </sql>
+
+
+    <select id="queryAccountReport" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+        SELECT m.id,endTime, memberId,
+         consumptionType,
+        (CASE WHEN payType = 'B' THEN '余额' WHEN payType='EB' THEN '企业余额'  WHEN payType = 'WX' THEN '微信'
+        WHEN payType= 'A' THEN '支付宝' END ) as payType
+        ,payMoney,
+        chargeCategory,
+        m.`name`, m.phone, card.money balance,card.deposit deposit,city.name AS cityName,c.brandName ,c.lpn
+        FROM
+        (
+        (
+        <include refid="sql_queryBalanceCharge" />
+        )UNION ALL
+        (
+        <include refid="sql_queryCharge" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryTS" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryDR" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryCharging" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryRefund" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryMoneyLog" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_attached" />
+        )
+        ) c
+       INNER JOIN x_member m ON m.id = c.memberId
+        LEFT JOIN x_member_card card ON card.member_id = c.memberId
+        LEFT JOIN x_city city on city.code = m.city_code
+        <include refid="sql_page"/>
+        <!-- WHERE 1 = 1
+        <if test="name != null and name !='' ">
+            AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="brandName != null and brandName !='' ">
+            AND c.brandName =#{brandName}
+        </if>
+        <if test="cityName != null and cityName !='' ">
+            AND c.cityName = #{cityName}
+        </if>
+        <if test="begin != null and begin !='' ">
+            <![CDATA[ AND c.endTime >= #{begin,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="end != null and end !='' ">
+            <![CDATA[ AND c.endTime < #{end,jdbcType=TIMESTAMP} ]]>
+        </if>-->
+        ORDER BY c.endTime DESC
+        <if test="from != null and to != null ">
+            LIMIT #{from, jdbcType=INTEGER}, #{to, jdbcType=INTEGER}
+        </if>
+	</select>
+
+	<select id="getAccountReportRecords" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+        SELECT COUNT(1)
+        FROM
+
+        (
+        (
+        <include refid="sql_queryCharge" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryBalanceCharge" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryTS" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryDR" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryCharging" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryRefund" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryMoneyLog" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_attached" />
+        )
+        ) c
+        INNER JOIN x_member m ON m.id = c.memberId
+        LEFT JOIN x_member_card card ON card.member_id = c.memberId
+        LEFT JOIN x_city city on city.code = m.city_code
+        <include refid="sql_page"/>
+		<!--SELECT COUNT(1)
+		FROM
+		(
+		(
+		<include refid="sql_queryCharge" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryTS" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryDR" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryCharging" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryRefund" />
+		)
+		UNION ALL
+		(
+			<include refid="sql_queryMoneyLog" />
+		)
+        UNION ALL
+        (
+        <include refid="sql_attached" />
+        )
+		) c
+		INNER JOIN x_member m ON m.id = c.memberId
+        LEFT JOIN x_city city ON city.code = m.city_code
+        <include refid="sql_page"/>-->
+ <!--       WHERE 1 = 1
+
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+
+        <if test="begin != null and begin !='' ">
+            <![CDATA[ AND c.endTime >= #{begin,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="end != null and end !='' ">
+            <![CDATA[ AND c.endTime < #{end,jdbcType=TIMESTAMP} ]]>
+        </if>-->
+
+	</select>
+
+    <select id="countPayMoneyTotal" resultMap="BaseResultMap" parameterType="map">
+        SELECT  (case when #{searchType,jdbcType=INTEGER}=1 then '本年合计'
+        when #{searchType,jdbcType=INTEGER}=2 then '总合计' end) as cityName,
+        sum(c.payMoney)  AS payMoney,
+        sum(ROUND(card.money/100,2)) as balance,
+        sum(ROUND(card.deposit/100,2)) as deposit
+        FROM
+        (
+        (
+        <include refid="sql_queryCharge" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryBalanceCharge" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryTS" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryDR" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryCharging" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryRefund" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_queryMoneyLog" />
+        )
+        UNION ALL
+        (
+        <include refid="sql_attached" />
+        )
+        ) c
+        INNER JOIN x_member m ON m.id = c.memberId
+        LEFT JOIN x_member_card card ON card.member_id = c.memberId
+        LEFT JOIN x_city city on city.code = m.city_code
+        <include refid="sql_page"/>
+    </select>
+
+	<sql id="sql_getAmount">
+		SELECT SUM(chargeMoney) chargeMoney, SUM(consumptionMoney)
+		consumptionMoney, SUM(refundMoney) refundMoney
+		FROM
+		(
+		(
+		<include refid="sql_queryCharge" />
+		)
+		UNION ALL
+        (
+        <include refid="sql_queryBalanceCharge" />
+        )
+        UNION ALL
+		(
+		<include refid="sql_queryTS" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryDR" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryCharging" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryRefund" />
+		)
+		) c
+	</sql>
+
+	<select id="getTodayAmount" resultMap="BaseResultMap">
+		<include refid="sql_getAmount" />
+		WHERE 
+				<![CDATA[  c.endTime >= ]]>
+		<include refid="commDateSqlMapper.sql_today_begin_datetime" />
+	</select>
+
+	<select id="getThisMonthAmount" resultMap="BaseResultMap">
+		<include refid="sql_getAmount" />
+		WHERE 
+				<![CDATA[  c.endTime >= ]]>
+		<include refid="commDateSqlMapper.sql_month_begin_datetime" />
+	</select>
+
+	<select id="getThisYearAmount" resultMap="BaseResultMap">
+		<include refid="sql_getAmount" />
+		WHERE 
+				<![CDATA[  c.endTime >= ]]>
+		CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS
+		datetime)
+	</select>
+
+	<!-- 统计今年的充值记录 -->
+	<select id="getThisYearChargeTotal" resultMap="BaseResultMap"
+		parameterType="string">
+		SELECT SUM(c.money) chargeMoney, c.charge_category chargeCategory
+		FROM x_member_charge_log c
+		INNER JOIN x_member m ON m.id = c.member_id
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+		</if>
+		WHERE 
+				<![CDATA[  c.create_time >= ]]>
+		CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS
+		datetime)
+		AND c.trade_status = '0'
+		GROUP BY c.charge_category
+	</select>
+
+	<!-- 统计今年的消费记录 2017-2-17 10:14:46 -->
+	<select id="getThisYearTotal" resultMap="BaseResultMap"
+		parameterType="string">
+		<include refid="sql_getAmount" />
+		INNER JOIN x_member m ON m.id = c.memberId
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+		</if>
+		WHERE <![CDATA[ c.endTime >= ]]>
+		CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS
+		datetime)
+	</select>
+
+	<!-- 统计今年的押金余额总和 -->
+	<select id="getThisBanlanceTotal" resultMap="BaseResultMap"
+		parameterType="string">
+		SELECT SUM(mc.money) balance, SUM(mc.deposit) deposit
+		FROM x_member_card mc
+		where mc.member_id in (
+		SELECT memberId FROM (
+		(
+		<include refid="sql_queryCharge" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryTS" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryDR" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryCharging" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryRefund" />
+		)
+		) c
+		INNER JOIN x_member m ON m.id = c.memberId
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE <![CDATA[ c.endTime >= ]]>
+		CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS
+		datetime)
+		)
+	</select>
+
+	<!-- 统计会员资金总和 -->
+	<select id="getAccountTotal" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		<include refid="sql_getAmount" />
+		INNER JOIN x_member m ON m.id = c.memberId
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE 1 = 1
+		<if test="begin != null and begin !='' ">
+					<![CDATA[ AND c.endTime >= #{begin,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end !='' ">
+					<![CDATA[ AND c.endTime < #{end,jdbcType=TIMESTAMP} ]]>
+		</if>
+	</select>
+
+	<!-- 统计充值合计 -->
+	<select id="getAccountChargeTotal" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT SUM(c.money) chargeMoney, c.charge_category chargeCategory
+		FROM x_member_charge_log c
+		INNER JOIN x_member m ON m.id = c.member_id
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE c.trade_status = '0'
+		<if test="begin != null and begin !='' ">
+					<![CDATA[ AND c.create_time >= #{begin,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end !='' ">
+					<![CDATA[ AND c.create_time < #{end,jdbcType=TIMESTAMP} ]]>
+		</if>
+		GROUP BY c.charge_category
+	</select>
+
+	<!-- 统计今年的押金余额总和 -->
+	<select id="getAccountBanlanceTotal" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT SUM(mc.money) balance, SUM(mc.deposit) deposit
+		FROM x_member_card mc
+		WHERE mc.member_id in (
+		SELECT memberId FROM (
+		(
+		<include refid="sql_queryCharge" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryTS" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryDR" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryCharging" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryRefund" />
+		)
+		) c
+		INNER JOIN x_member m ON m.id = c.memberId
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE 1 = 1
+		<if test="begin != null and begin !='' ">
+					<![CDATA[ AND c.endTime >= #{begin,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end !='' ">
+					<![CDATA[ AND c.endTime < #{end,jdbcType=TIMESTAMP} ]]>
+		</if>
+		)
+	</select>
+
+	<!-- 统计余额消费合计 -->
+	<select id="getAccountBalanceConsumptionTotal" resultType="double"
+		parameterType="java.util.Map">
+		SELECT sum(consumptionMoney) consumptionTotal
+		from (
+		(
+		<include refid="sql_queryTS" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryDR" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryCharging" />
+		)
+		) c
+		INNER JOIN x_member m ON m.id = c.memberId
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE c.payType = 'B'
+		<if test="begin != null and begin !='' ">
+					<![CDATA[ AND c.endTime >= #{begin,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end !='' ">
+					<![CDATA[ AND c.endTime < #{end,jdbcType=TIMESTAMP} ]]>
+		</if>
+	</select>
+
+
+	<!-- 统计今年余额消费合计 -->
+	<select id="getThisYearAccountBalanceConsumptionTotal"
+		resultType="double" parameterType="java.util.Map">
+		SELECT sum(consumptionMoney) consumptionTotal
+		from (
+		(
+		<include refid="sql_queryTS" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryDR" />
+		)
+		UNION ALL
+		(
+		<include refid="sql_queryCharging" />
+		)
+		) c
+		INNER JOIN x_member m ON m.id = c.memberId
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE c.payType = 'B' AND
+				<![CDATA[ c.endTime >= ]]>
+		CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS
+		datetime)
+	</select>
+	<!-- 查询该年度众泰车类型订单的返现总额 -->
+	<select id="getZtoyeReturnedBalanceRecords" resultMap="BaseResultMap"
+		parameterType="string">
+		SELECT SUM(c.money) chargeMoney, 'B' chargeCategory
+		FROM x_money_log c
+		INNER JOIN x_member m ON m.id = c.member_id
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name}),'%')
+		</if>
+		WHERE <![CDATA[  c.create_time >= ]]> CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS datetime) and 
+		c.category = 'zotye_cash_returned'
+	</select>
+    <!-- 根据时间范围查询众泰车类型订单的总额 -->
+    <select id="getTotalZtoyeReturnedBalanceByTime" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT SUM(c.money) chargeMoney, 'B' chargeCategory
+		FROM x_money_log c
+		INNER JOIN x_member m ON m.id = c.member_id
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE c.category = 'zotye_cash_returned'
+		<if test="begin != null and begin !='' ">
+					<![CDATA[ AND c.create_time >= #{begin,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end !='' ">
+					<![CDATA[ AND c.create_time < #{end,jdbcType=TIMESTAMP} ]]>
+		</if>
+
+	</select>
+</mapper>

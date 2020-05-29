@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.enterprise.EnterpriseMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.enterprise.Enterprise" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR" />
+    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="legal_phone" property="legalPhone" jdbcType="VARCHAR" />
+    <result column="responsible" property="responsible" jdbcType="VARCHAR" />
+    <result column="responsible_phone" property="responsiblePhone" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="enterprise_tel" property="enterpriseTel" jdbcType="VARCHAR" />
+    <result column="business_license" property="businessLicense" jdbcType="VARCHAR" />
+    <result column="license_file_url" property="licenseFileUrl" jdbcType="VARCHAR" />
+    <result column="organization_code" property="organizationCode" jdbcType="VARCHAR" />
+    <result column="admin" property="admin" jdbcType="VARCHAR" />
+    <result column="admin_mobile" property="adminMobile" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="level_name" property="levelName" jdbcType="VARCHAR" />
+      <result column="is_contact_park" property="isContactPark" jdbcType="INTEGER"/>
+      <result column="total_recharge" property="totalRecharge" jdbcType="INTEGER"/>
+      <result column="total_deposit" property="totalDeposit" jdbcType="INTEGER"/>
+      <result column="total_consumption" property="totalConsumption" jdbcType="INTEGER"/>
+      <result column="p_id" property="pId" jdbcType="INTEGER"/>
+      <result column="can_overdraft_num" property="canOverdraftNum" jdbcType="INTEGER"/>
+      <result column="can_overdraft_money" property="canOverdraftMoney" jdbcType="INTEGER"/>
+      <result column="total_overdraft_num" property="totalOverdraftNum" jdbcType="INTEGER"/>
+      <result column="total_refund_sum" property="totalRefundSum" jdbcType="INTEGER"/>
+      <result column="account_money" property="accountMoney" jdbcType="INTEGER"/>
+      <result column="deposit_limit" property="depositLimit" jdbcType="INTEGER"/>
+      <result column="bind_cars" property="bindCars" jdbcType="BIT" />
+      <result column="enterpriseMemberNum" property="enterpriseMemberNum" jdbcType="INTEGER" />
+      <result column="enterpriseParkNum" property="enterpriseParkNum" jdbcType="INTEGER" />
+      <result column="enterpriseCarNum" property="enterpriseCarNum" jdbcType="INTEGER" />
+      <result column="overdraft_money" property="overdraftMoney" jdbcType="INTEGER" />
+      <result column="overdraft_num" property="overdraftNum" jdbcType="INTEGER" />
+      <result column="branchOfficeNum" property="branchOfficeNum" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="BaseResultMapVo" type="com.iber.portal.vo.enterprise.EnterpriseVo" extends="BaseResultMap">
+  	<result column="enterpriseMemberNum" property="enterpriseMemberNum" jdbcType="INTEGER" />
+  	<result column="enterpriseRechargeSum" property="enterpriseRechargeSum" jdbcType="INTEGER" />
+  	<result column="enterpriseCostSum" property="enterpriseCostSum" jdbcType="INTEGER" />
+  	<result column="enterpriseRefundSum" property="enterpriseRefundSum" jdbcType="INTEGER" />
+  	<result column="money" property="money" jdbcType="INTEGER" />
+  	<result column="deposit" property="deposit" jdbcType="INTEGER" />
+  	<result column="enterpriseParkNum" property="enterpriseParkNum" jdbcType="INTEGER" />
+  	<result column="enterpriseCarNum" property="enterpriseCarNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, enterprise_name, legal_person, legal_phone, responsible, responsible_phone, address, 
+    email, enterprise_tel, business_license, license_file_url, organization_code, admin, 
+    admin_mobile, city_code, level, create_time, create_user, update_time, update_user, 
+    admin_id, is_delete,is_contact_park,total_recharge,total_deposit,total_consumption,p_id,
+    can_overdraft_money,deposit_limit,total_overdraft_num,can_overdraft_num,total_refund_sum,
+    account_money,bind_cars,overdraft_money,overdraft_num
+
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_enterprise
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByEnterpriseName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_enterprise
+    where enterprise_name = #{enterpriseName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_enterprise
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.enterprise.Enterprise" useGeneratedKeys="true" keyProperty="id">
+    insert into x_enterprise (id, enterprise_name, legal_person, 
+      legal_phone, responsible, responsible_phone, 
+      address, email, enterprise_tel, 
+      business_license, license_file_url, organization_code, 
+      admin, admin_mobile, city_code, 
+      level, create_time, create_user, 
+      update_time, update_user, admin_id, 
+      is_delete,
+      total_recharge,
+      is_contact_park,total_consumption,
+      total_deposit,p_id，can_overdraft_money,
+      deposit_limit,total_overdraft_num,can_overdraft_num,
+      total_refund_sum,account_money,
+      overdraft_money,overdraft_num
+      )
+    values (#{id,jdbcType=INTEGER}, #{enterpriseName,jdbcType=VARCHAR}, #{legalPerson,jdbcType=VARCHAR}, 
+      #{legalPhone,jdbcType=VARCHAR}, #{responsible,jdbcType=VARCHAR}, #{responsiblePhone,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{enterpriseTel,jdbcType=VARCHAR}, 
+      #{businessLicense,jdbcType=VARCHAR}, #{licenseFileUrl,jdbcType=VARCHAR}, #{organizationCode,jdbcType=VARCHAR}, 
+      #{admin,jdbcType=VARCHAR}, #{adminMobile,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{adminId,jdbcType=INTEGER}, 
+      #{isDelete,jdbcType=VARCHAR},
+      #{totalRecharge},#{isContactPark},#{totalConsumption},
+      #{totalDeposit},#{pId},#{canOverdraftMoney},#{depositLimit},#{totalOverdraftNum},
+      #{canOverdraftNum},#{totalRefundSum},#{accontMoney},
+      #{overdraftMoney},#{overdraftNum}
+
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.enterprise.Enterprise"  useGeneratedKeys="true" keyProperty="id">
+    insert into x_enterprise
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="enterpriseName != null" >
+        enterprise_name,
+      </if>
+      <if test="legalPerson != null" >
+        legal_person,
+      </if>
+      <if test="legalPhone != null" >
+        legal_phone,
+      </if>
+      <if test="responsible != null" >
+        responsible,
+      </if>
+      <if test="responsiblePhone != null" >
+        responsible_phone,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="enterpriseTel != null" >
+        enterprise_tel,
+      </if>
+      <if test="businessLicense != null" >
+        business_license,
+      </if>
+      <if test="licenseFileUrl != null" >
+        license_file_url,
+      </if>
+      <if test="organizationCode != null" >
+        organization_code,
+      </if>
+      <if test="admin != null" >
+        admin,
+      </if>
+      <if test="adminMobile != null" >
+        admin_mobile,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+        <if test="totalRecharge != null" >
+        total_recharge,
+      </if>
+        <if test="isContactPark != null" >
+        is_contack_park,
+      </if>
+        <if test="totalDeposit != null" >
+        total_deposit,
+      </if><if test="totalConsumption != null" >
+        total_consumption,
+      </if>
+        <if test="pId != null" >
+        p_id,
+      </if>
+        <if test="canOverdraftMoney!= null" >
+        can_overdraft_money,
+      </if>
+      <if test="depositLimit!= null" >
+          deposit_limit,
+      </if>
+      <if test="totalOverdraftNum != null" >
+            total_overdraft_num,
+      </if>
+      <if test="canOverdraftNum != null" >
+          can_overdraft_num,
+      </if>
+        <if test="totalRefundSum != null" >
+            total_refund_sum ,
+        </if>
+        <if test="accountMoney != null" >
+            account_money ,
+        </if>
+        <if test="bindCars != null" >
+            bind_cars ,
+        </if>
+        <if test="overdraftMoney != null" >
+            overdraft_money ,
+        </if>
+        <if test="overdraftNum != null" >
+            overdraft_num ,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="enterpriseName != null" >
+        #{enterpriseName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null" >
+        #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPhone != null" >
+        #{legalPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="responsible != null" >
+        #{responsible,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePhone != null" >
+        #{responsiblePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseTel != null" >
+        #{enterpriseTel,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicense != null" >
+        #{businessLicense,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseFileUrl != null" >
+        #{licenseFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCode != null" >
+        #{organizationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null" >
+        #{admin,jdbcType=VARCHAR},
+      </if>
+      <if test="adminMobile != null" >
+        #{adminMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=VARCHAR},
+      </if>
+        <if test="totalRecharge != null" >
+            #{totalRecharge,jdbcType=INTEGER},
+        </if>
+        <if test="isContactPark != null" >
+            #{isContactPark,jdbcType=INTEGER},
+        </if>
+        <if test="totalDeposit != null" >
+            #{totalDeposit,jdbcType=INTEGER},
+        </if>
+        <if test="totalConsumption != null" >
+        #{totalConsumption,jdbcType=INTEGER},
+        </if>
+        <if test="pId != null" >
+            #{pId,jdbcType=INTEGER},
+        </if>
+        <if test="canOverdraftMoney!= null" >
+            #{canOverdraftMoney,jdbcType=INTEGER},
+        </if>
+        <if test="depositLimit!= null" >
+            #{depositLimit,jdbcType=INTEGER},
+        </if>
+        <if test="totalOverdraftNum != null" >
+            #{totalOverdraftNum,jdbcType=INTEGER},
+        </if>
+        <if test="canOverdraftNum != null" >
+            #{canOverdraftNum,jdbcType=INTEGER},
+        </if>
+        <if test="totalRefundSum != null" >
+            #{totalRefundSum,jdbcType=INTEGER},
+        </if>
+         <if test="accountMoney != null" >
+             #{accountMoney,jdbcType=INTEGER},
+          </if>
+        <if test="bindCars != null" >
+            #{bindCars},
+        </if>
+        <if test="overdraftMoney != null" >
+            #{overdraftMoney},
+        </if>
+        <if test="overdraftNum != null" >
+            #{overdraftNum},
+        </if>
+    </trim>
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.enterprise.Enterprise" >
+    update x_enterprise
+    <set >
+      <if test="enterpriseName != null" >
+        enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null" >
+        legal_person = #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPhone != null" >
+        legal_phone = #{legalPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="responsible != null" >
+        responsible = #{responsible,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePhone != null" >
+        responsible_phone = #{responsiblePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseTel != null" >
+        enterprise_tel = #{enterpriseTel,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicense != null" >
+        business_license = #{businessLicense,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseFileUrl != null" >
+        license_file_url = #{licenseFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCode != null" >
+        organization_code = #{organizationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null" >
+        admin = #{admin,jdbcType=VARCHAR},
+      </if>
+      <if test="adminMobile != null" >
+        admin_mobile = #{adminMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=VARCHAR},
+      </if>
+        <if test="totalRecharge != null" >
+            total_recharge = #{totalRecharge,jdbcType=INTEGER},
+        </if>
+        <if test="isContactPark != null" >
+            is_contact_park = #{isContactPark,jdbcType=INTEGER},
+        </if>
+        <if test="totalDeposit != null" >
+            total_deposit = #{totalDeposit,jdbcType=INTEGER},
+        </if>
+        <if test="totalConsumption != null" >
+            total_consumption = #{totalConsumption,jdbcType=INTEGER},
+        </if>
+        <if test="pId != null" >
+            p_id = #{pId,jdbcType=INTEGER},
+        </if>
+        <if test="canOverdraftMoney != null" >
+            can_overdraft_money = #{canOverdraftMoney,jdbcType=INTEGER},
+        </if>
+        <if test="depositLimit != null" >
+            deposit_limit = #{depositLimit,jdbcType=INTEGER},
+        </if>
+        <if test="totalOverdraftNum!= null" >
+            total_overdraft_num = #{totalOverdraftNum,jdbcType=INTEGER},
+        </if>
+        <if test="canOverdraftNum!= null" >
+            can_overdraft_num = #{canOverdraftNum,jdbcType=INTEGER},
+        </if>
+        <if test="totalRefundSum!= null" >
+            total_refund_sum= #{totalRefundSum,jdbcType=INTEGER},
+        </if>
+        <if test="accountMoney!= null" >
+            account_money= #{accountMoney,jdbcType=INTEGER},
+        </if>
+        <if test="bindCars!= null" >
+            bind_cars= #{bindCars,jdbcType=INTEGER},
+        </if>
+        <if test="overdraftMoney!= null" >
+            overdraft_money= #{overdraftMoney,jdbcType=INTEGER},
+        </if>
+        <if test="overdraftNum!= null" >
+            overdraft_num= #{overdraftNum,jdbcType=INTEGER},
+        </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.enterprise.Enterprise" >
+    update x_enterprise
+    set enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+      legal_person = #{legalPerson,jdbcType=VARCHAR},
+      legal_phone = #{legalPhone,jdbcType=VARCHAR},
+      responsible = #{responsible,jdbcType=VARCHAR},
+      responsible_phone = #{responsiblePhone,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      enterprise_tel = #{enterpriseTel,jdbcType=VARCHAR},
+      business_license = #{businessLicense,jdbcType=VARCHAR},
+      license_file_url = #{licenseFileUrl,jdbcType=VARCHAR},
+      organization_code = #{organizationCode,jdbcType=VARCHAR},
+      admin = #{admin,jdbcType=VARCHAR},
+      admin_mobile = #{adminMobile,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=VARCHAR},
+      total_recharge = #{totalRecharge},
+      is_contact_park = #{isContactPark},
+      total_deposit = #{totalDeposit},
+      total_consumption = #{totalConsumption},
+      p_id = #{pId},
+      can_overdraft_money = #{canOverdraftMoney},
+      deposit_limit = #{depositLimit},
+      total_overdraft_num = #{totalOverDraftNum},
+      can_overdraft_num = #{canOverdraftNum},
+      total_refund_sum =#{totalRefundSum},
+      account_money = #{accountMoney}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+--     select count(1) from x_enterprise_member_view where is_delete = '0'
+    select count(1) from x_enterprise where is_delete = '0'
+
+     <if test="enterpriseName != null  and enterpriseName != '' " >
+        and enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%') 
+     </if>
+     <if test="cityCode != null and cityCode != '' " >
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+     <if test="parentId != null and parentId != '' " >
+       and p_id = #{parentId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+    <!--(select name from x_enterprise_level y where y.id = a.level) level_name,-->
+    <!--(select count(1) from x_member x where x.enterprise_id = en.id and x.member_level &lt;&gt;'account') enterpriseMemberNum-->
+    <!--enterpriseRechargeSum,enterpriseCostSum,enterpriseRefundSum,money,deposit from (
+       select t.*,b.total_charge_money enterpriseRechargeSum,b.total_consume_money enterpriseCostSum,
+         b.total_refund_money enterpriseRefundSum,b.money,b.deposit
+         from x_enterprise_member_view t LEFT JOIN x_member_card b on t.member_id = b.member_id ) a where a.is_delete = '0'-->
+  
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+      (select count(*) FROM x_enterprise e
+      join x_enterprise_relation_car c ON e.id= c.enterprise_id
+      JOIN x_car car ON c.car_id=car.id WHERE e.id=en.id
+      ) as enterpriseCarNum,
+     (select name from x_city c where c.code = en.city_code) city_name,
+     (select count(1) from x_park where enterprise_id = en.id ) enterpriseParkNum,
+     (select count(1) from x_member m JOIN x_enterprise_member_department_relation re ON  m.id =re.member_id
+      JOIN x_enterprise e ON re.enterprise_id = e.id WHERE e.id = en.id
+      ) enterpriseMemberNum,
+      (select count(*) from x_enterprise where p_id = en.id) branchOfficeNum
+      FROM x_enterprise en  WHERE en.is_delete ='0'
+    <if test="enterpriseName != null  and enterpriseName != '' " >
+        and en.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+       and en.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="parentId != null and parentId != '' " >
+       and en.p_id = #{parentId,jdbcType=INTEGER}
+    </if>
+    order by en.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+
+    <select id="enterpriseList" resultType="java.util.Map">
+        SELECT id as enterpriseId,enterprise_name as enterpriseName FROM x_enterprise WHERE p_id =0;
+    </select>
+
+    <select id="findBranchCompanyByParentId" resultMap="BaseResultMap" parameterType="int">
+        SELECT enterprise_name ,id,
+        (select name from x_city c where c.code = e.city_code) city_name
+        FROM x_enterprise  e WHERE e.is_delete ='0' and e.p_id = #{parentId}
+        <if test="enterpriseName != null  and enterpriseName != '' " >
+            and e.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%')
+        </if>
+        order by e.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+    </select>
+    <select id="findBranchCompanyTotal" resultType="java.lang.Integer">
+        SELECT count(1) FROM x_enterprise  e WHERE e.is_delete ='0' and e.p_id = #{parentId}
+        <if test="enterpriseName != null  and enterpriseName != '' " >
+            and e.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%')
+        </if>
+    </select>
+
+</mapper>

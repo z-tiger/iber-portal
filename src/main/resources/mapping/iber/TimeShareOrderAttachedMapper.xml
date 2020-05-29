@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.timeShare.TimeShareOrderAttachedMapper">
+    <resultMap id="baseResultMap" type="com.iber.portal.model.timeShare.TimeShareOrderAttached">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+        <result column="create_reason" property="createReason" jdbcType="VARCHAR" />
+        <result column="type" property="type" javaType="com.iber.portal.enums.OrderAttachedTypeEnum" typeHandler="com.iber.portal.enums.handler.IntEnumTypeHandler"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="creater" property="creater" jdbcType="INTEGER" />
+        <!--<result column="pay_status" property="payStatus" jdbcType="ENUM" />
+        <result column="pay_type" property="payType" jdbcType="ENUM" />-->
+        <result column="payment_completion" property="paymentCompletion" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <insert id="saveTimeShareOrderAttached" parameterType="com.iber.portal.model.timeShare.TimeShareOrderAttached" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO x_time_share_order_attached
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="orderId != null" >
+                order_id,
+            </if>
+            <if test="createReason != null" >
+                create_reason,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="createTime != null " >
+                create_time,
+            </if>
+            <if test="creater != null " >
+                creater,
+            </if>
+            <if test="payStatus != null" >
+                pay_status,
+            </if>
+            <if test="payType != null" >
+                pay_type,
+            </if>
+            <if test="paymentCompletion != null" >
+                payment_completion,
+            </if>
+            <if test="_parameter.toUser != null" >
+                to_user,
+            </if>
+            <if test="repairPictureUrl != null" >
+                repair_picture_url,
+            </if>
+            <if test="carDamagePictureUrl != null" >
+                car_damage_picture_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="orderId != null" >
+                #{orderId},
+            </if>
+            <if test="createReason != null" >
+                #{createReason},
+            </if>
+            <if test="type != null" >
+                #{type,typeHandler=com.iber.portal.enums.handler.IntEnumTypeHandler},
+            </if>
+            <if test="createTime != null " >
+                #{createTime},
+            </if>
+            <if test="creater != null " >
+                #{creater},
+            </if>
+            <if test="payStatus != null" >
+                #{payStatus,typeHandler=com.iber.portal.enums.handler.IntEnumTypeHandler},
+            </if>
+            <if test="payType != null" >
+                #{payType,typeHandler=com.iber.portal.enums.handler.IntEnumTypeHandler},
+            </if>
+            <if test="paymentCompletion != null" >
+                #{paymentCompletion},
+            </if>
+            <if test="_parameter.toUser != null" >
+                #{toUser},
+            </if>
+            <if test="repairPictureUrl != null" >
+                #{repairPictureUrl},
+            </if>
+            <if test="carDamagePictureUrl != null" >
+                #{carDamagePictureUrl},
+            </if>
+        </trim>
+    </insert>
+    <select id="findAll" resultMap="baseResultMap">
+          SELECT * as status FROM  x_time_share_order_attached;
+    </select>
+    <select id="getAllNum"  resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(1) FROM  x_time_share_order_attached xtsoa
+        left JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on  (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or  xlro.member_id = xm.id)
+        where 1=1
+        <if test="orderId != null and orderId != ''">
+            and xtsoa.order_id=#{orderId}
+        </if>
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="ispay != null and ispay != ''" >
+            and xtsoa.pay_status=#{ispay}
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        <if test="toUser != null and toUser !='' ">
+            and xtsoa.to_user = #{toUser}
+        </if>
+    </select>
+
+    <select id="getPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+          SELECT xtsoa.id ,xtsoa.order_id as orderId,xm.name as membername,xm.phone as phone,xca.lpn as lpn,xca.brand_name as brandName,
+          xtsoa.create_reason as reason,
+          (CASE WHEN  xtsoa.to_user =1 THEN '用户责任' else '我方责任' end) toUser,
+          (case when xtsoa.type=0 THEN '违章' WHEN xtsoa.type = 1 THEN '维修'
+           WHEN xtsoa.type = 2 THEN '救援' END )as type,
+          DATE_FORMAT(xtsoa.create_time,'%Y-%m-%d %H:%i:%s') as createtime,
+          xtsoa.creater as creater,xc.name as city,(case when xtsoad.money is null then 0 else ROUND(sum(xtsoad.money) / 100,2) end) AS ordermoney,
+          (case when xtsoa.pay_type=0 and xtsoa.pay_status=1 THEN '余额' WHEN xtsoa.pay_type = 1 and xtsoa.pay_status=1 THEN '支付宝'
+           WHEN xtsoa.pay_type = 2 and xtsoa.pay_status=1 THEN '微信' else ''END ) as paytype,
+          (case when xtsoa.pay_status=1 THEN '已支付' WHEN xtsoa.pay_status=0 and xtsoa.to_user =1 then '未支付'else '无需支付' END ) as paystatus,
+          DATE_FORMAT(xtsoa.payment_completion,'%Y-%m-%d %H:%i:%s') as completiontime
+           FROM x_time_share_order_attached xtsoa
+           LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+           LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+           left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+           INNER JOIN x_city xc on  (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+           INNER JOIN x_member xm on (xtso.member_id = xm.id or  xlro.member_id = xm.id)
+           left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+           where 1=1
+        <if test="orderId != null and orderId != ''">
+            and xtsoa.order_id=#{orderId}
+        </if>
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="ispay != null and ispay != ''" >
+            and xtsoa.pay_status=#{ispay}
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        <if test="toUser != null and toUser !='' ">
+            and xtsoa.to_user = #{toUser}
+        </if>
+          GROUP BY xtsoa.id
+          ORDER BY xtsoa.pay_status asc,xtsoa.create_time desc
+          <if test="offset != null and rows != null">
+          limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+          </if>
+    </select>
+
+    <select id="findOrder" resultType="java.lang.Integer">
+        select count(1) FROM x_time_share_order WHERE order_id = #{order}
+    </select>
+    <select id="findLongTimeUnpay" resultType="map">
+        select xm.id as id,xm.phone,xm.name,
+        (case when xtsoa.type=0 THEN '违章' WHEN xtsoa.type = 1 THEN '维修'
+           WHEN xtsoa.type = 2 THEN '救援' END )as type,datediff(now(),xtsoa.create_time) as dateidff
+         FROM x_member as xm
+        INNER JOIN x_time_share_order xtso on xm.id = xtso.member_id
+        INNER JOIN x_time_share_order_attached xtsoa on xtsoa.order_id = xtso.order_id
+        WHERE datediff(now(), xtsoa.create_time)>=30 and xtsoa.pay_status=0 and xtsoa.to_user = 1
+    </select>
+
+    <select id="queryAttachedOrderDetail" resultType="java.util.HashMap">
+        SELECT xtsoad.money as money,xtsoad.explanation as explanation,
+        (case when xtsoad.item = 1 then "误工费" when xtsoad.item = 2 then "救援费"
+        when xtsoad.item = 3 then "维修费" when xtsoad.item = 4 then "违章处理费" end) as itemName
+        FROM x_time_share_order_attached_detail xtsoad
+        INNER JOIN x_time_share_order_attached xtsoa on xtsoad.attached_id=xtsoa.id
+        WHERE xtsoa.id = #{id}
+    </select>
+    <sql id ="orderAttachedPageSql">
+        where 1=1
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            and xtsoa.pay_status =#{payStatus}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        and xtsoa.to_user = 1
+    </sql>
+
+    <select id="getPageReport" resultType="java.util.HashMap" parameterType="map">
+        SELECT xtsoa.id ,xtsoa.order_id as orderId,xm.name as membername,xm.phone as phone,xca.lpn as lpn,xca.brand_name as brandName,
+        (case when xtsoa.type=0 THEN '违章' WHEN xtsoa.type = 1 THEN '维修'
+        WHEN xtsoa.type = 2 THEN '救援' END )as type,
+        DATE_FORMAT(xtsoa.create_time,'%Y-%m-%d %H:%i:%s') as createtime,
+        xtsoa.creater as creater,xc.name as city,
+        (case when xtsoa.pay_type=0 and xtsoa.pay_status=1 THEN '余额' WHEN xtsoa.pay_type = 1 and xtsoa.pay_status=1 THEN '支付宝'
+        WHEN xtsoa.pay_type = 2 and xtsoa.pay_status=1 THEN '微信' else ''END ) as paytype,
+        (case when xtsoa.pay_status=1 THEN '已支付' WHEN xtsoa.pay_status=0 and xtsoa.to_user =1 then '未支付'else '无需支付' END ) as paystatus,
+        DATE_FORMAT(xtsoa.payment_completion,'%Y-%m-%d %H:%i:%s') as completiontime,
+        det.itemInfor,det.ordermoney
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on  (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or  xlro.member_id = xm.id)
+        LEFT JOIN
+        (SELECT d.attached_id ,ROUND(sum(money)/100,2) as ordermoney,group_concat(
+        if(item='1',concat('误工费:',ROUND(money/100,2),''),''),
+        if(item='2',concat('救援费:',ROUND(money/100,2),''),''),
+        if(item='3',concat('维修费:',ROUND(money/100,2),''),''),
+        if(item='4',concat('违章处理费:',ROUND(money/100,2),''),''),
+        if(item='5',concat('保险上涨费:',ROUND(money/100,2),''),'')
+        )as itemInfor FROM x_time_share_order_attached_detail d GROUP BY d.attached_id)
+        as det ON det.attached_id=xtsoa.id
+        <include refid="orderAttachedPageSql" />
+       <!-- where 1=1
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            and xtsoa.pay_status =#{payStatus}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        and xtsoa.to_user = 1-->
+        GROUP BY xtsoa.id
+        ORDER BY xtsoa.pay_status asc,xtsoa.create_time desc
+        limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+
+    </select>
+    <select id="getAllNumReport" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on  (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or  xlro.member_id = xm.id)
+        <include refid="orderAttachedPageSql"/>
+       <!-- where 1=1
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            and xtsoa.pay_status =#{payStatus}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        and xtsoa.to_user = 1-->
+    </select>
+    <select id="getPageReportAll" resultType="java.util.Map">
+        SELECT xtsoa.id ,xtsoa.order_id as orderId,xm.name as membername,xm.phone as phone,xca.lpn as lpn,xca.brand_name as brandName,
+        (case when xtsoa.type=0 THEN '违章' WHEN xtsoa.type = 1 THEN '维修'
+        WHEN xtsoa.type = 2 THEN '救援' END )as type,
+        DATE_FORMAT(xtsoa.create_time,'%Y-%m-%d %H:%i:%s') as createtime,
+        xtsoa.creater as creater,xc.name as city,
+        (case when xtsoa.pay_type=0 and xtsoa.pay_status=1 THEN '余额' WHEN xtsoa.pay_type = 1 and xtsoa.pay_status=1 THEN '支付宝'
+        WHEN xtsoa.pay_type = 2 and xtsoa.pay_status=1 THEN '微信' else ''END ) as paytype,
+        (case when xtsoa.pay_status=1 THEN '已支付' WHEN xtsoa.pay_status=0 and xtsoa.to_user =1 then '未支付'else '无需支付' END ) as paystatus,
+        DATE_FORMAT(xtsoa.payment_completion,'%Y-%m-%d %H:%i:%s') as completiontime,
+        det.itemInfor,det.ordermoney
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on  (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or  xlro.member_id = xm.id)
+        LEFT JOIN
+        (SELECT d.attached_id ,ROUND(sum(money)/100,2) as ordermoney,group_concat(
+        if(item='1',concat('误工费:',ROUND(money/100,2),''),''),
+        if(item='2',concat('救援费:',ROUND(money/100,2),''),''),
+        if(item='3',concat('维修费:',ROUND(money/100,2),''),''),
+        if(item='4',concat('违章处理费:',ROUND(money/100,2),''),''),
+        if(item='5',concat('保险上涨费:',ROUND(money/100,2),''),'')
+        )as itemInfor FROM x_time_share_order_attached_detail d GROUP BY d.attached_id)
+        as det ON det.attached_id=xtsoa.id
+        <include refid="orderAttachedPageSql" />
+        GROUP BY xtsoa.id
+        ORDER BY xtsoa.pay_status asc,xtsoa.create_time desc
+       <!-- SELECT xtsoa.id ,xtsoa.order_id as orderId,xm.name as membername,xm.phone as phone,xca.lpn as lpn,xca.brand_name as brandName,
+        (case when xtsoa.type=0 THEN '违章' WHEN xtsoa.type = 1 THEN '维修'
+        WHEN xtsoa.type = 2 THEN '救援' END )as type,
+        DATE_FORMAT(xtsoa.create_time,'%Y-%m-%d') as createtime,
+        xtsoa.creater as creater,xc.name as city,(case when xtsoad.money is null then 0 else ROUND(sum(xtsoad.money) / 100,2) end) AS ordermoney,
+        (case when xtsoa.pay_type=0 and xtsoa.pay_status=1 THEN '余额' WHEN xtsoa.pay_type = 1 and xtsoa.pay_status=1 THEN '支付宝'
+        WHEN xtsoa.pay_type = 2 and xtsoa.pay_status=1 THEN '微信' else ''END ) as paytype,
+        (case when xtsoa.pay_status=1 THEN '已支付' WHEN xtsoa.pay_status=0 and xtsoa.to_user =1 then '未支付'else '无需支付' END ) as paystatus,
+        DATE_FORMAT(xtsoa.payment_completion,'%Y-%m-%d') as completiontime
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on  (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or  xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        where 1=1
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        and xtsoa.pay_status = 1 and xtsoa.to_user = 1
+        GROUP BY xtsoa.id
+        ORDER BY xtsoa.pay_status asc,xtsoa.create_time desc-->
+    </select>
+
+    <select id="countTotalToReport" resultType="java.util.HashMap">
+        SELECT (case when #{searchType,jdbcType=INTEGER}=1 then '本年合计' when #{searchType,jdbcType=INTEGER}=0 then '当前合计'
+        when #{searchType,jdbcType=INTEGER}=2 then '总合计' end) as city,
+        sum(xtsoad.money) / 100 AS ordermoney
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        <include refid="orderAttachedPageSql"/>
+        <if test="offset !=null and rows !=null">
+            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+        </if>
+
+
+       <!-- where 1=1
+        <if test="memberName != null  and memberName != ''">
+            and xm.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' and cityCode!='00'">
+            and xc.code=#{cityCode}
+        </if>
+        <if test="lpn != null and lpn != ''">
+            and xca.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="type != null and type != ''">
+            and xtsoa.type=#{type}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            and xm.phone  LIKE CONCAT('%',#{phoneNumber,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+            and xtsoa.create_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+        </if>
+        and xtsoa.pay_status = 1 and xtsoa.to_user = 1-->
+    </select>
+
+    <select id="countlostIncomeTotalToReport" resultType="double" parameterType="map">
+        SELECT
+        sum(xtsoad.money) / 100 lostIncome
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        <include refid="orderAttachedPageSql"/>
+        and xtsoad.item=1
+        <if test="offset !=null and rows !=null">
+            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countRescueTotalToReport" resultType="double" parameterType="map">
+        SELECT
+        sum(xtsoad.money) / 100 rescueCost
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        <include refid="orderAttachedPageSql"/>
+        and xtsoad.item=2
+        <if test="offset !=null and rows !=null">
+            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countMaintainTotalToReport" resultType="double" parameterType="map">
+        SELECT
+        sum(xtsoad.money) / 100 maintainCost
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        <include refid="orderAttachedPageSql"/>
+        and xtsoad.item=3
+        <if test="offset !=null and rows !=null">
+            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countIllegalTotalToReport" resultType="double" parameterType="map">
+        SELECT
+        sum(xtsoad.money) / 100 illegalProcessingCost
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        <include refid="orderAttachedPageSql"/>
+        and xtsoad.item=4
+        <if test="offset !=null and rows !=null">
+            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countInsuranceTotalToReport" resultType="double" parameterType="map">
+        SELECT
+        sum(xtsoad.money) / 100 insurancePremiumCost
+        FROM x_time_share_order_attached xtsoa
+        LEFT JOIN x_time_share_order xtso on xtso.order_id = xtsoa.order_id
+        LEFT JOIN x_long_rent_order xlro on xlro.order_id = xtsoa.order_id and xlro.relet_no=0
+        left JOIN x_car xca on (xtso.lpn = xca.lpn or xlro.lpn = xca.lpn)
+        INNER JOIN x_city xc on (xc. CODE = xtso.city_code or xc.code = xlro.city_code)
+        INNER JOIN x_member xm on (xtso.member_id = xm.id or xlro.member_id = xm.id)
+        left JOIN x_time_share_order_attached_detail xtsoad on xtsoad.attached_id = xtsoa.id
+        <include refid="orderAttachedPageSql"/>
+        and xtsoad.item=5
+        <if test="offset !=null and rows !=null">
+            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+    <select id="findLongRentOrder" resultType="java.lang.Integer">
+        select count(1) FROM x_long_rent_order WHERE order_id = #{order}
+    </select>
+</mapper>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sys.SysWarnInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sys.SysWarnInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="warn_item_code" property="warnItemCode" jdbcType="VARCHAR" />
+    <result column="warn_content" property="warnContent" jdbcType="VARCHAR" />
+    <result column="to_dispatch" property="toDispatch" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="threshold_value" property="thresholdValue" jdbcType="VARCHAR" />
+    <result column="actual_value" property="actualValue" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, warn_item_code, warn_content, to_dispatch, member_id, lpn, park_id, order_id, 
+    threshold_value, actual_value, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_warn_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_sys_warn_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sys.SysWarnInfo" >
+    insert into x_sys_warn_info (id, warn_item_code, warn_content, 
+      to_dispatch, member_id, lpn, 
+      park_id, order_id, threshold_value, 
+      actual_value, create_time)
+    values (#{id,jdbcType=INTEGER}, #{warnItemCode,jdbcType=VARCHAR}, #{warnContent,jdbcType=VARCHAR}, 
+      #{toDispatch,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, 
+      #{parkId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{thresholdValue,jdbcType=VARCHAR}, 
+      #{actualValue,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sys.SysWarnInfo" >
+    insert into x_sys_warn_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="warnItemCode != null" >
+        warn_item_code,
+      </if>
+      <if test="warnContent != null" >
+        warn_content,
+      </if>
+      <if test="toDispatch != null" >
+        to_dispatch,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value,
+      </if>
+      <if test="actualValue != null" >
+        actual_value,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="warnItemCode != null" >
+        #{warnItemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContent != null" >
+        #{warnContent,jdbcType=VARCHAR},
+      </if>
+      <if test="toDispatch != null" >
+        #{toDispatch,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="thresholdValue != null" >
+        #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+      <if test="actualValue != null" >
+        #{actualValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sys.SysWarnInfo" >
+    update x_sys_warn_info
+    <set >
+      <if test="warnItemCode != null" >
+        warn_item_code = #{warnItemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContent != null" >
+        warn_content = #{warnContent,jdbcType=VARCHAR},
+      </if>
+      <if test="toDispatch != null" >
+        to_dispatch = #{toDispatch,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value = #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+      <if test="actualValue != null" >
+        actual_value = #{actualValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sys.SysWarnInfo" >
+    update x_sys_warn_info
+    set warn_item_code = #{warnItemCode,jdbcType=VARCHAR},
+      warn_content = #{warnContent,jdbcType=VARCHAR},
+      to_dispatch = #{toDispatch,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      park_id = #{parkId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      threshold_value = #{thresholdValue,jdbcType=VARCHAR},
+      actual_value = #{actualValue,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!--  根据orderId和warn_item_code查最新一条预警记录  -->
+  <select id="queryByOrderIdAndItemCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT  <include refid="Base_Column_List" /> 
+    	FROM x_sys_warn_info
+    		WHERE order_id = #{orderId} AND warn_item_code = #{code}
+    		ORDER BY create_time DESC LIMIT 1
+  </select>
+  
+</mapper>

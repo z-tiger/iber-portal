@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.employee.EmployeeInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.employee.EmployeeInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="photo_url" property="photoUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="finger_url" property="fingerUrl" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="taskNum" property="taskNum" jdbcType="INTEGER" />
+    <result column="profession" property="profession" jdbcType="VARCHAR" />
+      <result column="tbox_finger" property="tboxFinger"/>
+      <result column="position" property="position"/>
+      <result column="email" property="email"/>
+  </resultMap>
+  
+  <resultMap id="RescuerResultMap" type="com.iber.portal.model.employee.RescuerEmployeeInfo" extends="BaseResultMap">
+    <result column="sex" property="sex" jdbcType="VARCHAR"/>
+    <result column="currentTask" property="currentTask" jdbcType="INTEGER"/>
+    <result column="todayCompleteTask" property="todayCompleteTask" jdbcType="INTEGER"/>
+	<result column="processTask" property="processTask" jdbcType="INTEGER"/>
+	<result column="totalCompleteTask" property="totalCompleteTask" jdbcType="INTEGER"/>
+	<result column="identify_label" property="identifyLabel" jdbcType="INTEGER"/>
+	<result column="cityName" property="cityName" jdbcType="VARCHAR"/>
+	<result column="remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="todayScore" property="todayScore" jdbcType="VARCHAR"/>
+    <result column="monthScore" property="monthScore" jdbcType="VARCHAR"/>
+    <result column="totalScore" property="totalScore" jdbcType="VARCHAR"/>
+  </resultMap>
+  <resultMap id="MaintenancerResultMap" type="com.iber.portal.model.employee.MaintenanceEmployeeInfo" extends="BaseResultMap">
+    <result column="sex" property="sex" jdbcType="VARCHAR"/>
+    <result column="currentTask" property="currentTask" jdbcType="INTEGER"/>
+    <result column="todayCompleteTask" property="todayCompleteTask" jdbcType="INTEGER"/>
+	<result column="processTask" property="processTask" jdbcType="INTEGER"/>
+	<result column="totalCompleteTask" property="totalCompleteTask" jdbcType="INTEGER"/>
+	<result column="identify_label" property="identifyLabel" jdbcType="INTEGER"/>
+	<result column="cityName" property="cityName" jdbcType="VARCHAR"/>
+	<result column="remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="todayScore" property="todayScore" jdbcType="VARCHAR"/>
+    <result column="monthScore" property="monthScore" jdbcType="VARCHAR"/>
+    <result column="totalScore" property="totalScore" jdbcType="VARCHAR"/>
+  </resultMap>
+    <resultMap id="CityManagerResultMap" type="com.iber.portal.model.employee.CityManagerEmployeeInfo" extends="BaseResultMap">
+    <result column="sex" property="sex" jdbcType="VARCHAR"/>
+    <result column="currentTask" property="currentTask" jdbcType="INTEGER"/>
+    <result column="todayCompleteTask" property="todayCompleteTask" jdbcType="INTEGER"/>
+	<result column="processTask" property="processTask" jdbcType="INTEGER"/>
+	<result column="totalCompleteTask" property="totalCompleteTask" jdbcType="INTEGER"/>
+	<result column="identify_label" property="identifyLabel" jdbcType="INTEGER"/>
+	<result column="cityName" property="cityName" jdbcType="VARCHAR"/>
+	<result column="remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="todayScore" property="todayScore" jdbcType="VARCHAR"/>
+    <result column="monthScore" property="monthScore" jdbcType="VARCHAR"/>
+    <result column="totalScore" property="totalScore" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="baseSql">
+  	id,name,photo_url,status,type,longitude,latitude,create_time,create_id,update_id,update_time,city_code,phone,password,finger_url,profession,sex,identify_label,remark,tbox_finger
+  </sql>
+  <sql id="conditionSql">
+  	SELECT COUNT(1) FROM e_task_info WHERE employee_id = einfo.id 
+  </sql>
+  <select id="getRecordsById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  SELECT COUNT(1)taskNum,employee_id id  FROM e_task_info where  employee_id in
+(
+ SELECT id FROM  e_employee_info WHERE  status NOT IN ('closed') AND id IN
+  (select employee_id FROM e_employee_gridding_relation WHERE 
+  gridding_id =(SELECT gridding_id FROM e_gridding_park_relation WHERE park_id=#{parkId,jdbcType=INTEGER}) AND is_manager =2)
+ ) AND status in('1','2')  GROUP BY employee_id  ORDER BY  taskNum  LIMIT 0,1
+  </select>
+  
+  <!-- 查询救援人员的信息 -->
+  <select id="getRescuerInfos" parameterType="java.util.Map" resultMap="RescuerResultMap">
+     select <include refid="baseSql"/> ,
+     (<include refid="conditionSql"/> and status = '1' and task_type ='5') currentTask,
+	 (<include refid="conditionSql"/> and status = '2' and task_type ='5') processTask,
+	 (<include refid="conditionSql"/> and status = '3' and task_type ='5' and DATE(done_time) = CURDATE()) todayCompleteTask,
+	 (<include refid="conditionSql"/> and status = '3' and task_type ='5') totalCompleteTask,
+     (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id and DATE(ets.create_time) = CURDATE()) todayScore,
+     (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id and date_format(ets.create_time, '%Y-%m') = date_format(CURDATE(),'%Y-%m')) monthScore,
+     (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id ) totalScore,
+	 (select name from x_city c where c.code = einfo.city_code) cityName,
+      einfo.position,
+      einfo.email
+	 from e_employee_info einfo where einfo.type = 2
+	 <if test="rescuerName!=null and rescuerName !=''">
+	    and einfo.name like concat('%',#{rescuerName,jdbcType=VARCHAR},'%')
+	 </if>
+	 <if test="cityCode!=null and cityCode!=''">
+	    and einfo.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	 <if test="status != null and status != ''">
+		<if test="status == 'closed'">
+			and ( einfo.status = 'closed' or einfo.status is NULL) 
+		</if>
+		<if test="status != 'closed'">
+			and einfo.status = #{status}
+		</if>		
+	</if> 
+	<if test="page != null and rows != null">
+	 limit #{page,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER} 
+	</if>
+  </select>
+    <select id="getRescuerAmount" parameterType="java.util.Map" resultType="java.lang.Integer">
+     select count(1) from e_employee_info einfo where einfo.type = 2  
+	 <if test="rescuerName!=null and rescuerName !=''">
+	    and einfo.name like concat('%',#{rescuerName,jdbcType=VARCHAR},'%')
+	 </if>
+	 <if test="cityCode!=null and cityCode!=''">
+	    and einfo.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	 <if test="status != null and status != ''">
+		<if test="status == 'closed'">
+			and ( einfo.status = 'closed' or einfo.status is NULL) 
+		</if>
+		<if test="status != 'closed'">
+			and einfo.status = #{status}
+		</if>		
+	</if>
+  </select>
+  <update id="updateRescuerInfo">
+      UPDATE e_employee_info
+    <set>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="identifyLabel != null" >
+        identify_label = #{identifyLabel,jdbcType=INTEGER},
+      </if>
+        update_time = now(),
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=INTEGER},
+      </if>
+      <if test="profession != null" >
+        profession = #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id =#{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insertRescuerInfo" parameterType="java.util.Map">
+     insert into e_employee_info(name,sex,city_code,phone,remark,type,create_time,update_time,create_id,profession,identify_label,position,email)
+     values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+             #{city_code,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+             #{remark,jdbcType=VARCHAR},2,NOW(),NOW(),#{createId,jdbcType=INTEGER},
+             #{worker,jdbcType=INTEGER},#{identy,jdbcType=INTEGER},
+             #{position,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})
+  </insert>
+    <!-- 查询维保人员的信息 getMaintenancerAmount-->
+  <select id="getMaintenancerInfos" parameterType="java.util.Map" resultMap="MaintenancerResultMap">
+     select <include refid="baseSql"/> ,
+     (<include refid="conditionSql"/> and status = '1' and task_type in ('2','4')) currentTask,
+	 (<include refid="conditionSql"/> and status = '2' and task_type in ('2','4')) processTask,
+	 (<include refid="conditionSql"/> and status = '3' and task_type in ('2','4') and DATE(done_time) = CURDATE()) todayCompleteTask,
+	 (<include refid="conditionSql"/> and status = '3' and task_type in ('2','4')) totalCompleteTask,
+      (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id and DATE(ets.create_time) = CURDATE()) todayScore,
+      (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id and date_format(ets.create_time, '%Y-%m') = date_format(CURDATE(),'%Y-%m')) monthScore,
+      (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id ) totalScore,
+	 (select name from x_city c where c.code = einfo.city_code) cityName,
+      einfo.position,
+      einfo.email
+	 from e_employee_info einfo where einfo.type = 3  
+	 <if test="maintenancerName!=null and maintenancerName !=''">
+	    and einfo.name like concat('%',#{maintenancerName,jdbcType=VARCHAR},'%')
+	 </if>
+	 <if test="cityCode!=null and cityCode!=''">
+	    and einfo.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	 <if test="status != null and status != ''">
+		<if test="status == 'closed'">
+			and ( einfo.status = 'closed' or einfo.status is NULL) 
+		</if>
+		<if test="status != 'closed'">
+			and einfo.status = #{status}
+		</if>		
+	</if>
+	<if test="page != null and rows != null">
+	 limit #{page,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER} 
+	</if>
+   </select>
+   <select id="getMaintenancerAmount" parameterType="java.util.Map" resultType="java.lang.Integer">
+     select count(1) from e_employee_info einfo where einfo.type = 3  
+	 <if test="maintenancerName!=null and maintenancerName !=''">
+	    and einfo.name like concat('%',#{maintenancerName,jdbcType=VARCHAR},'%')
+	 </if>
+	 <if test="cityCode!=null and cityCode!=''">
+	    and einfo.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	 <if test="status != null and status != ''">
+		<if test="status == 'closed'">
+			and ( einfo.status = 'closed' or einfo.status is NULL) 
+		</if>
+		<if test="status != 'closed'">
+			and einfo.status = #{status}
+		</if>		
+	</if>
+  </select>
+    <update id="updateMaintenancerInfo">
+      UPDATE e_employee_info
+    <set>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="identifyLabel != null" >
+        identify_label = #{identifyLabel,jdbcType=INTEGER},
+      </if>
+        update_time = now(),
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=INTEGER},
+      </if>
+      <if test="profession != null" >
+        profession = #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id =#{id,jdbcType=INTEGER}
+  </update>
+    <insert id="insertMaintenancerInfo" parameterType="java.util.Map">
+     insert into e_employee_info(name,sex,city_code,phone,remark,type,create_time,update_time,create_id,profession,identify_label,position,email)
+     values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+             #{cityCode,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+             #{remark,jdbcType=VARCHAR},3,NOW(),NOW(),#{createId,jdbcType=INTEGER},
+             #{worker,jdbcType=INTEGER},#{identy,jdbcType=INTEGER},
+             #{position,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateEmployeeAccountToFrozen" parameterType="java.lang.Integer">
+     update e_employee_info set status = 'freeze' where id = #{id}
+  </update>
+    <update id="updateEmployeeAccountToActived" parameterType="java.lang.Integer">
+     update e_employee_info set status = 'closed' where id = #{id}
+  </update>
+  
+      <!-- 查询城市管理人员的信息 getCityManagerInfos-->
+  <select id="getCityManagerInfos" parameterType="java.util.Map" resultMap="CityManagerResultMap">
+     select <include refid="baseSql"/> ,
+     (<include refid="conditionSql"/> and status = '1') currentTask,
+	 (<include refid="conditionSql"/> and status = '2') processTask,
+	 (<include refid="conditionSql"/> and status = '3' and DATE(done_time) = CURDATE()) todayCompleteTask,
+	 (<include refid="conditionSql"/> and status = '3') totalCompleteTask,
+      (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id and DATE(ets.create_time) = CURDATE()) todayScore,
+      (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id and date_format(ets.create_time, '%Y-%m') = date_format(CURDATE(),'%Y-%m')) monthScore,
+      (SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = einfo.id ) totalScore,
+	 (select name from x_city c where c.code = einfo.city_code) cityName,
+      einfo.POSITION ,
+      einfo.email
+	 from e_employee_info einfo where einfo.identify_label = 2 and einfo.type is null
+	 <if test="cityManagerName!=null and cityManagerName !=''">
+	    and einfo.name like concat('%',#{cityManagerName,jdbcType=VARCHAR},'%')
+	 </if>
+	 <if test="cityCode!=null and cityCode!=''">
+	    and einfo.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	<if test="status != null and status != ''">
+		<if test="status == 'closed'">
+			and ( einfo.status = 'closed' or einfo.status is NULL) 
+		</if>
+		<if test="status != 'closed'">
+			and einfo.status = #{status}
+		</if>		
+	</if>
+	<if test="page != null and rows != null ">
+	 limit #{page,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER} 
+	</if>
+   </select>
+   <select id="getCityManagerAmount" parameterType="java.util.Map" resultType="java.lang.Integer">
+     select count(1) from e_employee_info einfo where einfo.identify_label = 2 and einfo.type is null 
+	 <if test="cityManagerName!=null and cityManagerName !=''">
+	    and einfo.name like concat('%',#{cityManagerName,jdbcType=VARCHAR},'%')
+	 </if>
+	 <if test="cityCode!=null and cityCode!=''">
+	    and einfo.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	<if test="status != null and status != ''">
+		<if test="status == 'closed'">
+			and ( einfo.status = 'closed' or einfo.status is NULL) 
+		</if>
+		<if test="status != 'closed'">
+			and einfo.status = #{status}
+		</if>		
+	</if>
+  </select>
+    <insert id="insertCityManagerInfo" parameterType="java.util.Map">
+     insert into e_employee_info(name,sex,city_code,phone,remark,create_time,update_time,create_id,profession,identify_label,type,position,email)
+     values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+             #{city_code,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+             #{remark,jdbcType=VARCHAR},NOW(),NOW(),#{createId,jdbcType=INTEGER},
+             #{worker,jdbcType=INTEGER},2,null,
+             #{position,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})
+  </insert>
+      <update id="updateCityManagerInfo">
+      UPDATE e_employee_info
+    <set>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="identifyLabel != null" >
+        identify_label = #{identifyLabel,jdbcType=INTEGER},
+      </if>
+        update_time = now(),
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=INTEGER},
+      </if>
+      <if test="profession != null" >
+        profession = #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id =#{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateEmployeeInfo">
+	UPDATE e_employee_info
+	<set>
+		<if test="name != null">
+			name = #{name},
+		</if>
+		<if test="photoUrl != null">
+			photo_url = #{photoUrl},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+		<if test="longitude != null">
+			longitude = #{longitude},
+		</if>
+		<if test="latitude != null">
+			latitude = #{latitude},
+		</if>
+		<if test="updateId != null">
+			update_id = #{updateId},
+		</if>
+		update_time = now(),
+		<if test="cityCode != null">
+			city_code = #{cityCode},
+		</if>
+		<if test="phone != null">
+			phone = #{phone},
+		</if>
+		<if test="password != null">
+			password = #{password},
+		</if>
+		<if test="fingerUrl != null">
+			finger_url = #{fingerUrl},
+		</if>
+		<if test="type != null">
+			<choose>
+				<when test="type == 0  or type =='0' ">
+					type = NUll,
+				</when>
+				<otherwise>
+					type = #{type},
+				</otherwise>
+			</choose>
+		</if>
+		<if test="sex != null">
+			sex = #{sex},
+		</if>
+		<if test="identifyLabel != null">
+			identify_label = #{identifyLabel},
+		</if>
+		<if test="profession != null">
+			profession = #{profession},
+		</if>
+		<if test="remark != null">
+        remark = #{remark },
+        </if>
+        <if test="position != null ">
+            position = #{position },
+        </if>
+        <if test="email != null">
+            email = #{email }
+        </if>
+	</set>
+	where id =#{id }  
+</update>
+
+    <select id="getEmployeeInfo" resultMap="BaseResultMap">
+        select <include refid="baseSql"/> FROM e_employee_info  where status != 'freeze'
+            <if test="name != null and name != ''">
+              and  name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+        limit #{from},#{to}
+    </select>
+    <select id="getAllEmployeeCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) FROM e_employee_info  where status != 'freeze'
+            <if test="name != null and name != ''">
+                and name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+    </select>
+</mapper>

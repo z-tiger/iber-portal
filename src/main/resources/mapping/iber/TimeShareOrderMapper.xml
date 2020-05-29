@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.timeShare.TimeShareOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.timeShare.TimeShareOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="total_run_mileage" property="totalRunMileage" jdbcType="DOUBLE" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="is_enterprise_use_car" property="isEnterpriseUseCar" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="is_free_compensate" property="isFreeCompensate"/>
+    <result column="return_park_id" property="returnParkId" jdbcType="INTEGER" />
+    <result column="is_lock_car" property="isLockCar" jdbcType="TINYINT" />
+    <result column="lock_car_time" property="lockCarTime" jdbcType="TIMESTAMP" />
+    <result column="one_warn_time" property="oneWarnTime" jdbcType="TIMESTAMP" />
+    <result column="is_one_warn" property="isOneWarn" jdbcType="TINYINT" />
+    <result column="two_warn_time" property="twoWarnTime" jdbcType="TIMESTAMP" />
+    <result column="is_two_warn" property="isTwoWarn" jdbcType="TINYINT" />
+    <result column="is_lock_two_warn" property="isLockTwoWarn" jdbcType="TINYINT" />
+    <result column="time_rate" property="timeRate" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="OrderResultMap" type="com.iber.portal.vo.timeShare.TimeShareOrderVo">
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="park_name" property="parkName" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="return_park_name" property="returnParkName" jdbcType="VARCHAR" />
+    <result column="total_mileage" property="totalMileage" jdbcType="DOUBLE" />
+    <result column="total_minute" property="totalMinute" jdbcType="DOUBLE" />
+    <result column="pay_money" property="payMoney" jdbcType="DOUBLE" />
+    <result column="coupon_no" property="couponNo" jdbcType="VARCHAR" />
+    <result column="coupon_balance" property="couponBalance" jdbcType="DOUBLE" />
+    <result column="reduction_pay_money" property="reductionPayMoney" jdbcType="DOUBLE" />
+    <result column="total_mileage_cost" property="totalMileageCost" jdbcType="DOUBLE" />
+    <result column="total_minute_cost" property="totalMinuteCost" jdbcType="DOUBLE" />
+    <result column="total_pay_money" property="totalPayMoney" jdbcType="DOUBLE" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+	<result column="free_compensation_money" property="freeCompensationMoney" jdbcType="DOUBLE" />
+	<result column="night_total_minute" property="nightTotalMinute" jdbcType="DOUBLE" />
+	<result column="night_minute_reduction_money" property="nightMinuteReductionMoney" jdbcType="DOUBLE" />
+	<result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+	<result column="discountMoney" property="discountMoney" jdbcType="DOUBLE"/>
+	<result column="memberLevelDiscount" property="memberLevelDiscount" jdbcType="VARCHAR"/>
+	<result column="consump_val" property="consumpVal" jdbcType="DOUBLE"/>
+	<result column="is_free_compensate" property="isFreeCompensate" jdbcType="VARCHAR"/>
+	<result column="member_phone" property="memberPhone" jdbcType="VARCHAR"/>
+	<result column="member_id" property="memberId"/>
+	<result column="balance" property="balance"/>
+	<result column="deposit" property="deposit"/>
+	<result column="is_lock_car" property="isLockCar"/>
+	<result column="isLongOrder" property="isLongOrder"/>
+	<result column="score" property="score"/>
+	<result column="last_money" property="lastMoney"/>
+      <result column="is_enterprise_use_car" property="isEnterpriseUseCar" jdbcType="VARCHAR" />
+      <result column="entprisePayMoney" property="entprisePayMoney"/>
+  </resultMap>
+   <resultMap id="CarOrderResultMap" type="com.iber.portal.vo.timeShare.TimeShareCarOrderVo">
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="total_run_mileage" property="totalRunMileage" jdbcType="DOUBLE" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="is_enterprise_use_car" property="isEnterpriseUseCar" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="return_park_id" property="returnParkId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="free_compensation_money" property="freeCompensationMoney" jdbcType="VARCHAR" />
+    <result column="free_compensation_money" property="freeCompensationMoney" jdbcType="VARCHAR" />
+    <result column="userType" property="userType"/>
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.vo.timeShare.NoPayOrderVo" id="NoPayOrderResultMap">
+  	<result column="member_id" property="memberId"/>
+  	<result column="order_id" property="orderId"/>
+  	<result column="pay_status" property="payStatus"/>
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.model.car.CarChargingRemind" id="CarChargingRemindResultMap">
+  	<result column="id" property="id" jdbcType="INTEGER" />
+  	<result column="order_id" property="orderId"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="lpn" property="lpn"/>
+  	<result column="phone" property="phone"/>
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.vo.timeShare.LongOrderVo" id="LongOrderResultMap">
+  	<result column="currOrderHours" property="currOrderHours"/>
+  	<result column="currOrderCost" property="currOrderCost"/>
+  	<result column="memberId" property="memberId"/>
+  	<result column="lpn" property="lpn"/>
+  	<result column="parkId" property="parkId"/>
+  	<result column="orderId" property="orderId"/>
+  	<result column="type" property="type"/>
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.zhima.vo.ZhimaRequestVo" id="zhimaRequestVoResultMap">
+  	<result column="idcard" property="idcard"/>
+  	<result column="name" property="userName"/>
+  	<result column="order_id" property="orderId"/>
+  	<result column="time_rate" property="timeRate"/>
+  	<result column="lpn" property="lpn"/>
+  	<result column="deposit" property="deposit"/>
+  	<result column="begin_time" property="startTime"/>
+  	<result column="pay_money" property="payMoney"/>
+  	<result column="end_time" property="endTime"/>
+  	<result column="wzMoney" property="wzMoney"/>
+  </resultMap>
+  
+    <resultMap id="ZOTYEReturnCashOrderResultMap" type="com.iber.portal.vo.timeShare.ZOTYEReturnCashOrderVo">
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+	<result column="phone" property="phone" jdbcType="VARCHAR"/>
+	<result column="member_id" property="memberId"/>
+	<result column="free_compensation_money" property="freeCompensationMoney" jdbcType="VARCHAR"/>
+	<result column="order_money" property="orderMoney" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="queryZOTYETypeTimeShareRecords" resultMap="ZOTYEReturnCashOrderResultMap" parameterType="java.util.Map">
+		SELECT o.id ,o.order_id,o.member_id,o.order_time,o.begin_time,o.end_time,mem.phone,mem.`name` member_name,o.lpn
+		from x_time_share_order o INNER JOIN x_car car on o.lpn = car.lpn left join x_member mem on o.member_id = mem.id 
+		where o.begin_time &gt;= #{startTime} and o.begin_time &lt;= #{endTime} and car.brand_name = #{brandName} and o.status != 'cancel'
+   </select>
+    
+  <sql id="Base_Column_List" >
+    id, order_id, member_id, park_id, lpn, total_run_mileage, order_time, begin_time, 
+    end_time, status, city_code, is_enterprise_use_car, order_type, enterprise_id, return_park_id, is_free_compensate,
+    is_lock_car, lock_car_time, is_one_warn, one_warn_time, is_two_warn, two_warn_time, is_lock_two_warn
+  </sql>
+    <sql id="Car_Order_Column_List" >
+    id, order_id, member_id, park_id, lpn, total_run_mileage, order_time, begin_time, 
+    end_time, status, city_code, is_enterprise_use_car, order_type, enterprise_id, return_park_id,name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_time_share_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_time_share_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.timeShare.TimeShareOrder" >
+    insert into x_time_share_order (id, order_id, member_id, 
+      park_id, lpn, total_run_mileage, 
+      order_time, begin_time, end_time, 
+      status, city_code, is_enterprise_use_car, 
+      order_type, enterprise_id, return_park_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, 
+      #{parkId,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, #{totalRunMileage,jdbcType=DOUBLE}, 
+      #{orderTime,jdbcType=TIMESTAMP}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{isEnterpriseUseCar,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{enterpriseId,jdbcType=INTEGER}, #{returnParkId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.timeShare.TimeShareOrder" >
+    insert into x_time_share_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="totalRunMileage != null" >
+        total_run_mileage,
+      </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
+      <if test="beginTime != null" >
+        begin_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="isEnterpriseUseCar != null" >
+        is_enterprise_use_car,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id,
+      </if>
+      <if test="returnParkId != null" >
+        return_park_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="totalRunMileage != null" >
+        #{totalRunMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnterpriseUseCar != null" >
+        #{isEnterpriseUseCar,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="returnParkId != null" >
+        #{returnParkId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.timeShare.TimeShareOrder" >
+    update x_time_share_order
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="totalRunMileage != null" >
+        total_run_mileage = #{totalRunMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null" >
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnterpriseUseCar != null" >
+        is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="returnParkId != null" >
+        return_park_id = #{returnParkId,jdbcType=INTEGER},
+      </if>
+      <if test="isLockCar != null" >
+        is_lock_car = #{isLockCar},
+      </if>
+      <if test="isLockTwoWarn != null" >
+        is_lock_two_warn = #{isLockTwoWarn},
+      </if>
+      <if test="lockCarTime != null" >
+        lock_car_time = #{lockCarTime},
+      </if>
+      <if test="isOneWarn != null" >
+        is_one_warn = #{isOneWarn},
+      </if>
+      <if test="oneWarnTime != null" >
+        one_warn_time = #{oneWarnTime},
+      </if>
+      <if test="isTwoWarn != null" >
+        is_two_warn = #{isTwoWarn},
+      </if>
+      <if test="twoWarnTime != null" >
+        two_warn_time = #{twoWarnTime},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!--  解除超长订单预警  -->
+  <update id="updateOverWarn" parameterType="java.lang.String">
+  	UPDATE x_time_share_order
+    SET is_one_warn = 0, is_two_warn = 0, is_lock_car = 0, is_lock_two_warn = 0, one_warn_time = NULL, two_warn_time = NULL, lock_car_time = NULL
+    WHERE order_id = #{orderId}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.timeShare.TimeShareOrder" >
+    update x_time_share_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=VARCHAR},
+      park_id = #{parkId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      total_run_mileage = #{totalRunMileage,jdbcType=DOUBLE},
+      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      return_park_id = #{returnParkId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT	count(1) FROM	x_time_share_order o ,	x_member m WHERE o. STATUS IN ('ordered','useCar','return' ) and o.member_id = m.id
+		<if test="memberName != null" >
+       and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+      </if> 
+      <if test="cityCode != null" >
+		and o.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+      <if test="isEnterpriseUseCar != null" >
+          and o.is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR}
+      </if>
+      <if test="phoneNumber != null" >
+	       and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+	 </if> 
+	 <if test="lpn != null and lpn !='' ">
+	     	and o.lpn like concat('%', #{lpn,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="queryDateFrom != null and queryDateFrom !='' ">
+	     	and o.order_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+	     </if>
+	     <if test="queryDateTo != null and queryDateTo !='' ">
+	     	and o.order_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+	     </if>
+	      <if test="isLongOrder != null and isLongOrder != ''">
+	     	and o.is_one_warn = #{isLongOrder}
+	     </if>
+	     <if test="isLockCar != null and isLockCar != ''">
+	     	and o.is_lock_car = #{isLockCar}
+	     </if>
+  </select>
+  <select id="getAll" resultMap="OrderResultMap" parameterType="java.util.Map">
+	SELECT
+		o.id,
+		o.order_id,
+        o.is_enterprise_use_car,
+		m.name member_name,
+		m.phone member_phone,
+		mc.money balance, mc.deposit,
+        mc.last_money,
+		IFNULL((SELECT score FROM x_zmxy_auth WHERE member_id = o.member_id limit 1), '') score,
+		o.is_lock_car, IF(o.is_one_warn = 1, 1, 0) isLongOrder,
+		(
+			SELECT
+				NAME 
+			FROM
+				x_park
+			WHERE
+				id = o.park_id
+		) park_name,
+		o.lpn,
+		o.order_time,
+		o.begin_time,
+		o.end_time,
+		o.STATUS,
+		o.city_code,
+		(
+			SELECT
+				NAME
+			FROM
+				x_park
+			WHERE
+				id = o.return_park_id
+		) return_park_name,
+		'' total_mileage,
+		'' total_minute,
+		'' pay_money,
+		o.member_id,
+	( SELECT c.NAME FROM x_city c WHERE c.code = o.city_code ) cityName  ,
+	o.is_free_compensate isFreeCompensate,
+	 '' pay_status
+	FROM
+		x_time_share_order o,
+		x_member m,
+		x_member_card mc
+	where 
+		o.STATUS IN (
+			'ordered',
+			'useCar',
+			'return'
+		) and o.member_id = m.id
+		and m.id = mc.member_id
+		<if test="cityCode != null" >
+			 and o.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+      <if test="isEnterpriseUseCar != null" >
+          and o.is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR}
+      </if>
+      <if test="memberName != null" >
+	       and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+	     </if>
+	     <if test="phoneNumber != null" >
+	       and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+	     </if>  
+		<if test="lpn != null and lpn !='' ">
+	     	and o.lpn LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR} ,'%')
+	     </if>
+	     <if test="queryDateFrom != null and queryDateFrom !='' ">
+	     	and o.order_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+	     </if>
+	     <if test="queryDateTo != null and queryDateTo !='' ">
+	     	and o.order_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+	     </if>
+	     <if test="isLongOrder != null and isLongOrder != ''">
+	     	and o.is_one_warn = #{isLongOrder}
+	     </if>
+	     <if test="isLockCar != null and isLockCar != ''">
+	     	and o.is_lock_car = #{isLockCar}
+	     </if>
+order by order_time 
+<if test="offset != null and rows != null">
+limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+</if>
+  </select>
+  
+  <select id="getHistoryAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+  select count(tsp.order_id) from
+		x_time_share_pay tsp
+<!-- 	  LEFT JOIN( -->
+<!-- 		SELECT -->
+<!-- 			car.lpn AS car_lpn, -->
+<!-- 			temp.temp_max_consump AS consump, car.brand_name AS brand,temp.city_code city_code -->
+<!-- 		FROM -->
+<!-- 			x_car car -->
+<!-- 		LEFT JOIN( -->
+<!-- 		SELECT -->
+<!-- 			t.`name`, -->
+<!-- 			t.max_consump AS temp_max_consump, -->
+<!-- 			c.brance AS temp_brance, -->
+<!-- 			t.city_code city_code -->
+<!-- 		FROM -->
+<!-- 			x_time_share_rate t -->
+<!-- 		JOIN x_car_type c ON t.car_type_id = c.id  -->
+<!-- 		)temp ON car.brand_name = temp.temp_brance and car.city_code = temp.city_code -->
+<!-- 		)a ON a.car_lpn = tsp.lpn   -->
+		LEFT JOIN x_time_share_order tso  on tsp.order_id = tso.order_id 
+		JOIN x_member m on m.id = tsp.member_id
+		JOIN x_member_card mc  on m.id = mc.member_id
+		and tso.`status` in ('finish', 'cancel')
+		<if test="cityCode != null" >
+			and tso.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+      <if test="isEnterpriseUseCar != null" >
+          and tso.is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR}
+      </if>
+      <if test="memberName != null and memberName !=''" >
+			where m.`name` LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%') 
+		</if> 
+		<if test="phoneNumber != null and phoneNumber !=''" >
+			and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+			and tso.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+    	</if>
+	    <if test="queryDateFrom != null and queryDateFrom !='' ">
+	    	and tso.order_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo !='' ">
+	    	and tso.order_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+		<if test="payStatus != null and payStatus !='' ">
+	    	and tsp.pay_status = #{payStatus,jdbcType=VARCHAR}
+	    </if>   
+	    <if test="status != null and status !='' ">
+	    	and tso.status = #{status,jdbcType=VARCHAR}
+	    </if>
+	    <if test="orderId != null and orderId !='' ">
+		     	and tso.order_id = #{orderId}
+		</if>   
+		
+  </select>
+  <select id="getHistoryAll" resultMap="OrderResultMap" parameterType="java.util.Map">
+  select tt.*,
+		            a.consump as consump_val, 
+		            p.`name` park_name,
+		            ep.`name` return_park_name,
+		            c.`name` cityName from
+		            
+	              ( 
+	              select 
+	              	DISTINCT tsp.order_id,mc.last_money,
+                    tso.is_enterprise_use_car,
+	                tsp.total_mileage,tsp.total_minute,tsp.pay_money,tsp.coupon_no,tsp.coupon_balance,tsp.reduction_pay_money,tsp.total_mileage_cost,tsp.total_minute_cost,
+	                tsp.total_pay_money,tsp.free_compensation_money,tsp.night_total_minute,tsp.night_minute_reduction_money,tsp.discountMoney,tsp.begin_time,tsp.end_time,tsp.pay_status,
+		            tso.status,tsp.lpn,tsp.city_code,tsp.memberLevelDiscount, m.`name` as member_name,m.phone as member_phone,tso.park_id,tso.return_park_id,tso.city_code as ccode,tso.order_time, tso.id,
+		            tsp.entprisePayMoney
+		           from 
+		           (
+	              SELECT 
+	              		tsp.*,ep.entprisePayMoney
+	              	 FROM x_time_share_pay tsp LEFT JOIN x_time_share_order tso  on tsp.order_id = tso.order_id and tso.`status` in ('finish', 'cancel') 
+	              	 LEFT JOIN (SELECT SUM(money) entprisePayMoney,obj_id from x_enterprise_money_log ll GROUP BY ll.obj_id) ep on ep.obj_id = tsp.order_id
+	              	 JOIN x_member m on m.id = tsp.member_id
+		            <if test="memberName != null" >
+			            where m.`name` LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		            </if>
+		            <if test="phoneNumber != null" >
+			            and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+		            </if>  
+		            <if test="cityCode != null" >
+			            and tso.city_code = #{cityCode,jdbcType=VARCHAR}
+		            </if>
+                  <if test="isEnterpriseUseCar != null" >
+                      and tso.is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR}
+                  </if>
+		            <if test="lpn != null and lpn !='' ">
+			            and tso.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+    	            </if>
+	                <if test="queryDateFrom != null and queryDateFrom !='' ">
+	    	            and tso.order_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+	                </if>
+	                <if test="queryDateTo != null and queryDateTo !='' ">
+	    	            and tso.order_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+	                </if>
+		            <if test="payStatus != null and payStatus !='' ">
+	    	            and tsp.pay_status = #{payStatus,jdbcType=VARCHAR}
+	                </if>   
+	                <if test="status != null and status !='' ">
+	    	            and tso.status = #{status,jdbcType=VARCHAR}
+	                </if>
+	                <if test="orderId != null and orderId !='' ">
+		     	        and tso.order_id = #{orderId}
+		            </if>  
+		            ORDER BY tsp.end_time DESC 
+		            <if test="offset != null and rows != null">
+		            limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+		            </if>
+		            )tsp LEFT JOIN x_time_share_order tso  on tsp.order_id = tso.order_id and tso.`status` in ('finish', 'cancel')
+		             JOIN x_member m on m.id = tsp.member_id
+					JOIN x_member_card mc  on m.id = mc.member_id
+	        ) tt   
+	             LEFT JOIN( SELECT car.lpn AS car_lpn,temp.temp_max_consump AS consump, car.brand_name AS brand,temp.city_code city_code FROM
+			                 x_car car LEFT JOIN ( SELECT t.`name`, t.max_consump AS temp_max_consump,c.brance AS temp_brance,t.city_code city_code
+		                               FROM x_time_share_rate t
+		                               JOIN x_car_type c ON t.car_type_id = c.id 
+		                              )temp ON car.brand_name = temp.temp_brance and car.city_code = temp.city_code
+		) a ON a.car_lpn = tt.lpn 
+		left join x_park p on p.id = tt.park_id left join x_city c on c.`code` = tt.ccode left join x_park ep on ep.id = tt.return_park_id 		
+</select>
+<select id="queryTimeShareOrderByLpn" resultMap="CarOrderResultMap" parameterType="java.util.Map">  
+	select 
+		o.*,m.name
+	from x_time_share_order o, x_member m where o.member_id = m.id
+  	and lpn = #{lpn,jdbcType=VARCHAR}
+  	ORDER BY order_time desc LIMIT 1
+</select>
+
+  <select id="queryOrderByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />,time_rate
+    from x_time_share_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getHistoryAllFinishNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT	count(1) FROM	x_time_share_order o ,	x_member m WHERE o. STATUS = 'finish' and o.member_id = m.id
+		<if test="memberName != null" >
+       and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+      </if>
+      <if test="cityCode != null" >
+		and o.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+      <if test="isEnterpriseUseCar != null" >
+          and o.is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR}
+      </if>
+      <if test="lpn != null" >
+	   and o.lpn = #{lpn,jdbcType=VARCHAR}
+	 </if> 
+  </select>
+  <select id="getHistoryAllFinish" resultMap="OrderResultMap" parameterType="java.util.Map">
+SELECT
+	o.*, p.total_mileage,
+	p.total_minute,
+	p.pay_money,
+	p.free_compensation_money
+FROM
+	(
+		SELECT
+			o.id,
+			o.order_id,
+			m. NAME member_name,
+			(
+				SELECT
+					NAME
+				FROM
+					x_park
+				WHERE
+					id = o.park_id
+			) park_name,
+			o.lpn,
+			o.order_time,
+			o.begin_time,
+			o.end_time,
+			o. STATUS,
+			o.city_code,
+			(
+				SELECT
+					NAME
+				FROM
+					x_park
+				WHERE
+					id = o.return_park_id
+			) return_park_name
+		FROM
+			x_time_share_order o,
+			x_member m
+		WHERE
+			o. STATUS = 'finish'
+		AND o.member_id = m.id
+		<if test="cityCode != null" >
+			and o.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null" >
+			and o.lpn = #{lpn,jdbcType=VARCHAR}
+		</if> 
+	) o
+LEFT JOIN x_time_share_pay p ON p.order_id = o.order_id
+<if test="memberName != null" >
+	where o.member_name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+</if> 
+ORDER BY end_time DESC limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+</select>
+
+  <select id="queryOrderByMemberId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_time_share_order
+    where member_id = #{memberId,jdbcType=INTEGER} and status in ('useCar','ordered','return')
+  </select>
+  
+  <select id="getFinishedOrderByOrderId" resultMap="OrderResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    p.total_mileage,
+	p.total_minute,
+	p.pay_money,
+	p.coupon_no,
+	p.coupon_balance,
+	p.reduction_pay_money , 
+	p.total_mileage_cost , 
+	p.total_minute_cost,
+	p.total_pay_money
+    from x_time_share_order
+    where order_id = #{orderId,jdbcType=VARCHAR} and status = 'finish'
+  </select>
+  
+  <select id="queryNoPayOrderByMemberId" resultMap="NoPayOrderResultMap">
+  	select
+  		tmp.member_id,tmp.order_id,tmp.pay_status
+  	from(
+  	    (select member_id, order_id, pay_status from x_time_share_pay where pay_status = 'noPay' and member_id = #{memberId})
+  	    UNION ALL
+  	    (select do.member_id, do.order_id, de.pay_status from x_day_rent_order_extend de left join x_day_rent_order do on de.order_id = do.order_id where do.pay_status = 'noPay' and do.member_id = #{memberId})
+  	    UNION ALL
+  	    (select member_id, order_id, status pay_status from x_charging_order where status = 'noPay' and member_id = #{memberId})) tmp
+  </select>
+  
+  
+  <select id="selectAllUsingCar" resultMap="CarChargingRemindResultMap">
+  	SELECT o.status,o.order_id,o.lpn,(SELECT o.member_id FROM x_member WHERE id = o.member_id) member_id,(SELECT phone FROM x_member WHERE id = o.member_id) phone FROM x_time_share_order o LEFT JOIN x_car_run c on o.lpn = c.lpn WHERE o.status = #{status} and c.bat_status = #{batStatus} and c.rest_battery &lt; #{restBattery}
+  </select>
+  
+  <select id="queryOrderByLpn" resultMap="CarOrderResultMap">
+      select
+		o.order_time,o.begin_time,m.name,'0' userType,o.is_enterprise_use_car
+	from x_time_share_order o, x_member m where o.member_id = m.id
+  	and o.lpn = #{lpn} and o.`status` in ('ordered','useCar','return')
+	UNION all
+	SELECT o.order_time,o.begin_time,m.name,'1' userType,'' is_enterprise_use_car FROM e_employee_order o,e_employee_info m WHERE o.employee_id = m.id and o.lpn = #{lpn} and o.`status` in ('ordered','useCar','return')
+  	UNION ALL
+  	(SELECT o.create_time,o.begin_time,m.name,'2' userType,'' is_enterprise_use_car FROM x_long_rent_order o,x_member m where o.member_id = m.id and o.lpn = #{lpn} and o.order_status in ('ordered','useCar','return') order by create_time asc limit 1)
+  </select>
+   <select id="queryAllCarRunOrderInfo" resultMap="CarOrderResultMap">
+  	select o.lpn,
+		o.order_time,o.begin_time,m.name,'0' userType
+	from x_time_share_order o, x_member m where o.member_id = m.id and o.`status` in ('ordered','useCar','return') group by o.lpn
+	UNION all
+	SELECT o.lpn,o.order_time,o.begin_time,m.name,'1' userType FROM e_employee_order o,e_employee_info m WHERE o.employee_id = m.id  and o.`status` in ('ordered','useCar','return') group by o.lpn
+  UNION all 
+    SELECT l.lpn,l.create_time as order_time,l.begin_time,m.name,'2' userType from x_long_rent_order l,x_member m where m.id = l.member_id and l.order_status in ('ordered','useCar') GROUP BY l.lpn
+  </select>
+  <select id="queryCancelOrder" resultMap="OrderResultMap">
+  	SELECT DISTINCT
+		tso.order_id,
+        tso.is_enterprise_use_car,
+		null total_mileage,
+		null total_minute,
+		null pay_money,
+		null coupon_no,
+		null coupon_balance,
+		null reduction_pay_money,
+		null total_mileage_cost,
+		null total_minute_cost,
+		null total_pay_money,
+		null free_compensation_money,
+		null night_total_minute,
+		null night_minute_reduction_money,
+		null discountMoney,
+		null begin_time,
+		tso.end_time,
+		null pay_status,
+		tso. STATUS,
+		tso.lpn,
+		tso.city_code,
+		null memberLevelDiscount,
+		null consump_val,
+		tso.order_time,
+		tso.id,
+		m.name memberName,
+		(
+			SELECT
+				NAME
+			FROM
+				x_park
+			WHERE
+				id = tso.park_id
+		)park_name,
+		null return_park_name,
+		(
+			SELECT
+				NAME
+			FROM
+				x_city c
+			WHERE
+				c.`code` = tso.city_code
+		)cityName
+	FROM
+		x_time_share_order tso join x_member m on tso.member_id = m.id
+	WHERE
+	tso. STATUS = 'cancel'
+	<if test="cityCode != null" >
+		and tso.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+      <if test="isEnterpriseUseCar != null" >
+          and tso.is_enterprise_use_car = #{isEnterpriseUseCar,jdbcType=VARCHAR}
+      </if>
+
+      <if test="phoneNumber != null" >
+		and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+	</if> 
+	<if test="memberName != null" >
+		and m.`name` LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+	</if> 
+	<if test="lpn != null and lpn !='' ">
+		and tso.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="orderId != null and orderId !='' ">
+		and tso.order_id = #{orderId}
+	</if>
+    <if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !=''  ">
+          and tso.order_time BETWEEN #{queryDateFrom,jdbcType=VARCHAR} and #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+	ORDER BY end_time DESC 
+	<if test="offset != null and rows != null">
+	limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+	
+	</if>
+  </select>
+  
+  <select id="queryCancelOrderNum" resultType="java.lang.Integer">
+  	select count(1) from x_time_share_order tso join x_member m on tso.member_id = m.id where 
+  	tso. STATUS = 'cancel'
+	<if test="cityCode != null" >
+		and tso.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if> 
+	<if test="memberName != null" >
+		and m.`name` LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+	</if> 
+	<if test="phoneNumber != null" >
+		and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+	</if> 
+	<if test="lpn != null and lpn !='' ">
+		and tso.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="orderId != null and orderId !='' ">
+		and tso.order_id = #{orderId}
+	</if>
+  </select>
+  
+  <select id="selectUserByLpn" resultMap="CarChargingRemindResultMap">
+  	select m.phone,m.id as member_id from x_time_share_order tso join x_member m on tso.member_id = m.id where tso.status in ('useCar','return') and tso.lpn = #{lpn} limit 1
+  </select>
+  
+  <update id="updateIsManualSaveByOrderId">
+  	update x_time_share_order set is_manual_save = 1 where order_id = #{orderId}
+  </update>
+  
+  <!--  查还在用车中，订单金额大于用户余额的订单。用车金额＝（当前小时数/24）商*最高消费费用＋（当前小时数%24）余数 *日时间计费  -->
+  <select id="queryOrdCostGreaterThenBalance" resultMap="LongOrderResultMap">
+  	SELECT IFNULL(TIMESTAMPDIFF(HOUR, o.begin_time, NOW()), 0) currOrderHours,
+		 ((IFNULL(TIMESTAMPDIFF(HOUR, o.begin_time, NOW()), 0) DIV 24) * r.max_consump + 
+		 	MOD(IFNULL(TIMESTAMPDIFF(HOUR, o.begin_time, NOW()), 0), 24) * r.time_rate) currOrderCost, 
+		 o.member_id memberId, o.lpn, o.park_id, o.order_id, r.type 
+		 FROM x_time_share_order o
+		INNER JOIN x_member_card m ON m.member_id = o.member_id
+		INNER JOIN 
+	(SELECT r.max_consump, r.time_rate, t.type, c.lpn FROM x_car c 
+		INNER JOIN x_car_type t ON t.id = c.model_id
+		INNER JOIN x_time_share_rate r ON r.car_type_id = t.id) r ON r.lpn = o.lpn
+	WHERE o.`status` = 'useCar' 
+		AND ((IFNULL(TIMESTAMPDIFF(HOUR, o.begin_time, NOW()), 0) DIV 24) * r.max_consump 
+			+ <![CDATA[ MOD(IFNULL(TIMESTAMPDIFF(HOUR, o.begin_time, NOW()), 0), 24) * r.time_rate) >= m.money ]]> 
+		GROUP BY o.order_id
+  </select>
+
+    <select id="queryAllUserAndReturnOrders" resultType="com.iber.portal.vo.timeShare.LongTimeShareOrderVo"
+        parameterType="com.iber.portal.model.timeShare.TimeShareOrder">
+        SELECT o.id,o.order_id orderId,o.member_id memberId,o.begin_time beginTime,o.one_warn_time oneWarnTime,
+               o.is_one_warn isOneWarn,o.two_warn_time twoWarnTime,o.is_two_warn isTwoWarn,o.is_lock_car isLockCar, o.is_lock_two_warn isLockTwoWarn,
+               o.lock_car_time lockCarTime,o.`status`,o.lpn,t.budget_amount budgetAmount,m.money
+        FROM `x_time_share_order` o JOIN x_car c ON o.lpn = c.lpn
+            JOIN x_car_type t ON c.model_id = t.id
+            JOIN x_member_card m ON m.member_id = o.member_id
+        WHERE o.`status` in ('useCar','return')
+        <if test="isOneWarn != null">
+            AND o.is_one_warn = #{isOneWarn}
+        </if>
+        <if test="isTwoWarn != null">
+            AND o.is_two_warn = #{isTwoWarn}
+        </if>
+        <if test="isLockCar != null">
+            AND o.is_lock_car = #{isLockCar}
+        </if>
+    </select>
+	<select id="getAllOrderInfo" resultMap="BaseResultMap">
+		select a.order_id,a.lpn,a.member_id,a.begin_time,a.end_time   from x_time_share_pay a  join x_time_share_pay_log b on  a.order_id=b.order_id where a.pay_status ='finish' and b.pay_status ='1'  and DATE(a.end_time)  <![CDATA[>=]]> (select date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(    
+   day from now())-1 day),interval 1 month)) and DATE(a.end_time) <![CDATA[<=]]> (select date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(    
+   day from now()) day),interval 0 month) ) AND a.member_id not in(select  DISTINCT(a.member_id)  from x_time_share_pay a  join x_time_share_pay_log b on  a.order_id=b.order_id where a.pay_status ='finish' and b.pay_status ='1'  and DATE(a.end_time)  <![CDATA[>=]]> (select date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(    
+   day from now())-1 day),interval 1 month)) and DATE(a.end_time) <![CDATA[<=]]> (select date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(    
+   day from now()) day),interval 0 month) ) and TIMESTAMPDIFF(minute,a.end_time,b.pay_time)<![CDATA[>]]>30)
+	</select>
+
+    <select id="queryMonthOrderByDate" resultMap="BaseResultMap">
+        SELECT
+            a.order_id,a.lpn,a.member_id,a.begin_time,a.end_time
+        FROM
+          x_time_share_pay a
+        JOIN x_time_share_pay_log b ON a.order_id = b.order_id
+        WHERE
+            a.pay_status = 'finish'
+            AND b.pay_status = '1'
+            AND a.end_time <![CDATA[ >= ]]> #{start}
+            AND a.end_time <![CDATA[ < ]]> #{end}
+            AND TIMESTAMPDIFF(
+            SECOND,
+            a.end_time,
+            b.pay_time
+            ) / 60 <![CDATA[<=]]>30
+    </select>
+    
+    <select id="queryMinCreateTime" resultType="date">
+        SELECT MIN(end_time) FROM x_time_share_pay
+    </select>
+    <select id="queryCarOrderedStatusByLpn" resultType="java.lang.Integer">
+       select count(1) from x_time_share_order where lpn = #{lpn,jdbcType=VARCHAR} and status = 'ordered';
+    </select>
+    
+    <select id="queryAllNoPayOrderInSpecifiedDate" resultMap="zhimaRequestVoResultMap">
+    	SELECT 0 wzMoney,o.lpn,o.pay_money,o.order_id,m.idcard,m.`name`,(SELECT time_rate FROM x_time_share_rate s JOIN x_car_type c on s.car_type_id = c.id JOIN x_car car on c.brance = car.brand_name WHERE car.lpn = o.lpn LIMIT 1) time_rate,
+    	o.begin_time,o.end_time,IFNULL((SELECT deposit_value from x_member_deposit WHERE member_level = m.level_code),100000)deposit 
+    	FROM x_time_share_pay o LEFT JOIN x_member m on o.member_id = m.id 
+    	WHERE o.pay_status = 'noPay' 
+    	<choose>
+    		<when test="status == 1">
+    			and DATEDIFF(SYSDATE(),o.end_time) <![CDATA[<=]]> #{specifiedDate}
+    		</when>
+    		<when test="status == 2">
+    			and DATEDIFF(SYSDATE(),o.end_time) <![CDATA[>]]> #{specifiedDate}
+    		</when>
+    	</choose>
+    </select>
+    
+    <select id="queryUntreatedAndFinishOrder" resultMap="zhimaRequestVoResultMap">
+    	SELECT w.money wzMoney,o.lpn,o.pay_money,o.order_id,m.idcard,m.`name`,(SELECT time_rate FROM x_time_share_rate s JOIN x_car_type c on s.car_type_id = c.id JOIN x_car car on c.brance = car.brand_name WHERE car.lpn = o.lpn LIMIT 1) time_rate,
+    	o.begin_time,o.end_time,IFNULL((SELECT deposit_value from x_member_deposit WHERE member_level = m.level_code),100000)deposit from x_wz_query w JOIN x_time_share_pay o on w.order_id = o.order_id JOIN x_member m on o.member_id = m.id 
+    	WHERE w.status = '1' and o.pay_status = 'finish' and DATEDIFF(SYSDATE(),DATE_FORMAT(w.date, '%Y-%m-%d %h:%i:%s')) <![CDATA[>]]> #{value}
+    	UNION ALL
+    	SELECT w.money wzMoney,o.lpn,0 pay_money,o.order_no,m.idcard,m.`name`,0 time_rate,
+    	o.begin_time,o.end_time,0 deposit from x_wz_query w JOIN e_employee_order o on w.order_id = o.order_no JOIN e_employee_info m on o.employee_id = m.id WHERE DATEDIFF(SYSDATE(),DATE_FORMAT(w.date, '%Y-%m-%d %h:%i:%s')) <![CDATA[>]]> #{value} and w.status = '1'
+    </select>
+    
+    <select id="queryUntreatedAndNoPayInSpecifiedDate" resultMap="zhimaRequestVoResultMap">
+    	SELECT w.money wzMoney,o.lpn,o.pay_money,o.order_id,m.idcard,m.`name`,(SELECT time_rate FROM x_time_share_rate s JOIN x_car_type c on s.car_type_id = c.id JOIN x_car car on c.brance = car.brand_name WHERE car.lpn = o.lpn LIMIT 1) time_rate,
+    	o.begin_time,o.end_time,IFNULL((SELECT deposit_value from x_member_deposit WHERE member_level = m.level_code),100000)deposit from x_wz_query w JOIN x_time_share_pay o on w.order_id = o.order_id JOIN x_member m on o.member_id = m.id 
+    	WHERE w.status = '1' and o.pay_status = 'noPay' and DATEDIFF(SYSDATE(),DATE_FORMAT(w.date, '%Y-%m-%d %h:%i:%s')) <![CDATA[>]]> #{value}
+    	<choose>
+    		<when test="status == 1">
+    			and DATEDIFF(SYSDATE(),o.end_time) <![CDATA[<=]]> #{specifiedDate}
+    		</when>
+    		<when test="status == 2">
+    			and DATEDIFF(SYSDATE(),o.end_time) <![CDATA[>]]> #{specifiedDate}
+    		</when>
+    	</choose>
+    </select>
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+    	select 
+		    <include refid="Base_Column_List" />
+		from x_time_share_order 
+    	where order_id = #{orderId}
+    </select>
+    <select id="getOrderInfoByMemberPhone" resultMap="OrderResultMap">
+    	select m.name member_name,m.phone member_phone,o.order_id,o.begin_time,o.end_time
+    	from x_time_share_order o join x_member m on o.member_id = m.id 
+    	where o.status <![CDATA[<>]]> 'cancel' 
+    	<if test="phone != null and phone !=''">
+    	    and m.phone = #{phone}
+    	</if>
+    	<if test="lpn !=null and lpn !=''">
+    	    and o.lpn = #{lpn}
+    	</if>
+    	<if test="startTime != null and startTime != ''">
+    		and o.begin_time &gt; #{startTime}
+    	</if>
+    	<if test="endTime != null and endTime != ''">
+    		and o.end_time &lt; #{endTime}
+    	</if>
+    	order by o.begin_time desc limit #{offset},#{rows};
+    </select>
+    
+    <select id="getOrderInfoNumByMemberPhone" resultType="java.lang.Integer">
+    	select count(1)
+    	from x_time_share_order o join x_member m on o.member_id = m.id where o.status <![CDATA[<>]]> 'cancel' 
+    	<if test="phone != null and phone !=''">
+    	    and m.phone = #{phone}
+    	</if>
+    	<if test="lpn !=null and lpn !=''">
+    	    and o.lpn = #{lpn}
+    	</if>
+    	<if test="startTime != null and startTime != ''">
+    		and o.begin_time &gt; #{startTime}
+    	</if>
+    	<if test="endTime != null and endTime != ''">
+    		and o.end_time &lt; #{endTime}
+    	</if>
+    </select>
+    
+    <select id="queryNotHandleAccidentAndFinishOrderRecords" resultMap="zhimaRequestVoResultMap">
+    	SELECT a.money wzMoney,o.lpn,o.pay_money,o.order_id,m.idcard,m.`name`,
+    	(SELECT time_rate FROM x_time_share_rate s JOIN x_car_type c on s.car_type_id = c.id JOIN x_car car on c.brance = car.brand_name WHERE car.lpn = o.lpn LIMIT 1) time_rate,
+    	o.begin_time,o.end_time,IFNULL((SELECT deposit_value from x_member_deposit WHERE member_level = m.level_code),100000)deposit 
+    	FROM x_car_accident a JOIN x_time_share_pay o on a.order_id = o.order_id JOIN x_member m on m.id = o.member_id WHERE o.pay_status = 'finish' and a.status = '1' and a.handle_by_customer = '1' 
+    	and DATEDIFF(SYSDATE(),DATE_FORMAT(a.start_time, '%Y-%m-%d %h:%i:%s')) <![CDATA[>]]> #{value} 
+    </select>
+    
+    <select id="queryAccidentAndNoPayOrderRecords" resultMap="zhimaRequestVoResultMap">
+    	SELECT a.money wzMoney,o.lpn,o.pay_money,o.order_id,m.idcard,m.`name`,
+    	(SELECT time_rate FROM x_time_share_rate s JOIN x_car_type c on s.car_type_id = c.id JOIN x_car car on c.brance = car.brand_name WHERE car.lpn = o.lpn LIMIT 1) time_rate,
+    	o.begin_time,o.end_time,IFNULL((SELECT deposit_value from x_member_deposit WHERE member_level = m.level_code),100000)deposit 
+    	FROM x_car_accident a JOIN x_time_share_pay o on a.order_id = o.order_id JOIN x_member m on m.id = o.member_id WHERE o.pay_status = 'noPay' and a.status = '1' and a.handle_by_customer = '1' 
+    	and DATEDIFF(SYSDATE(),DATE_FORMAT(a.start_time, '%Y-%m-%d %h:%i:%s')) <![CDATA[>]]> #{value}
+    	<choose>
+    		<when test="status == 1">
+    			and DATEDIFF(SYSDATE(),o.end_time) <![CDATA[<=]]> #{specifiedDate}
+    		</when>
+    		<when test="status == 2">
+    			and DATEDIFF(SYSDATE(),o.end_time) <![CDATA[>]]> #{specifiedDate}
+    		</when>
+    	</choose> 
+    </select>
+    
+    <select id="queryAllFinishOrder" resultMap="zhimaRequestVoResultMap">
+    	select 0 wzMoney,o.lpn,o.pay_money,o.order_id,m.idcard,m.`name`,(SELECT time_rate FROM x_time_share_rate s JOIN x_car_type c on s.car_type_id = c.id JOIN x_car car on c.brance = car.brand_name WHERE car.lpn = o.lpn LIMIT 1) time_rate,
+    	o.begin_time,o.end_time,IFNULL((SELECT deposit_value from x_member_deposit WHERE member_level = m.level_code),100000)deposit 
+    	FROM x_time_share_pay o LEFT JOIN x_member m on o.member_id = m.id 
+    	WHERE o.pay_status = 'finish'
+    </select>
+    <select id="selectLastedOrderbyLpn" resultMap="BaseResultMap" parameterType="java.util.Map">
+    	select 
+		    <include refid="Base_Column_List" />
+		from x_time_share_order  o
+    	where o.status !='cancel' and o.lpn = #{lpn} order by o.order_time desc limit 1 
+    </select>
+    
+    <select id="selectRunningOrderByLpn" resultMap="BaseResultMap" parameterType="java.lang.String">
+    	select 
+		    o.id,o.order_type,o.order_id,o.park_id,o.enterprise_id
+		from x_time_share_order o inner join x_car_run r on r.order_id = o.order_id
+    	where  r.lpn = #{lpn} and r.status in ('useCar','return') order by o.order_time desc limit 1 
+    </select>
+
+    <select id="queryOrderIdsByLpn" resultType="java.util.Map">
+        SELECT phone,order_id FROM x_time_share_order o JOIN x_member m on o.member_id = m.id WHERE o.status = 'finish' and o.lpn = #{lpn}
+    </select>
+</mapper>

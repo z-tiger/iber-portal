@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayRentOrderRefundLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.DayRentOrderRefundLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="extend_id" property="extendId" jdbcType="INTEGER" />
+    <result column="refund_type" property="refundType" jdbcType="VARCHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="VARCHAR" />
+    <result column="refund_time" property="refundTime" jdbcType="TIMESTAMP" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="trade_time" property="tradeTime" jdbcType="TIMESTAMP" />
+    <result column="refund_money" property="refundMoney" jdbcType="INTEGER" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="refund_id" property="refundId" jdbcType="VARCHAR" />
+    <result column="acp_trace_no" property="acpTraceNo" jdbcType="VARCHAR" />
+    <result column="acp_settle_date" property="acpSettleDate" jdbcType="VARCHAR" />
+    <result column="acp_settle_amt" property="acpSettleAmt" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <resultMap id="BaseResultPage" type="com.iber.portal.vo.dayRent.DayRentRefundVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="memberName" property="memberName" jdbcType="VARCHAR" />
+    <result column="pay_money" property="payMoney" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="refund_type" property="refundType" jdbcType="VARCHAR" />
+    <result column="car_bind_time" property="carBindTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="refund_money" property="refundMoney" jdbcType="VARCHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, extend_id, refund_type, refund_status, refund_time, trade_no, trade_time, 
+    refund_money, order_type, member_id, refund_id, acp_trace_no, acp_settle_date, acp_settle_amt, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order_refund_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryRefundLogByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order_refund_log
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_day_rent_order_refund_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.DayRentOrderRefundLog" >
+    insert into x_day_rent_order_refund_log (id, order_id, extend_id, 
+      refund_type, refund_status, refund_time, 
+      trade_no, trade_time, refund_money, 
+      order_type, member_id, refund_id, 
+      acp_trace_no, acp_settle_date, acp_settle_amt, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{extendId,jdbcType=INTEGER}, 
+      #{refundType,jdbcType=VARCHAR}, #{refundStatus,jdbcType=VARCHAR}, #{refundTime,jdbcType=TIMESTAMP}, 
+      #{tradeNo,jdbcType=VARCHAR}, #{tradeTime,jdbcType=TIMESTAMP}, #{refundMoney,jdbcType=INTEGER}, 
+      #{orderType,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{refundId,jdbcType=VARCHAR}, 
+      #{acpTraceNo,jdbcType=VARCHAR}, #{acpSettleDate,jdbcType=VARCHAR}, #{acpSettleAmt,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.DayRentOrderRefundLog" >
+    insert into x_day_rent_order_refund_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="extendId != null" >
+        extend_id,
+      </if>
+      <if test="refundType != null" >
+        refund_type,
+      </if>
+      <if test="refundStatus != null" >
+        refund_status,
+      </if>
+      <if test="refundTime != null" >
+        refund_time,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="tradeTime != null" >
+        trade_time,
+      </if>
+      <if test="refundMoney != null" >
+        refund_money,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="refundId != null" >
+        refund_id,
+      </if>
+      <if test="acpTraceNo != null" >
+        acp_trace_no,
+      </if>
+      <if test="acpSettleDate != null" >
+        acp_settle_date,
+      </if>
+      <if test="acpSettleAmt != null" >
+        acp_settle_amt,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="extendId != null" >
+        #{extendId,jdbcType=INTEGER},
+      </if>
+      <if test="refundType != null" >
+        #{refundType,jdbcType=VARCHAR},
+      </if>
+      <if test="refundStatus != null" >
+        #{refundStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="refundTime != null" >
+        #{refundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundMoney != null" >
+        #{refundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="refundId != null" >
+        #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="acpTraceNo != null" >
+        #{acpTraceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleDate != null" >
+        #{acpSettleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleAmt != null" >
+        #{acpSettleAmt,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.DayRentOrderRefundLog" >
+    update x_day_rent_order_refund_log
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="extendId != null" >
+        extend_id = #{extendId,jdbcType=INTEGER},
+      </if>
+      <if test="refundType != null" >
+        refund_type = #{refundType,jdbcType=VARCHAR},
+      </if>
+      <if test="refundStatus != null" >
+        refund_status = #{refundStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="refundTime != null" >
+        refund_time = #{refundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeNo != null" >
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundMoney != null" >
+        refund_money = #{refundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="refundId != null" >
+        refund_id = #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="acpTraceNo != null" >
+        acp_trace_no = #{acpTraceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleDate != null" >
+        acp_settle_date = #{acpSettleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleAmt != null" >
+        acp_settle_amt = #{acpSettleAmt,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.DayRentOrderRefundLog" >
+    update x_day_rent_order_refund_log
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      extend_id = #{extendId,jdbcType=INTEGER},
+      refund_type = #{refundType,jdbcType=VARCHAR},
+      refund_status = #{refundStatus,jdbcType=VARCHAR},
+      refund_time = #{refundTime,jdbcType=TIMESTAMP},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      refund_money = #{refundMoney,jdbcType=INTEGER},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      refund_id = #{refundId,jdbcType=VARCHAR},
+      acp_trace_no = #{acpTraceNo,jdbcType=VARCHAR},
+      acp_settle_date = #{acpSettleDate,jdbcType=VARCHAR},
+      acp_settle_amt = #{acpSettleAmt,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+	    SELECT
+			count(1)
+		FROM
+			x_day_rent_order o ,
+			x_day_rent_order_refund_log l,
+			x_day_rent_order_extend e ,
+			x_member m
+		where o.member_id = m.id 
+			and l.order_id = o.order_id
+			and l.refund_status = 'refunding'
+			and e.id = l.extend_id 
+		<if test="cityCode != null and cityCode != ''" >
+			 and o.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="memberName != null and memberName !='' " >
+		     and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="phone != null and phone != '' " >
+		     and m.phone = #{phone,jdbcType=VARCHAR}
+		</if>    
+		<if test="lpn != null and lpn !='' ">
+		    	and o.lpn like concat('%',#{lpn,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="orderStatus != null and orderStatus !='' ">
+			and o.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>
+  </select>
+  <select id="getAll" resultMap="BaseResultPage" parameterType="java.util.Map">
+			SELECT
+			o.id,
+			o.city_code,
+		( SELECT c.NAME FROM x_city c WHERE c.code = o.city_code ) cityName  ,
+			o.order_id,
+			o.order_status,
+			e.pay_money,
+			m.name memberName,
+			m.phone,
+			l.refund_type,
+			o.car_bind_time,
+			o.create_time	,
+			l.refund_money  ,
+			l.refund_status
+		FROM
+			x_day_rent_order o ,
+			x_day_rent_order_refund_log l,
+			 x_day_rent_order_extend e ,
+			x_member m
+		where o.member_id = m.id 
+			and l.order_id = o.order_id
+			and l.refund_status = 'refunding'
+			and e.id = l.extend_id 
+		<if test="cityCode != null and cityCode != ''" >
+			 and o.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="memberName != null and memberName !='' " >
+		     and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="phone != null and phone != '' " >
+		     and m.phone = #{phone,jdbcType=VARCHAR}
+		</if>    
+		<if test="lpn != null and lpn !='' ">
+		    	and o.lpn like concat('%',#{lpn,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="orderStatus != null and orderStatus !='' ">
+			and o.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>
+		order by l.create_time desc  limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+</mapper>

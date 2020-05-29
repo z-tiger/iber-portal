@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.charging.ChargingPileMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.charging.ChargingPile" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="pile_no" property="pileNo" jdbcType="VARCHAR" />
+    <result column="car_no" property="carNo" jdbcType="VARCHAR" />
+    <result column="charging_type" property="chargingType" jdbcType="VARCHAR" />
+    <result column="voltage" property="voltage" jdbcType="VARCHAR" />
+    <result column="electricity" property="electricity" jdbcType="VARCHAR" />
+    <result column="power" property="power" jdbcType="VARCHAR" />
+    <result column="dimension_rule" property="dimensionRule" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="is_online" property="isOnline" jdbcType="VARCHAR" />
+    <result column="pile_category" property="pileCategory" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pile_type" property="pileType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_code, type_id, park_id, pile_no, car_no, charging_type, voltage, electricity, 
+    power, dimension_rule, status, is_online, pile_category, create_time, create_id, 
+    update_time, update_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_charging_pile
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_charging_pile
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.charging.ChargingPile" >
+    insert into x_charging_pile (id, city_code, type_id, 
+      park_id, pile_no, car_no, 
+      charging_type, voltage, electricity, 
+      power, dimension_rule, status, 
+      is_online, pile_category, create_time, 
+      create_id, update_time, update_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 
+      #{parkId,jdbcType=INTEGER}, #{pileNo,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR}, 
+      #{chargingType,jdbcType=VARCHAR}, #{voltage,jdbcType=VARCHAR}, #{electricity,jdbcType=VARCHAR}, 
+      #{power,jdbcType=VARCHAR}, #{dimensionRule,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{isOnline,jdbcType=VARCHAR}, #{pileCategory,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.charging.ChargingPile" >
+    insert into x_charging_pile
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="pileNo != null" >
+        pile_no,
+      </if>
+      <if test="carNo != null" >
+        car_no,
+      </if>
+      <if test="chargingType != null" >
+        charging_type,
+      </if>
+      <if test="voltage != null" >
+        voltage,
+      </if>
+      <if test="electricity != null" >
+        electricity,
+      </if>
+      <if test="power != null" >
+        power,
+      </if>
+      <if test="dimensionRule != null" >
+        dimension_rule,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isOnline != null" >
+        is_online,
+      </if>
+      <if test="pileCategory != null" >
+        pile_category,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="pileNo != null" >
+        #{pileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="carNo != null" >
+        #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargingType != null" >
+        #{chargingType,jdbcType=VARCHAR},
+      </if>
+      <if test="voltage != null" >
+        #{voltage,jdbcType=VARCHAR},
+      </if>
+      <if test="electricity != null" >
+        #{electricity,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null" >
+        #{power,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionRule != null" >
+        #{dimensionRule,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null" >
+        #{isOnline,jdbcType=VARCHAR},
+      </if>
+      <if test="pileCategory != null" >
+        #{pileCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.ChargingPile" >
+    update x_charging_pile
+    <set >
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="pileNo != null" >
+        pile_no = #{pileNo,jdbcType=VARCHAR},
+      </if>
+      <if test="carNo != null" >
+        car_no = #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargingType != null" >
+        charging_type = #{chargingType,jdbcType=VARCHAR},
+      </if>
+      <if test="voltage != null" >
+        voltage = #{voltage,jdbcType=VARCHAR},
+      </if>
+      <if test="electricity != null" >
+        electricity = #{electricity,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null" >
+        power = #{power,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionRule != null" >
+        dimension_rule = #{dimensionRule,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null" >
+        is_online = #{isOnline,jdbcType=VARCHAR},
+      </if>
+      <if test="pileCategory != null" >
+        pile_category = #{pileCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.charging.ChargingPile" >
+    update x_charging_pile
+    set city_code = #{cityCode,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      park_id = #{parkId,jdbcType=INTEGER},
+      pile_no = #{pileNo,jdbcType=VARCHAR},
+      car_no = #{carNo,jdbcType=VARCHAR},
+      charging_type = #{chargingType,jdbcType=VARCHAR},
+      voltage = #{voltage,jdbcType=VARCHAR},
+      electricity = #{electricity,jdbcType=VARCHAR},
+      power = #{power,jdbcType=VARCHAR},
+      dimension_rule = #{dimensionRule,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      is_online = #{isOnline,jdbcType=VARCHAR},
+      pile_category = #{pileCategory,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_id = #{createId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryPileByParkId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_charging_pile
+    where park_id = #{parkId,jdbcType=INTEGER}
+    <if test="chargingType != null" >
+    	and charging_type = #{chargingType,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null" >
+    	and status = #{status,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="queryPileByAreaCode" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_charging_pile
+    where 1=1
+    <if test="cityCode != null" >
+    	and city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="chargingType != null" >
+    	and charging_type = #{chargingType,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null" >
+    	and status = #{status,jdbcType=VARCHAR}
+    </if>
+   </select>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(1) from (
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select pile_type from x_charging_pile_type a where a.id = t.type_id) pile_type,
+    (select name from x_park b where b.id = t.park_id) name
+    from x_charging_pile t ) x
+    where 1=1 
+    <if test="pileType != null and pileType != '' " >
+        and x.pile_type LIKE CONCAT(CONCAT('%', #{pileType,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="parkName != null and parkName != '' " >
+        and x.name LIKE CONCAT(CONCAT('%', #{parkName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and x.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select * from (
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select pile_type from x_charging_pile_type a where a.id = t.type_id) pile_type,
+    (select name from x_park b where b.id = t.park_id) name
+    from x_charging_pile t ) x
+    where 1=1 
+    <if test="pileType != null and pileType != '' " >
+        and x.pile_type LIKE CONCAT(CONCAT('%', #{pileType,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="parkName != null and parkName != '' " >
+        and x.name LIKE CONCAT(CONCAT('%', #{parkName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and x.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+     order by x.create_time desc 
+     <if test="from != null and to != null ">
+     	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+     </if>
+  </select>
+  
+  <select id="queryParkPileByAreaCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1) from x_charging_pile  where park_id in ( select id from x_park  where area_code = #{areaCode,jdbcType=VARCHAR} )
+  </select>
+  <select id="queryPileStatusByAreaCode" resultMap="BaseResultMap" parameterType="java.util.Map" >
+  	select * from x_charging_pile where park_id in (
+		select id from x_park   where area_code = #{areaCode,jdbcType=VARCHAR} )
+	<if test="chargingType != null" >
+    	and charging_type = #{chargingType,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

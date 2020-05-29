@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sms.WhiteListMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sms.WhiteList" >
+    <id column="SMS_WHITE_LIST_SEQ" property="smsWhiteListSeq" jdbcType="INTEGER" />
+    <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SMS_WHITE_LIST_SEQ, IP_ADDRESS, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sms_white_list
+    where SMS_WHITE_LIST_SEQ = #{smsWhiteListSeq,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sms_white_list
+    where SMS_WHITE_LIST_SEQ = #{smsWhiteListSeq,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sms.WhiteList" >
+    insert into sms_white_list (SMS_WHITE_LIST_SEQ, IP_ADDRESS, CREATE_TIME
+      )
+    values (#{smsWhiteListSeq,jdbcType=INTEGER}, #{ipAddress,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sms.WhiteList" >
+    insert into sms_white_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="smsWhiteListSeq != null" >
+        SMS_WHITE_LIST_SEQ,
+      </if>
+      <if test="ipAddress != null" >
+        IP_ADDRESS,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="smsWhiteListSeq != null" >
+        #{smsWhiteListSeq,jdbcType=INTEGER},
+      </if>
+      <if test="ipAddress != null" >
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sms.WhiteList" >
+    update sms_white_list
+    <set >
+      <if test="ipAddress != null" >
+        IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SMS_WHITE_LIST_SEQ = #{smsWhiteListSeq,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sms.WhiteList" >
+    update sms_white_list
+    set IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where SMS_WHITE_LIST_SEQ = #{smsWhiteListSeq,jdbcType=INTEGER}
+  </update>
+</mapper>

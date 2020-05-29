@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MemberRefundLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.MemberRefundLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_handle_time" property="lastHandleTime" jdbcType="TIMESTAMP" />
+    <result column="last_handle_user" property="lastHandleUser" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="refund_user_moblie" property="refundUserMoblie" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_card" property="bankCard" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="bank_card_user_name" property="bankCardUserName" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="fail_reason" property="failReason" jdbcType="VARCHAR" />
+    <result column="is_illegal" property="isIllegal" jdbcType="VARCHAR" />
+    <result column="refund_id" property="refundId" jdbcType="VARCHAR" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="charge_category" property="chargeCategory" jdbcType="VARCHAR" />
+    <result column="next_handle_user_role_id" property="nextHandleUserRoleId" jdbcType="INTEGER" />
+    <result column="next_handle_user_role_id_str" property="nextHandleUserRoleIdStr" jdbcType="INTEGER" />
+     <result column="name" property="name" jdbcType="VARCHAR" />
+     <result column="phone" property="phone" jdbcType="VARCHAR" />
+     <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+     <result column="is_handle_return" property="isHandleReturn"/>
+     <result column="refund_success_money" property="refundSuccessMoney"/>
+     <result column="charged_num" property="chargedNum"/>
+     <result column="refund_fail_num" property="refundFailNum"/>
+     <result column="userCarTime" property="userCarTime"/>
+     <result column="levelCode" property="levelCode"/>
+  </resultMap>
+  
+  <resultMap id="chargeLogVoResultMap" type="com.iber.portal.vo.member.ChargeLogVo">
+    <result column="name" property="name"/>
+    <result column="phone" property="phone"/>
+    <result column="tradeNo" property="tradeNo"/>
+    <result column="createTime" property="createTime"/>
+    <result column="money" property="money"/>
+    <result column="status" property="status"/>
+    <result column="refundId" property="refundId"/>
+    <result column="bank_category" property="bankCategory"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, money, create_time, last_handle_time, last_handle_user, status, refund_user_moblie, 
+    bank_name, bank_card, remark, bank_card_user_name, reason, fail_reason, is_illegal, 
+    refund_id, trade_no, charge_category,next_handle_user_role_id,is_handle_return,refund_success_money,charged_num,refund_fail_num
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   select tab.*, city.name city_name ,level_code levelCode from (
+	    select log.*, mem.name, mem.phone, mem.city_code , mem.level_code 
+	    from x_member_refund_log log , x_member mem
+	    where log.member_id = mem.id and log.id = #{id,jdbcType=INTEGER}
+    )tab left join  x_city city on tab.city_code = city.code
+  </select>
+  
+  <select id="selectAllRefundLog" resultMap="BaseResultMap" parameterType="java.util.Map">
+      select tab.*, 
+       (select name from x_sys_role xr where xr.id = tab.next_handle_user_role_id)next_handle_user_role_id_str,
+       city.name city_name from (
+	     select log.*, mem.name, mem.phone, mem.city_code ,mem.latest_use_car_time userCarTime 
+	     from 
+	     (
+	     	(select * from  x_member_refund_log where `status` in( '1','5') )
+			UNION ALL
+			(select * from (select * from x_member_refund_log where `status`  in('2','3','4')  ORDER BY create_time DESC )a ) 
+	     ) log, x_member mem
+	      where log.member_id = mem.id
+	         <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+	           and mem.city_code = #{cityCode,jdbcType=VARCHAR}
+	         </if>
+	         <if test="name != null and name !='' ">
+	           and mem.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+	         </if>
+	         <if test="phone != null and phone !='' ">
+	           and mem.phone = #{phone,jdbcType=VARCHAR}
+	         </if>
+             <if test="role == null">
+                 <choose>
+                     <when test="status == 1 and nextHandleRole == null">
+                         and next_handle_user_role_id is null
+                     </when>
+                     <when test="status == 1 and nextHandleRole != null">
+                         and next_handle_user_role_id = #{nextHandleRole}
+                     </when>
+                 </choose>
+             </if>
+
+	         <if test="status != null and status !='' ">
+	           and log.status = #{status,jdbcType=VARCHAR}
+	         </if>
+	         <if test="passTime != null and passTime != '' ">
+	         	and log.create_time <![CDATA[ <= ]]> SUBDATE(SYSDATE(),INTERVAL 15 DAY) and log.status = '1' 
+	         </if>
+	         <choose>
+	         	<when test="isHandleReturn == 1">
+	         		and  bank_card = '' and  bank_card = ''
+	         	</when>
+	         	<when test="isHandleReturn == 2">
+	         		and bank_card <![CDATA[<>]]> '' and bank_name <![CDATA[<>]]> ''
+	         	</when>
+	         </choose>
+	     <!--   order by log.create_time desc -->
+	       <if test="offset != null ">
+	            limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+	       </if>
+          
+	   )tab left join  x_city city on tab.city_code = city.code   
+  </select>
+  
+  <select id="selectAllRefundLogRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+     select count(1) from  (
+           select log.*, mem.name, mem.phone, mem.city_code
+		     from  x_member_refund_log log, x_member mem
+		      where log.member_id = mem.id
+		         <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+		           and mem.city_code = #{cityCode,jdbcType=VARCHAR}
+		         </if>
+		         <if test="name != null and name !='' ">
+		           and mem.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		         </if>
+		         <if test="phone != null and phone !='' ">
+		           and mem.phone = #{phone,jdbcType=VARCHAR}
+		         </if>
+                <if test="role == null">
+                    <choose>
+                        <when test="status == 1 and nextHandleRole == null">
+                            and next_handle_user_role_id is null
+                        </when>
+                        <when test="status == 1 and nextHandleRole != null">
+                            and next_handle_user_role_id = #{nextHandleRole}
+                        </when>
+                    </choose>
+                </if>
+
+		         <if test="status != null and status !='' ">
+		           and log.status = #{status,jdbcType=VARCHAR}
+		         </if>
+		         <if test="passTime != null and passTime != '' ">
+		         	and log.create_time <![CDATA[ <= ]]> SUBDATE(CURDATE(),INTERVAL 15 DAY) and log.status = '1' 
+		         </if>
+		         <choose>
+	         		<when test="isHandleReturn == 1">
+	         			and  bank_card = '' and  bank_card = ''
+	         		</when>
+	         		<when test="isHandleReturn == 2">
+	         			and bank_card <![CDATA[<>]]> '' and bank_name <![CDATA[<>]]> ''
+	         		</when>
+	         	</choose>
+     ) tab
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_refund_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.MemberRefundLog" >
+    insert into x_member_refund_log (id, member_id, money, 
+      create_time, last_handle_time, last_handle_user, 
+      status, refund_user_moblie, bank_name, 
+      bank_card, remark, bank_card_user_name, 
+      reason, fail_reason, is_illegal, 
+      refund_id, trade_no, charge_category,next_handle_user_role_id,refund_success_money,is_handle_return,charged_num,refund_fail_num
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{money,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastHandleTime,jdbcType=TIMESTAMP}, #{lastHandleUser,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{refundUserMoblie,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{bankCard,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{bankCardUserName,jdbcType=VARCHAR}, 
+      #{reason,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, #{isIllegal,jdbcType=VARCHAR}, 
+      #{refundId,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR}, #{chargeCategory,jdbcType=VARCHAR}, #{nextHandleUserRoleId,jdbcType=INTEGER},#{refundSuccessMoney},#{isHandleReturn},#{chargedNum},#{refundFailNum}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.MemberRefundLog" >
+    insert into x_member_refund_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastHandleTime != null" >
+        last_handle_time,
+      </if>
+      <if test="lastHandleUser != null" >
+        last_handle_user,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="refundUserMoblie != null" >
+        refund_user_moblie,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankCard != null" >
+        bank_card,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="bankCardUserName != null" >
+        bank_card_user_name,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="failReason != null" >
+        fail_reason,
+      </if>
+      <if test="isIllegal != null" >
+        is_illegal,
+      </if>
+      <if test="refundId != null" >
+        refund_id,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="chargeCategory != null" >
+        charge_category,
+      </if>
+      <if test="nextHandleUserRoleId != null" >
+        next_handle_user_role_id,
+      </if>
+      <if test="isHandleReturn != null">
+      	is_handle_return,
+      </if>
+      <if test="refundSuccessMoney != null">
+      	refund_success_money,
+      </if>
+      <if test="chargedNum !=null">
+      	charged_num,
+      </if>
+      <if test="refundFailNum != null">
+      	refund_fail_num
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastHandleTime != null" >
+        #{lastHandleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastHandleUser != null" >
+        #{lastHandleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="refundUserMoblie != null" >
+        #{refundUserMoblie,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardUserName != null" >
+        #{bankCardUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isIllegal != null" >
+        #{isIllegal,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeCategory != null" >
+        #{chargeCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="nextHandleUserRoleId != null" >
+        #{nextHandleUserRoleId,jdbcType=INTEGER},
+      </if>
+      <if test="isHandleReturn != null">
+      	#{isHandleReturn},
+      </if>
+      <if test="refundSuccessMoney != null">
+      	#{refundSuccessMoney},
+      </if>
+      <if test="chargedNum !=null">
+      	#{chargedNum},
+      </if>
+      <if test="refundFailNum != null">
+      	#{refundFailNum}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.MemberRefundLog" >
+    update x_member_refund_log
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastHandleTime != null" >
+        last_handle_time = #{lastHandleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastHandleUser != null" >
+        last_handle_user = #{lastHandleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="refundUserMoblie != null" >
+        refund_user_moblie = #{refundUserMoblie,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        bank_card = #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardUserName != null" >
+        bank_card_user_name = #{bankCardUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        fail_reason = #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isIllegal != null" >
+        is_illegal = #{isIllegal,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        refund_id = #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeCategory != null" >
+        charge_category = #{chargeCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="nextHandleUserRoleId != null" >
+        next_handle_user_role_id = #{nextHandleUserRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="isHandleReturn != null">
+      	is_handle_return = #{isHandleReturn},
+      </if>
+      <if test="refundSuccessMoney != null">
+      	refund_success_money = #{refundSuccessMoney},
+      </if>
+      <if test="chargedNum !=null">
+      	charged_num = #{chargedNum},
+      </if>
+      <if test="refundFailNum != null">
+      	refund_fail_num = #{refundFailNum}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.MemberRefundLog" >
+    update x_member_refund_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      money = #{money,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_handle_time = #{lastHandleTime,jdbcType=TIMESTAMP},
+      last_handle_user = #{lastHandleUser,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      refund_user_moblie = #{refundUserMoblie,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_card = #{bankCard,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      bank_card_user_name = #{bankCardUserName,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      fail_reason = #{failReason,jdbcType=VARCHAR},
+      is_illegal = #{isIllegal,jdbcType=VARCHAR},
+      refund_id = #{refundId,jdbcType=VARCHAR},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      charge_category = #{chargeCategory,jdbcType=VARCHAR},
+      next_handle_user_role_id = #{nextHandleUserRoleId,jdbcType=VARCHAR},
+      is_handle_return = #{isHandleReturn},
+      refund_success_money = #{refundSuccessMoney},
+      charged_num = #{chargedNum},
+      refund_fail_num = #{refundFailNum}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 查询用是否有租车订单的违章事故记录 -->
+   <select id="selectCustUsecarIsTrafficCitation" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+	   SELECT COUNT(1) counts FROM (
+	  SELECT a.is_traffic_citation, b.* 
+	  FROM x_member_refund_worder_usecar a RIGHT JOIN  x_time_share_pay b ON a.order_id = b.order_id WHERE b.member_id = #{0,jdbcType=INTEGER} ) tab WHERE tab.is_traffic_citation IS NULL
+   </select>
+  
+     <!-- 如果用户有违章记录，则统计罚款金额 -->
+   <select id="selectCustUsecartrafficCitationCharge" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    SELECT IFNULL(SUM(tab.traffic_citation_charge),0) total_mny FROM (
+    SELECT a.is_traffic_citation, a.traffic_citation_charge,  b.* FROM x_member_refund_worder_usecar a RIGHT JOIN  x_time_share_pay b ON a.order_id = b.order_id WHERE b.member_id = #{0,jdbcType=INTEGER} ) tab WHERE  tab.is_traffic_citation = '1'
+   </select>
+  
+   <select id="selectRefundLogByMemberId" resultMap="BaseResultMap">
+   	select <include refid="Base_Column_List" /> from x_member_refund_log where member_id = #{memberId} and status in ('1','5') order by create_time desc limit 1
+   </select>
+  
+  <select id="selectAllChargeLogByRefundId" resultMap="chargeLogVoResultMap">
+        SELECT m.name,m.phone,c.is_refund `status`,c.create_time createTime,c.money,c.trade_no tradeNo,r.`status` refundStatus,c.refund_id refundId,c.bank_category FROM x_member_charge_log c JOIN x_member_refund_log r on c.refund_id = r.id JOIN x_member m on c.member_id = m.id WHERE c.refund_id = #{id}
+  </select>
+
+  <select id="selectAllRejectLogByMemberId" resultType="java.util.Map">
+    SELECT DATE_FORMAT(last_handle_time,'%Y-%c-%d %h:%i:%s') rejectTime, fail_reason rejectReason, last_handle_user operationPerson FROM x_member_refund_log WHERE member_id = #{id} and `status` = 2 order by create_time desc
+  </select>
+  <update id="updateRecordByMap" parameterType="java.util.Map" >
+    update x_member_refund_log l,x_member m
+    <set>
+      <if test="memberId != null" >
+        l.member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        l.money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        l.create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastHandleTime != null" >
+        l.last_handle_time = #{lastHandleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastHandleUser != null" >
+        l.last_handle_user = #{lastHandleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        l.status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="refundUserMoblie != null" >
+        l.refund_user_moblie = #{refundUserMoblie,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        l.bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        l.bank_card = #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        l.remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardUserName != null" >
+        l.bank_card_user_name = #{bankCardUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        l.reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        l.fail_reason = #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isIllegal != null" >
+        l.is_illegal = #{isIllegal,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        l.refund_id = #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        l.trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeCategory != null" >
+        l.charge_category = #{chargeCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="nextHandleUserRoleId != null" >
+        l.next_handle_user_role_id = #{nextHandleUserRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="isHandleReturn != null">
+      	l.is_handle_return = #{isHandleReturn},
+      </if>
+      <if test="refundSuccessMoney != null">
+      	l.refund_success_money = #{refundSuccessMoney},
+      </if>
+      <if test="chargedNum !=null">
+      	l.charged_num = #{chargedNum},
+      </if>
+      <if test="refundFailNum != null">
+      	l.refund_fail_num = #{refundFailNum},
+      </if>
+      <if test="accoutStatus != null">
+      	m.accout_status = #{accoutStatus},
+      </if>
+    </set>
+    where l.id = #{id,jdbcType=INTEGER}
+    <if test="memberId != null">
+      and m.id = #{memberId}
+    </if>
+  </update>
+</mapper>

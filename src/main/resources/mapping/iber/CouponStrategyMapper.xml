@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.coupon.CouponStrategyMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.base.CounponName" >
+	<result column="id" property="id"/>
+	<result column="Name" property="name"/>	
+</resultMap>
+<resultMap id="BaseResultMap1"
+		type="com.iber.portal.model.coupon.CouponStrategy">
+		<result column="id" property="id" />
+		<result column="itemCode" property="itemCode" />
+		<result column="groupCode" property="groupCode" />
+		<result column="min" property="min" />
+		<result column="max" property="max" />
+		<result column="balance" property="balance" />
+		<result column="number" property="number" />
+		<result column="total" property="total" />
+		<result column="deadline" property="deadline" />
+		<result column="createId" property="createId" />
+		<result column="createTime" property="createTime" />
+		<result column="updateId" property="updateId" />
+		<result column="updateTime" property="updateTime" />
+		<result column="startTime" property="startTime" />
+		<result column="min_use_value" property="minUseValue" />
+		<result column="use_type" property="useType" />
+		<result column="isOnlyOnce" property="isOnlyOnce" />
+		<result column="city_code" property="cityCode"/>
+		<result column="max_deduction_value" property="maxDeductionValue"/>
+	</resultMap>
+
+<resultMap id="CounponMap" type="com.iber.portal.model.base.CounponList" >
+	<result column="id" property="id" jdbcType="INTEGER"/>
+	<result column="itemName" property="itemName"/>
+	<result column="min" property="min"/>
+	<result column="total" property="total"/>
+	<result column="max" property="max"/>
+	<result column="balance" property="balance"/>
+	<result column="number" property="number"/>
+	<result column="startTime" property="startTime"/>
+	<result column="deadline" property="deadline"/>
+	<result column="use_type" property="useType"/>
+	<result column="min_use_value" property="minUseValue"/>
+	<result column="itemCode" property="itemCode"/>
+	<result column="couponItemId" property="couponItemId"/>
+	<result column="city_name" property="cityName"/>
+	<result column="city_code" property="cityCode"/>
+	<result column="isOnlyOnce" property="isOnlyOnce"/>
+	<result column="max_deduction_value" property="maxDeductionValue"/>
+</resultMap>	  
+  	
+	<!-- x_coupon_strategy table all fields -->
+<sql id="Base_Column_List">
+ id,
+ itemCode,
+ groupCode,
+ min,
+ max,
+ balance,
+ number,
+ total,
+ startTime,
+ deadline,
+ createId,
+ createTime,
+ updateId,
+ updateTime,
+ max_deduction_value
+</sql>
+ <sql id="cs_Base_Column_List">
+		cs.id,cs.itemCode,cs.groupCode,cs.min,cs.max,cs.balance,cs.number,cs.total,cs.deadline,
+		cs.createId,cs.createTime,cs.updateId,cs.updateTime,cs.startTime,cs.min_use_value,cs.use_type,cs.isOnlyOnce,cs.max_deduction_value
+</sql> 	
+  	
+  	
+  	
+  	
+<!-- 查询优惠券配置项列表 -->
+<select id="selectCouponName" resultMap="BaseResultMap" >
+	select
+		c.itemCode  id   ,  c.itemName  Name
+	from x_coupon_item c
+	<if test="cityCode != null and cityCode != '' " >
+		WHERE c.city_code = #{cityCode}
+	</if>
+	group by c.itemCode
+
+</select>
+
+
+<select id="queryPageList" resultMap="CounponMap"  parameterType="java.util.Map">
+	select 	c.id ,	o.itemName ,	 c.itemCode , o.id couponItemId,
+	c.min ,
+	c.max ,
+	c.balance ,
+	c.number  ,
+	c.total,
+	c.startTime,
+	c.deadline ,
+    c.use_type,
+	c.min_use_value,
+	xc.name as city_name,
+	xc.code as city_code,
+	c.max_deduction_value 
+	from x_coupon_strategy c  
+	INNER JOIN x_coupon_item o  ON c.itemCode = o.itemCode and c.city_code = o.city_code
+	LEFT JOIN x_city xc on xc.code = c.city_code
+	where 1=1 
+ 	<if test="itemCode != null and itemCode != '' " >
+        and o.itemCode=#{itemCode,jdbcType=VARCHAR}
+    </if>
+	<if test="couponState != null and couponState != '' " >
+		<if test="couponState == 1">		
+		
+		<![CDATA[ AND CAST(DATE_ADD(c.startTime , INTERVAL c.deadline DAY) AS datetime)<  ]]> (CURRENT_DATE() )
+		</if>
+		<if test="couponState == 0">
+		<![CDATA[ AND CAST(DATE_ADD(c.startTime , INTERVAL c.deadline DAY) AS datetime)>=  ]]> (CURRENT_DATE() )
+		</if>
+	 </if>	
+	<if test="queryDateFrom != null and queryDateFrom != '' " >
+		<![CDATA[ and  c.startTime >=  ]]> #{queryDateFrom,jdbcType=DATE}  
+		<![CDATA[ and  c.startTime <  ]]> #{queryDateFrom,jdbcType=DATE} + INTERVAL 1 DAY
+    </if>
+	<if test="cityCode != null and cityCode != '00' and cityCode != '' " >
+		and c.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+	order by xc.code,c.min desc	limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+</select>
+
+<!-- 优惠券配置项 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) 	
+	from x_coupon_strategy c  
+		INNER JOIN x_coupon_item o  ON c.itemCode = o.itemCode and c.city_code = o.city_code
+	where 1=1 
+ 	<if test="itemName != null and itemName != '' " >
+        and o.itemName=#{itemName,jdbcType=VARCHAR}
+    </if>
+	<if test="couponState != null and couponState != '' " >
+		<if test="couponState == 1">
+		<![CDATA[ AND DATE(c.createTime) + INTERVAL c.deadline DAY <  ]]> (CURRENT_DATE() )
+		</if>
+		<if test="couponState == 0">
+		<![CDATA[ AND DATE(c.createTime) + INTERVAL c.deadline DAY >=  ]]> (CURRENT_DATE() )
+		</if>
+	</if>	
+	<if test="queryDateFrom != null and queryDateFrom != '' " >
+        and c.createTime=#{queryDateFrom,jdbcType=DATE}
+    </if>
+	<if test="cityCode != null and cityCode != '00' and cityCode != '' " >
+		and c.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+</select>
+<!--插入数据  -->
+	<insert id="insert" parameterType="com.iber.portal.model.coupon.CouponStrategy">
+		insert into x_coupon_strategy
+		(
+	        	<if test="itemCode != null and itemCode != '' ">
+	        		itemCode
+	        	</if>
+	        	<if test="groupCode != null and groupCode != '' ">
+	        		, groupCode
+	        	</if>
+	        	<if test="min != null and min != '' ">
+	        		, min
+	        	</if>
+	        	<if test="max != null and max != '' ">
+	        		, max
+	        	</if>
+	        	<if test="balance != null and balance != '' ">
+	        		, balance
+	        	</if>
+	        	<if test="number != null and number != '' ">
+	        		, number
+	        	</if>
+	        	<if test="total != null and total != '' ">
+	        		, total
+	        	</if>
+	        	<if test="startTime1 != null and startTime1 != '' ">
+	        		, startTime
+	        	</if>
+	        	<if test="deadline != null and deadline != '' ">
+	        		, deadline
+	        	</if>
+	        	<if test="createId != null and createId != '' ">
+	        		, createId
+	        	</if>
+	        	<if test="createTime1 != null and createTime1 != '' ">
+	        		, createTime
+	        	</if>
+	        	<if test="updateId != null and updateId != '' ">
+	        		, updateId
+	        	</if>
+	        	<if test="updateTime != null and updateTime != '' ">
+	        		, updateTime
+	        	</if>
+	            <if test="minUseValue != null">
+	        		, min_use_value
+	        	</if>
+	            <if test="useType != null">
+	        		, use_type
+	        	</if>
+				<if test="cityCode != null">
+					, city_code
+				</if>
+				<if test="maxDeductionValue != null">
+					, max_deduction_value 
+				</if>
+		 	)
+		 values  
+		        (
+		        	
+		        	<if test="itemCode != null and itemCode != '' ">
+		        		 #{itemCode}
+		        	</if>
+		        	<if test="groupCode != null and groupCode != '' ">
+		        		, #{groupCode}
+		        	</if>
+		        	<if test="min != null and min != '' ">
+		        		, #{min}
+		        	</if>
+		        	<if test="max != null and max != '' ">
+		        		, #{max}
+		        	</if>
+		        	<if test="balance != null and balance != '' ">
+		        		, #{balance}
+		        	</if>
+		        	<if test="number != null and number != '' ">
+		        		, #{number}
+		        	</if>
+		        	<if test="total != null and total != '' ">
+		        		, #{total} 
+		        	</if>
+		        	<if test="startTime1 != null and startTime1 != '' ">
+		        		, #{startTime1 ,jdbcType=TIMESTAMP}
+		        	</if>
+		        	<if test="deadline != null and deadline != '' ">
+		        		, #{deadline}
+		        	</if>
+		        	<if test="createId != null and createId != '' ">
+		        		, #{createId}
+		        	</if>
+		        	<if test="createTime1 != null and createTime1 != '' ">
+		        		, #{createTime1,jdbcType=TIMESTAMP}
+		        	</if>
+		        	<if test="updateId != null and updateId != '' ">
+		        		, #{updateId}
+		        	</if>
+		        	<if test="updateTime1 != null and updateTime1 != '' ">
+		        		, #{updateTime1 ,jdbcType=TIMESTAMP} 
+		        	</if>
+		            <if test="minUseValue != null">
+	        		    , #{minUseValue} 
+	        	    </if>
+	        	     <if test="useType != null">
+	        		    , #{useType} 
+	        	    </if>
+					<if test="cityCode != null and cityCode != ''">
+						, #{cityCode}
+					</if>
+					<if test="maxDeductionValue != null">
+						, #{maxDeductionValue}
+					</if>
+		        )  
+	</insert>
+
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.coupon.CouponStrategy">
+		update x_coupon_strategy set
+				
+		itemCode=#{itemCode},
+		groupCode=#{groupCode},
+		min=#{min},
+		max=#{max},
+		balance=#{balance},
+		number=#{number},
+		total=#{total},
+		startTime=#{startTime1 ,jdbcType=TIMESTAMP},
+		deadline=#{deadline},
+		createId=#{createId},
+		updateId=#{updateId},
+		updateTime=now(),
+		use_type=#{useType},
+		min_use_value=#{minUseValue},
+		city_code = #{cityCode},
+		max_deduction_value = #{maxDeductionValue}
+		where id=#{id}
+		
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from x_coupon_strategy where id = #{id}
+	</delete>	
+	<!--  查找策略中的金额范围下限的最大值  -->
+	<select id="getMaxOfMin" resultType="int" >
+		<![CDATA[
+		SELECT IFNULL(MAX(cs.min), 0) FROM x_coupon_strategy cs
+			INNER JOIN x_coupon_item ci ON ci.itemCode = cs.itemCode AND ci.`status` = 1
+			and ci.city_code = cs.city_code
+			and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(ci.start_time)) >= 0
+			and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(ci.end_time)) <= 0
+			and cs.city_code = #{cityCode}
+		 WHERE cs.itemCode = #{itemCode} AND cs.min <= #{chargeMoney} AND
+		 	CASE WHEN cs.max IS NOT NULL THEN cs.max > #{chargeMoney}
+			ELSE cs.max IS NULL
+			END
+		]]>
+	</select>
+<!-- 查询金额 money 在[min, max)区间内的策略 -->
+	<select id="getStrategyBetweenMinMax" resultMap="BaseResultMap1"
+		parameterType="java.util.Map">
+			SELECT <include refid="cs_Base_Column_List" />,cs.city_code
+			 FROM x_coupon_strategy cs
+				INNER JOIN x_coupon_item ci ON ci.itemCode = cs.itemCode
+				AND ci.`status` = 1 and ci.city_code = cs.city_code
+				and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(ci.start_time)) &gt;= 0
+				and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(ci.end_time)) &lt;= 0 and
+				cs.city_code = #{cityCode}
+			 WHERE cs.itemCode = #{itemCode}  
+			 	<![CDATA[  AND cs.min = #{money}  ]]> 
+<!-- 			 	<choose> -->
+<!-- 			 		<when test="hasMaxLimit == true"> -->
+<!-- 			 			<![CDATA[ AND #{money} < cs.max ]]> -->
+<!-- 			 		</when> -->
+<!-- 			 		<otherwise> AND cs.max IS NULL </otherwise> -->
+<!-- 			 	</choose> -->
+			 	
+	</select>
+  	
+</mapper>   

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.activity.LotteryDrawItemMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.activity.LotteryDrawItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lottery_draw_id" property="lotteryDrawId" jdbcType="INTEGER" />
+    <result column="prize_name" property="prizeName" jdbcType="VARCHAR" />
+    <result column="prize_amount" property="prizeAmount" jdbcType="INTEGER" />
+    <result column="prize_rest_amount" property="prizeRestAmount" jdbcType="INTEGER" />
+    <result column="prize_weight" property="prizeWeight" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="is_coupon" property="isCoupon" jdbcType="TINYINT" />
+    <result column="prizeWeightSum" property="prizeWeightSum" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, lottery_draw_id, prize_name, prize_amount, prize_rest_amount, prize_weight, version, 
+    remark, create_time, sort, is_coupon
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_lottery_draw_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_lottery_draw_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.activity.LotteryDrawItem" >
+    insert into x_lottery_draw_item (id, lottery_draw_id, prize_name, 
+      prize_amount, prize_rest_amount, prize_weight, 
+      version, remark, create_time, 
+      sort, is_coupon)
+    values (#{id,jdbcType=INTEGER}, #{lotteryDrawId,jdbcType=INTEGER}, #{prizeName,jdbcType=VARCHAR}, 
+      #{prizeAmount,jdbcType=INTEGER}, #{prizeRestAmount,jdbcType=INTEGER}, #{prizeWeight,jdbcType=VARCHAR}, 
+      #{version,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{sort,jdbcType=INTEGER}, #{isCoupon,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.activity.LotteryDrawItem" >
+    insert into x_lottery_draw_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lotteryDrawId != null" >
+        lottery_draw_id,
+      </if>
+      <if test="prizeName != null" >
+        prize_name,
+      </if>
+      <if test="prizeAmount != null" >
+        prize_amount,
+      </if>
+      <if test="prizeRestAmount != null" >
+        prize_rest_amount,
+      </if>
+      <if test="prizeWeight != null" >
+        prize_weight,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="isCoupon != null" >
+        is_coupon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryDrawId != null" >
+        #{lotteryDrawId,jdbcType=INTEGER},
+      </if>
+      <if test="prizeName != null" >
+        #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeAmount != null" >
+        #{prizeAmount,jdbcType=INTEGER},
+      </if>
+      <if test="prizeRestAmount != null" >
+        #{prizeRestAmount,jdbcType=INTEGER},
+      </if>
+      <if test="prizeWeight != null" >
+        #{prizeWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="isCoupon != null" >
+        #{isCoupon,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.activity.LotteryDrawItem" >
+    update x_lottery_draw_item
+    <set >
+      <if test="lotteryDrawId != null" >
+        lottery_draw_id = #{lotteryDrawId,jdbcType=INTEGER},
+      </if>
+      <if test="prizeName != null" >
+        prize_name = #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeAmount != null" >
+        prize_amount = #{prizeAmount,jdbcType=INTEGER},
+      </if>
+      <if test="prizeRestAmount != null" >
+        prize_rest_amount = #{prizeRestAmount,jdbcType=INTEGER},
+      </if>
+      <if test="prizeWeight != null" >
+        prize_weight = #{prizeWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="isCoupon != null" >
+        is_coupon = #{isCoupon,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.activity.LotteryDrawItem" >
+    update x_lottery_draw_item
+    set lottery_draw_id = #{lotteryDrawId,jdbcType=INTEGER},
+      prize_name = #{prizeName,jdbcType=VARCHAR},
+      prize_amount = #{prizeAmount,jdbcType=INTEGER},
+      prize_rest_amount = #{prizeRestAmount,jdbcType=INTEGER},
+      prize_weight = #{prizeWeight,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      sort = #{sort,jdbcType=INTEGER},
+      is_coupon = #{isCoupon,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAllLotteryDrawItem" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT ldi.id ,ldi.prize_name ,ldi.prize_amount , ldi.prize_rest_amount ,ldi.prize_weight
+  	FROM x_lottery_draw_item ldi
+  	where 1 = 1 
+  	<if test="lotteryDrawId != null and lotteryDrawId != ''">
+  		and ldi.lottery_draw_id = #{lotteryDrawId}
+  	</if>
+  	<if test="prizeName != null and prizeName != ''">
+  		and ldi.prize_name like CONCAT('%',#{prizeName,jdbcType=VARCHAR},'%')
+  	</if>
+  	ORDER BY ldi.create_time DESC limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER} 
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	SELECT COUNT(1) FROM x_lottery_draw_item ldi where 1 = 1 
+  	<if test="lotteryDrawId != null and lotteryDrawId != ''">
+  		and ldi.lottery_draw_id = #{lotteryDrawId}
+  	</if>
+  	<if test="prizeName != null and prizeName != ''">
+  		and ldi.prize_name like CONCAT('%',#{prizeName,jdbcType=VARCHAR},'%')
+  	</if>
+  </select>
+  <select id="selectMaxSort" resultType="java.lang.Integer">
+  	SELECT MAX(ldi.sort) as sort FROM x_lottery_draw_item ldi 
+  </select>
+  <select id="selectSumPrizeWeight" resultType="string" parameterType="java.lang.Integer">
+  	SELECT SUM(ldi.prize_weight) AS prizeWeightSum FROM x_lottery_draw_item ldi where 
+  	<if test="lotteryDrawId != null and lotteryDrawId != ''">
+  		and ldi.lottery_draw_id = #{lotteryDrawId}
+  	</if>
+  </select>
+</mapper>

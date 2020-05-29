@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.qrtz.SchedulerStateMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.qrtz.SchedulerState" >
+    <id column="INSTANCE_NAME" property="instanceName" jdbcType="VARCHAR" />
+    <result column="LAST_CHECKIN_TIME" property="lastCheckinTime" jdbcType="BIGINT" />
+    <result column="CHECKIN_INTERVAL" property="checkinInterval" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    INSTANCE_NAME, LAST_CHECKIN_TIME, CHECKIN_INTERVAL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from qrtz_scheduler_state
+    where INSTANCE_NAME = #{instanceName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from qrtz_scheduler_state
+    where INSTANCE_NAME = #{instanceName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.qrtz.SchedulerState" >
+    insert into qrtz_scheduler_state (INSTANCE_NAME, LAST_CHECKIN_TIME, CHECKIN_INTERVAL
+      )
+    values (#{instanceName,jdbcType=VARCHAR}, #{lastCheckinTime,jdbcType=BIGINT}, #{checkinInterval,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.qrtz.SchedulerState" >
+    insert into qrtz_scheduler_state
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instanceName != null" >
+        INSTANCE_NAME,
+      </if>
+      <if test="lastCheckinTime != null" >
+        LAST_CHECKIN_TIME,
+      </if>
+      <if test="checkinInterval != null" >
+        CHECKIN_INTERVAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instanceName != null" >
+        #{instanceName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastCheckinTime != null" >
+        #{lastCheckinTime,jdbcType=BIGINT},
+      </if>
+      <if test="checkinInterval != null" >
+        #{checkinInterval,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.qrtz.SchedulerState" >
+    update qrtz_scheduler_state
+    <set >
+      <if test="lastCheckinTime != null" >
+        LAST_CHECKIN_TIME = #{lastCheckinTime,jdbcType=BIGINT},
+      </if>
+      <if test="checkinInterval != null" >
+        CHECKIN_INTERVAL = #{checkinInterval,jdbcType=BIGINT},
+      </if>
+    </set>
+    where INSTANCE_NAME = #{instanceName,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.qrtz.SchedulerState" >
+    update qrtz_scheduler_state
+    set LAST_CHECKIN_TIME = #{lastCheckinTime,jdbcType=BIGINT},
+      CHECKIN_INTERVAL = #{checkinInterval,jdbcType=BIGINT}
+    where INSTANCE_NAME = #{instanceName,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.evaluate.OrderEvaluateMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.evaluate.OrderEvaluate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="evaluate_star" property="evaluateStar" jdbcType="INTEGER" />
+    <result column="evaluate_content" property="evaluateContent" jdbcType="VARCHAR" />
+    <result column="evaluate_type" property="evaluateType" jdbcType="VARCHAR" />
+    <result column="evaluate_time" property="evaluateTime" jdbcType="TIMESTAMP" />
+    <result column="label" property="label" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_reason" property="checkReason" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ev.id, ev.order_id, ev.member_id, ev.evaluate_star, ev.evaluate_content, ev.evaluate_type, ev.evaluate_time, 
+    ev.label,me.name,me.phone,ev.check_status,ev.check_reason,ev.check_time
+  </sql>
+  
+   <sql id="Base_Column_List_Record">
+	count(1) counts
+ </sql>
+  
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from x_order_evaluate ev
+     LEFT JOIN x_member me ON me.id=ev.member_id 
+ 			<trim prefixOverrides="and">
+			<where>
+		      <if test="evaluateType != null and evaluateType != ''" >
+		    	and ev.evaluate_type = #{evaluateType,jdbcType=VARCHAR}
+		      </if>
+		      <if test="orderId  != null and orderId  != ''">
+				 and ev.order_id like "%"#{orderId,jdbcType=VARCHAR}"%"
+				</if>
+			    <if test="evaluateStar != null and evaluateStar != ''" >
+		    	and ev.evaluate_star = #{evaluateStar,jdbcType=INTEGER}
+		       </if>
+		       <if test="name  != null and name  != ''">
+				 and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+				</if>
+		        <if test="phone  != null and phone  != ''">
+				 and me.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+				</if> 	
+			</where>
+		   </trim>
+		ORDER BY evaluate_time DESC
+		limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+  </select>
+ 
+ 	<select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List_Record" />
+     from x_order_evaluate ev
+     LEFT JOIN x_member me ON me.id=ev.member_id 
+ 			<trim prefixOverrides="and">
+			<where>
+		      <if test="evaluateType != null and evaluateType != ''" >
+		    	and ev.evaluate_type = #{evaluateType,jdbcType=VARCHAR}
+		      </if>
+		      <if test="orderId  != null and orderId  != ''">
+				 and ev.order_id like "%"#{orderId,jdbcType=VARCHAR}"%"
+				</if>
+			    <if test="evaluateStar != null and evaluateStar != ''" >
+		    	and ev.evaluate_star = #{evaluateStar,jdbcType=INTEGER}
+		       </if>
+		       <if test="name  != null and name  != ''">
+				 and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+				</if>
+		        <if test="phone  != null and phone  != ''">
+				 and me.phone like "%"#{phone,jdbcType=VARCHAR}"%"
+				</if> 	
+			</where>
+		   </trim>
+	</select> 
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_order_evaluate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.evaluate.OrderEvaluate" >
+    insert into x_order_evaluate (id, order_id, member_id, 
+      evaluate_star, evaluate_content, evaluate_type, 
+      evaluate_time, label,check_status,check_reason,check_time)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, 
+      #{evaluateStar,jdbcType=INTEGER}, #{evaluateContent,jdbcType=VARCHAR}, #{evaluateType,jdbcType=VARCHAR}, 
+      #{evaluateTime,jdbcType=TIMESTAMP}, #{label,jdbcType=VARCHAR},#{checkStatus,jdbcType=VARCHAR},#{checkReason,jdbcType=VARCHAR},#{checkTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.evaluate.OrderEvaluate" >
+    insert into x_order_evaluate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="evaluateStar != null" >
+        evaluate_star,
+      </if>
+      <if test="evaluateContent != null" >
+        evaluate_content,
+      </if>
+      <if test="evaluateType != null" >
+        evaluate_type,
+      </if>
+      <if test="evaluateTime != null" >
+        evaluate_time,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="checkReason != null" >
+        check_reason,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>    
+    
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateStar != null" >
+        #{evaluateStar,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateContent != null" >
+        #{evaluateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateType != null" >
+        #{evaluateType,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateTime != null" >
+        #{evaluateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkReason != null" >
+        #{checkReason,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.evaluate.OrderEvaluate" >
+    update x_order_evaluate
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateStar != null" >
+        evaluate_star = #{evaluateStar,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateContent != null" >
+        evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateType != null" >
+        evaluate_type = #{evaluateType,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateTime != null" >
+        evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkReason != null" >
+        check_reason = #{checkReason,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.evaluate.OrderEvaluate" >
+    update x_order_evaluate
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      evaluate_star = #{evaluateStar,jdbcType=INTEGER},
+      evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
+      evaluate_type = #{evaluateType,jdbcType=VARCHAR},
+      evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
+      label = #{label,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=VARCHAR},
+      check_reason = #{checkReason,jdbcType=VARCHAR},
+      check_time = #{checkTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+     <select id="selectByPrimaryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+     *
+    from x_order_evaluate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

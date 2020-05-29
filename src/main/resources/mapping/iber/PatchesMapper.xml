@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.patch.PatchesMapper">
+	<resultMap id="BaseResultMap"
+		type="com.iber.portal.model.timeShare.TimeShareOrder">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="member_id" property="memberId" jdbcType="VARCHAR" />
+		<result column="park_id" property="parkId" jdbcType="INTEGER" />
+		<result column="lpn" property="lpn" jdbcType="VARCHAR" />
+		<result column="total_run_mileage" property="totalRunMileage" jdbcType="DOUBLE" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+		<result column="is_enterprise_use_car" property="isEnterpriseUseCar" jdbcType="VARCHAR" />
+		<result column="order_type" property="orderType" jdbcType="VARCHAR" />
+		<result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+		<result column="is_free_compensate" property="isFreeCompensate" />
+		<result column="return_park_id" property="returnParkId"	jdbcType="INTEGER" />
+		<result column="is_lock_car" property="isLockCar" jdbcType="TINYINT" />
+		<result column="lock_car_time" property="lockCarTime" jdbcType="TIMESTAMP" />
+		<result column="one_warn_time" property="oneWarnTime" jdbcType="TIMESTAMP" />
+		<result column="is_one_warn" property="isOneWarn" jdbcType="TINYINT" />
+		<result column="two_warn_time" property="twoWarnTime" jdbcType="TIMESTAMP" />
+		<result column="is_two_warn" property="isTwoWarn" jdbcType="TINYINT" />
+		<result column="is_lock_two_warn" property="isLockTwoWarn" jdbcType="TINYINT" />
+	</resultMap>
+	<resultMap id="ZOTYEReturnCashOrderResultMap"
+		type="com.iber.portal.vo.timeShare.ZOTYEReturnCashOrderVo">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="member_name" property="memberName" jdbcType="VARCHAR" />
+		<result column="lpn" property="lpn" jdbcType="VARCHAR" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="member_id" property="memberId" />
+		<result column="free_compensation_money" property="freeCompensationMoney" jdbcType="VARCHAR" />
+		<result column="order_money" property="orderMoney" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryZOTYETypeTimeShareRecords" resultMap="ZOTYEReturnCashOrderResultMap"
+		parameterType="java.util.Map">
+		SELECT o.id
+		,o.order_id,o.member_id,o.order_time,o.begin_time,o.end_time,mem.phone,mem.`name`
+		member_name,o.lpn
+		from x_time_share_order o INNER JOIN x_car car on
+		o.lpn = car.lpn left join x_member mem on o.member_id = mem.id
+		where o.begin_time &gt;= #{startTime} and o.begin_time &lt;= #{endTime} and
+		car.brand_name = #{brandName} and o.status != 'cancel'
+	</select>
+
+	<sql id="Base_Column_List">
+		id, order_id, member_id, park_id, lpn, total_run_mileage, order_time,
+		begin_time,
+		end_time, status, city_code, is_enterprise_use_car, order_type, enterprise_id,
+		return_park_id, is_free_compensate,
+		is_lock_car, lock_car_time, is_one_warn, one_warn_time, is_two_warn,
+		two_warn_time, is_lock_two_warn
+	</sql>
+	<insert id="insertTimeShareOrderDiscountRecord" parameterType="java.util.List">
+		INSERT INTO x_time_share_order_discount_records
+		(order_id,category,create_time,cash_return_status,create_user)
+		<trim prefix=" values " suffixOverrides=",">
+			<foreach collection="list" item="item" index="index"
+				separator=",">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					<choose>
+						<when test="item.orderId != null">
+							#{item.orderId},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.category != null">
+							#{item.category},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.createTime != null">
+							#{item.createTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.cashReturnStatus != null">
+							#{item.cashReturnStatus},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.createUser != null">
+							#{item.createUser},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</insert>
+	<select id="getZOTYEFinishPaidOrderInfos" resultMap="ZOTYEReturnCashOrderResultMap"
+		parameterType="java.util.Map">
+		SELECT p.order_id,p.pay_money,p.coupon_no,IFNULL(p.coupon_balance,0)
+		coupon_balance,p.member_id,IFNULL(p.orderMoney,0) order_money,
+		IFNULL(p.free_compensation_money,0) free_compensation_money from
+		x_time_share_pay p
+		INNER JOIN x_time_share_order_discount_records r on r.order_id = p.order_id
+		LEFT JOIN x_member m on m.id = p.member_id
+		where r.cash_return_status != 'done'
+	</select>
+	<update id="updateDiscountRecordsBatch" parameterType="java.util.List">
+		update x_time_share_order_discount_records set cash_return_status=
+		'done'
+		where order_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+	<delete id="batchDeleteZeroMoneyOrder" parameterType="java.util.List">
+		delete from x_time_share_order_discount_records where order_id in
+		<foreach item="item" collection="list" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="getTimeShareOrderInfoByCarType" resultMap="BaseResultMap" parameterType="java.util.Map">
+    	select o.id,o.order_id,o.begin_time,o.end_time,o.status ,car.lpn,o.member_id
+    	from x_time_share_order o INNER JOIN x_car car on o.lpn = car.lpn 
+    	where o.status <![CDATA[<>]]> 'cancel'
+    	<if test="brandName != null and brandName != ''">
+    		and car.brand_name = #{brandName}
+    	</if>
+    	<if test="startTime != null and startTime != ''">
+    		and o.order_time &gt;= #{startTime}
+    	</if>
+    	<if test="endTime != null and endTime != ''">
+    		and o.order_time &lt;= #{endTime}
+    	</if>
+    </select>
+</mapper>

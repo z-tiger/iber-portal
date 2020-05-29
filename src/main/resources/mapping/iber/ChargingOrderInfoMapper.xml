@@ -1,0 +1,1262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.charging.ChargingOrderInfoMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap"
+			   type="com.iber.portal.model.charging.ChargingOrderInfo">
+		<result column="id" property="id" />
+		<result column="member_id" property="memberId" />
+		<result column="equipment_id" property="equipmentId" />
+		<result column="connector_id" property="connectorId" />
+ 		<result column="station_id" property="stationId" />
+		<result column="charging_amount" property="chargingAmount" />
+		<result column="charging_time" property="chargingTime" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="order_money" property="orderMoney" />
+		<result column="coupon_code" property="couponCode" />
+		<result column="coupon_value" property="couponValue" />
+		<result column="pay_money" property="payMoney" />
+		<result column="pay_type" property="payType" />
+		<result column="charging_status" property="chargingStatus" />
+		<result column="charging_before_electric" property="chargingBeforeElectric" />
+		<result column="charging_back_electric" property="chargingBackElectric" />
+		<result column="create_id" property="createId" />
+		<result column="update_id" property="updateId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="create_name" property="createName" />
+		<result column="update_name" property="updateName" />
+		<result column="member_name" property="memberName" />
+		<result column="equipment_code" property="equipmentCode" />
+		<result column="station_name" property="stationName" />
+		<result column="chargeSeq" property="chargeSeq" />
+		<result column="connector_code" property="connectorCode" />
+		<result column="city_code" property="cityCode" />
+		<result column="memberStatus" property="memberStatus"/>
+		<result column="phone" property="phone"/>
+		<result column="lpn" property="lpn"/>
+		<result column="equipment_type" property="equipmentType"/>
+			<result column="userType" property="userType"/>
+		<result column="park_no" property="carport"/>
+		<result column="east_trade_no" property="eastTradeNo"/><!-- 易事特  -->
+		<result column="connector_type" property="connectorType"/>
+	</resultMap>
+
+	<resultMap id="ReportMap" type="com.iber.portal.vo.charging.ChargingReportVo">
+		<result column="cityLayer" property="cityLayer" />
+		<result column="cityName" property="cityName" />
+		<result column="cityId" property="cityId" />
+		<result column="cityPid" property="cityPid" />
+		<result column="cityCode" property="cityCode" />
+		<result column="parkId" property="parkId" />
+		<result column="stationName" property="stationName" />
+		<result column="equipmentId" property="equipmentId" />
+		<result column="equipmentCode" property="equipmentCode" />
+		<result column="typeAndCnt" property="typeAndCnt" />
+		<result column="equipmentType" property="equipmentType" />
+		<result column="connectorCnt" property="connectorCnt" />
+		<result column="chargedTimes" property="chargedTimes" />
+		<result column="chargedFreq" property="chargedFreq" />
+		<result column="chargedQuantity" property="chargedQuantity" />
+		<result column="totalChargingTime" property="totalChargingTime" />
+		<result column="fee" property="fee" />
+		<result column="cooperationType" property="cooperationType" />
+		<result column="charging_time_sum" property="chargingTimeSum"/>
+		<result column="charging_amount_sum" property="chargingAmountSum"/>
+		<result column="order_money_sum" property="orderMoneySum"/>
+		<result column="useTime" property="useTime"/>
+		<result column="useTimeSum" property="useTimeSum"/>
+		<result column="chargedTimesSum" property="chargedTimesSum"/>
+	</resultMap>
+
+	<resultMap id="DetailMap" type="com.iber.portal.vo.charging.ChargingDetailVo"
+			   extends="ReportMap">
+		<result column="memberName" property="memberName" />
+		<result column="memberIdcard" property="memberIdcard" />
+		<result column="memberPhone" property="memberPhone" />
+		<result column="consumption" property="consumption" />
+		<result column="payMoney" property="payMoney" />
+		<result column="couponAmount" property="couponAmount" />
+		<result column="charging_amount_sum" property="chargingAmountSum"/>
+		<result column="charging_time_sum" property="chargingTimeSum"/>
+		<result column="order_money_sum" property="orderMoneySum"/>
+		<result column="pay_money_sum" property="payMoneySum"/>
+		<result column="coupon_value_sum" property="couponValueSum"/>
+		<result column="userType" property="userType"/>
+		<result column="memberStatus" property="memberStatus"/>
+		<result column="charging_status" property="chargingStatus"/>
+		<result column="park_no" property="carport"/>
+	</resultMap>
+
+	<resultMap id="IncomeMap" type="com.iber.portal.vo.charging.ChargingIncomeVo"
+			   extends="ReportMap">
+		<result column="totalPrice" property="totalPrice" />
+		<result column="income" property="income" />
+		<result column="charging_price" property="chargingPrice" />
+		<result column="service_price" property="servicePrice" />
+		<result column="charging_amount_sum" property="chargingAmountSum"/>
+		<result column="total_price_sum" property="totalPriceSum"/>
+		<result column="fee_sum" property="feeSum"/>
+		<result column="income_sum" property="incomeSum"/>
+		<result column="park_no" property="carport"/>
+		<result column="lpn" property="lpn"/>
+		<result column="charging_status" property="chargingStatus"/>
+		<result column="userType" property="userType"/>
+		<result column="memberStatus" property="memberStatus"/>
+		<result column="invoice_status" property="invoiceStatus"/>
+		<result column="invoiceMoney" property="invoiceMoney"/>
+		<result column="invoiceMoney_sum" property="invoiceMoneySum"/>
+		<result column="chargedQuantity" property="chargedQuantity"/>
+		<result column="pay_money" property="payMoney"/>
+		<result column="pay_time" property="payTime"/>
+		<result column="start_time" property="startTime"/>
+	</resultMap>
+
+	<resultMap id="ConsumptionMap" type="com.iber.portal.vo.charging.ChargingConsumptionVo">
+		<result column="cityCode" property="cityCode" />
+		<result column="cityName" property="cityName" />
+		<result column="stationName" property="stationName" />
+		<result column="cooperationType" property="cooperationType" />
+		<result column="equipmentCnt" property="equipmentCnt" />
+		<result column="fastPileCnt" property="fastPileCnt" />
+		<result column="slowPileCnt" property="slowPileCnt" />
+		<result column="combinedPileCnt" property="combinedPileCnt" />
+		<result column="chargedQuantity" property="chargedQuantity" />
+	</resultMap>
+
+	<resultMap id="FinanceReportMap" type="com.iber.portal.vo.charging.ChargingFinanceReportVo">
+		<result column="id" property="id" />
+		<result column="createTime" property="createTime" />
+		<result column="lpn" property="lpn" />
+		<result column="invoice_status" property="invoiceStatus" />
+		<result column="cityName" property="cityName" />
+		<result column="memberId" property="memberId" />
+		<result column="parkName" property="parkName" />
+		<result column="equipmentCode" property="equipmentCode" />
+		<result column="equipmentType" property="equipmentType" />
+		<result column="chargingAmount" property="chargingAmount" />
+		<result column="chargingPrice" property="chargingPrice" />
+		<result column="servicePrice" property="servicePrice" />
+		<result column="payMoney" property="payMoney" />
+		<result column="invoiceMoney" property="invoiceMoney" />
+
+		<result column="chargingAmountThisYearSum" property="chargingAmountThisYearSum" />
+		<result column="payMoneyThisYearSum" property="payMoneyThisYearSum" />
+		<result column="chargingAmountSum" property="chargingAmountSum" />
+		<result column="payMoneySum" property="payMoneySum" />
+		<result column="pay_time" property="payTime" />
+		<result column="order_money" property="orderMoney" />
+		<result column="pay_status" property="payStatus" />
+
+	</resultMap>
+
+	<!-- c_charging_order table all fields -->
+	<sql id="Base_Column_List">
+		id,member_id,equipment_id,connector_id,station_id,charging_amount,charging_time,start_time,end_time,order_money,coupon_code,coupon_value,pay_money,pay_type,charging_status,charging_before_electric,charging_back_electric,create_id,update_id,create_time,update_time,chargeSeq,city_code,memberStatus,lpn,userType,park_no
+	</sql>
+
+	<sql id="ChargingOrder_Column_List">
+		c.id,c.member_id,c.equipment_id,c.connector_id,c.station_id,c.charging_amount,c.charging_time,
+		c.start_time,c.end_time,c.order_money,c.coupon_code,c.coupon_value,c.pay_money,c.pay_type,
+		c.charging_status,c.charging_before_electric,c.charging_back_electric,c.create_id,c.update_id,
+		c.create_time,c.update_time,c.chargeSeq,c.city_code,c.park_no,c.memberStatus,
+		c.chargingMoney,c.serviceMoney,c.lpn,c.relatedOrderId,c.userType,c.invoice_status
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.iber.portal.model.charging.ChargingOrderInfo">
+		insert into
+		c_charging_order(id,member_id,equipment_id,connector_id,station_id,charging_amount,charging_time,start_time,end_time,order_money,coupon_code,coupon_value,pay_money,pay_type,charging_status,charging_before_electric,charging_back_electric,create_id,create_time,chargeSeq,city_code)
+		values(#{id},#{memberId},#{equipmentId},#{connectorId},#{stationId},#{chargingAmount},#{chargingTime},#{startTime},#{endTime},#{orderMoney},#{couponCode},#{couponValue},#{payMoney},#{payType},#{chargingStatus},#{chargingBeforeElectric},#{chargingBackElectric},#{createId},#{createTime},#{chargeSeq},#{cityCode})
+	</insert>
+
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from c_charging_order where id = #{id}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+		update c_charging_order set
+		member_id=#{memberId},equipment_id=#{equipmentId},connector_id=#{connectorId},station_id=#{stationId},charging_amount=#{chargingAmount},charging_time=#{chargingTime},start_time=#{startTime},end_time=#{endTime},order_money=#{orderMoney},coupon_code=#{couponCode},coupon_value=#{couponValue},pay_money=#{payMoney},pay_type=#{payType},charging_status=#{chargingStatus},charging_before_electric=#{chargingBeforeElectric},charging_back_electric=#{chargingBackElectric},update_id=#{updateId},update_time=#{updateTime},chargeSeq=#{chargeSeq}
+		where id=#{id}
+	</update>
+
+	<update id="updateStatusWhenStealing" parameterType="com.iber.portal.model.charging.ChargingOrderInfo" >
+		UPDATE c_charging_order SET memberStatus = #{memberStatus}, charging_status = #{chargingStatus},
+		remark = '偷电', end_time = NULL
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateInvoiceStatus">
+		update c_charging_order set invoice_status = #{invoiceStatus} where id = #{id}
+
+	</update>
+
+	<update id="bitchUpdateInvoiceStatus" >
+		update c_charging_order set    invoice_status= #{invocieStatus}   where id
+		<foreach collection="list" item="item" index="index" open="in(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</update>
+
+	<!-- 根据id查询 充电订单管理 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+			parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from c_charging_order where id = #{id}
+	</select>
+
+	<!-- 充电订单管理 列表总数 -->
+	<select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT COUNT(1)  FROM c_charging_order c
+		INNER JOIN
+		<choose>
+			<when test="userType == 'employee' and userType !=''">
+				e_employee_info
+			</when>
+			<otherwise>
+				x_member
+			</otherwise>
+		</choose>  m ON m.id = c.member_id
+		INNER JOIN c_connector_info ci ON ci.id = c.connector_id
+		INNER JOIN x_park p ON p.id = c.station_id
+		WHERE 1 = 1
+		<choose>
+			<when test="userType == 'employee' and userType !=''">
+				AND c.userType = 'employee'
+			</when>
+			<otherwise>
+				AND c.userType = 'member'
+			</otherwise>
+		</choose>
+		<if test="cityCode != null and cityCode != '' ">
+			AND c.city_code = #{cityCode}
+		</if>
+		<if test="stationName != null and stationName != '' ">
+			AND p.`name` LIKE CONCAT('%',#{stationName},'%')
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			AND m.`name` LIKE CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="phone != null and phone != '' ">
+			AND m.phone = #{phone}
+		</if>
+		<if test="lpn != null and lpn != ''">
+			AND c.lpn LIKE CONCAT('%',#{lpn},'%')
+		</if>
+		<choose>
+			<when test="chargingStatus !=null and chargingStatus !=''">
+				AND c.charging_status =#{chargingStatus,jdbcType=VARCHAR}
+			</when>
+			<otherwise>
+				AND c.charging_status NOT IN ('preCharging', 'cancel')
+			</otherwise>
+		</choose>
+		<if test=" bt != null and bt!='' and et != null and et !='' ">
+			AND (c.create_time &gt;= #{bt,jdbcType=TIMESTAMP} AND  c.create_time &lt;= #{et,jdbcType=TIMESTAMP})
+		</if>
+	</select>
+
+	<!-- 城市-充电站列表 -->
+	<select id="getCityParkList" resultMap="ReportMap">
+		SELECT c.layer cityLayer, c.`name` cityName, c.id cityId, c.p_id cityPid, c.`code` cityCode,
+		p.id parkId, p.`name` stationName FROM x_city c
+		INNER JOIN x_park p ON c.`code` = p.city_code WHERE c.layer = 3 AND c.`status` = 1
+	</select>
+	<sql id="base_select">
+		FROM c_equipment_info ei
+		INNER JOIN x_park p ON ei.station_id = p.id
+		<if test="parkId != null and parkId != '' ">
+			AND p.id = #{parkId}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		INNER JOIN x_city c on p.city_code = c.`code`
+
+		INNER JOIN c_charging_order co ON co.station_id = p.id
+		AND co.equipment_id = ei.id
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+		WHERE 1 = 1
+		<if test="equipmentId != null and equipmentId != '' ">
+			AND ei.id = #{equipmentId}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</sql>
+	<sql id="charging_base_select">
+		from  c_charging_order cco
+		where
+		cco.station_id = p.id  AND cco.equipment_id = co.equipment_id
+		<![CDATA[ AND cco.charging_time > 0 ]]> AND cco.end_time IS NOT NULL
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND cco.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND cco.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</sql>
+	<sql id="co_sql">
+		FROM c_charging_order co
+		JOIN x_park p ON co.station_id = p.id
+		WHERE <![CDATA[ co.charging_time > 0 ]]> AND co.end_time IS NOT NULL
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="parkId != null and parkId != '' ">
+			AND co.station_id = #{parkId}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND co.city_code = #{cityCode}
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		<if test="equipmentId != null and equipmentId != '' ">
+			AND co.equipment_id = #{equipmentId}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</sql>
+	<sql id="coo_sql">
+		from  c_charging_order cco WHERE
+		cco.station_id = p.id  AND cco.equipment_id = co.equipment_id
+		<![CDATA[ AND cco.charging_time > 0 ]]> AND cco.end_time IS NOT NULL
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND cco.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND cco.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</sql>
+	<!-- 生成充电运营报表 -->
+	<!--<select id="getChargingReport" resultMap="ReportMap"-->
+			<!--parameterType="java.util.Map">-->
+		<!--SELECT c.layer cityLayer, c.id cityId, c.p_id cityPid, c.`name` cityName, c.`code` cityCode,-->
+		<!--p.id parkId, p.`name` stationName, p.cooperation_type cooperationType,-->
+		<!--ei.id equipmentId, ei.equipment_code equipmentCode, ei.equipment_type equipmentType, ei.connector_number connectorCnt,-->
+		<!--co.charging_time totalChargingTime, co.charging_amount chargedQuantity,-->
+		<!--co.order_money fee,co.start_time,-->
+		<!--(select count(1) <include refid="coo_sql"/>) chargedTimes,-->
+		<!--(select sum(cco.charging_time) <include refid="coo_sql"/>) useTime,-->
+		<!--(select COUNT(co.end_time) <include refid="co_sql"/>) chargedTimesSum,-->
+		<!--(select sum(co.charging_time) <include refid="co_sql"/>) charging_time_sum,-->
+		<!--(select sum(co.charging_time) <include refid="co_sql"/>) useTimeSum,-->
+		<!--(select sum(co.charging_amount) <include refid="co_sql"/>) charging_amount_sum,-->
+		<!--(select sum(co.order_money) <include refid="co_sql"/>) order_money_sum-->
+		<!--<include refid="base_select"/>-->
+		<!--<if test="from != null and to != null">-->
+		<!--LIMIT #{from, jdbcType=INTEGER} , #{to, jdbcType=INTEGER}-->
+		<!--</if>-->
+	<!--</select>-->
+
+	<select id="getChargingReport" resultMap="ReportMap"
+			parameterType="java.util.Map">
+		SELECT c.layer cityLayer, c.id cityId, c.p_id cityPid, c.`name` cityName, c.`code` cityCode,
+		p.id parkId, p.`name` stationName, p.cooperation_type cooperationType,
+		ei.id equipmentId, ei.equipment_code equipmentCode, ei.equipment_type equipmentType, ei.connector_number connectorCnt,
+		co.charging_time totalChargingTime, co.charging_amount chargedQuantity,
+		co.order_money fee,
+		(select count(1)  <include refid="charging_base_select"/>) chargedTimes,
+		(select sum(cco.charging_time) <include refid="charging_base_select"/>) useTime,
+		(select COUNT(co.end_time) <include refid="base_select"/>) chargedTimesSum,
+		(select sum(co.charging_time) <include refid="base_select"/>) charging_time_sum,
+		(select sum(co.charging_time) <include refid="base_select"/>) useTimeSum,
+		(select sum(co.charging_amount) <include refid="base_select"/>) charging_amount_sum,
+		(select sum(co.order_money) <include refid="base_select"/>) order_money_sum
+
+		<include refid="base_select"/>
+		<if test="from != null and to != null">
+			LIMIT #{from, jdbcType=INTEGER} , #{to, jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="getAllChargingReport" resultMap="ReportMap"	parameterType="java.util.Map">
+		SELECT c.layer cityLayer, c.id cityId, c.p_id cityPid, c.`name` cityName, c.`code` cityCode,
+		p.id parkId, p.`name` stationName, p.cooperation_type cooperationType,
+		ei.id equipmentId, ei.equipment_code equipmentCode, ei.equipment_type equipmentType, ei.connector_number connectorCnt,
+		co.charging_time totalChargingTime, co.charging_amount chargedQuantity,co.order_money fee,
+		(select count(1)  <include refid="charging_base_select"/>) chargedTimes,
+		(select sum(cco.charging_time) <include refid="charging_base_select"/>) useTime,
+		COUNT(co.end_time) chargedTimesSum,
+		sum(co.charging_time) charging_time_sum,
+		sum(co.charging_time) useTimeSum,
+		sum(co.charging_amount) charging_amount_sum,
+		sum(co.order_money) order_money_sum
+		<include refid="base_select"/>
+		ORDER BY co.start_time DESC
+	</select>
+
+	<select id="getChargingTotolCount" resultType="java.lang.Integer">
+		select count(1) FROM c_charging_order co
+		WHERE  <![CDATA[ co.charging_time > 0 ]]>	AND co.end_time IS NOT NULL
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+
+	</select>
+	<select id="getReportCount" resultType="java.lang.Integer"
+			parameterType="java.util.Map">
+		SELECT COUNT(1)
+		FROM c_equipment_info ei
+		INNER JOIN x_park p ON ei.station_id = p.id
+		<if test="parkId != null and parkId != '' ">
+			AND p.id = #{parkId}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		INNER JOIN x_city c on p.city_code = c.`code`
+
+		INNER JOIN c_charging_order co ON co.station_id = p.id
+		AND co.equipment_id = ei.id
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+		WHERE 1 = 1
+		<if test="equipmentId != null and equipmentId != '' ">
+			AND ei.id = #{equipmentId}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</select>
+
+	<!-- 获取一个充电桩的充电明细表 -->
+	<select id="getOnePileChargingDetail"
+			parameterType="java.lang.Integer"
+			resultMap="DetailMap">
+		SELECT co.pay_money payMoney, co.coupon_value couponAmount,
+		(co.pay_money + co.coupon_value) consumption, co.order_money fee,
+		co.charging_time totalChargingTime, co.charging_amount chargedQuantity,
+		m.`name` memberName, m.idcard memberIdcard, m.phone memberPhone
+		FROM c_charging_order co
+		INNER JOIN x_member m ON m.id = co.member_id
+		WHERE co.equipment_id = #{equipmentId}
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+		ORDER BY co.start_time DESC
+		LIMIT #{from, jdbcType=INTEGER} , #{to, jdbcType=INTEGER}
+	</select>
+
+	<select id="getOnePileChargingDetailCount"
+			parameterType="java.lang.Integer"
+			resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM c_charging_order co
+		INNER JOIN x_member m ON m.id = co.member_id
+		WHERE co.equipment_id = #{equipmentId}
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+	</select>
+	<sql id="detail_base_select">
+		FROM c_equipment_info ei
+		INNER JOIN x_park p ON ei.station_id = p.id
+		<if test="parkId != null and parkId != '' ">
+			AND p.id = #{parkId}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		INNER JOIN x_city c ON p.city_code = c.`code`
+
+		INNER JOIN c_charging_order co ON co.station_id = p.id
+		AND co.equipment_id = ei.id
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+		INNER JOIN x_member m ON m.id = co.member_id
+		WHERE 1 = 1
+		<if test="equipmentId != null and equipmentId != '' ">
+			AND ei.id = #{equipmentId}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</sql>
+	<!-- 充电桩充电明细表 【网点名】【充电桩编码】【桩类型】（如：快充-单枪、慢充-双枪）【使用者】【使用者身份证】【手机号码】【充电电量】【充电时长】【计费金额（元）】、【消费金额（元）】，两个小项：【支付金额（元）】、【优惠券（元）】 -->
+	<select id="getChargingDetailReport" resultMap="DetailMap"
+			parameterType="java.util.Map">
+		SELECT
+		c.layer cityLayer, c.id cityId, c.p_id cityPid, c.`name` cityName, c.`code` cityCode,
+		p.id parkId, p.`name` stationName, p.cooperation_type cooperationType,
+		ei.id equipmentId, ei.equipment_code equipmentCode,
+		ei.equipment_type equipmentType, ei.connector_number connectorCnt,
+		co.pay_money payMoney, co.coupon_value couponAmount,
+		(co.pay_money + co.coupon_value) consumption, co.order_money fee,
+		co.charging_time totalChargingTime, co.charging_amount chargedQuantity ,co.userType,co.memberStatus,co.park_no,co.charging_status,
+		m.`name` memberName, m.idcard memberIdcard, m.phone memberPhone,
+		(select sum(charging_amount) <include refid="detail_base_select"/>) charging_amount_sum,
+		(select sum(charging_time) <include refid="detail_base_select"/>) charging_time_sum,
+		(select sum(order_money) <include refid="detail_base_select"/>) order_money_sum,
+		(select sum(pay_money) <include refid="detail_base_select"/>) pay_money_sum,
+		(select sum(coupon_value) <include refid="detail_base_select"/>) coupon_value_sum
+		<include refid="detail_base_select"/>
+		<!-- GROUP BY ei.id, c.id -->
+		ORDER BY co.start_time DESC
+		<if test="from != null and to != null">
+		LIMIT #{from, jdbcType=INTEGER} , #{to, jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="getChargingDetailReportCount" resultType="java.lang.Integer"
+			parameterType="java.util.Map">
+		SELECT COUNT(1)
+		FROM c_equipment_info ei
+		INNER JOIN x_park p ON ei.station_id = p.id
+		<if test="parkId != null and parkId != '' ">
+			AND p.id = #{parkId}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		INNER JOIN x_city c on p.city_code = c.`code`
+
+		INNER JOIN c_charging_order co ON co.station_id = p.id
+		AND co.equipment_id = ei.id
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+		INNER JOIN x_member m ON m.id = co.member_id
+		WHERE 1 = 1
+		<if test="equipmentId != null and equipmentId != '' ">
+			AND ei.id = #{equipmentId}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</select>
+	<sql id="income_base_select">
+		FROM c_equipment_info ei
+		INNER JOIN x_park p ON ei.station_id = p.id
+		<if test="parkId != null and parkId != '' ">
+			AND p.id = #{parkId}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND p.city_code = #{cityCode}
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		INNER JOIN x_city c ON p.city_code = c.`code`
+
+		INNER JOIN c_charging_order co ON co.station_id = p.id
+		AND co.equipment_id = ei.id
+		<![CDATA[ AND co.charging_time > 0 ]]>
+		AND co.end_time IS NOT NULL
+		INNER JOIN c_charging_pile_price price ON
+		price.equipment_type = ei.equipment_type AND price.city_code = p.city_code AND price.park_id = p.id
+
+        INNER JOIN c_charging_order_pay_log  log ON log.order_id = co.chargeSeq
+		WHERE 1 = 1
+		<if test="equipmentId != null and equipmentId != '' ">
+			AND ei.id = #{equipmentId}
+		</if>
+		<if test="invoiceStatus != null and invoiceStatus !='' ">
+			<choose>
+				<when test="invoiceStatus == 3 ">
+					AND co.invoice_status = #{invoiceStatus}
+				</when>
+				<otherwise>
+					AND co.invoice_status != 3
+				</otherwise>
+			</choose>
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.start_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+        <if test="payBeginTime != null and payBeginTime != '' ">
+            <![CDATA[ AND log.pay_time >= #{payBeginTime, jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="payEndTime != null and payEndTime != '' ">
+            <![CDATA[ AND log.pay_time <= #{payEndTime, jdbcType=TIMESTAMP} ]]>
+        </if>
+	</sql>
+	<!-- 充电桩收入报表  【网点名】【充电桩编码】【桩类型】（如：快充-单枪、慢充-双枪）【充电电量】【价格】（两个小项：【物业电价】、【会员电价】）【计费金额（元）】【充电收入】 -->
+	<select id="getIncomeDetailReport" resultMap="IncomeMap" parameterType="java.util.Map">
+		SELECT
+        log.pay_time,
+		price.charging_price chargingPrice, price.service_price servicePrice,
+		co.invoice_status, case co.invoice_status when 3 then co.pay_money else 0 end as invoiceMoney,
+		(price.charging_price + price.service_price) totalPrice,
+		c.layer cityLayer, c.id cityId, c.p_id cityPid, c.`name` cityName, c.`code` cityCode,
+		p.id parkId, p.`name` stationName, p.cooperation_type cooperationType,
+		ei.id equipmentId, ei.equipment_code equipmentCode,
+		ei.equipment_type equipmentType, ei.connector_number connectorCnt,
+		co.pay_money payMoney, co.coupon_value couponAmount, co.charging_status,
+		(co.pay_money + co.coupon_value) income, co.order_money fee,co.start_time,co.pay_money,
+		co.charging_time totalChargingTime, co.charging_amount chargedQuantity,co.park_no carport,co.lpn lpn,co.userType,co.memberStatus,
+		(select sum(charging_amount) <include refid="income_base_select"/>) charging_amount_sum,
+		(select sum(charging_price + service_price) <include refid="income_base_select"/>) total_price_sum,
+		(select sum(order_money) <include refid="income_base_select"/>) fee_sum,
+		(select sum(co.pay_money ) <include refid="income_base_select"/> and co.invoice_status = 3) invoiceMoney_sum,
+		(select sum(co.pay_money) <include refid="income_base_select"/>) income_sum
+
+		<include refid="income_base_select"/>
+		<!-- GROUP BY ei.id, c.id -->
+		ORDER BY co.start_time DESC
+		<if test="from != null and to != null">
+		LIMIT #{from, jdbcType=INTEGER} , #{to, jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="getIncomeDetailReportCount" resultType="java.lang.Integer"
+			parameterType="java.util.Map">
+		SELECT COUNT(1) <include refid="income_base_select"/>
+		<!-- FROM c_equipment_info ei
+           INNER JOIN x_park p ON ei.station_id = p.id
+                   <if test="parkId != null and parkId != '' ">
+                       AND p.id = #{parkId}
+                   </if>
+                   <if test="cityCode != null and cityCode != '' ">
+                       AND p.city_code = #{cityCode}
+                   </if>
+                   <if test="cooperationType != null and cooperationType != '' ">
+                       AND p.cooperation_type = #{cooperationType}
+                   </if>
+               INNER JOIN x_city c ON p.city_code = c.`code`
+
+               INNER JOIN c_charging_order co ON co.station_id = p.id
+                   AND co.equipment_id = ei.id
+                   <![CDATA[ AND co.charging_time > 0 ]]>
+                   AND co.end_time IS NOT NULL
+               INNER JOIN c_charging_pile_price price ON
+                   price.equipment_type = ei.equipment_type AND price.city_code = p.city_code AND price.park_id = p.id
+
+               WHERE 1 = 1
+               <if test="equipmentId != null and equipmentId != '' ">
+                   AND ei.id = #{equipmentId}
+               </if>
+               <if test="begin != null and begin != '' ">
+                   <![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+               </if>
+               <if test="end != null and end != '' ">
+                   <![CDATA[ AND co.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+               </if> -->
+	</select>
+
+	<!-- 用电量报表。按城市、网点（模糊查询）、网点类型、桩类型、日期区间查询 -->
+	<select id="getChargingConsumptionReport" parameterType="java.util.Map" resultMap="ConsumptionMap">
+		SELECT tab.*,ords.charging_amount chargedQuantity  from c_charging_order ords RIGHT JOIN
+		(SELECT
+		c.`name` cityname,
+		e.type,
+		p.id,
+		p.`name` stationName,
+		p.cooperation_type cooperationType,
+		e.eid,
+		e.fastPileCnt,
+		e.slowPileCnt,
+		e.combinedPileCnt,
+		e.station_id stid
+		FROM x_park p inner join x_city c on c.code = p.city_code
+		<if test="cityCode != null and cityCode != '' ">
+			AND c.`code` = #{cityCode}
+		</if> inner join
+		( SELECT station_id,infos.id eid,infos.equipment_type type,
+		SUM(IF(infos.equipment_type = 1, 1, 0)) fastPileCnt,
+		SUM(IF(infos.equipment_type = 2, 1, 0)) slowPileCnt,
+		SUM(IF(infos.equipment_type = 3, 1, 0)) combinedPileCnt
+		FROM c_equipment_info infos,x_park park where infos.station_id = park.id
+		<if test="equipmentType != null and equipmentType != '' ">
+			AND infos.equipment_type = #{equipmentType}
+		</if>
+		group by park.`name`
+		) e on e.station_id = p.id
+		<if test="stationName != null and stationName != '' ">
+			AND p.`name` LIKE CONCAT(CONCAT('%', #{stationName}), '%')
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+		) tab on tab.eid = ords.equipment_id AND ords.station_id = tab.stid
+
+	</select>
+
+	<select id="getChargingConsumptionReportCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT  COUNT(DISTINCT p.`name`)
+		FROM x_park p
+		<!-- INNER JOIN c_charging_order co ON p.id = co.station_id -->
+		INNER JOIN x_city c ON c.`code` = p.city_code
+		<if test="cityCode != null and cityCode != '' ">
+			AND c.`code` = #{cityCode}
+		</if>
+		INNER JOIN c_equipment_info e ON e.station_id = p.id
+		<if test="equipmentType != null and equipmentType != '' ">
+			AND e.equipment_type = #{equipmentType}
+		</if>
+		WHERE 1 = 1
+		<if test="stationName != null and stationName != '' ">
+			AND p.`name` LIKE CONCAT(CONCAT('%', #{stationName}), '%')
+		</if>
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND p.cooperation_type = #{cooperationType}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND co.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND co.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+
+	</select>
+
+<!-- 查询充电订单管理列表 -->
+	<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+		SELECT p.`name` stationName, m.`name` member_name, m.phone, c.chargeSeq,
+		c.lpn, ci.connector_type, ci.park_no, c.charging_status, c.memberStatus,
+		c.charging_amount, c.charging_time, c.create_time, c.start_time, c.end_time,
+		c.order_money, c.pay_money, c.pay_type  FROM c_charging_order c
+		INNER JOIN
+		<choose>
+			<when test="userType == 'employee' and userType !=''">
+				e_employee_info
+			</when>
+			<otherwise>
+				x_member
+			</otherwise>
+		</choose>  m ON m.id = c.member_id
+		INNER JOIN c_connector_info ci ON ci.id = c.connector_id
+		INNER JOIN x_park p ON p.id = c.station_id
+		WHERE 1 = 1
+		<choose>
+			<when test="userType == 'employee' and userType !=''">
+				AND c.userType = 'employee'
+			</when>
+			<otherwise>
+				AND c.userType = 'member'
+			</otherwise>
+		</choose>
+		<if test="cityCode != null and cityCode != '' ">
+			AND c.city_code = #{cityCode}
+		</if>
+		<if test="stationName != null and stationName != '' ">
+			AND p.`name` LIKE CONCAT('%',#{stationName},'%')
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			AND m.`name` LIKE CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="phone != null and phone != '' ">
+			AND m.phone = #{phone}
+		</if>
+		<if test="lpn != null and lpn != ''">
+			AND c.lpn  LIKE CONCAT('%',#{lpn},'%')
+		</if>
+		<choose>
+			<when test="chargingStatus !=null and chargingStatus !=''">
+				AND c.charging_status =#{chargingStatus,jdbcType=VARCHAR}
+			</when>
+			<otherwise>
+				AND c.charging_status NOT IN ('preCharging', 'cancel')
+			</otherwise>
+		</choose>
+		<if test=" bt != null and bt!='' and et != null and et !='' ">
+			AND (c.create_time &gt;= #{bt,jdbcType=TIMESTAMP} AND  c.create_time &lt;= #{et,jdbcType=TIMESTAMP})
+		</if>
+		order by c.create_time DESC 
+		<if test="from != null and to != null">
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+		</if>
+
+  </select>
+<!--
+	<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>,
+		(select u.name from x_sys_user u where u.id = c.create_id) create_name,
+		(select u.name from x_sys_user u where u.id = c.update_id) update_name,
+		case when c.userType = 'employee' then
+				(select e.name from e_employee_info e where e.id = c.member_id)
+			else
+				(select m.name from x_member m where m.id = c.member_id)
+		end
+		member_name,
+		case when c.userType = 'employee' then
+				(select e.phone from e_employee_info e where e.id = c.member_id)
+			else
+				(select m.phone from x_member m where m.id = c.member_id)
+		end
+		phone,
+		(select e.equipment_code from c_equipment_info e where e.id=c.equipment_id) equipment_code,
+		(select e.equipment_type from c_equipment_info e where e.id=c.equipment_id) equipmentType,
+		(select t.name  from x_park t where t.id = c.station_id) station_name ,
+		(select n.connector_code from  c_connector_info n   where n.id =c.connector_id )connector_code
+		from c_charging_order c where 1 =1
+		<if test="cityCode !=null and cityCode !=''">
+			and c.city_code =#{cityCode}
+		</if>
+		<if test="stationName !=null and stationName!=''">
+			and c.station_id = (select t.id from x_park t where t.name =#{stationName})
+		</if>
+		<if test="memberName !=null and memberName !=''">
+			and c.member_id =
+				case when c.userType = 'employee' then
+					(select e.id from e_employee_info e where e.name = #{memberName})
+				else
+					(select m.id from x_member m where m.name = #{memberName})
+				end
+		</if>
+		<if test=" bt != null and bt!='' and et != null and et !='' ">
+			and (create_time &gt;= #{bt,jdbcType=TIMESTAMP} and  create_time &lt;= #{et,jdbcType=TIMESTAMP})
+		</if>
+		<choose>
+			<when test="chargingStatus !=null and chargingStatus !=''">
+				and c.charging_status =#{chargingStatus,jdbcType=VARCHAR}
+			</when>
+			<otherwise>
+				and c.charging_status <![CDATA[ <> ]]> 'preCharging'
+			</otherwise>
+		</choose>
+		order by c.create_time DESC limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+
+  </select>
+-->
+
+	<select id="selectByChargeSeq" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from c_charging_order
+		where chargeSeq = #{objId}
+	</select>
+	<select id="selectByMemberIdAndStatus" resultMap="BaseResultMap">
+		select
+		o.chargeSeq,m.phone,o.member_id
+		from c_charging_order o join x_member m on o.member_id = m.id
+		where o.connector_id = #{connectorId} and o.charging_status = 'ordered'
+	</select>
+	<select id="selectByMemberIdAndChargingStatus" resultMap="BaseResultMap">
+		SELECT m.phone,o.chargeSeq,o.member_id FROM x_member m
+		INNER JOIN c_charging_order o on m.id = o.member_id
+		INNER JOIN c_connector_status_info s on o.connector_id = s.connector_id
+		WHERE s.`status` = 3 and s.connector_id = #{connectorId} and o.charging_status IN ('charging', 'afterReturn')
+	</select>
+
+	<select id="selectByConnectorId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from c_charging_order
+		where connector_id = #{connectorId} and charging_status = 'ordered'
+	</select>
+
+	<select id="selectEmployeeChargingOrderByConnectorId" resultMap="BaseResultMap">
+		select * from c_charging_order where connector_id = #{connectorId} and userType = 'employee' and charging_status = 'charging'
+	</select>
+
+	<select id="selectUserByConnectorId" resultMap="BaseResultMap">
+		SELECT
+		(CASE WHEN userType = 'employee' then (SELECT name FROM e_employee_info WHERE id = member_id) ELSE (SELECT name FROM x_member WHERE id = member_id) end) member_name,
+		start_time from c_charging_order WHERE connector_id = #{connectorId} and charging_status in
+		<foreach collection="statusList" item="orderStatus" index="index" open="(" close=")" separator=",">
+			#{orderStatus}
+		</foreach>
+		order by create_time DESC LIMIT 1
+
+	</select>
+
+	<select id="selectReturnCarCharging" resultMap="BaseResultMap">
+		SELECT (select name from x_member where id = o.member_id) member_name, o.start_time from c_charging_order o INNER JOIN c_connector_status_info c on o.connector_id = c.connector_id WHERE c.connector_id = #{connectorId} and o.memberStatus = 'return' and c.status = 3 order by o.start_time DESC limit 1
+	</select>
+
+	<!--  合计  -->
+	<sql id="sql_queryChargingSum">
+
+		(select
+		o.charging_amount charging_amount,
+		case o.invoice_status when 3 then plog.pay_money else 0 end as invoiceMoney,
+		o.pay_money pay_money,
+		o.create_time create_time,
+		o.lpn lpn,
+		o.invoice_status invoice_status,
+        if(o.charging_status='finish',plog.pay_time,NULL ) as pay_time
+		FROM c_charging_order o
+		INNER JOIN c_charging_order_pay_log plog ON plog.order_id = o.chargeSeq
+		AND o.pay_money <![CDATA[ > ]]> 0
+		INNER JOIN
+		( SELECT c.id connectorId,
+		p.`name` parkName, e.equipment_code, e.equipment_type,
+		price.charging_price, price.service_price
+		FROM c_equipment_info e
+		INNER JOIN c_connector_info c ON c.equipment_id = e.id
+		INNER JOIN x_park p ON p.id = e.station_id
+		INNER JOIN c_charging_pile_price price ON price.park_id = e.station_id AND price.equipment_type = e.equipment_type
+		) a ON a.connectorId = o.connector_id
+		<if test=" cityCode != '-1'">
+			<choose>
+				<when test="cityCode != null and cityCode != '' ">
+					INNER JOIN
+					(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code`
+					AND car.city_code = #{cityCode}
+					) city ON city.lpn = o.lpn
+				</when>
+				<otherwise>
+					LEFT JOIN
+					(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code` ) city ON city.lpn = o.lpn
+				</otherwise>
+			</choose>
+		</if>
+		<!-- FROM c_charging_order o
+		INNER JOIN c_charging_order_pay_log plog ON plog.order_id = o.chargeSeq
+		AND plog.pay_status = '1' AND plog.pay_money <![CDATA[ > ]]> 0
+		<if test="cityCode != null and cityCode != '' and cityCode != '-1' ">
+			INNER JOIN
+			(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code`
+			AND car.city_code = #{cityCode}
+			) city ON city.lpn = o.lpn
+		</if>
+		-->
+		) _order 
+
+	</sql>
+
+	<!--  本年合计  -->
+	<select id="queryChargingThisYearSum" parameterType="java.lang.String" resultMap="FinanceReportMap">
+		SELECT
+		SUM(_order.charging_amount) chargingAmount, ROUND(SUM(_order.pay_money) / 100.0, 2) payMoney ,ROUND(SUM(_order.invoiceMoney) / 100.0, 2) invoiceMoney
+		from
+		<include refid="sql_queryChargingSum"/>
+		WHERE 1 = 1 and
+		<![CDATA[ _order.create_time >= CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS datetime) ]]>
+		and <![CDATA[ _order.pay_time >= CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS datetime) ]]>
+		<if test="cityCode != null and cityCode == '-1'">
+			and _order.lpn not in (select lpn from x_car_run)
+		</if>
+		<if test="invoiceStatus != null and invoiceStatus !='' ">
+			<choose>
+				<when test="invoiceStatus == 3 ">
+					AND _order.invoice_status = #{invoiceStatus}
+				</when>
+				<otherwise>
+					AND _order.invoice_status != 3
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+
+	<!--  总合计  -->
+	<select id="queryChargingTotalSum" parameterType="java.lang.String" resultMap="FinanceReportMap">
+		SELECT
+		SUM(_order.charging_amount) chargingAmount, ROUND(SUM(_order.pay_money) / 100.0, 2) payMoney ,ROUND(SUM(_order.invoiceMoney) / 100.0, 2) invoiceMoney
+		from
+		<include refid="sql_queryChargingSum"/>
+		
+		WHERE  1=1
+		<if test="cityCode != null and cityCode == '-1'">
+			and  _order.lpn not in (select lpn from x_car_run)
+		</if>
+		<if test="yearStart != null and yearStart !='' and yearEnd != null and yearEnd !='' ">
+            and _order.create_time BETWEEN #{yearStart,jdbcType=TIMESTAMP} AND #{yearEnd,jdbcType=TIMESTAMP}
+        </if>
+		<if test="invoiceStatus != null and invoiceStatus !='' ">
+			<choose>
+				<when test="invoiceStatus == 3 ">
+					AND _order.invoice_status = #{invoiceStatus}
+				</when>
+				<otherwise>
+					AND _order.invoice_status != 3
+				</otherwise>
+			</choose>
+		</if>
+		
+	</select>
+    <sql id="queryChargingFinanceReportSql">
+        FROM c_charging_order o
+        LEFT JOIN c_charging_order_pay_log plog ON plog.order_id = o.chargeSeq
+        INNER JOIN
+        ( SELECT c.id connectorId,
+        p.`name` parkName, e.equipment_code, e.equipment_type,
+        price.charging_price, price.service_price
+        FROM c_equipment_info e
+        INNER JOIN c_connector_info c ON c.equipment_id = e.id
+        INNER JOIN x_park p ON p.id = e.station_id
+        INNER JOIN c_charging_pile_price price ON price.park_id = e.station_id AND price.equipment_type = e.equipment_type
+        ) a ON a.connectorId = o.connector_id
+
+        <if test=" cityCode != '-1'">
+            <choose>
+                <when test="cityCode != null and cityCode != '' ">
+                    INNER JOIN
+                    (SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code`
+                    AND car.city_code = #{cityCode}
+                    ) city ON city.lpn = o.lpn
+                </when>
+                <otherwise>
+                    LEFT JOIN
+                    (SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code` ) city ON city.lpn = o.lpn
+                </otherwise>
+            </choose>
+        </if>
+        WHERE 1 = 1  and o.charging_status in ('finish','noPay')   AND o.order_money> 0
+        <if test="cityCode != null and cityCode == '-1' ">
+            and  o.lpn not in (select lpn from x_car_run)
+        </if>
+        <if test="payStatus != null and payStatus != '' ">
+            and  o.charging_status = #{payStatus}
+        </if>
+        <if test="invoiceStatus != null and invoiceStatus !='' ">
+            <choose>
+                <when test="invoiceStatus == 3 ">
+                    AND o.invoice_status = #{invoiceStatus}
+                </when>
+                <otherwise>
+                    AND o.invoice_status != 3
+                </otherwise>
+            </choose>
+        </if>
+        <if test="begin != null and begin != '' ">
+            <![CDATA[ AND o.create_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="end != null and end != '' ">
+            <![CDATA[ AND o.create_time <= #{end, jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="payBeginTime != null and payBeginTime != '' ">
+            <![CDATA[ AND plog.pay_time >= #{payBeginTime, jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="payEndTime != null and payEndTime != '' ">
+            <![CDATA[ AND plog.pay_time <= #{payEndTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+    </sql>
+
+	<!--  查询充电财务报表   -->
+	<select id="queryChargingFinanceReport" parameterType="java.util.Map" resultMap="FinanceReportMap">
+		SELECT o.id, o.start_time createTime, o.lpn,
+		<choose>
+			<when test="cityCode != null and cityCode == '-1'">
+				'外部车辆' cityName,
+			</when>
+			<otherwise>
+				IFNULL(city.`name`, '外部车辆') cityName,
+			</otherwise>
+		</choose>
+		o.member_id memberId, a.parkName,o.invoice_status,
+		a.equipment_code equipmentCode, a.equipment_type equipmentType,
+		o.charging_amount chargingAmount,
+		ROUND(a.charging_price / 100.0, 2) chargingPrice, ROUND(a.service_price / 100.0, 2) servicePrice,
+		case o.invoice_status when 3 then ROUND(plog.pay_money/100.0,2) else 0 end as invoiceMoney,
+		ROUND(o.pay_money / 100.0, 2) payMoney
+        ,if(o.charging_status='finish',plog.pay_time,NULL ) as pay_time
+        ,ROUND(o.order_money/100.0,2) as order_money
+        ,o.charging_status as pay_status
+        <include refid="queryChargingFinanceReportSql"/>
+		<!--FROM c_charging_order o
+		LEFT JOIN c_charging_order_pay_log plog ON plog.order_id = o.chargeSeq
+		AND o.pay_money <![CDATA[ > ]]> 0
+		INNER JOIN
+		( SELECT c.id connectorId,
+		p.`name` parkName, e.equipment_code, e.equipment_type,
+		price.charging_price, price.service_price
+		FROM c_equipment_info e
+		INNER JOIN c_connector_info c ON c.equipment_id = e.id
+		INNER JOIN x_park p ON p.id = e.station_id
+		INNER JOIN c_charging_pile_price price ON price.park_id = e.station_id AND price.equipment_type = e.equipment_type
+		) a ON a.connectorId = o.connector_id
+
+		<if test=" cityCode != '-1'">
+			<choose>
+				<when test="cityCode != null and cityCode != '' ">
+					INNER JOIN
+					(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code`
+					AND car.city_code = #{cityCode}
+					) city ON city.lpn = o.lpn
+				</when>
+				<otherwise>
+					LEFT JOIN
+					(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code` ) city ON city.lpn = o.lpn
+				</otherwise>
+			</choose>
+		</if>
+		WHERE 1 = 1  and o.charging_status in ('finish','noPay')
+		<if test="cityCode != null and cityCode == '-1' ">
+			and  o.lpn not in (select lpn from x_car_run)
+		</if>
+        <if test="payStatus != null and payStatus != '' ">
+            and  o.charging_status = #{payStatus}
+        </if>
+		<if test="invoiceStatus != null and invoiceStatus !='' ">
+			<choose>
+				<when test="invoiceStatus == 3 ">
+					AND o.invoice_status = #{invoiceStatus}
+				</when>
+				<otherwise>
+					AND o.invoice_status != 3
+				</otherwise>
+			</choose>
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND o.create_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND o.create_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+        <if test="payBeginTime != null and payBeginTime != '' ">
+            <![CDATA[ AND plog.pay_time >= #{payBeginTime, jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="payEndTime != null and payEndTime != '' ">
+            <![CDATA[ AND plog.pay_time <= #{payEndTime,jdbcType=TIMESTAMP} ]]>
+        </if>-->
+
+		ORDER BY o.create_time DESC
+		<if test="from != null and to != null">
+			LIMIT #{from, jdbcType=INTEGER} , #{to, jdbcType=INTEGER}
+		</if>
+	</select>
+    <!--充电财务报表本年合计和总合计-->
+    <select id="queryChargingSum" resultMap="FinanceReportMap">
+        SELECT (case when #{searchType,jdbcType=INTEGER}=1 then '本年合计'
+        when #{searchType,jdbcType=INTEGER}=2 then '总合计' end) as cityName,
+       ROUND(sum(o.order_money)/100.0,2)  AS order_money,
+        ROUND(sum(o.pay_money)/100.0,2) AS payMoney,
+        sum(o.charging_amount) as chargingAmount,
+        (case o.invoice_status when 3 then ROUND(sum(plog.pay_money)/100.0 ,2) else 0 end) as invoiceMoney
+        <include refid="queryChargingFinanceReportSql"/>
+    </select>
+
+	<!--  查询充电财务报表记录数   -->
+	<select id="queryChargingFinanceReportRecords" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1)
+        <include refid="queryChargingFinanceReportSql"/>
+		<!--FROM c_charging_order o
+		INNER JOIN c_charging_order_pay_log plog ON plog.order_id = o.chargeSeq
+		AND o.pay_money <![CDATA[ > ]]> 0
+
+		INNER JOIN
+		( SELECT c.id connectorId,
+		p.`name` parkName, e.equipment_code, e.equipment_type,
+		price.charging_price, price.service_price
+		FROM c_equipment_info e
+		INNER JOIN c_connector_info c ON c.equipment_id = e.id
+		INNER JOIN x_park p ON p.id = e.station_id
+		INNER JOIN c_charging_pile_price price ON price.park_id = e.station_id AND price.equipment_type = e.equipment_type
+		) a ON a.connectorId = o.connector_id
+
+		&lt;!&ndash;  <if test="cityCode != null and cityCode != '' and cityCode != '-1' ">
+             INNER JOIN
+                (SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code`
+                    AND car.city_code = #{cityCode}
+                ) city ON city.lpn = o.lpn
+         </if> &ndash;&gt;
+		<if test=" cityCode != '-1'">
+			<choose>
+				<when test="cityCode != null and cityCode != '' ">
+					INNER JOIN
+					(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code`
+					AND car.city_code = #{cityCode}
+					) city ON city.lpn = o.lpn
+				</when>
+				<otherwise>
+					LEFT JOIN
+					(SELECT city.`code`, city.`name`, car.lpn FROM x_city city INNER JOIN x_car car ON car.city_code = city.`code` ) city ON city.lpn = o.lpn
+				</otherwise>
+			</choose>
+		</if>
+		WHERE 1 = 1   and o.charging_status in ('finish','noPay')
+		<if test="cityCode != null and  cityCode == '-1' ">
+			and  o.lpn not in (select lpn from x_car_run)
+		</if>
+        <if test="payStatus != null and payStatus != '' ">
+            and  o.charging_status = #{payStatus}
+        </if>
+		<if test="invoiceStatus != null and invoiceStatus !='' ">
+			<choose>
+				<when test="invoiceStatus == 3 ">
+					AND o.invoice_status = #{invoiceStatus}
+				</when>
+				<otherwise>
+					AND o.invoice_status != 3
+				</otherwise>
+			</choose>
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND o.create_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND o.create_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>-->
+	</select>
+	<select id="queryCooperationChargingOrder" resultMap="BaseResultMap">
+		select * from c_charging_order where connector_id = #{connectorId} and charging_status = 'charging' limit 1
+	</select>
+
+	<!-- 查询非宜步车的充电信息，用于控制结束充电  -->
+	<!-- 条件：充电订单状态为charging或afterReturn，非员工充电，memberStatus为ordered或return（偷电的情况memberStatus都是这样的状态，然后给别的车充电）  -->
+	<!-- 对车的判断条件：车的restBatteryCache大于实时的rest_battery，表示车在耗电；或者，实时update_time远大于restBatteryCacheTime，表示很久没更新，即restBatteryCache与实时的rest_battery持平了很久，则车没有被充电  -->
+	<select id="queryChargingNotIberCarOrderList" parameterType="java.lang.Integer"
+			resultMap="BaseResultMap">
+		SELECT <include refid="ChargingOrder_Column_List" />
+		FROM c_charging_order c
+		<![CDATA[
+			INNER JOIN c_connector_status_info cs ON cs.connector_id = c.connector_id AND cs.`status` = 3
+			INNER JOIN
+				(SELECT r.lpn FROM x_car_run r
+					WHERE r.bat_status = 0 AND r.update_time IS NOT NULL AND
+					(r.restBatteryCache > r.rest_battery
+						OR TIMESTAMPDIFF(MINUTE, r.restBatteryCacheTime, r.update_time) > #{updateBatteryCacheInterval})) cr ON cr.lpn = c.lpn
+			WHERE c.userType = 'member' AND c.charging_status IN ('charging', 'afterReturn')
+				AND c.memberStatus IN ('useCar', 'return')
+				AND TIMESTAMPDIFF(MINUTE,  c.start_time, NOW()) >= #{chargingStartedMinutes}
+				AND (c.remark <> '正常' OR c.remark IS NULL)
+			GROUP BY c.connector_id
+		]]>
+	</select>
+
+
+
+    <update id="updateNormalOrder" parameterType="java.lang.Integer">
+		<![CDATA[
+		UPDATE c_charging_order c
+			INNER JOIN (SELECT r.lpn FROM x_car_run r
+			WHERE r.bat_status = 1 OR r.restBatteryCache < r.rest_battery) cr ON cr.lpn = c.lpn
+		  SET c.remark = '正常'
+			WHERE c.userType = 'member' AND c.charging_status IN ('charging', 'afterReturn')
+			AND c.memberStatus IN ('ready', 'useCar', 'return')
+			AND TIMESTAMPDIFF(MINUTE,  c.start_time, NOW()) >= #{chargingStartedMinutes}
+			AND (c.remark <> '偷电' OR c.remark IS NULL)
+		]]>
+	</update>
+
+</mapper>

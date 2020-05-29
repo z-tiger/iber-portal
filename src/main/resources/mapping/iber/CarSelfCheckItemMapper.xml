@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarSelfCheckItemMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarSelfCheckItem" >
+    <id column="id" property="id"  />
+    <result column="item_type" property="itemType"  />
+    <result column="item_name" property="itemName"  />
+    <result column="status" property="status"  />
+    <result column="create_time" property="createTime" />
+    <result column="update_time" property="updateTime" />
+    <result column="create_user" property="createUser"  />
+    <result column="uname" property="uname" />
+    <result column="app_type" property="appType"/>
+    <result column="exception_upload_status" property="exceptionUploadStatus"/>
+    <result column="upload_status" property="uploadStatus"/>
+    <result column="sample_photo_uri" property="samplePhotoUri"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, item_type, item_name, status, create_time, update_time, create_user,app_type,exception_upload_status,upload_status,sample_photo_uri
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_self_check_item
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_self_check_item
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.car.CarSelfCheckItem" >
+    insert into x_car_self_check_item (id, item_type, item_name, 
+      status, create_time, update_time, 
+      create_user,app_type,exception_upload_status,upload_status)
+    values (#{id}, #{itemType}, #{itemName}, 
+      #{status}, #{createTime}, #{updateTime}, 
+      #{createUser},#{appType},#{exceptionUploadStatus},#{uploadStatus})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarSelfCheckItem" >
+    insert into x_car_self_check_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemType != null" >
+        item_type,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="appType != null" >
+        app_type,
+      </if>
+      <if test="exceptionUploadStatus != null" >
+        exception_upload_status,
+      </if>
+      <if test="uploadStatus != null" >
+        upload_status,
+      </if>
+      <if test="samplePhotoUri != null" >
+        sample_photo_uri,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="itemType != null" >
+        #{itemType},
+      </if>
+      <if test="itemName != null" >
+        #{itemName},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="createUser != null" >
+        #{createUser},
+      </if>
+      <if test="appType != null" >
+        #{appType},
+      </if>
+      <if test="exceptionUploadStatus != null" >
+        #{exceptionUploadStatus},
+      </if>
+      <if test="uploadStatus != null" >
+        #{uploadStatus},
+      </if>
+      <if test="samplePhotoUri != null" >
+        #{samplePhotoUri},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarSelfCheckItem" >
+    update x_car_self_check_item
+    <set >
+      <if test="itemType != null" >
+        item_type = #{itemType},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+       <if test="appType != null" >
+      	 app_type = #{appType},
+      </if>
+      <if test="exceptionUploadStatus != null" >
+         exception_upload_status = #{exceptionUploadStatus},
+      </if>
+      <if test="uploadStatus != null" >
+         upload_status = #{uploadStatus},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.CarSelfCheckItem" >
+    update x_car_self_check_item
+    set item_type = #{itemType},
+      item_name = #{itemName},
+      status = #{status},
+      create_time = #{createTime},
+      update_time = #{updateTime},
+      app_type = #{appType},exception_upload_status = #{exceptionUploadStatus},upload_status = #{uploadStatus},
+      sample_photo_uri = #{samplePhotoUri},
+      create_user = #{createUser}
+    where id = #{id}
+  </update>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select  <include refid="Base_Column_List" />,(SELECT u.name from x_sys_user u where u.id = csci.create_user) uname from x_car_self_check_item csci
+  	where 1 = 1
+  	<if test="itemType != null and itemType != ''">
+  		and csci.item_type = #{itemType}
+  	</if>
+  	<if test="status != null and status != ''">
+  		and csci.status = #{status}
+  	</if>
+  	<if test="appType != null and appType != ''">
+  		and csci.app_type = #{appType}
+  	</if>
+  	order by create_time desc limit #{from}, #{to}
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	select count(1) from x_car_self_check_item csci where 1 = 1
+  	<if test="itemType != null and itemType != ''">
+  		and csci.item_type = #{itemType}
+  	</if>
+  	<if test="status != null and status != ''">
+  		and csci.status = #{status}
+  	</if>
+  	<if test="appType != null and appType != ''">
+  		and csci.app_type = #{appType}
+  	</if>
+  </select>
+</mapper>

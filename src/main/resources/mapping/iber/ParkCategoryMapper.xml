@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.base.ParkCategoryMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.base.ParkCategory" >
+	<result column="id" property="id"/>
+	<result column="name" property="name"/>
+	<result column="remark" property="remark"/>
+</resultMap>
+       
+<!-- x_park_category table all fields -->
+<sql id="Base_Column_List" >
+	 id,name,remark
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.base.ParkCategory" >
+  insert into x_park_category(id,name,remark)
+ values(#{id},#{name},#{remark})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_park_category where id = #{id}
+</delete>
+
+<!-- 删除记录 -->
+<delete id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_park_category set name=#{name},remark=#{remark} where id=#{id}
+</delete>
+
+<!-- 根据id查询 停车场类型 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_park_category where id = #{id}
+</select>
+
+<!-- 停车场类型 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_park_category where 1=1 
+ 
+ 
+</select>
+  	
+<!-- 查询停车场类型列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="Base_Column_List"/>
+	from x_park_category where 1 =1 
+	
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+  	
+<select id="queryAllParkCategoryList" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List"/>
+	from x_park_category where 1 =1 
+</select>  	
+</mapper>   

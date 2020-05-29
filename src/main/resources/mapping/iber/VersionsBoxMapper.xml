@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.versions.VersionsBoxMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.versions.VersionsBox" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="category_code" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="version_name" property="versionName" jdbcType="VARCHAR" />
+    <result column="version_url" property="versionUrl" jdbcType="VARCHAR" />
+    <result column="version_no" property="versionNo" jdbcType="VARCHAR" />
+    <result column="version_record" property="versionRecord" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_increment" property="isIncrement" jdbcType="VARCHAR" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+    <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, category_code, version_name, version_url, version_no, version_record, create_id, 
+    create_time, update_id, update_time, remark, is_increment
+  </sql>
+
+    <sql id="Base_Column_List_Record">
+	count(1) counts
+  </sql> 
+  
+    <select id="selectByPrimaryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from x_versions_box
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <select id="selectByPrimaryInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   		SELECT
+	box.*, (
+		SELECT
+			`name`
+		FROM
+			x_sys_user
+		WHERE
+			box.create_id = id
+	) create_name,
+	(
+		SELECT
+			`name`
+		FROM
+			x_sys_user
+		WHERE
+			box.update_id = id
+	) update_name,
+	(
+		SELECT
+			`name`
+		FROM
+			x_versions_category
+		WHERE
+			box.category_code = `code`
+	) category_name
+FROM
+	x_versions_box box
+    	<trim prefixOverrides="and">
+			<where>
+		      <if test="categoryCode != null and categoryCode != ''" >
+		    	and category_code like "%"#{categoryCode,jdbcType=VARCHAR}"%"
+		      </if>	
+			</where>
+		</trim>
+		order by create_time  desc  limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+   </select>
+  
+ 	<select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List_Record" />
+         from x_versions_box
+    		<trim prefixOverrides="and">
+			<where>
+		      <if test="categoryCode != null and categoryCode != ''" >
+		    	and category_code like "%"#{categoryCode,jdbcType=VARCHAR}"%"
+		      </if>	
+			</where>
+		   </trim>
+	</select>  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_versions_box
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_versions_box
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.versions.VersionsBox" >
+    insert into x_versions_box (id, category_code, version_name, 
+      version_url, version_no, version_record, 
+      create_id, create_time, update_id, 
+      update_time, remark, is_increment
+      )
+    values (#{id,jdbcType=INTEGER}, #{categoryCode,jdbcType=VARCHAR}, #{versionName,jdbcType=VARCHAR}, 
+      #{versionUrl,jdbcType=VARCHAR}, #{versionNo,jdbcType=VARCHAR}, #{versionRecord,jdbcType=INTEGER}, 
+      #{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{isIncrement,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.versions.VersionsBox" >
+    insert into x_versions_box
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="categoryCode != null" >
+        category_code,
+      </if>
+      <if test="versionName != null" >
+        version_name,
+      </if>
+      <if test="versionUrl != null" >
+        version_url,
+      </if>
+      <if test="versionNo != null" >
+        version_no,
+      </if>
+      <if test="versionRecord != null" >
+        version_record,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isIncrement != null" >
+        is_increment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="categoryCode != null" >
+        #{categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null" >
+        #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="versionUrl != null" >
+        #{versionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="versionNo != null" >
+        #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="versionRecord != null" >
+        #{versionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isIncrement != null" >
+        #{isIncrement,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.versions.VersionsBox" >
+    update x_versions_box
+    <set >
+      <if test="categoryCode != null" >
+        category_code = #{categoryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null" >
+        version_name = #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="versionUrl != null" >
+        version_url = #{versionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="versionNo != null" >
+        version_no = #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="versionRecord != null" >
+        version_record = #{versionRecord,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isIncrement != null" >
+        is_increment = #{isIncrement,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.versions.VersionsBox" >
+    update x_versions_box
+    set category_code = #{categoryCode,jdbcType=VARCHAR},
+      version_name = #{versionName,jdbcType=VARCHAR},
+      version_url = #{versionUrl,jdbcType=VARCHAR},
+      version_no = #{versionNo,jdbcType=VARCHAR},
+      version_record = #{versionRecord,jdbcType=INTEGER},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_increment = #{isIncrement,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

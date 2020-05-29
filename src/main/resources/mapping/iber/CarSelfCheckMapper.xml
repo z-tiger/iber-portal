@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarSelfCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarSelfCheck" >
+    <id column="id" property="id"  />
+    <result column="item_id" property="itemId"  />
+    <result column="order_id" property="orderId"  />
+    <result column="member_id" property="memberId"  />
+    <result column="member_type" property="memberType"  />
+    <result column="lpn" property="lpn"  />
+    <result column="handle_status" property="handleStatus"  />
+    <result column="handle_user" property="handleUser"  />
+    <result column="car_check_uri" property="carCheckUri"  />
+    <result column="create_time" property="createTime"  />
+    <result column="update_time" property="updateTime"  />
+    <result column="phone" property="phone"/>
+    <result column="itemName" property="itemName"/>
+    <result column="item_type" property="itemType"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, item_id, order_id,member_id, member_type, lpn, handle_status, handle_user, car_check_uri, 
+    create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_self_check
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_self_check
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.car.CarSelfCheck" >
+    insert into x_car_self_check (id, item_id, order_id, 
+      member_id, member_type, lpn, 
+      handle_status, handle_user, car_check_uri, 
+      create_time, update_time)
+    values (#{id}, #{itemId}, #{orderId}, 
+      #{memberId}, #{memberType}, #{lpn}, 
+      #{handleStatus}, #{handleUser}, #{carCheckUri}, 
+      #{createTime}, #{updateTime})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarSelfCheck" >
+    insert into x_car_self_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="memberType != null" >
+        member_type,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="handleStatus != null" >
+        handle_status,
+      </if>
+      <if test="handleUser != null" >
+        handle_user,
+      </if>
+      <if test="carCheckUri != null" >
+        car_check_uri,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="itemId != null" >
+        #{itemId},
+      </if>
+      <if test="orderId != null" >
+        #{orderId},
+      </if>
+      <if test="memberId != null" >
+        #{memberId},
+      </if>
+      <if test="memberType != null" >
+        #{memberType},
+      </if>
+      <if test="lpn != null" >
+        #{lpn},
+      </if>
+      <if test="handleStatus != null" >
+        #{handleStatus},
+      </if>
+      <if test="handleUser != null" >
+        #{handleUser},
+      </if>
+      <if test="carCheckUri != null" >
+        #{carCheckUri},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarSelfCheck" >
+    update x_car_self_check
+    <set >
+      <if test="itemId != null" >
+        item_id = #{itemId},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId},
+      </if>
+      <if test="memberType != null" >
+        member_type = #{memberType},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn},
+      </if>
+      <if test="handleStatus != null" >
+        handle_status = #{handleStatus},
+      </if>
+      <if test="handleUser != null" >
+        handle_user = #{handleUser},
+      </if>
+      <if test="carCheckUri != null" >
+        car_check_uri = #{carCheckUri},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.CarSelfCheck" >
+    update x_car_self_check
+    set item_id = #{itemId},
+      order_id = #{orderId},
+      member_id = #{memberId},
+      member_type = #{memberType},
+      lpn = #{lpn},
+      handle_status = #{handleStatus},
+      handle_user = #{handleUser},
+      car_check_uri = #{carCheckUri},
+      create_time = #{createTime},
+      update_time = #{updateTime}
+    where id = #{id}
+  </update>
+  <sql id="Base_list">
+  		ck.id, ck.item_id, ck.order_id,ck.member_id, ck.member_type, ck.lpn, ck.handle_status, ck.handle_user, ck.car_check_uri, 
+    ck.create_time
+  </sql>
+  <sql id="member_Base_list">
+  			 ck.id, ck.order_id,ck.member_id,m.`name` name,m.phone,c.name cityName,c.`code`,
+			 ck.member_type, ck.lpn, ck.handle_status, 
+			 ck.handle_user, ck.create_time,cki.item_type,
+			 cki.item_name as itemName, 
+			 ck.item_id as itemId, 
+			 ck.car_check_uri as carCheckUri
+  </sql>
+ <!--  <sql id="employee_Base_list">
+  			 ck.id, ck.order_id,ck.member_id,e.`name` name,e.phone,c.name cityName,c.`code`,
+			 ck.member_type, ck.lpn, ck.handle_status, 
+			 ck.handle_user, ck.create_time,cki.item_type,
+			 cki.item_name as itemName, 
+			 ck.item_id as itemId, 
+			 ck.car_check_uri as carCheckUri
+  </sql> -->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT t.* from (	(      
+			 SELECT <include refid="member_Base_list"/>
+			 FROM x_car_self_check ck INNER JOIN x_car_self_check_item cki on cki.id = ck.item_id 
+			 INNER JOIN x_member m on m.id = ck.member_id
+			 INNER JOIN x_city c on m.city_code = c.`code` where ck.member_type = 'member'
+              <if test="status != null and status != ''">
+                and ck.handle_status = #{status}
+              </if>
+		)
+			 UNION ALL 
+		(
+			 SELECT <include refid="member_Base_list"/>
+			 FROM x_car_self_check ck INNER JOIN x_car_self_check_item cki on cki.id = ck.item_id 
+			 INNER JOIN e_employee_info m on m.id = ck.member_id
+			 INNER JOIN x_city c on m.city_code = c.`code` where ck.member_type = 'employee'
+              <if test="status != null and status != ''">
+                  and ck.handle_status = #{status}
+              </if>
+		) ) t where 1 = 1
+		<if test="cityCode != null and cityCode !=''">
+			and t.code = #{cityCode}
+		</if>
+		<if test="phone != null and phone != ''">
+			and t.phone like CONCAT('%',#{phone},'%')
+		</if>
+		<if test="lpn != null and lpn != ''">
+			and t.lpn like CONCAT('%',#{lpn},'%')
+		</if>
+		<if test="exceptionStatus != null and exceptionStatus != ''">
+			<choose>
+				<when test="exceptionStatus == 2">
+					and t.handle_status = 2
+				</when>
+				<otherwise>
+					and t.handle_status != 2
+				</otherwise>
+			</choose>
+		</if>
+		<if test="itemType != null and itemType != ''">
+			and t.item_type = #{itemType}
+		</if>
+		<if test="orderId != null and orderId != ''">
+			and t.order_id = #{orderId}
+		</if>
+		
+		ORDER BY t.create_time DESC 
+		<if test="from != null and to != null">
+		limit #{from}, #{to}  
+		</if>
+  </select>
+  <select id= "selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+  		SELECT COUNT(1) from (	(      
+			 SELECT <include refid="member_Base_list"/>
+			 FROM x_car_self_check ck INNER JOIN x_car_self_check_item cki on cki.id = ck.item_id 
+			 INNER JOIN x_member m on m.id = ck.member_id
+			 INNER JOIN x_city c on m.city_code = c.`code` where ck.member_type = 'member'
+              <if test="status != null and status != ''">
+                  and ck.handle_status = #{status}
+              </if>
+		)
+			 UNION ALL 
+		(
+			 SELECT <include refid="member_Base_list"/>
+			 FROM x_car_self_check ck INNER JOIN x_car_self_check_item cki on cki.id = ck.item_id 
+			 INNER JOIN e_employee_info m on m.id = ck.member_id
+			 INNER JOIN x_city c on m.city_code = c.`code` where ck.member_type = 'employee'
+              <if test="status != null and status != ''">
+                  and ck.handle_status = #{status}
+              </if>
+		) ) t where 1 = 1
+		<if test="cityCode != null and cityCode !=''">
+			and t.code = #{cityCode}
+		</if>
+		<if test="phone != null and phone != ''">
+			and t.phone like CONCAT('%',#{phone},'%')
+		</if>
+		<if test="lpn != null and lpn != ''">
+			and t.lpn like CONCAT('%',#{lpn},'%')
+		</if>
+		<if test="exceptionStatus != null and exceptionStatus != ''">
+			<choose>
+				<when test="exceptionStatus == 2">
+					and t.handle_status = 2
+				</when>
+				<otherwise>
+					and t.handle_status != 2
+				</otherwise>
+			</choose>
+		</if>
+		<if test="itemType != null and itemType != ''">
+			and t.item_type = #{itemType}
+		</if>
+		<if test="orderId != null and orderId != ''">
+			and t.order_id = #{orderId}
+		</if>
+  </select>
+  <select id="selectOrderList" parameterType="list" resultType="string">
+  	select ck.order_id from x_car_self_check ck where ck.id in 
+  	<foreach collection="list"  item="id" separator="," open="(" close=")">
+         #{id}
+    </foreach>
+  </select>
+  <select id="selecthandleStatus" parameterType="list" resultType="boolean">
+  	select ck.handle_status from x_car_self_check ck where ck.id in 
+  	<foreach collection="list"  item="id" separator="," open="(" close=")">
+         #{id}
+    </foreach>
+  </select>
+  <update id="batchUpdateHandleStatus" parameterType="java.util.HashMap">
+		update x_car_self_check set handle_status = 1,handle_user =  
+		<foreach collection="names" item="handle_user" separator="," open="(" close=")">
+			#{handle_user}
+		</foreach>  where id in
+		<foreach collection="idList"  item="id" separator="," open="(" close=")">
+         	#{id}
+    	</foreach>
+  </update>
+</mapper>

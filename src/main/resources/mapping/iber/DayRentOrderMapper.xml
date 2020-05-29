@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayRentOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.DayRentOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="car_bind_time" property="carBindTime" jdbcType="TIMESTAMP" />
+    <result column="appointmen_take_car_timet" property="appointmenTakeCarTimet" jdbcType="TIMESTAMP" />
+    <result column="appointmen_take_park_id" property="appointmenTakeParkId" jdbcType="INTEGER" />
+    <result column="appointmen_return_car_time" property="appointmenReturnCarTime" jdbcType="TIMESTAMP" />
+    <result column="appointmen_return_car_park_id" property="appointmenReturnCarParkId" jdbcType="INTEGER" />
+    <result column="delay_return_car_time" property="delayReturnCarTime" jdbcType="TIMESTAMP" />
+    <result column="actual_taken_car_time" property="actualTakenCarTime" jdbcType="TIMESTAMP" />
+    <result column="actual_taken_car_park_id" property="actualTakenCarParkId" jdbcType="INTEGER" />
+    <result column="actual_return_car_time" property="actualReturnCarTime" jdbcType="TIMESTAMP" />
+    <result column="actual_return_car_park_id" property="actualReturnCarParkId" jdbcType="INTEGER" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="rent_timeout" property="rentTimeout" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+  </resultMap>
+			
+ <resultMap id="BaseResultPage" type="com.iber.portal.vo.dayRent.DayRentOrderVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="memberName" property="memberName" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="appointmen_take_car_timet" property="appointmenTakeCarTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="branceName" property="branceName" jdbcType="VARCHAR" />
+    <result column="appointmenTakeCarPark" property="appointmenTakeCarPark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, order_id, member_id, city_code, model_id, lpn, car_bind_time, appointmen_take_car_timet, 
+    appointmen_take_park_id, appointmen_return_car_time, appointmen_return_car_park_id, 
+    delay_return_car_time, actual_taken_car_time, actual_taken_car_park_id, actual_return_car_time, 
+    actual_return_car_park_id, order_status, rent_timeout, create_time,pay_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_day_rent_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.DayRentOrder" >
+    insert into x_day_rent_order (id, order_id, member_id, 
+      city_code, model_id, lpn, 
+      car_bind_time, appointmen_take_car_timet, 
+      appointmen_take_park_id, appointmen_return_car_time, 
+      appointmen_return_car_park_id, delay_return_car_time, 
+      actual_taken_car_time, actual_taken_car_park_id, 
+      actual_return_car_time, actual_return_car_park_id, 
+      order_status, rent_timeout, create_time,pay_status
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, 
+      #{cityCode,jdbcType=VARCHAR}, #{modelId,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, 
+      #{carBindTime,jdbcType=TIMESTAMP}, #{appointmenTakeCarTimet,jdbcType=TIMESTAMP}, 
+      #{appointmenTakeParkId,jdbcType=INTEGER}, #{appointmenReturnCarTime,jdbcType=TIMESTAMP}, 
+      #{appointmenReturnCarParkId,jdbcType=INTEGER}, #{delayReturnCarTime,jdbcType=TIMESTAMP}, 
+      #{actualTakenCarTime,jdbcType=TIMESTAMP}, #{actualTakenCarParkId,jdbcType=INTEGER}, 
+      #{actualReturnCarTime,jdbcType=TIMESTAMP}, #{actualReturnCarParkId,jdbcType=INTEGER}, 
+      #{orderStatus,jdbcType=VARCHAR}, #{rentTimeout,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{payStatus,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.DayRentOrder" >
+    insert into x_day_rent_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="carBindTime != null" >
+        car_bind_time,
+      </if>
+      <if test="appointmenTakeCarTimet != null" >
+        appointmen_take_car_timet,
+      </if>
+      <if test="appointmenTakeParkId != null" >
+        appointmen_take_park_id,
+      </if>
+      <if test="appointmenReturnCarTime != null" >
+        appointmen_return_car_time,
+      </if>
+      <if test="appointmenReturnCarParkId != null" >
+        appointmen_return_car_park_id,
+      </if>
+      <if test="delayReturnCarTime != null" >
+        delay_return_car_time,
+      </if>
+      <if test="actualTakenCarTime != null" >
+        actual_taken_car_time,
+      </if>
+      <if test="actualTakenCarParkId != null" >
+        actual_taken_car_park_id,
+      </if>
+      <if test="actualReturnCarTime != null" >
+        actual_return_car_time,
+      </if>
+      <if test="actualReturnCarParkId != null" >
+        actual_return_car_park_id,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="rentTimeout != null" >
+        rent_timeout,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="carBindTime != null" >
+        #{carBindTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenTakeCarTimet != null" >
+        #{appointmenTakeCarTimet,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenTakeParkId != null" >
+        #{appointmenTakeParkId,jdbcType=INTEGER},
+      </if>
+      <if test="appointmenReturnCarTime != null" >
+        #{appointmenReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenReturnCarParkId != null" >
+        #{appointmenReturnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="delayReturnCarTime != null" >
+        #{delayReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualTakenCarTime != null" >
+        #{actualTakenCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualTakenCarParkId != null" >
+        #{actualTakenCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="actualReturnCarTime != null" >
+        #{actualReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualReturnCarParkId != null" >
+        #{actualReturnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rentTimeout != null" >
+        #{rentTimeout,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.DayRentOrder" >
+    update x_day_rent_order
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="carBindTime != null" >
+        car_bind_time = #{carBindTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenTakeCarTimet != null" >
+        appointmen_take_car_timet = #{appointmenTakeCarTimet,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenTakeParkId != null" >
+        appointmen_take_park_id = #{appointmenTakeParkId,jdbcType=INTEGER},
+      </if>
+      <if test="appointmenReturnCarTime != null" >
+        appointmen_return_car_time = #{appointmenReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenReturnCarParkId != null" >
+        appointmen_return_car_park_id = #{appointmenReturnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="delayReturnCarTime != null" >
+        delay_return_car_time = #{delayReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualTakenCarTime != null" >
+        actual_taken_car_time = #{actualTakenCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualTakenCarParkId != null" >
+        actual_taken_car_park_id = #{actualTakenCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="actualReturnCarTime != null" >
+        actual_return_car_time = #{actualReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualReturnCarParkId != null" >
+        actual_return_car_park_id = #{actualReturnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rentTimeout != null" >
+        rent_timeout = #{rentTimeout,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.DayRentOrder" >
+    update x_day_rent_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      car_bind_time = #{carBindTime,jdbcType=TIMESTAMP},
+      appointmen_take_car_timet = #{appointmenTakeCarTimet,jdbcType=TIMESTAMP},
+      appointmen_take_park_id = #{appointmenTakeParkId,jdbcType=INTEGER},
+      appointmen_return_car_time = #{appointmenReturnCarTime,jdbcType=TIMESTAMP},
+      appointmen_return_car_park_id = #{appointmenReturnCarParkId,jdbcType=INTEGER},
+      delay_return_car_time = #{delayReturnCarTime,jdbcType=TIMESTAMP},
+      actual_taken_car_time = #{actualTakenCarTime,jdbcType=TIMESTAMP},
+      actual_taken_car_park_id = #{actualTakenCarParkId,jdbcType=INTEGER},
+      actual_return_car_time = #{actualReturnCarTime,jdbcType=TIMESTAMP},
+      actual_return_car_park_id = #{actualReturnCarParkId,jdbcType=INTEGER},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      rent_timeout = #{rentTimeout,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      pay_status = #{payStatus,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+	    SELECT
+			count(1)
+		FROM
+			x_day_rent_order o ,
+			x_member m
+		where o.member_id = m.id 
+		<if test="cityCode != null and cityCode != ''" >
+			 and o.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="memberName != null and memberName !='' " >
+		     and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="phone != null and phone != '' " >
+		     and m.phone = #{phone,jdbcType=VARCHAR}
+		</if>    
+		<if test="lpn != null and lpn !='' ">
+		    and o.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="orderStatus != null and orderStatus !='' ">
+			and o.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if> 						 
+  </select>
+  <select id="getAll" resultMap="BaseResultPage" parameterType="java.util.Map">
+			SELECT
+			CASE order_status
+			WHEN 'finish'     THEN '4'
+			WHEN 'cancel'     THEN '5'
+			WHEN 'ordered'     THEN '1'
+			WHEN 'bound'     THEN '2'
+			WHEN 'useCar'  THEN '3' ELSE NULL END orders,
+			o.id,
+			o.city_code,
+		( SELECT c.NAME FROM x_city c WHERE c.code = o.city_code ) cityName  ,
+			order_id,
+			order_status,
+			pay_status,
+			m.name memberName,
+		m.phone,
+			lpn,
+			appointmen_take_car_timet,
+			(select name from x_park where id = o.appointmen_take_park_id)	appointmenTakeCarPark,
+			o.create_time,
+			(select concat(brance,type) from x_car_type  where id = o.model_id) branceName
+		FROM
+			x_day_rent_order o ,
+			x_member m
+		where o.member_id = m.id 
+		<if test="cityCode != null and cityCode != ''" >
+			 and o.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="memberName != null and memberName !='' " >
+		     and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="phone != null and phone != '' " >
+		     and m.phone = #{phone,jdbcType=VARCHAR}
+		</if>    
+		<if test="lpn != null and lpn !='' ">
+		    and o.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="orderStatus != null and orderStatus !='' ">
+			and o.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>							
+		order by orders , o.create_time desc  limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="queryDayRentOrder" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+
+  
+  <select id="getAllFinishNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+	    SELECT
+			count(1)
+		FROM
+			x_day_rent_order o
+		where 1=1
+		<if test="cityCode != null and cityCode != ''" >
+			 and city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+		     and lpn = #{lpn,jdbcType=VARCHAR}
+		</if>
+		<if test="queryDateFrom != null and queryDateFrom != '' " >
+	       and create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo != '' " >
+	       and create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+		 and order_status='finish' and pay_status='finish'
+  </select>
+  <select id="getAllFinish" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT <include refid="Base_Column_List" />,(select `name` from x_member c where c.id = a.member_id) member_name,
+		(select name from x_city d where d.code = a.city_code) city_name
+		 FROM x_day_rent_order a
+		where 1=1
+		<if test="cityCode != null and cityCode != ''" >
+			 and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+		    and a.lpn = #{lpn,jdbcType=VARCHAR} 
+		</if>
+		<if test="queryDateFrom != null and queryDateFrom != '' " >
+	       and a.create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo != '' " >
+	       and a.create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+		and a.order_status='finish' and a.pay_status='finish'
+		order by a.create_time desc  limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  	<!-- 查询已完成的订单 -->
+    <select id="queryFinishByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order
+    where order_id = #{orderId,jdbcType=VARCHAR} and order_status = 'finish'
+  </select>
+</mapper>

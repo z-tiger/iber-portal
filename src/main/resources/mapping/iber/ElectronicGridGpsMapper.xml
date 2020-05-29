@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.dispatcher.ElectronicGridGpsMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.dispatcher.ElectronicGridGps" >
+	<result column="id" property="id"/>
+	<result column="grid_id" property="gridId"/>
+	<result column="longitude" property="longitude"/>
+	<result column="latitude" property="latitude"/>
+</resultMap>
+       
+<!-- gridding_park_relation table all fields -->
+<sql id="Base_Column_List" >
+	 id,grid_id,longitude,latitude
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.dispatcher.ElectronicGridGps">
+  insert into e_electronic_grid_gps(grid_id,longitude,latitude)
+ values(#{gridId},#{longitude},#{latitude})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByGridId" parameterType="java.lang.Integer">
+	delete from e_electronic_grid_gps where grid_id = #{gridId}
+</delete>
+
+<select id="selectElectronicGridGpsByGridId" resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List"/>
+	from e_electronic_grid_gps
+	where grid_id = #{id}
+</select>
+
+  	
+</mapper>   

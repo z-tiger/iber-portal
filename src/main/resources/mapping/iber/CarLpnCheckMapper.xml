@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarLpnCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarLpnCheck" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="cid" property="cid" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="check_user" property="checkUser" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="car_status" property="carStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, lpn, cid, status, create_time, check_time, check_user,remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_lpn_check
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_lpn_check
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.car.CarLpnCheck" >
+    insert into x_car_lpn_check (id, lpn, cid, 
+      status, create_time, check_time, 
+      check_user,remark)
+    values (#{id,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, #{cid,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{checkTime,jdbcType=TIMESTAMP}, 
+      #{checkUser,jdbcType=VARCHAR,#{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarLpnCheck" >
+    insert into x_car_lpn_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="checkUser != null" >
+        check_user,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkUser != null" >
+        #{checkUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        ,#{remark,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarLpnCheck" >
+    update x_car_lpn_check
+    <set >
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkUser != null" >
+        check_user = #{checkUser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.CarLpnCheck" >
+    update x_car_lpn_check
+    set lpn = #{lpn,jdbcType=VARCHAR},
+      cid = #{cid,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      check_user = #{checkUser,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_car_lpn_check where 1=1 
+    <if test="lpn != null and lpn != '' " >
+        and lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="status != null and status != '' " >
+        and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+    (select status from x_car_run x where x.lpn = t.lpn) car_status
+    from x_car_lpn_check t where 1=1 
+    <if test="lpn != null and lpn != '' " >
+        and t.lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="status != null and status != '' " >
+        and t.status LIKE CONCAT(CONCAT('%', #{status,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and t.create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and t.create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+     order by t.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+</mapper>

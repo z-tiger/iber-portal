@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.function.AppVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.function.AppVersion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="app_desc" property="appDesc" jdbcType="VARCHAR" />
+    <result column="app_name" property="appName" jdbcType="VARCHAR" />
+    <result column="current_record" property="currentRecord" jdbcType="INTEGER" />
+    <result column="version_no" property="versionNo" jdbcType="VARCHAR" />
+    <result column="publish_date" property="publishDate" jdbcType="TIMESTAMP" />
+    <result column="download_url" property="downloadUrl" jdbcType="VARCHAR" />
+    <result column="is_force_update" property="isForceUpdate" jdbcType="VARCHAR" />
+    <result column="app_category" property="appCategory" jdbcType="VARCHAR" />
+    <result column="app_category" property="appCategory" jdbcType="VARCHAR" />
+    <result column="app_size" property="appSize" jdbcType="DOUBLE" />
+    <result column="app_type" property="appType" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, app_desc, app_name, current_record, version_no, publish_date, download_url, is_force_update, 
+    app_category,app_size,app_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_app_version
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_app_version
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.function.AppVersion" >
+    insert into x_app_version (id, app_desc, app_name, 
+      current_record, version_no, publish_date, 
+      download_url, is_force_update, app_category,app_size,app_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{appDesc,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, 
+      #{currentRecord,jdbcType=INTEGER}, #{versionNo,jdbcType=VARCHAR}, #{publishDate,jdbcType=TIMESTAMP}, 
+      #{downloadUrl,jdbcType=VARCHAR}, #{isForceUpdate,jdbcType=VARCHAR}, #{appCategory,jdbcType=VARCHAR},
+      #{appSize,jdbcType=DOUBLE},#{appType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.function.AppVersion" >
+    insert into x_app_version
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="appDesc != null" >
+        app_desc,
+      </if>
+      <if test="appName != null" >
+        app_name,
+      </if>
+      <if test="currentRecord != null" >
+        current_record,
+      </if>
+      <if test="versionNo != null" >
+        version_no,
+      </if>
+      <if test="publishDate != null" >
+        publish_date,
+      </if>
+      <if test="downloadUrl != null" >
+        download_url,
+      </if>
+      <if test="isForceUpdate != null" >
+        is_force_update,
+      </if>
+      <if test="appCategory != null" >
+        app_category,
+      </if>
+      <if test="appSize != null" >
+        app_size,
+      </if>
+      <if test="appType != null" >
+        app_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="appDesc != null" >
+        #{appDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null" >
+        #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="currentRecord != null" >
+        #{currentRecord,jdbcType=INTEGER},
+      </if>
+      <if test="versionNo != null" >
+        #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="publishDate != null" >
+        #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadUrl != null" >
+        #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isForceUpdate != null" >
+        #{isForceUpdate,jdbcType=VARCHAR},
+      </if>
+      <if test="appCategory != null" >
+        #{appCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="appSize != null" >
+        #{appSize,jdbcType=DOUBLE},
+      </if>
+      <if test="appType != null" >
+        #{appType,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.function.AppVersion" >
+    update x_app_version
+    <set >
+      <if test="appDesc != null" >
+        app_desc = #{appDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null" >
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+      <if test="currentRecord != null" >
+        current_record = #{currentRecord,jdbcType=INTEGER},
+      </if>
+      <if test="versionNo != null" >
+        version_no = #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="publishDate != null" >
+        publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downloadUrl != null" >
+        download_url = #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isForceUpdate != null" >
+        is_force_update = #{isForceUpdate,jdbcType=VARCHAR},
+      </if>
+      <if test="appCategory != null" >
+        app_category = #{appCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="appSize != null" >
+        app_size = #{appSize,jdbcType=DOUBLE},
+      </if>
+      <if test="appType != null" >
+        app_type = #{appType,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.function.AppVersion" >
+    update x_app_version
+    set app_desc = #{appDesc,jdbcType=VARCHAR},
+      app_name = #{appName,jdbcType=VARCHAR},
+      current_record = #{currentRecord,jdbcType=INTEGER},
+      version_no = #{versionNo,jdbcType=VARCHAR},
+      publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      download_url = #{downloadUrl,jdbcType=VARCHAR},
+      is_force_update = #{isForceUpdate,jdbcType=VARCHAR},
+      app_category = #{appCategory,jdbcType=VARCHAR},
+      app_size = #{appSize,jdbcType=DOUBLE},
+      app_type = #{appType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByAPPVersionList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+   		SELECT
+			*
+		FROM
+		x_app_version
+		order by current_record  desc  limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+   </select>
+   
+   <select id="selectByAPPVersionListRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+			count(1)
+         from x_app_version
+	</select> 
+</mapper>

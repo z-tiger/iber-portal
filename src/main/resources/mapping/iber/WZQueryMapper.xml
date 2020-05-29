@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.WZQueryMapper" >
+    <resultMap id="BaseResultMap" type="com.iber.portal.model.base.WZQuery" >
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="resultcode" property="resultcode" jdbcType="VARCHAR" />
+        <result column="reason" property="reason" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="VARCHAR" />
+        <result column="city" property="city" jdbcType="VARCHAR" />
+        <result column="hphm" property="hphm" jdbcType="VARCHAR" />
+        <result column="hpzl" property="hpzl" jdbcType="VARCHAR" />
+        <result column="query_time" property="queryTime" jdbcType="TIMESTAMP" />
+        <result column="query_user" property="queryUser" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="date" property="date" jdbcType="VARCHAR" />
+        <result column="area" property="area" jdbcType="VARCHAR" />
+        <result column="act" property="act" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="fen" property="fen" jdbcType="VARCHAR" />
+        <result column="money" property="money" jdbcType="VARCHAR" />
+        <result column="handled" property="handled" jdbcType="VARCHAR" />
+        <result column="member_id" property="memberId" jdbcType="INTEGER" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime"/>
+        <result column="archiveno" property="archiveno"/>
+        <result column="create_user" property="createUser"/>
+        <result column="handle_type" property="handleType"/>
+        <association property="memberRefundWorderUsecar" javaType="com.iber.portal.model.base.MemberRefundWorderUsecar" columnPrefix="u_">
+            <result property="wzFee" column="wz_fee"/>
+            <result property="wzPoint" column="wz_point"/>
+            <result property="wzPayStatus" column="wz_pay_status"/>
+        </association>
+    </resultMap>
+
+    <resultMap type="com.iber.portal.vo.base.WZQueryVo" id="BaseResultMapVo" extends="BaseResultMap">
+        <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+        <result column="cust_phone" property="custPhone" jdbcType="VARCHAR" />
+        <result column="wzId" property="wzId" jdbcType="INTEGER"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <select id="queryUndisposedWzRecord" resultMap="BaseResultMap">
+        SELECT  q.*  from x_wz_query q   WHERE q.member_id = #{memberId,jdbcType=INTEGER} and status = 1
+    </select>
+
+    <select id="queryWzRecord" resultMap="BaseResultMap">
+        SELECT u.wz_fee as u_wz_fee, u.wz_point as u_wz_point, u.wz_pay_status as u_wz_pay_status, q.* from x_wz_query q left join x_member_refund_worder_usecar u
+        on q.order_id = u.order_id WHERE q.member_id = #{memberId,jdbcType=INTEGER}
+    </select>
+
+    <!--  查会员最新一条违章记录  -->
+    <select id="queryLatestWzRecord" resultMap="BaseResultMap">
+        SELECT * FROM x_wz_query q
+        WHERE q.member_id = #{memberId,jdbcType=INTEGER}
+        ORDER BY q.date DESC LIMIT 1
+    </select>
+
+    <!--  查最后一次存储违章记录的时间  -->
+    <select id="getLatestInsertTime" resultType="java.util.Date">
+        SELECT MAX(query_time) FROM x_wz_query
+    </select>
+
+    <select id="selectWZQuery" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+        SELECT wz.*,
+        (select c.name from x_city c where c.code = wz.city_code) city_name,
+        m.name cust_name, m.phone cust_phone FROM x_wz_query wz LEFT JOIN  x_member m
+        ON wz.member_id = m.id
+        <trim prefixOverrides="and">
+            <where>
+                <if test="lpn !=null and lpn != '' ">
+                    and wz.hphm  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+                    and wz.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                <if test="orderId != null and orderId != '' ">
+                    and wz.order_id = #{orderId}
+                </if>
+                <if test="status !=null and status != '' ">
+                    and wz.status = #{status,jdbcType=VARCHAR}
+                </if>
+                <if test="custName != null and custName != '' ">
+                    and m.name =  #{custName,jdbcType=VARCHAR}
+                </if>
+                <if test="custPhone != null and custPhone != '' ">
+                    and m.phone = #{custPhone,jdbcType=VARCHAR}
+                </if>
+                <if test="city != null and city != '' ">
+                    and wz.city = #{city,jdbcType=VARCHAR}
+                </if>
+
+            </where>
+        </trim>
+        order by wz.status , wz.query_time
+        limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+    </select>
+    <select id="selectWZQueryMember" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+        SELECT wz.*,
+        (select c.name from x_city c where c.code = wz.city_code) city_name,
+        m.name cust_name, m.phone cust_phone FROM x_wz_query wz LEFT JOIN  x_member m
+        ON wz.member_id = m.id
+        <trim prefixOverrides="and">
+            <where>
+                <if test="lpn !=null and lpn != '' ">
+                    and wz.hphm  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+
+                <if test="orderId != null and orderId != '' ">
+                    and wz.order_id = #{orderId}
+                </if>
+                <if test="status !=null and status != '' ">
+                    and wz.status = #{status,jdbcType=VARCHAR}
+                </if>
+                <if test="custName != null and custName != '' ">
+                    and m.name =  #{custName,jdbcType=VARCHAR}
+                </if>
+                <if test="custPhone != null and custPhone != '' ">
+                    and m.phone = #{custPhone,jdbcType=VARCHAR}
+                </if>
+                <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+                    and wz.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                <if test="city != null and city != '' ">
+                    and wz.city = #{city,jdbcType=VARCHAR}
+                </if>
+            </where>
+        </trim>
+        order by wz.status , wz.query_time
+        limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+    </select>
+    <select id="selectWZQueryEmployee" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+        SELECT wz.*,
+        (select c.name from x_city c where c.code = wz.city_code) city_name,
+        e.name cust_name,e.phone cust_phone FROM x_wz_query wz LEFT JOIN  e_employee_info e ON wz.member_id = e.id
+        <trim prefixOverrides="and">
+            <where>
+                <if test="lpn !=null and lpn != '' ">
+                    and wz.hphm  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="orderId != null and orderId != '' ">
+                    and wz.order_id = #{orderId}
+                </if>
+                <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+                    and wz.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                <if test="status !=null and status != '' ">
+                    and wz.status = #{status,jdbcType=VARCHAR}
+                </if>
+                <if test="custName != null and custName != '' ">
+                    and e.name =  #{custName,jdbcType=VARCHAR}
+                </if>
+                <if test="custPhone != null and custPhone != '' ">
+                    and e.phone = #{custPhone,jdbcType=VARCHAR}
+                </if>
+                <if test="city != null and city != '' ">
+                    and wz.city = #{city,jdbcType=VARCHAR}
+                </if>
+                and wz.order_id like "%employee%"
+            </where>
+        </trim>
+        order by wz.status , wz.query_time
+        limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+    </select>
+
+
+    <select id="selectWZQueryRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT  count(1) FROM x_wz_query wz LEFT JOIN  x_member m
+        ON wz.member_id = m.id
+        <trim prefixOverrides="and">
+            <where>
+                <if test="lpn !=null and lpn != '' ">
+                    and wz.hphm  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="orderId != null and orderId != '' ">
+                    and wz.order_id = #{orderId}
+                </if>
+                <if test="custName != null and custName != '' ">
+                    and m.name =  #{custName,jdbcType=VARCHAR}
+                </if>
+                <if test="custPhone != null and custPhone != '' ">
+                    and m.phone = #{custPhone,jdbcType=VARCHAR}
+                </if>
+                <if test="city != null and city != '' ">
+                    and wz.city = #{city,jdbcType=VARCHAR}
+                </if>
+                <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+                    and wz.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+            </where>
+        </trim>
+    </select>
+    <select id="selectWZQueryEmployeeRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT  count(1) FROM x_wz_query wz LEFT JOIN  e_employee_info e
+        ON wz.member_id = e.id
+        <trim prefixOverrides="and">
+            <where>
+                <if test="lpn !=null and lpn != '' ">
+                    and wz.hphm  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="orderId != null and orderId != '' ">
+                    and wz.order_id = #{orderId}
+                </if>
+                <if test="custName != null and custName != '' ">
+                    and e.name =  #{custName,jdbcType=VARCHAR}
+                </if>
+                <if test="custPhone != null and custPhone != '' ">
+                    and e.phone = #{custPhone,jdbcType=VARCHAR}
+                </if>
+                <if test="city != null and city != '' ">
+                    and wz.city = #{city,jdbcType=VARCHAR}
+                </if>
+                <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+                    and wz.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                and wz.order_id like "%employee%"
+            </where>
+        </trim>
+    </select>
+    <select id="selectWZQueryMemberRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT  count(1) FROM x_wz_query wz LEFT JOIN  x_member m
+        ON wz.member_id = m.id
+        <trim prefixOverrides="and">
+            <where>
+                <if test="lpn !=null and lpn != '' ">
+                    and wz.hphm  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="orderId != null and orderId != '' ">
+                    and wz.order_id = #{orderId}
+                </if>
+                <if test="custName != null and custName != '' ">
+                    and m.name =  #{custName,jdbcType=VARCHAR}
+                </if>
+                <if test="custPhone != null and custPhone != '' ">
+                    and m.phone = #{custPhone,jdbcType=VARCHAR}
+                </if>
+                <if test="city != null and city != '' ">
+                    and wz.city = #{city,jdbcType=VARCHAR}
+                </if>
+                <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+                    and wz.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                and wz.order_id like "%employee%"
+            </where>
+        </trim>
+    </select>
+
+    <update id="updateWZStatus">
+        update x_wz_query set status = #{status,jdbcType=VARCHAR} ,
+        remark =  #{remark,jdbcType=VARCHAR} ,
+        update_time = #{date,jdbcType=TIMESTAMP},
+        update_user = #{user,jdbcType=VARCHAR},
+        handle_type = #{handleType,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <insert id="insert" parameterType="com.iber.portal.model.base.WZQuery" >
+        insert into x_wz_query (id, resultcode, reason,
+        province, city, hphm,
+        hpzl, query_time, query_user,
+        status, date, area,
+        act, code, fen, money,
+        handled, member_id, order_id,
+        remark, update_time, update_user,create_time,archiveno,create_user,handle_type
+        )
+        values (#{id,jdbcType=INTEGER}, #{resultcode,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR},
+        #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{hphm,jdbcType=VARCHAR},
+        #{hpzl,jdbcType=VARCHAR}, #{queryTime,jdbcType=TIMESTAMP}, #{queryUser,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR},
+        #{act,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{fen,jdbcType=VARCHAR}, #{money,jdbcType=VARCHAR},
+        #{handled,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},#{createTime},#{archiveno},#{createUser},#{handleType}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.iber.portal.model.base.WZQuery" >
+        insert into x_wz_query
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="resultcode != null" >
+                resultcode,
+            </if>
+            <if test="reason != null" >
+                reason,
+            </if>
+            <if test="province != null" >
+                province,
+            </if>
+            <if test="city != null" >
+                city,
+            </if>
+            <if test="hphm != null" >
+                hphm,
+            </if>
+            <if test="hpzl != null" >
+                hpzl,
+            </if>
+            <if test="queryTime != null" >
+                query_time,
+            </if>
+            <if test="queryUser != null" >
+                query_user,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="date != null" >
+                date,
+            </if>
+            <if test="area != null" >
+                area,
+            </if>
+            <if test="act != null" >
+                act,
+            </if>
+            <if test="code != null" >
+                code,
+            </if>
+            <if test="fen != null" >
+                fen,
+            </if>
+            <if test="money != null" >
+                money,
+            </if>
+            <if test="handled != null" >
+                handled,
+            </if>
+            <if test="memberId != null" >
+                member_id,
+            </if>
+            <if test="orderId != null" >
+                order_id,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+            <if test="updateUser != null" >
+                update_user,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="archiveno != null" >
+                archiveno,
+            </if>
+            <if test="createUser != null" >
+                create_user,
+            </if>
+            <if test="handleType != null" >
+                handle_type,
+            </if>
+            <if test="cityCode != null" >
+                city_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="resultcode != null" >
+                #{resultcode,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null" >
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null" >
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="hphm != null" >
+                #{hphm,jdbcType=VARCHAR},
+            </if>
+            <if test="hpzl != null" >
+                #{hpzl,jdbcType=VARCHAR},
+            </if>
+            <if test="queryTime != null" >
+                #{queryTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="queryUser != null" >
+                #{queryUser,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="date != null" >
+                #{date,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null" >
+                #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="act != null" >
+                #{act,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null" >
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="fen != null" >
+                #{fen,jdbcType=VARCHAR},
+            </if>
+            <if test="money != null" >
+                #{money,jdbcType=VARCHAR},
+            </if>
+            <if test="handled != null" >
+                #{handled,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null" >
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null" >
+                #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime},
+            </if>
+            <if test="archiveno != null" >
+                #{archiveno},
+            </if>
+            <if test="createUser != null" >
+                #{createUser},
+            </if>
+            <if test="handleType != null" >
+                #{handleType},
+            </if>
+            <if test="cityCode != null" >
+                #{cityCode},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据 hphm（车牌号）hpzl（ 车辆类型) date(违章日期) 查询表中是否有记录 -->
+    <select id="queryByCondition" resultType="java.lang.Integer">
+        select count(1) from x_wz_query
+        where hphm=#{hphm} and hpzl=#{hpzl} and date=#{date}
+    </select>
+
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        select id, resultcode, reason,
+        province, city, hphm,
+        hpzl, query_time, query_user,
+        status, date, area,
+        act, code, fen, money,
+        handled, member_id, order_id,
+        remark, update_time, update_user
+        from x_wz_query
+        where order_id = #{orderId}
+    </select>
+
+    <!--  查超过天数为days的未处理违章  -->
+    <select id="queryNoDealt" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id, resultcode, reason,
+        province, city, hphm,
+        hpzl, query_time, query_user,
+        status, date, area,
+        act, code, fen, money,
+        handled, member_id, order_id,
+        remark, update_time, update_user
+        FROM x_wz_query WHERE `status` = '1'
+        AND NOW() <![CDATA[ >  ]]>  DATE_ADD(query_time, INTERVAL #{days} DAY)
+    </select>
+    <!-- selectEmployeeWZRecord用来查询员工端用车违章记录 -->
+    <select id="selectEmployeeWZRecord" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+        select wz.id,wz.hphm,wz.status,wz.date,wz.area,wz.act,
+        qcity.city_name,
+        tab.name cust_name,tab.phone cust_phone,
+        wz.fen,wz.money,wz.order_id,wz.remark from x_wz_query wz inner join x_wz_citys_query qcity on wz.city = qcity.query_city_code
+        <if test="cityCode != null and cityCode !='' ">
+            and qcity.city_code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join
+        (select einfo.id,einfo.name,eo.order_no,einfo.phone from e_employee_order eo inner join e_employee_info einfo on einfo.id = eo.employee_id) tab
+        on tab.order_no = wz.order_id and tab.id = wz.member_id
+        <if test="order_id != null and order_id != ''">
+            and wz.order_id = #{order_id,jdbcType=VARCHAR}
+        </if>
+        <if test="hphm !=null and hphm !=''">
+            AND wz.hphm like concat('%', #{hphm,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="status != null and status!='' ">
+            and wz.status = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="phone!=null and phone!=''">
+            and tab.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name!=null and name !='' ">
+            and tab.name =#{name,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <!-- selectMemberWZRecord用来查询会员端用车违章记录 -->
+    <select id="selectMemberWZRecord" resultMap="BaseResultMapVo" parameterType="java.util.Map">
+        select wz.id,wz.hphm,wz.status,wz.date,wz.area,wz.act,
+        qcity.city_name,
+        tab.name cust_name,tab.phone cust_phone,
+        wz.fen,wz.money,wz.order_id,wz.remark from x_wz_query wz inner join  x_wz_citys_query qcity on
+        wz.city = qcity.query_city_code
+        <if test="cityCode != null and cityCode !=''">
+            and qcity.city_code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join
+        (select m.id,m.name,tso.order_id,m.phone from x_time_share_order tso inner join x_member m on m.id = tso.member_id) tab
+        on tab.order_id = wz.order_id and tab.id = wz.member_id
+        <if test="order_id != null and order_id != ''">
+            and wz.order_id = #{order_id,jdbcType=VARCHAR}
+        </if>
+        <if test="hphm !=null and hphm !=''">
+            AND wz.hphm like concat('%', #{hphm,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="status != null and status!='' ">
+            and wz.status = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="phone!=null and phone!=''">
+            and tab.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name!=null and name !='' ">
+            and tab.name =#{name,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectRecordByOrderId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT id, resultcode, reason,
+        province, city, hphm,
+        hpzl, query_time, query_user,
+        status, date, area,
+        act, code, fen, money,
+        handled, member_id, order_id,
+        remark, update_time, update_user  from x_wz_query where order_id=#{orderId}
+    </select>
+
+    <select id="queryWZEmployeeInfos" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+        select tab.*,city.name city_name,einfo.name cust_name,einfo.phone cust_phone from
+        (select wz.id wzId, wz.order_id,wz.date,wz.money,wz.status,wz.area,wz.act,wz.fen,wz.remark,wz.hphm,
+        q.city_code ,wz.member_Id,wz.handle_type
+        from x_wz_query wz inner join x_wz_citys_query q on q.query_city_code=wz.city
+        <if test="lpn != null and lpn!=''">
+            and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="orderId != null and orderId !=''">
+            and wz.order_id =#{orderId,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status !=''">
+            and wz.status =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="handle_type != null and handle_type !=''">
+            and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+        </if>
+        ) tab
+        inner join x_city city on city.code = tab.city_code
+        <if test="cityCode != null  and cityCode!=''">
+            and city.code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join e_employee_order eor on eor.order_no = tab.order_id inner join e_employee_info einfo on einfo.id = tab.member_Id
+        <if test="phone != null and phone !=''">
+            and  einfo.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name !=''">
+            and  einfo.name like concat('%', #{name,jdbcType=VARCHAR},'%')
+        </if>
+
+        order by date desc
+        <if test="offset != null and rows != null ">
+            limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryWZMemberInfos" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+        select tab.*,city.name city_name,m.name cust_name,m.phone cust_phone from
+        (select wz.id wzId, wz.order_id,wz.date,wz.money,wz.status,wz.area,wz.act,wz.fen,wz.remark,wz.hphm,
+        q.city_code ,wz.member_Id,wz.handle_type
+        from x_wz_query wz inner join x_wz_citys_query q on q.query_city_code=wz.city
+        <if test="lpn != null and lpn!=''">
+            and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="orderId != null and orderId !=''">
+            and wz.order_id =#{orderId,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status !=''">
+            and wz.status =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="handle_type != null and handle_type !=''">
+            and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+        </if>
+        ) tab
+        inner join x_city city on city.code = tab.city_code
+        <if test="cityCode != null  and cityCode!=''">
+            and city.code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join x_time_share_order ts on ts.order_id = tab.order_id inner join x_member m on m.id = tab.member_Id
+        <if test="phone != null and phone !=''">
+            and  m.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name !=''">
+            and  m.name like concat('%', #{name,jdbcType=VARCHAR},'%')
+        </if>
+        order by date desc
+        <if test="offset != null and rows != null ">
+            limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryWZLongRentInfos" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+        select tab.*,city.name city_name,m.name cust_name,m.phone cust_phone from
+        (select wz.id wzId, wz.order_id,wz.date,wz.money,wz.status,wz.area,wz.act,wz.fen,wz.remark,wz.hphm,
+        q.city_code ,wz.member_Id,wz.handle_type
+        from x_wz_query wz inner join x_wz_citys_query q on q.query_city_code=wz.city
+        <if test="lpn != null and lpn!=''">
+            and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="orderId != null and orderId !=''">
+            and wz.order_id =#{orderId,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status !=''">
+            and wz.status =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="handle_type != null and handle_type !=''">
+            and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+        </if>
+        ) tab
+        inner join x_city city on city.code = tab.city_code
+        <if test="cityCode != null  and cityCode!=''">
+            and city.code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join x_long_rent_order ts on ts.order_id = tab.order_id inner join x_member m on m.id = tab.member_Id
+        <if test="phone != null and phone !=''">
+            and  m.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name !=''">
+            and  m.name like concat('%', #{name,jdbcType=VARCHAR},'%')
+        </if>
+        order by date desc
+        <if test="offset != null and rows != null ">
+            limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryWZLongRentInfosRecords" parameterType="java.util.Map" resultType="int">
+        select count(1) from
+        (select tab.* from
+        (select wz.order_id,q.city_code,wz.member_Id
+        from x_wz_query wz inner join x_wz_citys_query q on q.query_city_code=wz.city
+        <if test="lpn != null and lpn!=''">
+            and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="orderId != null and orderId !=''">
+            and wz.order_id =#{orderId,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status !=''">
+            and wz.status =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="handle_type != null and handle_type !=''">
+            and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+        </if>
+        ) tab
+        inner join x_city city on city.code = tab.city_code
+        <if test="cityCode != null  and cityCode!=''">
+            and city.code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join x_long_rent_order ts on ts.order_id = tab.order_id inner join x_member m on m.id = tab.member_Id
+        <if test="phone != null and phone !=''">
+            and  m.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name !=''">
+            and   m.name = #{name,jdbcType=VARCHAR}
+        </if>
+        ) t
+    </select>
+
+    <select id="queryWZMemberInfosRecords" parameterType="java.util.Map" resultType="int">
+        select count(1) from
+        (select tab.* from
+        (select wz.order_id,q.city_code,wz.member_Id
+        from x_wz_query wz inner join x_wz_citys_query q on q.query_city_code=wz.city
+        <if test="lpn != null and lpn!=''">
+            and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="orderId != null and orderId !=''">
+            and wz.order_id =#{orderId,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status !=''">
+            and wz.status =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="handle_type != null and handle_type !=''">
+            and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+        </if>
+        ) tab
+        inner join x_city city on city.code = tab.city_code
+        <if test="cityCode != null  and cityCode!=''">
+            and city.code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join x_time_share_order ts on ts.order_id = tab.order_id inner join x_member m on m.id = tab.member_Id
+        <if test="phone != null and phone !=''">
+            and  m.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name !=''">
+            and   m.name = #{name,jdbcType=VARCHAR}
+        </if>
+        ) t
+    </select>
+    <select id="queryWZEmployeeInfosRecords" parameterType="java.util.Map" resultType="int">
+        select count(1) from (
+        select tab.* from
+        (select wz.order_id,q.city_code ,wz.member_Id
+        from x_wz_query wz inner join x_wz_citys_query q on q.query_city_code=wz.city
+        <if test="lpn != null and lpn!=''">
+            and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="orderId != null and orderId !=''">
+            and wz.order_id =#{orderId,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status !=''">
+            and wz.status =#{status,jdbcType=VARCHAR}
+        </if>
+        <if test="handle_type != null and handle_type !=''">
+            and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+        </if>
+        ) tab
+        inner join x_city city on city.code = tab.city_code
+        <if test="cityCode != null  and cityCode!=''">
+            and city.code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        inner join e_employee_order eor on eor.order_no = tab.order_id inner join e_employee_info einfo on einfo.id = tab.member_Id
+        <if test="phone != null and phone !=''">
+            and  einfo.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name !=''">
+            and einfo.name = #{name,jdbcType=VARCHAR}
+        </if>
+        ) t
+    </select>
+    <select id="lockLongTimeUndisposedMember" resultType="java.lang.String">
+        UPDATE x_member xm,x_member_card xmc
+        SET xm.accout_status = '5',xmc.blocking_reason = '有长时间未处理的违章，系统自动冻结'
+        WHERE
+        xm.id=xmc.member_id and
+        xm.id IN (
+        SELECT
+        ( CASE WHEN datediff(NOW(), xwq.query_time) >=  #{timeValue} THEN xwq.member_id WHEN COUNT(xwq.member_id)>= #{timeSpace} THEN xwq.member_id else '' end )member_id
+        FROM
+        x_wz_query xwq
+        WHERE
+        locate("employee", xwq.order_id) = 0 and (xwq.handle_type=1 or xwq.status=1) GROUP BY xwq.member_id
+        )
+    </select>
+    <select id="queryLongTimeMember" resultType="com.iber.portal.model.base.Member">
+        SELECT
+        xm.id as id,xm.phone as phone,xm.name as name
+        FROM
+        x_wz_query xwq INNER JOIN x_member xm on xm.id = xwq.member_id
+        WHERE
+        xm.id IN (
+        SELECT
+        ( CASE WHEN datediff(NOW(), xwq.query_time) >=  #{timeValue} THEN xwq.member_id WHEN COUNT(xwq.member_id)>= #{timeSpace} THEN xwq.member_id else '' end )member_id
+        FROM
+        x_wz_query xwq
+        WHERE
+        locate("employee", xwq.order_id) = 0 and (xwq.handle_type=1 or xwq.status=1) GROUP BY xwq.member_id
+        )
+        group by xm.id
+    </select>
+
+    <select id="queryWzInfo" resultMap="BaseResultMapVo">
+        SELECT wz.id, wz.order_id,wz.date,wz.money,wz.status,wz.area,wz.act,wz.fen,wz.remark,wz.hphm,city.name city_name,wz.archiveno,
+        CASE WHEN LOCATE('employee',wz.order_id) <![CDATA[ > ]]> 0 THEN 1 ELSE 2 END type,
+        case WHEN LOCATE('employee',wz.order_id) <![CDATA[ > ]]> 0 THEN e.`name` ELSE m.name END cust_name,case WHEN LOCATE('employee',wz.order_id) <![CDATA[ > ]]> 0 THEN e.phone ELSE m.phone END cust_phone,
+        q.city_code ,wz.member_Id,wz.handle_type FROM x_wz_query wz
+        LEFT JOIN x_time_share_order tso on wz.order_id = tso.order_id LEFT JOIN e_employee_order eo on eo.order_no = wz.order_id
+        LEFT JOIN x_long_rent_order lro on lro.order_id = wz.order_id AND lro.begin_time <![CDATA[ <= ]]> wz.date and lro.end_time <![CDATA[ >= ]]>  wz.date
+        LEFT JOIN x_member m on wz.member_id = m.id LEFT JOIN e_employee_info e on e.id = wz.member_id
+        LEFT join x_wz_citys_query q on q.query_city_code=wz.city LEFT join x_city city on city.code = q.city_code
+        <where>
+            <if test="lpn != null and lpn!=''">
+                and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="orderId != null and orderId !=''">
+                and wz.order_id =#{orderId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status !=''">
+                and wz.status =#{status,jdbcType=VARCHAR}
+            </if>
+            <if test="handle_type != null and handle_type !=''">
+                and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+            </if>
+            <if test="cityCode != null  and cityCode!=''">
+                and city.code = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="phone != null and phone !=''">
+                and (e.phone = #{phone,jdbcType=VARCHAR} or m.phone = #{phone,jdbcType=VARCHAR})
+            </if>
+            <if test="name != null and name !=''">
+                and (e.name = #{name,jdbcType=VARCHAR} or m.name = #{name,jdbcType=VARCHAR})
+            </if>
+            <if test="type != null and type != ''">
+                <choose>
+                    <when test="type == 1">
+                        and LOCATE('employee',wz.order_id) > 0
+                    </when>
+                    <otherwise>
+                        and (LOCATE('DR',wz.order_id) > 0 or LOCATE('TS',wz.order_id) > 0)
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        ORDER BY wz.date desc
+        <if test="offset != null and rows != null ">
+            limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryWzInfoRecord" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM x_wz_query wz
+        LEFT join x_wz_citys_query q on q.query_city_code=wz.city LEFT join x_city city on city.code = q.city_code
+        LEFT JOIN x_member m on m.id = wz.member_id LEFT JOIN e_employee_info e on wz.member_id = e.id
+        <where>
+            <if test="lpn != null and lpn!=''">
+                and wz.hphm like concat('%',#{lpn,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="orderId != null and orderId !=''">
+                and wz.order_id =#{orderId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status !=''">
+                and wz.status =#{status,jdbcType=VARCHAR}
+            </if>
+            <if test="handle_type != null and handle_type !=''">
+                and  wz.handle_type = #{handle_type,jdbcType=INTEGER}
+            </if>
+            <if test="cityCode != null  and cityCode!=''">
+                and city.code = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="phone != null and phone !=''">
+                and (e.phone = #{phone,jdbcType=VARCHAR} or m.phone = #{phone,jdbcType=VARCHAR})
+            </if>
+            <if test="name != null and name !=''">
+                and (e.name = #{name,jdbcType=VARCHAR} or m.name = #{name,jdbcType=VARCHAR})
+            </if>
+            <if test="type != null and type != ''">
+                <choose>
+                    <when test="type == 1 ">
+                        and LOCATE('employee',wz.order_id) > 0
+                    </when>
+                    <otherwise>
+                        and (LOCATE('DR',wz.order_id) > 0 or LOCATE('TS',wz.order_id) > 0)
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectRecordByLpnAndDateAndArchiveno" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM x_wz_query WHERE date = #{date} and hphm = #{lpn} and act = #{act}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </select>
+
+    <update id="update">
+        update x_wz_query
+        <set >
+            <if test="resultcode != null" >
+                resultcode = #{resultcode,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null" >
+                reason = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null" >
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null" >
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="hphm != null" >
+                hphm = #{hphm,jdbcType=VARCHAR},
+            </if>
+            <if test="hpzl != null" >
+                hpzl = #{hpzl,jdbcType=VARCHAR},
+            </if>
+            <if test="queryTime != null" >
+                query_time = #{queryTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="queryUser != null" >
+                query_user = #{queryUser,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="date != null" >
+                date = #{date,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null" >
+                area = #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="act != null" >
+                act = #{act,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null" >
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="fen != null" >
+                fen = #{fen,jdbcType=VARCHAR},
+            </if>
+            <if test="money != null" >
+                money = #{money,jdbcType=VARCHAR},
+            </if>
+            <if test="handled != null" >
+                handled = #{handled,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null" >
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null" >
+                order_id = #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCode != null" >
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="handleType != null" >
+                handle_type = #{handleType},
+            </if>
+            <if test="archiveno != null" >
+                archiveno = #{archiveno,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

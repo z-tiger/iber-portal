@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.operationReport.MemberCapitalMapper">
+	<resultMap id="BaseResultMap"
+		type="com.iber.portal.model.operationReport.MemberCapital">
+		<result column="member_id" property="memberId" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="VARCHAR" />
+		<result column="last_date_time" property="lastDateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="last_money" property="lastMoney" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="last_charge_time" property="lastChargeTime"
+			jdbcType="TIMESTAMP" />
+		<result column="total_charge_money" property="totalChargeMoney"
+			jdbcType="VARCHAR" />
+		<result column="total_consume_money" property="totalConsumeMoney"
+			jdbcType="VARCHAR" />
+		<result column="last_comsume_time" property="lastComsumeTime"
+			jdbcType="TIMESTAMP" />
+		<result column="total_refund_money" property="totalRefundMoney"
+			jdbcType="VARCHAR" />
+		<result column="last_refund_time" property="lastRefundTime"
+			jdbcType="TIMESTAMP" />
+		<result column="deposit" property="deposit" jdbcType="VARCHAR" />
+		<result column="deposit_date_time" property="depositDateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="quota" property="quota" jdbcType="INTEGER" />
+		<result column="quota_month" property="quotaMonth" jdbcType="INTEGER" />
+		<result column="quota_date_time" property="quotaDateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="quota_use_money" property="quotaUseMoney"
+			jdbcType="INTEGER" />
+		<result column="integral" property="integral" jdbcType="INTEGER" />
+		<result column="total_money" property="totalMoney" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+		<result column="integral" property="integral" jdbcType="INTEGER" />
+		<result column="total_coupon_money" property="totalCouponMoney"
+			jdbcType="VARCHAR" />
+		<result column="level_code" property="levelCode" jdbcType="INTEGER" />
+		<result column="contributedVal" property="contributedVal" />
+
+		<result column="deposit_sum" property="depositSum" />
+		<result column="money_sum" property="moneySum" />
+		<result column="total_charging_money_sum" property="totalChargeMoneySum" />
+		<result column="total_consume_money_sum" property="totalConsumeMoneySum" />
+		<result column="total_coupon_money_sum" property="totalCouponMoneySum" />
+		<result column="total_refund_money_sum" property="totalRefundMoneySum" />
+	</resultMap>
+	<resultMap id="MemberRechargeResultMap" type="com.iber.portal.model.operationReport.MemberRecharge">
+		<result column="member_id" property="memberId" />
+		<result column="name" property="name" />
+		<result column="charge_id" property="rechargeId" />
+		<result column="charge_category" property="rechargeCategory" />
+		<result column="money" property="rechargeMoney" />
+		<result column="bank_category" property="bankCategory" />
+		<result column="trade_status" property="tradeStatus" />
+		<result column="trade_time" property="tradeTime" />
+		<result column="create_time" property="rechargeCreatTime" />
+		<result column="trade_no" property="tradeNo" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		mc.member_id, truncate(money/100,2) as money, last_date_time, last_money,
+		mc.create_time, last_charge_time, truncate(mc.deposit/100,2) as
+		deposit,
+		truncate(total_charge_money/100,2) as total_charge_money, truncate(total_consume_money/100,2) as
+		total_consume_money, last_comsume_time,
+		truncate(total_refund_money/100,2) as
+		total_refund_money,me.name,ci.name as city_name,me.phone,
+		mc.integral,mc.contributedVal,me.level_code
+	</sql>
+
+	<sql id="Base_Column_List_Record">
+		count(1) counts
+	</sql>
+	<sql id="base_select">
+		from x_member_card mc
+		LEFT JOIN x_member me ON me.id = mc.member_id
+		LEFT JOIN x_city ci ON ci.code = me.city_code
+		<trim prefixOverrides="and">
+			<where>
+				me.status IS NOT NULL
+            <![CDATA[and me.status <>'']]>  
+		    <![CDATA[and me.status <>'experience']]>
+				<if test="code != null and code != '' and code !='00'">
+					and ci.code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != ''">
+					and me.name = #{name,jdbcType=VARCHAR}
+				</if>
+				<if test="phone != null and phone != ''">
+					and me.phone = #{phone,jdbcType=INTEGER}
+				</if>
+				<if test="beginTime != null and beginTime != ''">
+		        <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]>
+				</if>
+				<if test="endTime != null and endTime != ''">
+		       <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]>
+				</if>
+			</where>
+		</trim>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />,
+		(SELECT l.name from x_member_level l WHERE l.integral_down_limit &lt;=
+		mc.integral AND l.integral_up_limit &gt;= mc.integral)member_level,
+		truncate(IFNULL(( SELECT SUM(coupon_balance) FROM x_time_share_pay
+		WHERE member_id=mc.member_id),0)/100,2)total_coupon_money,
+		(select truncate(sum(mc.deposit)/100,2)
+		<include refid="base_select" />
+		) deposit_sum,
+		(select truncate(sum(money)/100,2)
+		<include refid="base_select" />
+		) money_sum,
+		(select truncate(sum(total_charge_money)/100,2)
+		<include refid="base_select" />
+		) total_charging_money_sum,
+		(select truncate(sum(total_consume_money)/100,2)
+		<include refid="base_select" />
+		) total_consume_money_sum,
+		(select sum(truncate(IFNULL(( SELECT SUM(coupon_balance) FROM
+		x_time_share_pay WHERE member_id=mc.member_id),0)/100,2))
+		<include refid="base_select" />
+		) total_coupon_money_sum,
+		(select truncate(sum(total_refund_money)/100,2)
+		<include refid="base_select" />
+		) total_refund_money_sum
+		<include refid="base_select" />
+		ORDER BY mc.create_time DESC
+		limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) counts from (
+		select
+		<include refid="Base_Column_List" />,
+		(SELECT l.name from x_member_level l WHERE l.integral_down_limit &lt;=
+		mc.integral AND l.integral_up_limit &gt;= mc.integral)member_level
+		from x_member_card mc
+		LEFT JOIN x_member me ON me.id = mc.member_id
+		LEFT JOIN x_city ci ON ci.code = me.city_code
+		<trim prefixOverrides="and">
+			<where>
+				me.status IS NOT NULL
+            <![CDATA[and me.status <>'']]>  
+		    <![CDATA[and me.status <>'experience']]>
+				<if test="code != null and code != '' and code !='00'">
+					and ci.code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != ''">
+					and me.name = #{name,jdbcType=VARCHAR}
+				</if>
+				<if test="phone != null and phone != ''">
+					and me.phone = #{phone,jdbcType=INTEGER}
+				</if>
+				<if test="beginTime != null and beginTime != ''">
+		        <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]>
+				</if>
+				<if test="endTime != null and endTime != ''">
+		       <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]>
+				</if>
+			</where>
+		</trim>
+		) tab
+	</select>
+	<!-- <select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" 
+		parameterType="java.util.Map" > select <include refid="Base_Column_List_Record" 
+		/> from x_member_card mc LEFT JOIN x_member me ON me.id = mc.member_id LEFT 
+		JOIN x_city ci ON ci.code = me.city_code <trim prefixOverrides="and" > <where> 
+		me.status IS NOT NULL <![CDATA[and me.status <>'']]> <![CDATA[and me.status 
+		<>'experience']]> <if test="code != null and code != ''" > and ci.code = 
+		#{code,jdbcType=VARCHAR} </if> <if test="name != null and name != ''" > and 
+		me.name like "%"#{name,jdbcType=VARCHAR}"%" </if> <if test="phone != null 
+		and phone != ''" > and me.phone like "%"#{phone,jdbcType=INTEGER}"%" </if> 
+		<if test="beginTime != null and beginTime != ''" > <![CDATA[and mc.create_time 
+		>= #{beginTime,jdbcType=TIMESTAMP} ]]> </if> <if test="endTime != null and 
+		endTime != ''" > <![CDATA[and mc.create_time<= #{endTime,jdbcType=TIMESTAMP} 
+		]]> </if> </where> </trim> </select> -->
+
+	<select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />,
+		(SELECT l.name from x_member_level l WHERE l.integral_down_limit &lt;=
+		mc.integral AND l.integral_up_limit &gt;= mc.integral)member_level
+		,
+		truncate(IFNULL(( SELECT SUM(coupon_balance) FROM x_time_share_pay WHERE
+		member_id=mc.member_id)/100,0),2)total_coupon_money
+		from x_member_card mc
+		LEFT JOIN x_member me ON me.id = mc.member_id
+		LEFT JOIN x_city ci ON ci.code = me.city_code
+		<trim prefixOverrides="and">
+			<where>
+				me.status IS NOT NULL
+            <![CDATA[and me.status <>'']]>  
+		    <![CDATA[and me.status <>'experience']]>
+				<if test="code != null and code != '' and code !='00'">
+					and ci.code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != ''">
+					and me.name =#{name,jdbcType=VARCHAR}
+				</if>
+				<if test="phone != null and phone != ''">
+					and me.phone =#{phone,jdbcType=INTEGER}
+				</if>
+				<if test="beginTime != null and beginTime != ''">
+		        <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]>
+				</if>
+				<if test="endTime != null and endTime != ''">
+		       <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]>
+				</if>
+			</where>
+		</trim>
+		ORDER BY mc.create_time DESC
+	</select>
+	
+	<select id="selectMemberRechargeDetails" parameterType="java.util.Map" resultMap="MemberRechargeResultMap">
+	   
+	   select logs.member_id,logs.money ,logs.bank_category bankCategory,
+	          logs.create_time ,logs.trade_status,
+	          (select m.name from x_member m where m.id = logs.member_id) name,
+	          logs.trade_no,logs.trade_time,logs.charge_id ,
+	          logs.charge_category,remark
+	   from x_member_charge_log logs where 
+	          logs.member_id = #{memberId,jdbcType=INTEGER} ORDER BY logs.trade_time DESC
+	          limit #{page,jdbcType=INTEGER} , #{size,jdbcType=INTEGER}
+	
+	</select>
+	
+	<select id="selectMemberRechargeDetailsCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	    select count(1) from x_member_charge_log where member_id = #{memberId,jdbcType=INTEGER}
+	</select>
+	
+</mapper>

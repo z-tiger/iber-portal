@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.car.CarRescueMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarRescue" >
+	<result column="id" property="id"/>
+	<result column="car_id" property="carId"/>
+	<result column="lpn" property="lpn"/>
+	<result column="start_time" property="startTime"/>
+	<result column="end_time" property="endTime"/>
+	<result column="reason" property="reason"/>
+	<result column="responsible_person" property="responsiblePerson"/>
+	<result column="responsible_person_phone" property="responsiblePersonPhone"/>
+	<result column="create_user" property="createUser"/>
+	<result column="create_time" property="createTime"/>
+	<result column="update_user" property="updateUser"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="status" property="status"/>
+	<result column="result" property="result"/>
+	<result column="responsible_type" property="responsibleType"/>
+	<result column="if_repair" property="ifRepair"/>
+	<result column="pictureUrl" property="pictureUrl"/>
+	<result column="picCount" property="picCount"/>
+	<result column="behavior_type_name" property="behaviorTypeName"/>
+	<result column="responsibility_judge_advice" property="responsibilityJudgeAdvice"/>
+	<result column="responsible_description" property="responsibleDescription"/>
+	<result column="matter_process" property="matterProcess"/>
+	<result column="rescue_address" property="rescueAddress"/>
+	<result column="carBranceType" property="carBranceType"/>
+	<result column="level_code" property="memberLevel"/>
+	<result column="name" property="memberName"/>
+	<result column="phone" property="memberPhone"/>
+</resultMap>
+<resultMap id="BaseCarProblemMap" type="com.iber.portal.model.car.CarRescueProblem" >
+	<result column="id" property="id"/>
+	<result column="dic_id" property="dicId"/>
+	<result column="dic_code" property="dicCode"/>
+	<result column="car_rescue_id" property="carRescueId"/>
+	<result column="create_user" property="createUser"/>
+	<result column="create_time" property="createTime"/>
+	<result column="update_user" property="updateUser"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="remark" property="remark"/>
+	<result column="problem_description" property="problemDescription"/>
+	
+</resultMap>
+<!-- x_car_rescue table all fields -->
+<sql id="Base_Column_List" >
+	 id,car_id, lpn,start_time,end_time,reason,responsible_person,responsible_person_phone,create_user,create_time,update_user,update_time,status,result,
+	 responsibility_judge_advice,responsible_description,matter_process,rescue_address
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.car.CarRescue" >
+  insert into x_car_rescue(id,car_id,lpn,start_time,end_time,reason,responsible_person,responsible_person_phone,create_user,create_time,update_user,update_time,status,result,
+  responsibility_judge_advice,responsible_description,matter_process,rescue_address)
+ values(#{id},#{carId},#{lpn},#{startTime},#{endTime},#{reason},#{responsiblePerson},#{responsiblePersonPhone},#{createUser},#{createTime},#{updateUser},#{updateTime},#{status},#{result},
+ #{responsibilityJudgeAdvice},#{responsibleDescription},#{matterProcess},#{rescueAddress})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_car_rescue where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_car_rescue set reason=#{reason},matter_process=#{reason},responsible_person=#{responsiblePerson},responsible_person_phone=#{responsiblePersonPhone},update_user=#{updateUser},update_time=#{updateTime} where id=#{id}
+</update>
+
+<!-- 根据id查询 车辆救援信息 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_car_rescue where id = #{id}
+</select>
+
+<!-- 车辆救援信息 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_car_rescue x
+    left join x_member m on m.id = x.member_id  where 1=1
+ 	<if test="lpn != null and lpn !='' ">
+        and x.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+     </if>
+    <if test="memberName != null and memberName !='' ">
+        and m.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="memberPhone != null and memberPhone !='' ">
+        and m.phone LIKE CONCAT('%',#{memberPhone,jdbcType=VARCHAR},'%')
+    </if>
+     <if test="status !=null and status!=''">
+         and x.status = #{status,jdbcType=VARCHAR}
+     </if>
+  	<if test="cityCode !=null and cityCode !=''">
+       and  EXISTS
+ 	 (select * from x_car_run,x_car_rescue where  x_car_run.city_code = #{cityCode,jdbcType=VARCHAR} and  x_car_run.id = x_car_rescue.car_id) 
+     </if>
+</select>
+  	
+<!-- 查询车辆救援信息列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	x.*,m.`name`,m.phone,m.level_code,
+	(SELECT CONCAT(t.brance,t.type) from x_car_type t INNER JOIN x_car c on c.model_id = t.id  where c.lpn=x.lpn ) carBranceType,
+	(select count(1) from x_evidence_relation er where er.report_id = x.id and er.is_member_complain = 2) picCount,
+	(select name from x_member_behavior b where b.id = x.responsible_type) behavior_type_name
+	from x_car_rescue x left join x_member m on m.id = x.member_id where 1 =1 
+	<if test="lpn != null and lpn !='' ">
+        and x.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')  
+     </if>
+    <if test="memberName != null and memberName !='' ">
+        and m.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="memberPhone != null and memberPhone !='' ">
+        and m.phone LIKE CONCAT('%',#{memberPhone,jdbcType=VARCHAR},'%')
+    </if>
+     <if test="status !=null and status!=''">
+         and x.status = #{status,jdbcType=VARCHAR}
+     </if>
+     <if test="cityCode !=null and cityCode !=''">
+       and  EXISTS
+ 	 (select * from x_car_run  where  x_car_run.city_code = #{cityCode,jdbcType=VARCHAR} and  x_car_run.id = x.car_id) 
+     </if>
+     order by x.start_time desc
+     <if test="from != null and to != null">
+     
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+     </if>
+</select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarRescue" >
+    update x_car_rescue
+    <set >
+      <if test="carId != null" >
+        car_id = #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person = #{responsiblePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        responsible_person_phone = #{responsiblePersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+          responsibility_judge_advice = #{responsibilityJudgeAdvice,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+          responsible_description = #{responsibleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+          matter_process = #{matterProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+          rescue_address = #{rescueAddress,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ <!-- 有条件的插入车辆救援记录 -->
+ <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarRescue" useGeneratedKeys="true" keyProperty="id">
+    insert into x_car_rescue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="carId != null" >
+        car_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person,
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        responsible_person_phone,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="responsibilityJudgeAdvice != null" >
+          responsibility_judge_advice,
+      </if>
+      <if test="responsibleDescription != null" >
+          responsible_description,
+      </if>
+      <if test="matterProcess != null" >
+          matter_process,
+      </if>
+      <if test="rescueAddress != null" >
+          rescue_address,
+      </if>
+      <if test="taskId != null" >
+          task_id,
+      </if>
+      <if test="orderId != null" >
+          order_id,
+      </if>
+      <if test="memberId != null" >
+          member_id,
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="carId != null" >
+        #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePerson != null" >
+        #{responsiblePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        #{responsiblePersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="result!= null">
+       #{result,jdbcType=TIMESTAMP},
+      </if>
+      <if test="responsibilityJudgeAdvice!= null">
+       #{responsibilityJudgeAdvice},
+      </if>
+      <if test="responsibleDescription!= null">
+       #{responsibleDescription},
+      </if>
+      <if test="matterProcess!= null">
+       #{matterProcess},
+      </if>
+      <if test="rescueAddress!= null">
+       #{rescueAddress},
+      </if>
+      <if test="taskId != null" >
+        #{taskId},
+      </if>
+      <if test="orderId != null" >
+          #{orderId},
+      </if>
+      <if test="memberId != null" >
+          #{memberId},
+      </if>
+    </trim>
+  </insert>
+  <update id="carResumeRepair" parameterType="com.iber.portal.model.car.CarRescue" >
+    update x_car_rescue
+    <set >
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="ifRepair != null" >
+        if_repair = #{ifRepair,jdbcType=VARCHAR},
+      </if>
+       <if test="responsibleType != null" >
+        responsible_type = #{responsibleType,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl = #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="responsibleDescription != null" >
+        responsible_description = #{responsibleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="matterProcess != null" >
+        matter_process = #{matterProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{matterProcess,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!--  查给定时间段，lpn的救援记录数  -->
+  <select id="queryByLpnBetweenTime" parameterType="java.util.Map" resultType="int">
+  	SELECT IFNULL(COUNT(1), 0) FROM x_car_rescue WHERE lpn = #{lpn}
+  		 AND start_time <![CDATA[ >= ]]> #{ordStartTime} AND start_time <![CDATA[ <= ]]> #{ordEndTime}
+  </select>
+  
+  <select id="selectByLpn" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(*) from (select id  from x_car_rescue where lpn =#{lpn} and
+  	create_time between #{to} and #{for} 
+  	union all
+  	select id from x_car_accident  where  lpn =#{lpn} and
+  	create_time between #{to} and #{for})a
+  </select>
+  <select id="getRescueEviPicsByReportId" resultType="java.lang.String">
+   select picture_evidence_url from  x_evidence_relation where report_id = #{reportId} and is_member_complain = 2
+  </select>
+  
+  <insert id="insertRescuePicUrls" parameterType="java.util.List" useGeneratedKeys="true">
+         
+         insert into x_evidence_relation(report_id,picture_evidence_url,is_member_complain,create_time) values
+         <foreach collection="list" index="index" item="item" open="" close="" separator=",">  
+            (#{item.reportId,jdbcType=INTEGER},#{item.pictureEvidenceUrl,jdbcType=VARCHAR},2, now())  
+        </foreach>  
+         
+  </insert>
+   <select id="selectUnfinishedRecordByLpn" parameterType="java.util.Map" resultType="java.lang.Integer">
+   select count(*) from  x_car_rescue where lpn = #{lpn} and status = 1
+  </select>
+
+    <insert id="insertCarRescueProblems" parameterType="java.util.List">
+        INSERT INTO x_car_rescue_problems
+        (dic_id,car_rescue_id,problem_description,create_time,create_user)
+        <trim prefix=" values " suffixOverrides=",">
+            <foreach collection="list" item="item" index="index" separator=",">
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <choose>
+                        <when test="item.dicId != null">
+                            #{item.dicId},
+                        </when>
+                        <otherwise>NULL,</otherwise>
+                    </choose>
+                    <choose>
+                        <when test="item.carRescueId != null">
+                            #{item.carRescueId},
+                        </when>
+                        <otherwise>NULL,</otherwise>
+                    </choose>
+                    <choose>
+                        <when test="item.problemDescription != null">
+                            #{item.problemDescription},
+                        </when>
+                        <otherwise>NULL,</otherwise>
+                    </choose>
+                    <choose>
+                        <when test="item.createTime != null">
+                            #{item.createTime,jdbcType=TIMESTAMP},
+                        </when>
+                        <otherwise>NULL,</otherwise>
+                    </choose>
+                    <choose>
+                        <when test="item.createUser != null">
+                            #{item.createUser},
+                        </when>
+                        <otherwise>NULL,</otherwise>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    </insert>
+   <select id="selectCarProblemsDetailByRecId" resultMap="BaseCarProblemMap">
+      select p.*,d.dic_code from  x_car_rescue_problems p LEFT JOIN x_sys_dic d on d.id = p.dic_id 
+      where car_rescue_id = #{recId}
+  </select>
+</mapper>   

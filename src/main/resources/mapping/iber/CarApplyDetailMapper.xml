@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.operationReport.CarApplyDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.iber.portal.model.operationReport.CarApplyDetail" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="member_id" property="memberId" jdbcType="INTEGER" />
+        <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+        <result column="use_date" property="useDate" jdbcType="TIMESTAMP" />
+        <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="total_mileage" property="totalMileage" jdbcType="DOUBLE" />
+        <result column="total_minute" property="totalMinute" jdbcType="INTEGER" />
+        <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+        <result column="coupon_no" property="couponNo" jdbcType="VARCHAR" />
+        <result column="coupon_balance" property="couponBalance" jdbcType="INTEGER" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+        <result column="total_pay_money" property="totalPayMoney" jdbcType="DOUBLE" />
+        <result column="reduction_pay_money" property="reductionPayMoney" jdbcType="INTEGER" />
+        <result column="rate_id" property="rateId" jdbcType="INTEGER" />
+        <result column="integral_num" property="integralNum" jdbcType="INTEGER" />
+        <result column="integral_mny" property="integralMny" jdbcType="INTEGER" />
+        <result column="total_mileage_cost" property="totalMileageCost" jdbcType="INTEGER" />
+        <result column="total_minute_cost" property="totalMinuteCost" jdbcType="INTEGER" />
+        <result column="park_name" property="parkName" jdbcType="VARCHAR" />
+        <result column="return_park_name" property="returnParkName" jdbcType="VARCHAR" />
+        <result column="car_type" property="carType" jdbcType="VARCHAR" />
+        <result column="total_mileage_val" property="totalMileageVal" jdbcType="DOUBLE" />
+        <result column="total_minute_val" property="totalMinuteVal" jdbcType="INTEGER" />
+        <result column="total_pay_money_val" property="totalPayMoneyVal" jdbcType="INTEGER" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        tsp.member_id, tsp.lpn,begin_time as use_date ,begin_time, end_time, truncate(total_mileage,2) as total_mileage,
+        truncate(total_minute,2) as total_minute,
+        truncate((tsp.total_pay_money + tsp.free_compensation_money)/100,2) as total_pay_money,me.name,me.phone,me.idCard,tab.park_name,tab.return_park_name
+    </sql>
+
+    <sql id="Base_Column_List_Record" >
+        count(1) counts
+    </sql>
+
+    <sql id="base_select">
+        <trim prefixOverrides="and" >
+            <where>
+                <if test="lpn != null and lpn != ''" >
+                    and lpn like concat('%', #{lpn,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="name != null and name != ''" >
+                    and me.name = #{name,jdbcType=VARCHAR}
+                </if>
+                <if test="phone != null and phone != ''" >
+                    and me.phone = #{phone,jdbcType=VARCHAR}
+                </if>
+                <if test="idCard != null and idCard != ''" >
+                    and me.idcard = #{idCard,jdbcType=VARCHAR}
+                </if>
+                <if test="beginTime != null and beginTime != ''" >
+                    <![CDATA[and begin_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]>
+                </if>
+                <if test="carType != null and carType != ''">
+                    and  tsp.lpn in(select m.lpn  from  x_car m where m.model_id =#{carType,jdbcType=VARCHAR})
+                </if>
+                <if test="endTime != null and endTime != ''" >
+                    <![CDATA[and end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]>
+                </if>
+            </where>
+        </trim>
+    </sql>
+    <sql id="tso_sql">
+        WHERE tso.status = 'finish'
+        <if test="lpn != null and lpn != ''" >
+            and lpn like concat('%', #{lpn,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="beginTime != null and beginTime != ''" >
+            <![CDATA[and tso.begin_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]>
+        </if>
+        <if test="carType != null and carType != ''">
+            and  tso.lpn in(select m.lpn  from  x_car m where m.model_id =#{carType,jdbcType=VARCHAR})
+        </if>
+        <if test="endTime != null and endTime != ''" >
+            <![CDATA[and tso.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]>
+        </if>
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />,
+        (select sum(total_mileage)  from x_time_share_pay tsp LEFT JOIN x_member me ON tsp.member_id=me.id
+        <include refid="base_select"/>) total_mileage_val,
+
+        (select sum(total_minute) from x_time_share_pay tsp LEFT JOIN x_member me ON tsp.member_id=me.id
+        <include refid="base_select"/>) total_minute_val,
+
+        (select sum(p.total_pay_money) from
+        (select truncate((total_pay_money + free_compensation_money)/100,2) as total_pay_money
+        from x_time_share_pay tsp LEFT JOIN x_member me ON tsp.member_id=me.id  <include refid="base_select"/>) p) total_pay_money_val,
+        (select c.type from x_car_type c where c.id in(select m.model_id from x_car m where m.lpn = tsp.lpn)) car_type
+        from x_time_share_pay tsp
+        LEFT JOIN x_member me ON tsp.member_id=me.id
+        LEFT JOIN
+        (select a.order_id,a.park_name,b.return_park_name from
+        (select order_id,name as park_name from x_time_share_order tso
+        LEFT JOIN  x_park pa ON tso.park_id=pa.id <include refid="tso_sql"/>
+        )a
+        LEFT JOIN
+        (select order_id,name as return_park_name from x_time_share_order tso
+        LEFT JOIN  x_park pa ON tso.return_park_id=pa.id <include refid="tso_sql"/>
+        ) b
+        ON a.order_id=b.order_id )tab
+        ON tsp.order_id=tab.order_id
+        <include refid="base_select"/>
+        ORDER BY begin_time DESC
+        <if test="page != null and size != null">
+            limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+        select
+        COUNT(1)
+        from x_time_share_pay tsp
+        LEFT JOIN x_member me ON tsp.member_id=me.id <include refid="base_select"/>
+    </select>
+
+    <select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />,
+        (select c.type from x_car_type c where c.id in(select m.model_id from x_car m where m.lpn = tsp.lpn)) car_type
+        from x_time_share_pay tsp
+        LEFT JOIN x_member me ON tsp.member_id=me.id
+        LEFT JOIN
+        (select a.order_id,a.park_name,b.return_park_name from
+        (select order_id,name as park_name from x_time_share_order tso
+        LEFT JOIN  x_park pa ON tso.park_id=pa.id <include refid="tso_sql"/>
+        )a
+        LEFT JOIN
+        (select order_id,name as return_park_name from x_time_share_order tso
+        LEFT JOIN  x_park pa ON tso.return_park_id=pa.id <include refid="tso_sql"/>
+        ) b
+        ON a.order_id=b.order_id )tab
+        ON tsp.order_id=tab.order_id
+        <include refid="base_select"/>
+        ORDER BY begin_time DESC
+    </select>
+
+</mapper>

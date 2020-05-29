@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayRentOrderPayLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.DayRentOrderPayLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="extend_id" property="extendId" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="trade_time" property="tradeTime" jdbcType="TIMESTAMP" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="pay_id" property="payId" jdbcType="VARCHAR" />
+    <result column="acp_trace_no" property="acpTraceNo" jdbcType="VARCHAR" />
+    <result column="acp_settle_date" property="acpSettleDate" jdbcType="VARCHAR" />
+    <result column="acp_settle_amt" property="acpSettleAmt" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, extend_id, pay_type, pay_status, pay_time, trade_no, trade_time, pay_money, 
+    order_type, member_id, pay_id, acp_trace_no, acp_settle_date, acp_settle_amt, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order_pay_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_day_rent_order_pay_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.DayRentOrderPayLog" >
+    insert into x_day_rent_order_pay_log (id, order_id, extend_id, 
+      pay_type, pay_status, pay_time, 
+      trade_no, trade_time, pay_money, 
+      order_type, member_id, pay_id, 
+      acp_trace_no, acp_settle_date, acp_settle_amt, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{extendId,jdbcType=INTEGER}, 
+      #{payType,jdbcType=VARCHAR}, #{payStatus,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{tradeNo,jdbcType=VARCHAR}, #{tradeTime,jdbcType=TIMESTAMP}, #{payMoney,jdbcType=INTEGER}, 
+      #{orderType,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{payId,jdbcType=VARCHAR}, 
+      #{acpTraceNo,jdbcType=VARCHAR}, #{acpSettleDate,jdbcType=VARCHAR}, #{acpSettleAmt,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.DayRentOrderPayLog" >
+    insert into x_day_rent_order_pay_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="extendId != null" >
+        extend_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="tradeTime != null" >
+        trade_time,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="payId != null" >
+        pay_id,
+      </if>
+      <if test="acpTraceNo != null" >
+        acp_trace_no,
+      </if>
+      <if test="acpSettleDate != null" >
+        acp_settle_date,
+      </if>
+      <if test="acpSettleAmt != null" >
+        acp_settle_amt,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="extendId != null" >
+        #{extendId,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="payId != null" >
+        #{payId,jdbcType=VARCHAR},
+      </if>
+      <if test="acpTraceNo != null" >
+        #{acpTraceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleDate != null" >
+        #{acpSettleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleAmt != null" >
+        #{acpSettleAmt,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.DayRentOrderPayLog" >
+    update x_day_rent_order_pay_log
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="extendId != null" >
+        extend_id = #{extendId,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeNo != null" >
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="payId != null" >
+        pay_id = #{payId,jdbcType=VARCHAR},
+      </if>
+      <if test="acpTraceNo != null" >
+        acp_trace_no = #{acpTraceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleDate != null" >
+        acp_settle_date = #{acpSettleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleAmt != null" >
+        acp_settle_amt = #{acpSettleAmt,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.DayRentOrderPayLog" >
+    update x_day_rent_order_pay_log
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      extend_id = #{extendId,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      pay_money = #{payMoney,jdbcType=INTEGER},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      pay_id = #{payId,jdbcType=VARCHAR},
+      acp_trace_no = #{acpTraceNo,jdbcType=VARCHAR},
+      acp_settle_date = #{acpSettleDate,jdbcType=VARCHAR},
+      acp_settle_amt = #{acpSettleAmt,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryDayRentOrderPayLogByOrderId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order_pay_log
+    where order_id = #{orderId,jdbcType=VARCHAR} and order_type = #{orderType,jdbcType=VARCHAR} and pay_status='1'
+  </select>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT count(1) from (
+		SELECT c.*,(select `name` from x_member d where d.id = c.member_id) member_name,
+				(select name from x_city e where e.code = c.city_code) city_name from (
+		SELECT
+			a.id,
+			a.order_id,
+			a.extend_id,
+			a.pay_type,
+			a.pay_time,
+			a.pay_money,
+			a.order_type,
+			a.member_id,
+		b.city_code,b.lpn
+		FROM
+			`x_day_rent_order_pay_log` a LEFT JOIN
+			x_day_rent_order b
+		on
+			a.order_id = b.order_id
+		where a.pay_status = '1' and b.order_status='finish' and b.pay_status='finish' 
+		) c ) t
+		where 1=1
+		<if test="cityCode != null and cityCode != ''" >
+			 and t.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+		    and t.lpn LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR} ,'%')
+		</if>
+		<if test="queryDateFrom != null and queryDateFrom != '' " >
+	       and t.pay_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo != '' " >
+	       and t.pay_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT * from (
+		SELECT c.*,(select `name` from x_member d where d.id = c.member_id) member_name,
+				(select name from x_city e where e.code = c.city_code) city_name from (
+		SELECT
+			a.id,
+			a.order_id,
+			a.extend_id,
+			a.pay_type,
+			a.pay_time,
+			a.pay_money,
+			a.order_type,
+			a.member_id,
+		b.city_code, b.lpn
+		FROM
+			`x_day_rent_order_pay_log` a LEFT JOIN
+			x_day_rent_order b
+		on
+			a.order_id = b.order_id
+		where a.pay_status = '1' and b.order_status='finish' and b.pay_status='finish' 
+		) c ) t
+		where 1=1
+		<if test="cityCode != null and cityCode != ''" >
+			 and t.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+		    and t.lpn LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="queryDateFrom != null and queryDateFrom != '' " >
+	       and t.pay_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo != '' " >
+	       and t.pay_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+		order by t.pay_time desc  limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  <select id="getAllExcel" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT * from (
+		SELECT c.*,(select `name` from x_member d where d.id = c.member_id) member_name,
+				(select name from x_city e where e.code = c.city_code) city_name from (
+		SELECT
+			a.id,
+			a.order_id,
+			a.extend_id,
+			a.pay_type,
+			DATE_FORMAT(a.pay_time,'%Y-%m-%d %H:%i:%s') AS pay_time,
+			a.pay_money,
+			a.order_type,
+			a.member_id,
+		b.city_code,b.lpn
+		FROM
+			`x_day_rent_order_pay_log` a LEFT JOIN
+			x_day_rent_order b
+		on
+			a.order_id = b.order_id
+		where a.pay_status = '1' and b.order_status='finish' and b.pay_status='finish' 
+		) c ) t
+		where 1=1
+		<if test="cityCode != null and cityCode != ''" >
+			 and t.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+		    and t.lpn = #{lpn,jdbcType=VARCHAR} 
+		</if>
+		<if test="queryDateFrom != null and queryDateFrom != '' " >
+	       and t.pay_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo != '' " >
+	       and t.pay_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+		order by t.pay_time desc  
+  </select>
+</mapper>

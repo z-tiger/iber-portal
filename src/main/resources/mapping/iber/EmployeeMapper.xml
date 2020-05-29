@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.dispatcher.EmployeeMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.dispatcher.Employee">
+		<result column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="photo_url" property="photoUrl" />
+		<result column="status" property="status"/>
+		<result column="type" property="type"/>
+		<result column="create_time" property="createTime"/>
+		<result column="longitude" property="longitude" />
+		<result column="latitude" property="latitude" />
+		<result column="create_id" property="createId" />
+		<result column="update_id" property="updateId" />
+		<result column="update_time" property="updateTime" />
+		<result column="city_code" property="cityCode" />
+		<result column="phone" property="phone" />
+		<result column="password" property="password" />
+		<result column="finger_url" property="fingerUrl" />
+		<result column="cityName" property="cityName"/>
+		<result column="gridName" property="gridName"/>
+		<result column="is_manager" property="isManager"/>
+		<result column="sex" property="sex"/>
+		<result column="profession" property="profession"/>
+		<result column="currentTask" property="currentTask"/>
+		<result column="todayCompleteTask" property="todayCompleteTask"/>
+		<result column="processTask" property="processTask"/>
+		<result column="totalCompleteTask" property="totalCompleteTask"/>
+		<result column="remark" property="remark"/>
+		<result column="identify_label" property="identifyLabel"/>
+		<result column="tbox_finger" property="tboxFinger"/>
+		<result column="position" property="position" />
+		<result column="email" property="email"/>
+		<result column="todayScore" property="todayScore" jdbcType="VARCHAR"/>
+		<result column="monthScore" property="monthScore" jdbcType="VARCHAR"/>
+		<result column="totalScore" property="totalScore" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="com.iber.portal.model.dispatcher.EmployeeVo" id="DispatcherResultMap">
+		<result column="name" property="name"/>
+		<result column="type" property="type"/>
+		<result column="status" property="status"/>
+		<result column="currentTask" property="currentTask"/>
+		<result column="processTask" property="processTask"/>
+		<result column="todayCompleteTask" property="todayCompleteTask"/>
+		<result column="totalCompleteTask" property="totalCompleteTask"/>
+		<result column="longitude" property="longitude"/>
+		<result column="latitude" property="latitude"/>
+		<result column="photo_url" property="photoUrl"/>
+		<result column="id" property="id"/>
+		<result column="address" property="address"/>
+		<result column="phone" property="phone"/>
+		<result column="lpn" property="lpn"/>
+		<result column="usingCarStatus" property="usingCarStatus"/>
+		<result column="identifyLabel" property="identifyLabel"/>
+	</resultMap>
+	
+	<resultMap id="EmployeeOrderResultMap" type="com.iber.portal.model.employee.EmployeeOrder" >
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="park_id" property="parkId" jdbcType="INTEGER"/>
+		<result column="return_park_id" property="returnParkId" jdbcType="INTEGER"/>
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP"/>
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP"/>
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR"/>
+		<result column="is_return_car" property="isReturnCar" jdbcType="INTEGER"/>
+		<result column="lpn" property="lpn" jdbcType="VARCHAR"/>
+		<result column="employee_id" property="employeeId" jdbcType="INTEGER"/>
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+		<result column="task_id" property="taskId" jdbcType="INTEGER"/>
+		<result column="status" property="status" jdbcType="VARCHAR"/>
+		<result column="endLocation" property="endLocation" jdbcType="VARCHAR"/>
+		<result column="longitude" property="longitude"/>
+		<result column="latitude" property="latitude"/>
+	</resultMap>
+	
+	<resultMap type="com.iber.portal.vo.car.EmployeeInfoVo" id="EmployeeInfoVoResultMap">
+		<result column="employeeName" property="employeeName"/>
+		<result column="employeePhone" property="employeePhone"/>
+		<result column="id" property="id"/>
+	</resultMap>
+	
+	<!-- activity table all fields -->
+	<sql id="Base_Column_List">
+		e.id,e.name,e.photo_url,e.status,e.create_time,e.longitude,e.latitude,e.update_time,e.city_code,e.phone,e.password,e.finger_url,e.sex,e.profession,e.type
+	</sql>
+	
+	<select id="selectAllDispatcher" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>,
+		s.name,si.name
+		from
+		e_employee_info e left join x_sys_user s on e.create_id = s.id
+		left join x_sys_user si on e.update_id = si.id
+		where e.type = '1'
+	</select>
+	
+	<select id="getDispatcherDetail" resultMap="BaseResultMap">
+		select e.id, e.name,c.name cityName,g.name gridName, e.type,e.status, e.phone, eg.is_manager,e.identify_label 
+		from e_employee_info e left join x_city c on e.city_code = c.code 
+		left join e_employee_gridding_relation eg on e.id = eg.employee_id
+		left join e_gridding_info g on g.id = eg.gridding_id
+		where e.type = '1' and e.status !='freeze' 
+			<if test="gridId != null and gridId != ''">
+				and g.id = #{gridId} 
+			</if>
+			<if test="dispatcherName != null and dispatcherName != ''">
+				and e.name like concat('%',#{dispatcherName},'%')
+			</if>
+		limit #{from}, #{to}
+	</select>
+	
+	<select id="getMyAllParkNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from e_employee_info e left join e_employee_gridding_relation eg on e.id = eg.employee_id
+		where e.type = '1'
+			<if test="gridId != null and gridId != ''">
+				and eg.gridding_id = #{gridId} 
+			</if>
+			<if test="dispatcherName != null and dispatcherName != ''">
+				and e.name like concat('%',#{dispatcherName},'%')
+			</if>
+	</select>
+	
+	<select id="selectExceptExistRelation" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>,
+		s.name,si.name
+		from
+		e_employee_info e left join x_sys_user s on e.create_id = s.id
+		left join x_sys_user si on e.update_id = si.id
+		where e.type = '1' and e.status != 'freeze' and  e.id not in (select employee_id from e_employee_gridding_relation)
+		<if test="_parameter != null and _parameter != ''">
+			and e.city_code = #{_parameter}
+		</if>
+	</select>
+	
+	<select id="selectByGridId" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from e_employee_info e where e.id in
+		(select employee_id from e_employee_gridding_relation where gridding_id = #{id})
+	</select>
+	<select id="selectDispatherByGridId" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from e_employee_info e where e.type='1' and e.status != 'freeze' and e.id in
+		(select employee_id from e_employee_gridding_relation where gridding_id = #{id})
+	</select>
+	<select id="queryPageList" resultMap="BaseResultMap">
+		select e.id, e.name,c.name cityName,g.name gridName, e.type,e.status, e.phone, eg.is_manager,e.sex,e.profession,e.city_code,e.finger_url,e.remark,e.identify_label,e.tbox_finger,
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '1' and task_type in ('1','3','6') ) currentTask, -->
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '2' and task_type in ('1','3','6')) processTask, -->
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '3' and task_type in ('1','3','6') and DATE(done_time) = CURDATE()) todayCompleteTask, -->
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '3' and task_type in ('1','3','6')) totalCompleteTask -->
+		         IFNULL(tt.currentTask,0) as currentTask, 
+		         IFNULL(tt.processTask,0) as processTask, 
+		         IFNULL(tt.todayCompleteTask,0) as todayCompleteTask, 
+		         IFNULL(tt.totalCompleteTask,0) as totalCompleteTask,
+				(SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = e.id and DATE(ets.create_time) = CURDATE()) todayScore,
+				(SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = e.id and date_format(ets.create_time, '%Y-%m') = date_format(CURDATE(),'%Y-%m')) monthScore,
+				(SELECT format(ifnull(sum(ets.score),0)/10,1) FROM e_task_score ets WHERE ets.employee_id = e.id ) totalScore,
+		         e.position,
+				 e.email
+		from e_employee_info e left join x_city c on e.city_code = c.code 
+		left join e_employee_gridding_relation eg on e.id = eg.employee_id
+		left join e_gridding_info g on g.id = eg.gridding_id left join 
+		(  SELECT  employee_id,
+		         COUNT(IF(status='1',status='1',null)) currentTask ,
+                 COUNT(IF(status='2',status='2',null)) processTask,
+                 COUNT(IF(status='3' and DATE(done_time) = CURDATE(),status='3',null)) todayCompleteTask,
+                 COUNT(IF(status='3',status='3',null))  totalCompleteTask
+                 FROM e_task_info where task_type in ('1','3','6') GROUP BY employee_id
+         ) tt on tt.employee_id = e.id
+		where e.type = '1'
+			<if test="dispatcherName != null and dispatcherName != ''">
+				and e.name like concat('%',#{dispatcherName},'%')
+			</if>
+			<if test="griddingId !=null and griddingId !=''">
+				and e.id in(select employee_id from e_employee_gridding_relation where gridding_id =#{griddingId})
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				and e.city_code = #{cityCode}
+			</if>
+			<if test="status != null and status != ''">
+				<if test="status == 'closed'">
+					and ( e.status = 'closed' or e.status is NULL) 
+				</if>
+				<if test="status != 'closed'">
+					and e.status = #{status}
+				</if>
+			</if>
+			<if test="from != null and to != null">
+		limit #{from}, #{to}
+			</if>	
+	</select>
+	
+	<select id="getAllNum" resultType="java.lang.Integer">
+		select count(1) from e_employee_info
+		where type = '1'
+			<if test="dispatcherName != null and dispatcherName != ''">
+				and name = #{dispatcherName}
+			</if>
+			<if test="griddingId !=null and griddingId !=''">
+				and id in(select employee_id from e_employee_gridding_relation where gridding_id =#{griddingId})
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				and city_code = #{cityCode}
+			</if>
+			<if test="status != null and status != ''">
+				<if test="status == 'closed'">
+					and (status = 'closed' or status is NULL)
+				</if>
+				<if test="status != 'closed'">
+					and status = #{status}
+				</if>
+			</if>	
+	</select>
+	
+	<select id="selectAllPhone" resultType="java.util.HashMap">
+		select id,phone from e_employee_info
+	</select>
+	
+	<insert id="insert">
+		insert into e_employee_info(city_code,create_time,create_id,name,profession,sex,type,phone,remark,position,email)
+		values(#{cityCode},#{createTime},#{createId},#{name},#{profession},#{sex},#{type},#{phone},#{remark},#{position},#{email})
+	</insert>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from e_employee_info e
+		where e.id = #{id}
+	</select>
+	
+	<update id="update">
+		update e_employee_info set 
+			name = #{name}, phone = #{phone}, sex = #{sex},
+			type = #{type}, city_code = #{cityCode}, profession = #{profession},remark=#{remark},identify_label=#{identifyLabel},
+			update_id = #{updateId}, update_time = #{updateTime}
+		where id = #{id}
+		
+	</update>
+	
+	<delete id="deleteByPrimaryKey">
+		delete from e_employee_info 
+		where id = #{id}
+	</delete>
+	
+	<select id="queryDispatcherList" resultMap="DispatcherResultMap">
+		SELECT e.name, e.type, e.status,e.longitude,e.latitude,e.photo_url,e.id,e.address,e.phone,orders.lpn,orders.`status` usingCarStatus,e.identify_label identifyLabel,
+		         IFNULL(tt.currentTask,0) as currentTask, 
+		         IFNULL(tt.processTask,0) as processTask, 
+		         IFNULL(tt.todayCompleteTask,0) as todayCompleteTask, 
+		         IFNULL(tt.totalCompleteTask,0) as totalCompleteTask
+		FROM e_employee_info e left join e_employee_order orders on e.id = orders.employee_id  and orders.`status` in ('useCar','ordered') left join 
+				(  SELECT  employee_id,
+		         COUNT(IF(status='1',status='1',null)) currentTask ,
+                 COUNT(IF(status='2',status='2',null)) processTask,
+                 COUNT(IF(status='3' and DATE(done_time) = CURDATE(),status='3',null)) todayCompleteTask,
+                 COUNT(IF(status='3',status='3',null))  totalCompleteTask
+                 FROM e_task_info GROUP BY employee_id
+         ) tt on tt.employee_id = e.id where e.`status` != 'freeze'
+	</select>
+	
+	<select id="queryDispatcher" resultMap="DispatcherResultMap">
+		SELECT e.name, e.type, e.status,e.longitude,e.latitude,e.photo_url,e.id,e.address,e.phone,
+			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '1') currentTask,
+			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '2') processTask,
+			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '3' and DATE(done_time) = CURDATE()) todayCompleteTask,
+			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '3') totalCompleteTask
+		FROM e_employee_info e where e.type = '1' 
+		<if test="_parameter != null and _parameter != ''">
+			and e.city_code = #{_parameter}
+		</if>
+	</select>
+	<select id="queryOrderByEmployeeId" resultMap="EmployeeOrderResultMap">
+		select o.*,r.longitude,r.latitude from e_employee_order o inner join x_car_run r on o.lpn = r.lpn where o.employee_id = #{employeeId} and o.status = 'useCar'
+	</select>
+	
+	<select id="queryOrderByLpn" resultMap="EmployeeOrderResultMap">
+		select o.*,r.longitude,r.latitude from e_employee_order o inner join x_car_run r on o.lpn = r.lpn where o.lpn = #{lpn} and o.status = 'useCar'
+	</select>
+	
+	<update id="deleteEmployeeFinger" parameterType="java.lang.Integer">
+		update e_employee_info set finger_url = null  where id =#{id}
+	</update>
+	
+	<select id="selectByPhone" resultMap="BaseResultMap">
+		select * from e_employee_info where phone = #{responsiblePersonPhone}
+	</select>
+	
+	<select id="getAll" resultMap="EmployeeInfoVoResultMap">
+		select name employeeName, phone employeePhone, id from e_employee_info where status = 'working' limit #{from},#{to}
+	</select>
+	
+	<select id="getAllWorkingNum" resultType="java.lang.Integer">
+		select count(1) from e_employee_info where status = 'working'
+	</select>
+	<!-- 查询监控中心中员工端的信息  -->
+	<select id="queryEmployeePortInfos" resultMap="BaseResultMap">
+	select * from 
+	  (	select e.id,e.longitude,e.latitude, e.name,c.name cityName,g.name gridName, e.type,e.status, e.phone, eg.is_manager,e.sex,e.profession,e.city_code,e.finger_url,e.remark,e.identify_label,
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '1') currentTask, -->
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '2') processTask, -->
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '3' and DATE(done_time) = CURDATE()) todayCompleteTask, -->
+<!-- 			(SELECT COUNT(1) FROM e_task_info WHERE employee_id = e.id and status = '3') totalCompleteTask -->
+		         IFNULL(tt.currentTask,0) as currentTask, 
+		         IFNULL(tt.processTask,0) as processTask, 
+		         IFNULL(tt.todayCompleteTask,0) as todayCompleteTask, 
+		         IFNULL(tt.totalCompleteTask,0) as totalCompleteTask
+		from e_employee_info e left join x_city c on e.city_code = c.code 
+		left join e_employee_gridding_relation eg on e.id = eg.employee_id
+		left join e_gridding_info g on g.id = eg.gridding_id left join 
+		(  SELECT  employee_id,
+		         COUNT(IF(status='1',status='1',null)) currentTask ,
+                 COUNT(IF(status='2',status='2',null)) processTask,
+                 COUNT(IF(status='3' and DATE(done_time) = CURDATE(),status='3',null)) todayCompleteTask,
+                 COUNT(IF(status='3',status='3',null))  totalCompleteTask
+                 FROM e_task_info GROUP BY employee_id
+         ) tt on tt.employee_id = e.id
+		where e.status != 'freeze'
+			<if test="wstatus != null and wstatus != ''">
+			    <if test="wstatus == 'working'">
+				   and e.status in ('working','ordered','useCar')
+				</if>
+				<if test="wstatus != 'working'">
+				   and e.status not in ('working','ordered','useCar') or e.status is null
+				</if>
+			</if>
+		) einfo  where 1=1
+			<if test="dispatcherName != null and dispatcherName != ''">
+				and einfo.name like concat('%',#{dispatcherName},'%')
+			</if>
+			<if test="griddingId !=null and griddingId !=''">
+				and einfo.id in (select employee_id from e_employee_gridding_relation where gridding_id =#{griddingId})
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				and einfo.city_code = #{cityCode}
+			</if>
+			<if test="empType != null and empType!=''">
+				and einfo.type = #{empType}
+			</if>
+			<if test="empType == null">
+				and einfo.type is null
+			</if>
+		limit #{from}, #{to}
+	</select>
+	<select id="queryEmployeePortInfosNum" resultType="java.lang.Integer">
+	select count(1) from 
+	(select e.id,e.name,e.city_code,e.type from e_employee_info e
+		where e.status != 'freeze'
+		<if test="wstatus != null and wstatus != ''">
+			 <if test="wstatus == 'working'">
+				   and status in ('working','ordered','useCar')
+				</if>
+				<if test="wstatus != 'working'">
+                   and status not in ('working','ordered','useCar') or  status is null
+				</if>
+		</if>) info where 1=1 
+			<if test="dispatcherName != null and dispatcherName != ''">
+				and name like concat('%',#{dispatcherName},'%')
+			</if>
+			<if test="griddingId !=null and griddingId !=''">
+				and id in (select employee_id from e_employee_gridding_relation where gridding_id =#{griddingId})
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				and city_code = #{cityCode}
+			</if>
+			<if test="empType != null and empType!=''">
+				and type = #{empType}
+			</if>
+			<if test="empType == null">
+				and type is null
+			</if>
+
+	</select>
+    <select id="queryEmployeesByCityCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+		(select id,name from e_employee_info e where  e.status != 'freeze' 
+		<if test="employeeType!=null ">
+		 and e.type =#{employeeType}
+		</if>
+		<if test="employeeType==null">
+		  and e.type is null 
+		</if>
+		<if test="cityCode!='00'">
+		   and e.city_code =#{cityCode,jdbcType=VARCHAR}
+		</if>)
+		union
+		(select id,name from e_employee_info e where e.status is null
+		<if test="employeeType!=null ">
+		 and e.type =#{employeeType}
+		</if>
+		<if test="employeeType==null">
+		  and e.type is null 
+		</if>
+		<if test="cityCode!='00'">
+		   and e.city_code =#{cityCode,jdbcType=VARCHAR}
+		</if>)
+	</select>
+	<select id="queryEmployeeLeaders" resultType="java.util.Map">
+	  SELECT t.id,leaders.leader from 
+        (SELECT e.id,e.type,e.identify_label,
+           CASE when e.type = 1 and e.identify_label = 0 then (SELECT GROUP_CONCAT(`name`) from e_employee_info x where x.type = 1 and x.identify_label = 1 and x.city_code = e.city_code and x.status!='freeze') 
+           when e.type = 1 and e.identify_label = 1 then (SELECT GROUP_CONCAT(`name`) from e_employee_info x where x.type is null and x.identify_label = 2 and x.city_code = e.city_code and x.status!='freeze')  
+           when e.type = 2 and e.identify_label = 0 then (SELECT GROUP_CONCAT(`name`) from e_employee_info x where x.type = 2 and x.identify_label = 1 and x.city_code = e.city_code and x.status!='freeze') 
+           when e.type = 2 and e.identify_label = 1 then (SELECT GROUP_CONCAT(`name`) from e_employee_info x where x.type is null and x.identify_label = 2 and x.city_code = e.city_code and x.status!='freeze') 
+           when e.type = 3 and e.identify_label = 0 then (SELECT GROUP_CONCAT(`name`) from e_employee_info x where x.type = 3 and x.identify_label = 1 and x.city_code = e.city_code and x.status!='freeze')
+           when e.type = 3 and e.identify_label = 1 then (SELECT GROUP_CONCAT(`name`) from e_employee_info x where x.type is null and x.identify_label = 2 and x.city_code = e.city_code and x.status!='freeze')  
+           END as leader 
+        from e_employee_info e) leaders RIGHT JOIN e_task_info t on t.employee_id = leaders.id
+	</select>
+	<select id="queryEmployeeGrid" resultType="java.lang.Integer">
+	    select count(1) from e_employee_gridding_relation where employee_id = #{id}
+	</select>
+	
+	<select id="getAllEmployeeInfo" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from e_employee_info e 
+		<where>
+			<if test="name != null and name != ''">
+				name like concat('%',#{name},'%')
+			</if>
+		</where>
+		limit #{offset}, #{rows}
+	</select>
+	
+	<select id="selectAllEmployeesRecords" resultType="java.lang.Integer">
+		select count(1) from 
+		e_employee_info 
+		<where>
+			<if test="name != null and name != ''">
+				name like concat('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectPhoneListByParkId" resultType="java.lang.String">
+		SELECT e.phone FROM e_employee_info e JOIN e_employee_gridding_relation eg on e.id = eg.employee_id JOIN e_gridding_park_relation gp 
+		on eg.gridding_id = gp.gridding_id JOIN x_park p on gp.park_id = p.id WHERE park_id = #{parkId} and e.status not in ('closed','freeze')
+		
+	</select>
+
+	<update id="deleteEmployeeTboxFinger" parameterType="java.lang.Integer">
+		update e_employee_info set tbox_finger = ''  where id =#{id}
+	</update>
+</mapper>   

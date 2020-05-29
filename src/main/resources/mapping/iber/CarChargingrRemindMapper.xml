@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.car.CarChargingRemindMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarChargingRemind">
+		<result column="id" property="id" />
+		<result column="order_id" property="orderId" />
+		<result column="member_id" property="memberId" />
+		<result column="lpn" property="lpn"/>
+		<result column="phone" property="phone"/>
+	</resultMap>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from x_car_charging_remind
+	</select>
+	
+	<insert id="batchInsert" useGeneratedKeys="true" parameterType="java.util.List">  
+		insert into x_car_charging_remind (order_id,member_id,lpn,phone)   
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >  
+	        (#{item.orderId},#{item.memberId},#{item.lpn},#{item.phone})  
+	    </foreach>  
+	</insert> 
+</mapper>   

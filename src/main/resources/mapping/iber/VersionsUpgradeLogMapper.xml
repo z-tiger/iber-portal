@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.versions.VersionsUpgradeLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.versions.VersionsUpgradeLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="upgradeType" property="upgradetype" jdbcType="VARCHAR" />
+    <result column="current_version_no" property="currentVersionNo" jdbcType="VARCHAR" />
+    <result column="upgrade_version_no" property="upgradeVersionNo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, lpn, upgradeType, current_version_no, upgrade_version_no, status, remark, create_id, 
+    create_time, update_id, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_versions_upgrade_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_versions_upgrade_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.versions.VersionsUpgradeLog" >
+    insert into x_versions_upgrade_log (id, lpn, upgradeType, 
+      current_version_no, upgrade_version_no, status, 
+      remark, create_id, create_time, 
+      update_id, update_time)
+    values (#{id,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, #{upgradetype,jdbcType=VARCHAR}, 
+      #{currentVersionNo,jdbcType=VARCHAR}, #{upgradeVersionNo,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.versions.VersionsUpgradeLog" >
+    insert into x_versions_upgrade_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="upgradetype != null" >
+        upgradeType,
+      </if>
+      <if test="currentVersionNo != null" >
+        current_version_no,
+      </if>
+      <if test="upgradeVersionNo != null" >
+        upgrade_version_no,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradetype != null" >
+        #{upgradetype,jdbcType=VARCHAR},
+      </if>
+      <if test="currentVersionNo != null" >
+        #{currentVersionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeVersionNo != null" >
+        #{upgradeVersionNo,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.versions.VersionsUpgradeLog" >
+    update x_versions_upgrade_log
+    <set >
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradetype != null" >
+        upgradeType = #{upgradetype,jdbcType=VARCHAR},
+      </if>
+      <if test="currentVersionNo != null" >
+        current_version_no = #{currentVersionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeVersionNo != null" >
+        upgrade_version_no = #{upgradeVersionNo,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.versions.VersionsUpgradeLog" >
+    update x_versions_upgrade_log
+    set lpn = #{lpn,jdbcType=VARCHAR},
+      upgradeType = #{upgradetype,jdbcType=VARCHAR},
+      current_version_no = #{currentVersionNo,jdbcType=VARCHAR},
+      upgrade_version_no = #{upgradeVersionNo,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryCarVersionsUpgradeLog" resultMap="BaseResultMap" parameterType="java.util.Map" >
+      select * from x_versions_upgrade_log where 
+      	<if test="lpn != null and lpn !='' ">
+      		lpn = #{lpn,jdbcType=VARCHAR}
+      	</if>
+      	<if test="upgradeType != null and upgradeType !='' ">
+      		and upgradeType = #{upgradeType,jdbcType=VARCHAR}
+      	</if>
+      	order by create_time desc 
+       limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="queryVersionsUpgradeLogCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+  	select count(1) from x_versions_upgrade_log 
+	<trim prefixOverrides="and">
+	     <where>
+			  <if test="lpn != null and lpn !='' ">
+      			lpn = #{lpn,jdbcType=VARCHAR}
+		      </if>
+		      <if test="upgradeType != null and upgradeType !='' ">
+		      		and upgradeType = #{upgradeType,jdbcType=VARCHAR}
+		      </if>
+	     </where>
+	   </trim>
+  </select>
+  
+</mapper>

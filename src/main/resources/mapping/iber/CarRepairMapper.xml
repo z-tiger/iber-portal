@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarRepairMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarRepair" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="car_id" property="carId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_cache" property="statusCache" jdbcType="VARCHAR" />
+    <result column="responsible_person" property="responsiblePerson" jdbcType="VARCHAR" />
+    <result column="responsible_person_phone" property="responsiblePersonPhone" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="predict_time" property="predictTime" jdbcType="TIMESTAMP" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="parkName" property="parkName" jdbcType="VARCHAR" />
+    <result column="parkId" property="parkId" jdbcType="INTEGER"/>
+    <result column="task_id" property="taskId"/>
+    <result column="battery" property="battery"/>
+    <result column="voltage" property="voltage"/>
+    <result column="batStatus" property="batStatus"/>
+    <result column="latestUpdateTime" property="latestUpdateTime"/>
+    <result column="bluetoothNo" property="bluetoothNo"/>
+    <result column="tfcardstatus" property="tfCardStatus"/>
+    <result column="category" property="category"/><!-- 网点类型 -->
+    <result column="gi_name" property="giName"/><!-- 所属片区 -->
+    <result column="start_rest_battery" property="startRestBattery"/>
+    <result column="end_rest_battery" property="endRestBattery"/>
+    <result column="recover_user" property="recoverUser"/>
+    <result column="recover_user_phone" property="recoverUserPhone"/>
+    <result column="recover_reason" property="recoverReason"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    b.id, b.car_id, b.lpn, b.start_time, b.end_time, b.reason, b.responsible_person, b.responsible_person_phone,
+    b.create_user, b.create_time, b.update_user, b.update_time,b.status,b.predict_time,b.task_id,b.status_cache,
+    b.start_rest_battery,b.end_rest_battery,b.recover_user,b.recover_user_phone,b.recover_reason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_repair b
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city city where city.code =(select r.city_code from x_car_run r where r.lpn=b.lpn)) cityName,
+    (select name from x_park park where park.id =(select r.park_id from x_car_run r where r.lpn=b.lpn)) parkName
+    from x_car_repair b
+    <trim prefixOverrides="and">
+       <where>
+          <if test="lpn != null and lpn !='' ">
+          and lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="status !=null and status!=''">
+          and status = #{status,jdbcType=VARCHAR}
+          </if>
+          <if test="timeOut !=null and timeOut !=''">
+          and predict_time &lt; now() AND end_time is  NULL and status != '0'
+          </if>
+          <if test="cityCode != null and cityCode != ''">
+          and   EXISTS	
+			 (select 1 from x_car_run  where x_car_run.city_code = #{cityCode,jdbcType=VARCHAR} and x_car_run.id =  b.car_id)
+          </if>
+       </where>
+    </trim>
+    order by start_time desc
+    limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectTotalRepairsInfos" resultMap="BaseResultMap" parameterType="java.util.Map">
+       select 
+    <include refid="Base_Column_List" />,
+        city.name cityName,
+     	p.`name`  parkName ,
+	    p.category,
+		git.gi_name,
+    	xcr.rest_battery as battery ,xcr.small_battery_voltage as voltage,
+    	xcr.bat_status as batStatus,xcr.update_time latestUpdateTime,xcr.tf_card_exist tfcardstatus,
+    	car.bluetooth_no bluetoothNo 
+     from x_car_repair b 
+     	left JOIN x_car_run xcr on xcr.lpn = b.lpn 
+     	left JOIN x_park p on xcr.park_id = p.id  
+     	left join x_car car on car.lpn = b.lpn 
+     	left join x_city city on city.code = b.city_code 
+     	LEFT JOIN (SELECT gpr.park_id ,GROUP_CONCAT(name) gi_name  from e_gridding_info  gi INNER JOIN  e_gridding_park_relation  gpr ON gi.id = gpr.gridding_id GROUP BY gpr.park_id ) git ON git.park_id = xcr.park_id
+<!--      LEFT JOIN x_park p on b.park_id = p.id  -->
+<!-- 	 LEFT JOIN e_gridding_park_relation gpr ON p.id = gpr.park_id  -->
+<!-- 	 LEFT JOIN e_gridding_info gi ON gi.id = gpr.gridding_id -->
+    <trim prefixOverrides="and">
+       <where>
+          <if test="lpn != null and lpn !='' ">
+          and b.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="reason != null and reason !='' ">
+             and b.reason LIKE CONCAT('%', #{reason,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="status !=null and status!=''">
+          and b.status = #{status,jdbcType=VARCHAR}
+          </if>
+          <if test="timeOut !=null and timeOut !=''">
+          and b.predict_time &lt; now() AND b.end_time is  NULL and b.status != '0'
+          </if>
+          <if test="cityCode != null and cityCode != ''">
+          and b.city_code = #{cityCode,jdbcType=VARCHAR}
+          </if>
+          <if test="statusCache != null and statusCache != ''">
+          and b.status_cache = #{statusCache,jdbcType=VARCHAR}
+          </if>
+          <if test="category != null and category != ''">
+          and p.category = #{category}
+          </if>
+       </where>
+    </trim>
+<!--     GROUP BY b.id  -->
+      order by b.start_time desc,xcr.update_time asc
+      <if test="offset != null and rows != null">
+      limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+      </if>
+  </select>
+  
+  <select id="selectTotalRepairsInfoRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+  SELECT COUNT(1) FROM (
+  	select count(1)
+     from x_car_repair b 
+     LEFT JOIN x_park p on b.park_id = p.id 
+    <!--  left JOIN x_car_run xcr on xcr.lpn = b.lpn
+	 LEFT JOIN e_gridding_park_relation gpr ON p.id = gpr.park_id  
+	 LEFT JOIN e_gridding_info gi ON gi.id = gpr.gridding_id -->
+    <trim prefixOverrides="and">
+       <where>
+          <if test="lpn != null and lpn !='' ">
+          and b.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="reason != null and reason !='' ">
+             and b.reason LIKE CONCAT('%', #{reason,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="status !=null and status!=''">
+          and b.status = #{status,jdbcType=VARCHAR}
+          </if>
+          <if test="timeOut !=null and timeOut !=''">
+          and b.predict_time &lt; now() AND b.end_time is  NULL and b.status != '0'
+          </if>
+          <if test="cityCode != null and cityCode != ''">
+           and  b.city_code = #{cityCode,jdbcType=VARCHAR}
+          </if>
+          <if test="statusCache != null and statusCache != ''">
+          and b.status_cache = #{statusCache,jdbcType=VARCHAR}
+          </if>
+          <if test="category != null and category != ''">
+          and p.category = #{category}
+          </if>
+       </where>
+    </trim>
+    GROUP BY b.id
+  ) t
+  </select>
+  
+  <select id="selectAllRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+     select count(1)
+     from x_car_repair
+     <trim prefixOverrides="and">
+       <where>
+          <if test="lpn != null and lpn !='' ">
+          and lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+          </if>
+          <if test="status !=null and status!=''">
+          and status = #{status,jdbcType=VARCHAR}
+          </if>
+          <if test="timeOut !=null and timeOut !=''">
+          and predict_time &lt; now() AND end_time is  NULL and status != '0'
+          </if>
+          <if test="cityCode != null and cityCode != ''">
+          and 
+          EXISTS	
+			 (select 1 from x_car_run  where x_car_run.city_code = #{cityCode,jdbcType=VARCHAR} and x_car_run.id =  x_car_repair.car_id)
+          </if>
+       </where>
+    </trim>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_repair
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.car.CarRepair" >
+    insert into x_car_repair (id, car_id, lpn, 
+      start_time, end_time, reason, 
+      responsible_person, responsible_person_phone, 
+      create_user, create_time, update_user, 
+      update_time,status,task_id)
+    values (#{id,jdbcType=INTEGER}, #{carId,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, 
+      #{responsiblePerson,jdbcType=VARCHAR}, #{responsiblePersonPhone,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},#{taskId})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarRepair" useGeneratedKeys="true" keyProperty="id">
+    insert into x_car_repair
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="carId != null" >
+        car_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="responsiblePersonId != null" >
+        responsible_person_id,
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person,
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        responsible_person_phone,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="predictTime!= null" >
+        predict_time,
+      </if>
+      <if test="cityCode!= null" >
+        city_code,
+      </if>
+      <if test="parkId!= null" >
+        park_id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="status != null" >
+        status_cache,
+      </if>
+      <if test="startRestBattery != null" >
+        start_rest_battery,
+      </if>
+      <if test="endRestBattery != null" >
+        end_rest_battery,
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="carId != null" >
+        #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonId != null" >
+        #{responsiblePersonId,jdbcType=INTEGER},
+      </if>
+      <if test="responsiblePerson != null" >
+        #{responsiblePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        #{responsiblePersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="predictTime!= null">
+       #{predictTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityCode!= null">
+       #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId!= null">
+       #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="taskId!= null">
+       #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+       #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="startRestBattery != null" >
+       #{startRestBattery},
+      </if>
+      <if test="endRestBattery != null" >
+       #{endRestBattery},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarRepair" >
+    update x_car_repair
+    <set >
+      <if test="carId != null" >
+        car_id = #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person = #{responsiblePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        responsible_person_phone = #{responsiblePersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="statusCache != null" >
+        status_cache = #{statusCache,jdbcType=VARCHAR},
+      </if>
+      <if test="startRestBattery != null" >
+        start_rest_battery = #{startRestBattery},
+      </if>
+      <if test="endRestBattery != null" >
+        end_rest_battery = #{endRestBattery},
+      </if>
+      <if test="recoverReason != null" >
+        recover_reason = #{recoverReason},
+      </if>
+      <if test="recoverUser != null" >
+        recover_user = #{recoverUser},
+      </if>
+      <if test="recoverUserPhone != null" >
+          recover_user_phone = #{recoverUserPhone},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.CarRepair" >
+    update x_car_repair
+    set car_id = #{carId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      reason = #{reason,jdbcType=VARCHAR},
+      responsible_person = #{responsiblePerson,jdbcType=VARCHAR},
+      responsible_person_phone = #{responsiblePersonPhone,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      task_id = #{taskId,jdbcType=INTEGER},
+      recover_user = #{recoverUser,jdbcType=VARCHAR},
+      recover_user_phone = #{recoverUserPhone,jdbcType=VARCHAR},
+      recover_reason = #{recoverReason,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryCarRepairByLpnStatus" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_repair b
+    where
+      lpn = #{lpn,jdbcType=VARCHAR}
+    and
+      status = #{status,jdbcType=VARCHAR}
+    order by start_time desc limit 1
+  </select>
+  <update id="updateStatusCarBylpn">
+  	update x_car_repair cr set cr.status = #{status},cr.status_cache = #{statusCache} where cr.lpn = #{lpn}
+  </update>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.qrtz.SimpleTriggersMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.qrtz.SimpleTriggers" >
+    <id column="TRIGGER_NAME" property="triggerName" jdbcType="VARCHAR" />
+    <id column="TRIGGER_GROUP" property="triggerGroup" jdbcType="VARCHAR" />
+    <result column="REPEAT_COUNT" property="repeatCount" jdbcType="BIGINT" />
+    <result column="REPEAT_INTERVAL" property="repeatInterval" jdbcType="BIGINT" />
+    <result column="TIMES_TRIGGERED" property="timesTriggered" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TRIGGER_NAME, TRIGGER_GROUP, REPEAT_COUNT, REPEAT_INTERVAL, TIMES_TRIGGERED
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.iber.portal.model.qrtz.SimpleTriggersKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from qrtz_simple_triggers
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.iber.portal.model.qrtz.SimpleTriggersKey" >
+    delete from qrtz_simple_triggers
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.qrtz.SimpleTriggers" >
+    insert into qrtz_simple_triggers (TRIGGER_NAME, TRIGGER_GROUP, REPEAT_COUNT, 
+      REPEAT_INTERVAL, TIMES_TRIGGERED)
+    values (#{triggerName,jdbcType=VARCHAR}, #{triggerGroup,jdbcType=VARCHAR}, #{repeatCount,jdbcType=BIGINT}, 
+      #{repeatInterval,jdbcType=BIGINT}, #{timesTriggered,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.qrtz.SimpleTriggers" >
+    insert into qrtz_simple_triggers
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="triggerName != null" >
+        TRIGGER_NAME,
+      </if>
+      <if test="triggerGroup != null" >
+        TRIGGER_GROUP,
+      </if>
+      <if test="repeatCount != null" >
+        REPEAT_COUNT,
+      </if>
+      <if test="repeatInterval != null" >
+        REPEAT_INTERVAL,
+      </if>
+      <if test="timesTriggered != null" >
+        TIMES_TRIGGERED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="triggerName != null" >
+        #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerGroup != null" >
+        #{triggerGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="repeatCount != null" >
+        #{repeatCount,jdbcType=BIGINT},
+      </if>
+      <if test="repeatInterval != null" >
+        #{repeatInterval,jdbcType=BIGINT},
+      </if>
+      <if test="timesTriggered != null" >
+        #{timesTriggered,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.qrtz.SimpleTriggers" >
+    update qrtz_simple_triggers
+    <set >
+      <if test="repeatCount != null" >
+        REPEAT_COUNT = #{repeatCount,jdbcType=BIGINT},
+      </if>
+      <if test="repeatInterval != null" >
+        REPEAT_INTERVAL = #{repeatInterval,jdbcType=BIGINT},
+      </if>
+      <if test="timesTriggered != null" >
+        TIMES_TRIGGERED = #{timesTriggered,jdbcType=BIGINT},
+      </if>
+    </set>
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.qrtz.SimpleTriggers" >
+    update qrtz_simple_triggers
+    set REPEAT_COUNT = #{repeatCount,jdbcType=BIGINT},
+      REPEAT_INTERVAL = #{repeatInterval,jdbcType=BIGINT},
+      TIMES_TRIGGERED = #{timesTriggered,jdbcType=BIGINT}
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+  </update>
+</mapper>

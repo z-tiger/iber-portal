@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.timeShare.TimeShareOrderAttachedDetailMapper">
+    <insert id="saveOrderAttachedDetail">
+        INSERT INTO x_time_share_order_attached_detail (attached_id,item,money,explanation)
+        VALUES
+        <foreach collection="details" item="item" separator=",">
+            <if test="item.ischeck==true">
+            (#{attached.id},#{item.item ,typeHandler=com.iber.portal.enums.handler.IntEnumTypeHandler},#{item.money}*100,#{item.explanation})
+            </if>
+        </foreach>
+    </insert>
+</mapper>

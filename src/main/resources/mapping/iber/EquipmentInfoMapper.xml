@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.charging.EquipmentInfoMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.charging.EquipmentInfo" >
+	<result column="id" property="id"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="manufacturer_id" property="manufacturerId"/>
+	<result column="equipment_model" property="equipmentModel"/>
+	<result column="production_date" property="productionDate"/>
+	<result column="equipment_type" property="equipmentType"/>
+	<result column="connector_infos" property="connectorInfos"/>
+	<result column="equipment_lng" property="equipmentLng"/>
+	<result column="equipment_lat" property="equipmentLat"/>
+	<result column="station_id" property="stationId"/>
+	<result column="equipment_code" property="equipmentCode"/>
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+	<result column="station_name" property="stationName" jdbcType="VARCHAR" />
+	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+	<result column="operatorId" property="operatorId"/>
+	<result column="brandIds" property="brandIds"/>
+	<result column="connector_number" property="connectorNumber" jdbcType="INTEGER"/>
+	<result column="afford_name" property="affordName" jdbcType="VARCHAR"/>
+	<result column="version" property="version" jdbcType="VARCHAR"/>
+</resultMap>
+
+<resultMap id="upgradeResultMap" type="com.iber.portal.vo.pile.EquipmentInfoVo" >
+	<result column="id" property="id"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="manufacturer_id" property="manufacturerId"/>
+	<result column="equipment_model" property="equipmentModel"/>
+	<result column="production_date" property="productionDate"/>
+	<result column="equipment_type" property="equipmentType"/>
+	<result column="connector_infos" property="connectorInfos"/>
+	<result column="equipment_lng" property="equipmentLng"/>
+	<result column="equipment_lat" property="equipmentLat"/>
+	<result column="station_id" property="stationId"/>
+	<result column="equipment_code" property="equipmentCode"/>
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+	<result column="station_name" property="stationName" jdbcType="VARCHAR" />
+	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+	<result column="operatorId" property="operatorId"/>
+	<result column="brandIds" property="brandIds"/>
+	<result column="connector_number" property="connectorNumber" jdbcType="INTEGER"/>
+	<result column="afford_name" property="affordName" jdbcType="VARCHAR"/>
+	<result column="soft_type" property="softType" jdbcType="VARCHAR"/>
+	<result column="softTypeName" property="softTypeName" jdbcType="VARCHAR"/>
+	<result column="version" property="versionCode" jdbcType="VARCHAR"/>
+	<result column="pileVersionId" property="pileVersionId" jdbcType="VARCHAR"/>
+	<result column="pileVersionRecord" property="pileVersionRecord" jdbcType="VARCHAR"/>
+	<result column="pileVersionNo" property="pileVersionNo" jdbcType="VARCHAR"/>
+	<result column="pileVersionName" property="pileVersionName" jdbcType="VARCHAR"/>
+	<result column="pileIsIncrement" property="pileIsIncrement" jdbcType="VARCHAR"/>
+	<result column="version_record" property="versionRecord" jdbcType="VARCHAR"/>
+</resultMap>
+       
+<!-- c_equipment_info table all fields -->
+<sql id="Base_Column_List" >
+	 id,create_time,create_id,update_time,update_id,manufacturer_id,equipment_model,production_date,equipment_type,connector_infos,equipment_lng,equipment_lat,station_id,equipment_code,operatorId,connector_number,afford_name,version
+</sql>
+
+<sql id="query_Column_List" >
+	 c.id,c.create_time,c.create_id,c.update_time,c.update_id,c.manufacturer_id,c.equipment_model,c.production_date,c.equipment_type,c.connector_infos,c.equipment_lng,c.equipment_lat,c.station_id,c.equipment_code,c.operatorId,c.connector_number,c.afford_name
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.charging.EquipmentInfo"  useGeneratedKeys="true" keyProperty="id">
+  insert into c_equipment_info(id,create_time,create_id,equipment_model,production_date,equipment_type,connector_infos,equipment_lng,equipment_lat,station_id,equipment_code,operatorId,connector_number,afford_name)
+ values(#{id},#{createTime},#{createId},#{equipmentModel},#{productionDate},#{equipmentType},#{connectorInfos},#{equipmentLng},#{equipmentLat},#{stationId},#{equipmentCode},#{operatorId},#{connectorNumber},#{affordName})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from c_equipment_info where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update c_equipment_info set update_time=#{updateTime},update_id=#{updateId},equipment_model=#{equipmentModel},production_date=#{productionDate},equipment_type=#{equipmentType},connector_infos=#{connectorInfos},connector_number=#{connectorNumber},afford_name=#{affordName}  where id=#{id}
+</update>
+
+<!-- 根据id查询 充电设备信息 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from c_equipment_info where station_id = #{id}
+</select>
+
+<!-- 充电设备信息 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from c_equipment_info c where  1=1
+	<if test="cityCode != null and cityCode != ''" >
+    	and c.station_id in (select p.id from x_park p where p.city_code=#{cityCode})
+    </if>
+ 	<if test="equipmentCode != null and equipmentCode != '' " >
+        and c.equipment_code like CONCAT(CONCAT('%', #{equipmentCode,jdbcType=VARCHAR}),'%')
+    </if>
+	<if test="stationName != null and stationName != '' " >
+       and c.station_id in (select p.id from x_park p where p.name like CONCAT(CONCAT('%', #{stationName,jdbcType=VARCHAR}),'%'))
+    </if>
+   
+</select>
+<!-- 查询充电设备信息（包含版本信息） -->
+<select id="selectUpgradePageList" parameterType="java.util.Map" resultMap="upgradeResultMap">
+  select 
+	<include refid="query_Column_List"/>,
+	(select u.name from x_sys_user u where u.id = c.create_id ) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id ) update_name,
+	(select p.name from x_park p where p.id = c.station_id) station_name,
+	(select group_concat(b.brand_id) from c_equipment_brand_relation b where b.equipment_id =c.id) brandIds,
+	<!-- (select group_concat(b.brand_name) from x_car_brand b where b.id in(select e.brand_id from c_equipment_brand_relation e WHERE  e.equipment_id=c.id))brandNames -->
+	c.equipment_type soft_type ,
+	CASE c.equipment_type WHEN '1' THEN "直流" WHEN '2' THEN '交流' when '3' THEN '交直流一体' else '' END softTypeName,
+	c.version,
+	c.version_record,
+	pile.id pileVersionId,
+	pile.version_record pileVersionRecord,
+	pile.version_no pileVersionNo,
+	pile.version_name pileVersionName,
+	pile.is_increment pileIsIncrement
+	from 
+	(
+		select
+		 _info.* ,
+		<!-- (select p.category_code from x_versions_pile p where p.version_no = _info.version and _info.equipment_type = p.category_code) soft_type, -->
+		(select p1.version_record   from x_versions_pile p1 where p1.version_no = _info.version and _info.equipment_type = p1.category_code) version_record 
+		 from c_equipment_info _info
+	) c 
+	LEFT JOIN (
+	select * from x_versions_pile  tem01 where tem01.version_record =(
+			SELECT
+				max(tem02.version_record)
+			FROM
+				x_versions_pile tem02
+			WHERE
+				tem01.category_code = tem02.category_code
+		) 
+	) pile ON pile.category_code = c.equipment_type 
+	<where>
+	<if test="cityCode != null and cityCode != ''" >
+    	and c.station_id in (select p.id from x_park p where p.city_code=#{cityCode}) 
+    </if>
+	<if test="equipmentCode != null and equipmentCode != '' " >
+        and c.equipment_code like CONCAT(CONCAT('%', #{equipmentCode,jdbcType=VARCHAR}),'%') 
+    </if>
+	<if test="stationName != null and stationName != '' " >
+       and c.station_id in (select p.id from x_park p where p.name like CONCAT(CONCAT('%', #{stationName,jdbcType=VARCHAR}),'%')) 
+    </if>
+    </where> 
+    <if test="from != null and to != null">
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+    </if>
+	 
+
+</select>	
+<!-- 查询充电设备信息列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="query_Column_List"/>,
+	(select u.name from x_sys_user u where u.id = c.create_id ) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id ) update_name,
+	(select p.name from x_park p where p.id = c.station_id) station_name,
+	(select group_concat(b.brand_id) from c_equipment_brand_relation b where b.equipment_id =c.id) brandIds
+	<!-- (select group_concat(b.brand_name) from x_car_brand b where b.id in(select e.brand_id from c_equipment_brand_relation e WHERE  e.equipment_id=c.id))brandNames -->
+	from c_equipment_info c where  1=1
+	<if test="cityCode != null and cityCode != ''" >
+    	and c.station_id in (select p.id from x_park p where p.city_code=#{cityCode})
+    </if>
+	<if test="equipmentCode != null and equipmentCode != '' " >
+        and c.equipment_code like CONCAT(CONCAT('%', #{equipmentCode,jdbcType=VARCHAR}),'%')
+    </if>
+	<if test="stationName != null and stationName != '' " >
+       and c.station_id in (select p.id from x_park p where p.name like CONCAT(CONCAT('%', #{stationName,jdbcType=VARCHAR}),'%'))
+    </if>
+    
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+<!-- 根据编码查询id -->
+<select id="queryIdByCode" resultType="java.lang.Integer" parameterType="java.lang.String">
+	select id from c_equipment_info where equipment_code=#{equipmentCode}
+ </select>	
+ <!-- 根据station_id查询 -->
+ <select id="queryByStationId" parameterType="java.lang.String" resultMap="BaseResultMap">
+ 	select equipment_code from c_equipment_info where station_id in (select id from c_station_info  where city_code  =#{cityCode})
+ </select>
+ 
+ <!-- 查询所有的-->
+ <select id="getAllParkEquipment" resultMap="BaseResultMap"  parameterType="java.util.Map" >
+ 	select 
+	<include refid="query_Column_List"/>,
+ 	(select p.name from x_park p where p.id = c.station_id) station_name 
+ 	from c_equipment_info c
+ 	where  1=1
+ 	<if test="cityCode != null and cityCode != ''" >
+    	and  c.station_id in (select p.id from x_park p where p.city_code=#{cityCode})
+    </if>
+ 	<if test="equipmentCode != null and equipmentCode != '' " >
+        and c.equipment_code like CONCAT(CONCAT('%', #{equipmentCode,jdbcType=VARCHAR}),'%')
+    </if>
+    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+ </select>
+ 
+ <select id="getAllParkEquipmentNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) 
+ 	from c_equipment_info c
+ 	where  1=1
+ 	<if test="cityCode != null and cityCode != ''" >
+    	and  c.station_id in (select p.id from x_park p where p.city_code=#{cityCode})
+    </if>
+  	<if test="equipmentCode != null and equipmentCode != '' " >
+        and c.equipment_code like CONCAT(CONCAT('%', #{equipmentCode,jdbcType=VARCHAR}),'%')
+    </if> 
+</select>
+
+<select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select
+	 <include refid="Base_Column_List" /> 
+	from c_equipment_info 
+	where equipment_code=#{equipmentCode,jdbcType=VARCHAR}
+</select>
+<!-- <select id="queryAllUpgrade" parameterType="java.util.Map" resultMap="upgradeResultMap">
+	select
+	<include refid="query_Column_List" />
+	,
+	(select u.name from x_sys_user u where u.id = c.create_id )
+	create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id )
+	update_name,
+	x_park.name station_name,
+	(select group_concat(b.brand_id)
+	from c_equipment_brand_relation b where b.equipment_id =c.id) brandIds,
+	c.equipment_type soft_type ,
+	CASE c.equipment_type WHEN '1' THEN "直流"
+	WHEN '2' THEN '交流' when '3' THEN '交直流一体' else '' END softTypeName,
+	c.version,
+	c.version_record,
+	pile.id pileVersionId,
+	pile.version_record
+	pileVersionRecord,
+	pile.version_no pileVersionNo,
+	pile.version_name
+	pileVersionName,
+	pile.is_increment pileIsIncrement
+	from
+	(
+	select
+	_info.* , (select p1.version_record from x_versions_pile p1 where
+	p1.version_no = _info.version and _info.equipment_type =
+	p1.category_code) version_record
+	from c_equipment_info _info
+	) c
+	LEFT JOIN (
+	select * from x_versions_pile tem01 where tem01.version_record
+	=(
+	SELECT
+	max(tem02.version_record)
+	FROM
+	x_versions_pile tem02
+	WHERE
+	tem01.category_code = tem02.category_code
+	)
+	) pile ON pile.category_code = c.equipment_type
+
+	LEFT JOIN x_park on x_park.id = c.station_id
+	<where>
+		<if test="cityCode != null and cityCode != ''">
+			_park.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+	</where>
+
+</select> -->
+<select id="queryAllUpgrade" parameterType="java.util.Map" resultMap="upgradeResultMap">
+	select 
+	_info.* ,
+	_pile.version_record 
+	from c_equipment_info _info
+	LEFT JOIN x_versions_pile  _pile ON  _info.version = _pile.version_no and _info.equipment_type =_pile.category_code 
+	LEFT JOIN x_park on x_park.id = _info.station_id
+	<where>
+		<if test="cityCode != null and cityCode != ''">
+			_park.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+	</where>
+</select>
+
+</mapper>   

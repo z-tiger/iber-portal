@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sms.DsmsDefenseCoreMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sms.DsmsDefenseCore" >
+    <id column="SMS_DEFENSE_CORE_SEQ" property="smsDefenseCoreSeq" jdbcType="INTEGER" />
+    <result column="TELEPHONE_NO" property="telephoneNo" jdbcType="VARCHAR" />
+    <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="SEND_TIME" property="sendTime" jdbcType="TIMESTAMP" />
+    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+    <result column="CONTENT_PARAM" property="contentParam" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SMS_DEFENSE_CORE_SEQ, TELEPHONE_NO, IP_ADDRESS, SEND_TIME, TEMPLATE_ID, CONTENT_PARAM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sms_defense_core
+    where SMS_DEFENSE_CORE_SEQ = #{smsDefenseCoreSeq,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sms_defense_core
+    where SMS_DEFENSE_CORE_SEQ = #{smsDefenseCoreSeq,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sms.DsmsDefenseCore" >
+    insert into sms_defense_core (SMS_DEFENSE_CORE_SEQ, TELEPHONE_NO, IP_ADDRESS, 
+      SEND_TIME, TEMPLATE_ID, CONTENT_PARAM
+      )
+    values (#{smsDefenseCoreSeq,jdbcType=INTEGER}, #{telephoneNo,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR}, 
+      #{sendTime,jdbcType=TIMESTAMP}, #{templateId,jdbcType=VARCHAR}, #{contentParam,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sms.DsmsDefenseCore" >
+    insert into sms_defense_core
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="smsDefenseCoreSeq != null" >
+        SMS_DEFENSE_CORE_SEQ,
+      </if>
+      <if test="telephoneNo != null" >
+        TELEPHONE_NO,
+      </if>
+      <if test="ipAddress != null" >
+        IP_ADDRESS,
+      </if>
+      <if test="sendTime != null" >
+        SEND_TIME,
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID,
+      </if>
+      <if test="contentParam != null" >
+        CONTENT_PARAM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="smsDefenseCoreSeq != null" >
+        #{smsDefenseCoreSeq,jdbcType=INTEGER},
+      </if>
+      <if test="telephoneNo != null" >
+        #{telephoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null" >
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentParam != null" >
+        #{contentParam,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sms.DsmsDefenseCore" >
+    update sms_defense_core
+    <set >
+      <if test="telephoneNo != null" >
+        TELEPHONE_NO = #{telephoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null" >
+        IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentParam != null" >
+        CONTENT_PARAM = #{contentParam,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SMS_DEFENSE_CORE_SEQ = #{smsDefenseCoreSeq,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sms.DsmsDefenseCore" >
+    update sms_defense_core
+    set TELEPHONE_NO = #{telephoneNo,jdbcType=VARCHAR},
+      IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR},
+      SEND_TIME = #{sendTime,jdbcType=TIMESTAMP},
+      TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      CONTENT_PARAM = #{contentParam,jdbcType=VARCHAR}
+    where SMS_DEFENSE_CORE_SEQ = #{smsDefenseCoreSeq,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.base.ParkUseDetailMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.base.ParkUseDetail">
+		<result column="id" property="id" />
+		<result column="city_code" property="cityCode" />
+		<result column="order_id" property="orderId" />
+		<result column="order_type" property="orderType" />
+		<result column="member_id" property="memberId" />
+		<result column="member_type" property="memberType" />
+		<result column="park_id" property="parkId" />
+		<result column="park_name" property="parkName" />
+		<result column="count_time" property="countTime" />
+		<result column="count_type" property="countType" />
+		<result column="create_time" property="createTime" />
+		<result column="count_hour" property="countHour" />
+	</resultMap>									
+	<resultMap id="ParkDetailStatisticsVoResultMap" type="com.iber.portal.vo.park.ParkDetailStatisticsVo">
+		<result column="cnt" property="cnt" jdbcType="BIGINT" />
+		<result column="name" property="name" />
+	</resultMap>
+	<resultMap id="ParkUseDetailVoResultMap" type="com.iber.portal.vo.park.ParkUseAnalysisVo" >
+		<result column="parkUserTime" property="parkUserTime" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	
+	</resultMap>	
+	<!-- x_park_use_detail table all fields -->
+	<sql id="Base_Column_List">
+		id,city_code,order_id,order_type,member_id,member_type,park_id,park_name,count_time,count_type,create_time,count_hour
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.iber.portal.model.base.ParkUseDetail">
+		insert into
+		x_park_use_detail(id,city_code,order_id,order_type,member_id,member_type,park_id,park_name,count_time,count_type,create_time)
+		values(#{id},#{cityCode},#{orderId},#{orderType},#{memberId},#{memberType},#{parkId},#{parkName},#{countTime},#{countType},#{createTime})
+	</insert>
+
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from x_park_use_detail where id = #{id}
+	</delete>
+
+	<!-- 根据id查询 网点使用明细 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_park_use_detail where id = #{id}
+	</select>
+   
+	<select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_park_use_detail where 1=1
+
+
+	</select>
+
+	<!-- 查询网点使用明细列表 -->
+	<select id="queryPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from x_park_use_detail where 1 =1
+
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+
+	</select>
+	
+	<!-- 限定城市区域 -->
+	<sql id="sql_chooseByCityLayer">
+		<choose>
+			<when test="layer == 2 ">   
+			AND d.city_code IN
+			(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+			WHERE cc.code = d.city_code) 	
+			</when>
+			<otherwise>
+				AND d.city_code = #{cityCode}
+			</otherwise>
+		</choose>
+	</sql>
+	
+	
+	<sql id="sql_queryTsAndDrAndCharging">
+	
+		<!-- (
+			SELECT o.`status` , p.city_code, o.order_id, 'TS' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, o.park_id, o.return_park_id, 
+			p.name park_name, p2.name return_park_name, 
+			DATE(o.begin_time) count_time, DATE(o.end_time) return_count_time, 
+			HOUR(o.begin_time) count_hour, HOUR(o.end_time) return_count_hour 
+			FROM x_time_share_order o 
+			RIGHT JOIN x_park p2 ON o.return_park_id = p2.id
+			INNER JOIN x_park p ON o.park_id = p.id
+			INNER JOIN x_member m ON m.id = o.member_id
+		)
+		UNION ALL
+		(
+			SELECT o.order_status `status`, o.city_code, o.order_id, 'DR' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			o.appointmen_take_park_id park_id, o.actual_return_car_park_id return_park_id,
+			p.name park_name, p2.name return_park_name, 
+			DATE(o.actual_taken_car_time) count_time, DATE(o.actual_return_car_time) return_count_time, 
+			HOUR(o.actual_taken_car_time) count_hour, HOUR(o.actual_return_car_time) return_count_hour 
+			 FROM x_day_rent_order o 
+			RIGHT JOIN x_park p2 ON o.actual_return_car_park_id = p2.id
+			INNER JOIN x_park p ON o.appointmen_take_park_id = p.id 
+			INNER JOIN x_member m ON m.id = o.member_id
+		)
+		UNION ALL
+		(
+			SELECT o.charging_status `status`, o.city_code, o.chargeSeq order_id, 'charging' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, p.id park_id, NULL return_park_id, 
+			p.name park_name, NULL return_park_name, 
+			DATE(o.create_time) count_time, NULL return_count_time,
+			HOUR(o.create_time) count_hour, NULL return_count_hour
+			 FROM c_charging_order o 
+			INNER JOIN x_park p ON o.station_id = p.id 
+			INNER JOIN x_member m ON m.id = o.member_id
+		) -->
+		(SELECT 
+				o.`status`, p.city_code, o.order_id, 'TS' order_type, o.member_id, IF(m.enterprise_id IS NULL, 0, 1)member_type, 
+				o.park_id,  p. NAME park_name,
+				DATE(o.begin_time)count_time, HOUR(o.begin_time)count_hour, 0 count_type
+			FROM
+				x_time_share_order o
+			left JOIN x_park p ON o.park_id = p.id
+			left JOIN x_member m ON m.id = o.member_id
+		)
+		union all
+		(SELECT 
+				o.`status`, p2.city_code, o.order_id, 'TS' order_type, o.member_id, IF(m.enterprise_id IS NULL, 0, 1)member_type, 
+				o.return_park_id park_id,  p2. NAME park_name, 
+				DATE(o.end_time)count_time, HOUR(o.end_time)count_hour,1 count_type
+			FROM
+				x_time_share_order o
+			left JOIN x_park p2 ON o.return_park_id = p2.id
+			left JOIN x_member m ON m.id = o.member_id
+			where  o.return_park_id is not null
+		)
+		union all
+		(
+			SELECT 
+				o.order_status `status`, p.city_code, o.order_id, 'DR' order_type, o.member_id, IF(m.enterprise_id IS NULL, 0, 1)member_type,
+				o.appointmen_take_park_id park_id, p. NAME park_name,
+				DATE(o.actual_taken_car_time)count_time,HOUR(o.actual_taken_car_time)count_hour,0 count_type
+			FROM
+				x_day_rent_order o
+			left JOIN x_park p ON o.appointmen_take_park_id = p.id
+			left JOIN x_member m ON m.id = o.member_id
+		)
+		union all
+		(
+			SELECT 
+				o.order_status `status`, p2.city_code, o.order_id, 'DR' order_type, o.member_id, IF(m.enterprise_id IS NULL, 0, 1)member_type,
+				o.actual_return_car_park_id park_id, p2. NAME park_name, 
+				DATE(o.actual_return_car_time)count_time, HOUR(o.actual_return_car_time)count_hour,1 count_type
+			FROM
+				x_day_rent_order o
+			left JOIN x_park p2 ON o.actual_return_car_park_id = p2.id
+			left JOIN x_member m ON m.id = o.member_id
+		)
+		UNION ALL
+		(
+			SELECT 
+				o.charging_status `status`, p.city_code, o.chargeSeq order_id, 'charging' order_type, o.member_id, IF(m.enterprise_id IS NULL, 0, 1)member_type, 
+				p.id park_id,p. NAME park_name, DATE(o.create_time)count_time,HOUR(o.create_time)count_hour,2 count_type
+			FROM
+				c_charging_order o
+			left JOIN x_park p ON o.station_id = p.id
+			left JOIN x_member m ON m.id = o.member_id
+		)	
+	</sql>
+
+	<!-- count_time为约车订单或充电订单的日期，return_count_time为还车日期  -->
+	<sql id="sql_queryAll">
+		SELECT d.city_code, d.order_id, d.order_type, d.member_id, d.member_type,
+			 d.park_id, d.park_name, d.count_time,d.count_hour, d.count_type, NOW() create_time
+			 FROM
+			( <include refid="sql_queryTsAndDrAndCharging" /> ) d
+			WHERE <![CDATA[ d.status <> 'cancel'  ]]>  and CURDATE() >d.count_time
+ 			AND d.count_time <![CDATA[ >  ]]> (SELECT MAX(create_time) FROM x_park_use_detail)
+	</sql>
+
+	
+	<!-- 查询柱状图所需数据的公用部分 -->
+	<!-- 实时查询分时、日租、充电订单表的公用部分 -->
+	<sql id="sql_queryCurrDetailComm">
+		SELECT 
+			<!-- <choose>
+				如果有限定约车、还车或充电
+				<when test="countType != null or countType == 0 ">
+					<choose>
+						还车网点
+						<when test="countType == 1 ">
+							COUNT(a.return_park_id) cnt, a.return_park_name name, a.return_count_time countTime
+						</when>
+						充电网点
+						<when test="countType == 2 ">
+							SUM(IF(a.order_type = 'charging', 1, 0)) cnt, a.park_name name, a.count_time countTime
+						</when>
+						约车
+						<otherwise> 
+							SUM(IF(a.return_park_id IS NULL, 1, 0)) cnt, a.park_name name, a.count_time countTime
+						</otherwise>
+					</choose>
+				</when>
+				无限定
+				<otherwise> COUNT(1) cnt, a.park_name name, a.count_time countTime </otherwise>
+			</choose> -->
+				COUNT(1) cnt, a.park_name name, a.count_time countTime 
+			FROM (
+					SELECT d.park_id, d.park_name,  d.count_time, d.order_type
+						 FROM 
+						 	( <include refid="sql_queryTsAndDrAndCharging" /> ) d
+						WHERE <![CDATA[ d.status <> 'cancel'  ]]>
+							<if test="cityCode != null and cityCode != '' ">
+								<include refid="sql_chooseByCityLayer" />
+							</if>
+							<if test="orderType != null and orderType != '' ">
+								AND d.order_type = #{orderType}
+							</if>
+							<if test="memberType != null or memberType == 0 ">
+								AND d.member_type = #{memberType}
+							</if>
+							<if test="countType != null or countType == 0 ">
+								and d.count_type = #{countType} 
+							</if>
+					) a  WHERE 1 = 1
+					
+	</sql>
+	
+	<!-- 查昨天或上月的详情，从x_park_use_detail查 -->
+	<sql id="sql_queryLastDetailComm">
+		SELECT 
+			COUNT(1) cnt, park_name name 
+			FROM 													
+				x_park_use_detail d
+				   where 1 = 1
+					<if test="countType != null or countType == 0 ">
+						AND d.count_type = #{countType}
+					</if>
+					<if test="memberType != null or memberType == 0 ">								
+				      	AND d.member_type = #{memberType}					  
+				    </if>
+				    <if test="orderType != null and orderType != '' ">								
+				      	AND d.order_type = #{orderType}	  
+				    </if>	
+				    <if test="cityCode != null and cityCode != '' ">
+						<include refid="sql_chooseByCityLayer" />
+					</if>
+	</sql>
+	
+	<!-- 查今天的详情 -->
+	<select id="queryTodayDetail" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryCurrDetailComm" />
+			<include refid="sql_chooseCountTime_byCountType" />
+				= <include refid="commDateSqlMapper.sql_today_date" />
+			GROUP BY name 
+			ORDER BY cnt DESC
+			LIMIT 5
+	</select>
+	
+	<!-- 查昨天的详情 -->
+	<select id="queryYesterdayDetail" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryLastDetailComm" />
+			AND d.count_time = <include refid="commDateSqlMapper.sql_yesterday_date" />
+		 	GROUP BY d.park_name 
+			ORDER BY cnt DESC
+			LIMIT 5
+	</select>
+	
+	<!-- 查本月的详情 -->
+	<select id="queryThisMonthDetail" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryCurrDetailComm" />
+			<include refid="sql_chooseCountTime_byCountType" />
+				<![CDATA[ >= ]]>  <include refid="commDateSqlMapper.sql_month_begin_date" />
+			GROUP BY name 
+			ORDER BY cnt DESC
+			LIMIT 5
+	</select>
+	
+	<!-- 查上月的详情 -->
+	<select id="queryLastMonthDetail" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryLastDetailComm" />
+			<![CDATA[ AND d.count_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+			<![CDATA[ AND d.count_time <  ]]>  <include refid="commDateSqlMapper.sql_month_begin_date" />
+		 	GROUP BY d.park_name 
+			ORDER BY cnt DESC
+			LIMIT 5
+	</select>
+	
+	<!-- 根据countType定统计时间是否为还车时间  -->
+	<sql id="sql_chooseCountTime_byCountType">
+		<choose>
+			<!-- 如果有限定为还车网点 -->
+			<when test="countType != null and countType == 1 ">
+				<!-- AND return_count_time -->
+				 AND count_time
+			</when>
+			<!-- 无限定 -->
+			<otherwise> AND count_time </otherwise>
+		</choose>
+	</sql>
+	
+	
+	<!-- 查总体数据  -->
+	<!-- 查今天的总体数据 -->
+	<select id="queryTodayCnt" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryCurrDetailComm" />
+			<include refid="sql_chooseCountTime_byCountType" />  
+				= <include refid="commDateSqlMapper.sql_today_date" />
+	</select>
+	
+	<!-- 查昨天的总体数据 -->
+	<select id="queryYesterdayCnt" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryLastDetailComm" />
+			AND count_time = <include refid="commDateSqlMapper.sql_yesterday_date" />
+			AND count_hour <![CDATA[ <= ]]>  HOUR(NOW()) 
+	</select>
+	
+	<!-- 查本月的总体数据 -->
+	<select id="queryThisMonthCnt" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryCurrDetailComm" />
+			<include refid="sql_chooseCountTime_byCountType" />
+				<![CDATA[ >= ]]>  <include refid="commDateSqlMapper.sql_month_begin_date" />
+	</select>
+	
+	<!-- 查上月的总体数据  -->
+	<select id="queryLastMonthCnt" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryLastDetailComm" />
+			AND count_time 
+				<![CDATA[ >= ]]> <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+			AND count_time 
+				<![CDATA[ < ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+			AND count_hour <![CDATA[ <= ]]>  DAYOFMONTH(NOW()) 
+	</select>
+	
+	<!-- 查累计的总体数据 -->
+	<select id="queryTotalCnt" resultMap="ParkDetailStatisticsVoResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryCurrDetailComm" />
+	</select>
+	
+	
+
+	<!-- 定时收集网点使用明细数据，并插入数据表 -->
+	<insert id="insertQuatz">
+		INSERT x_park_use_detail 
+		(city_code, order_id, order_type, member_id, member_type, 
+			park_id, park_name,count_time,count_hour,count_type,create_time)
+				<include refid="sql_queryAll" />
+				
+	</insert>
+	
+<!-- 网点运营分析 -->
+	<!-- 各省的网点运营情况 -->
+	<select id="provinceParkUse" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap">
+		SELECT d.parkUserTime ,x.name FROM(SELECT SUM(c.parkUserTime)parkUserTime,c.p_id FROM(SELECT SUM(b.parkUserTime)parkUserTime,x.p_id FROM (SELECT SUM(parkUserTime)parkUserTime,a.city_code FROM(SELECT COUNT(1)*2 parkUserTime ,city_code FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		  GROUP BY city_code
+		UNION ALL
+		SELECT COUNT(1)*2 parkUserTime ,city_code FROM x_day_rent_order WHERE order_status ='finish'
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		  GROUP BY city_code
+		UNION ALL
+		SELECT COUNT(1)parkUserTime,city_code FROM c_charging_order WHERE charging_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND start_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		GROUP BY city_code)a GROUP BY a.city_code)b,x_city x WHERE b.city_code=x.code GROUP BY x.p_id)c GROUP BY c.p_id)d,x_city x WHERE d.p_id =x.id ORDER BY d.parkUserTime DESC	
+	</select>
+	<!-- 各城市的网点运营情况 -->
+	<select id="cityParkUse" parameterType="java.util.Map"  resultMap="ParkUseDetailVoResultMap">
+		SELECT b.parkUserTime,IF(x.name ="全国","其他",x.name) name FROM(SELECT SUM(a.parkUserTime)parkUserTime,a.city_code  FROM(SELECT COUNT(1)*2 parkUserTime ,city_code FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code
+		UNION ALL
+		SELECT COUNT(1)*2 parkUserTime ,city_code FROM x_day_rent_order WHERE order_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code
+		UNION ALL
+		SELECT COUNT(1)parkUserTime,city_code FROM c_charging_order WHERE charging_status ='finish'
+		<if test="startTime !=null and endTime !=null">
+			AND start_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code)a GROUP BY a.city_code)b,x_city x WHERE b.city_code =x.code ORDER BY b.parkUserTime DESC
+	</select>
+	<!-- 各个网点的运营情况 -->
+	<select id="ParkUse" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap" >
+		SELECT b.number parkUserTime,p.name FROM (SELECT a.pId,SUM(number)number FROM(SELECT park_id pId,COUNT(1) number FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY park_id
+		UNION ALL
+		SELECT return_park_id,COUNT(1) FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY return_park_id
+		UNION ALL
+		SELECT actual_taken_car_park_id,COUNT(1) FROM x_day_rent_order WHERE order_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		 GROUP BY actual_taken_car_park_id
+		UNION ALL
+		SELECT actual_return_car_park_id,COUNT(1) FROM x_day_rent_order WHERE order_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		 GROUP BY actual_return_car_park_id
+		UNION ALL
+		SELECT station_id,COUNT(1) FROM c_charging_order WHERE charging_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND start_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY station_id)a GROUP BY a.pId)b,x_park p WHERE b.pId=p.id ORDER BY b.number DESC
+	</select>
+	
+	<!-- 各省的约车网点使用情况 -->
+	<select id="provinceParkUseByOrder" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap">
+		SELECT d.parkUserTime ,x.name FROM(SELECT SUM(c.parkUserTime)parkUserTime,c.p_id FROM(SELECT SUM(b.parkUserTime)parkUserTime,x.p_id FROM (SELECT SUM(parkUserTime)parkUserTime,a.city_code FROM(SELECT COUNT(1) parkUserTime ,city_code FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		  GROUP BY city_code)a GROUP BY a.city_code)b,x_city x WHERE b.city_code=x.code)c GROUP BY c.p_id)d,x_city x WHERE d.p_id =x.id ORDER BY d.parkUserTime DESC	
+	</select>	
+	<!-- 各省的还车网点使用情况 -->
+	<select id="provinceParkUseByReturn" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap">
+		SELECT d.parkUserTime ,x.name FROM(SELECT SUM(c.parkUserTime)parkUserTime,c.p_id FROM(SELECT SUM(b.parkUserTime)parkUserTime,x.p_id FROM (SELECT SUM(parkUserTime)parkUserTime,a.city_code FROM(
+		SELECT COUNT(1) parkUserTime ,city_code FROM x_time_share_order WHERE status ='finish'
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		  GROUP BY city_code
+		)a GROUP BY a.city_code)b,x_city x WHERE b.city_code=x.code)c GROUP BY c.p_id)d,x_city x WHERE d.p_id =x.id ORDER BY d.parkUserTime DESC	
+	</select>	
+	<!-- 各省的充电网点使用情况 -->
+	<select id="provinceParkUseByCharging" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap">
+		SELECT d.parkUserTime ,x.name FROM(SELECT SUM(c.parkUserTime)parkUserTime,c.p_id FROM(SELECT SUM(b.parkUserTime)parkUserTime,x.p_id FROM (SELECT SUM(parkUserTime)parkUserTime,a.city_code FROM(
+		SELECT COUNT(1)parkUserTime,city_code FROM c_charging_order WHERE charging_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND start_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code
+		)a GROUP BY a.city_code)b,x_city x WHERE b.city_code=x.code GROUP BY x.p_id  )c GROUP BY c.p_id)d,x_city x WHERE d.p_id =x.id ORDER BY d.parkUserTime DESC	
+	</select>
+	<!-- 各市的约车网点使用情况 -->
+	<select id="cityParkUseByOrder" parameterType="java.util.Map"  resultMap="ParkUseDetailVoResultMap">
+		SELECT b.parkUserTime,x.name FROM(SELECT SUM(a.parkUserTime)parkUserTime,a.city_code  FROM(SELECT COUNT(1) parkUserTime ,city_code FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code)a GROUP BY a.city_code)b,x_city x WHERE b.city_code =x.code ORDER BY b.parkUserTime DESC
+	</select>
+	<!-- 各市的还车网点使用情况 -->
+	<select id="cityParkUseByReturn" parameterType="java.util.Map"  resultMap="ParkUseDetailVoResultMap">
+		SELECT b.parkUserTime,x.name FROM(SELECT SUM(a.parkUserTime)parkUserTime,a.city_code  FROM(
+		
+		SELECT COUNT(1) parkUserTime ,city_code FROM x_day_rent_order WHERE order_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code)a GROUP BY a.city_code)b,x_city x WHERE b.city_code =x.code ORDER BY b.parkUserTime DESC
+	</select>
+	<!-- 各市的充电网点使用情况 -->
+	<select id="cityParkUseByCharging" parameterType="java.util.Map"  resultMap="ParkUseDetailVoResultMap">
+		SELECT b.parkUserTime,x.name FROM(SELECT SUM(a.parkUserTime)parkUserTime,a.city_code  FROM(
+		SELECT COUNT(1)parkUserTime,city_code FROM c_charging_order WHERE charging_status ='finish'
+		<if test="startTime !=null and endTime !=null">
+			AND start_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY city_code)a GROUP BY a.city_code)b,x_city x WHERE b.city_code =x.code ORDER BY b.parkUserTime DESC
+	</select>
+	<!-- 约车网点使用情况 -->
+	<select id="ParkUseByOrder" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap" >
+		SELECT b.number parkUserTime,p.name FROM (SELECT a.pId,SUM(number)number FROM(SELECT park_id pId,COUNT(1) number FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY park_id
+		UNION ALL
+		SELECT actual_taken_car_park_id,COUNT(1) FROM x_day_rent_order WHERE order_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		 GROUP BY actual_taken_car_park_id)a GROUP BY a.pId)b,x_park p WHERE b.pId=p.id ORDER BY b.number DESC
+	</select>
+	<!-- 还车网点使用情况 -->
+	<select id="ParkUseByReturn" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap" >
+		SELECT b.number parkUserTime,p.name FROM (SELECT a.pId,SUM(number)number FROM(
+		SELECT return_park_id pId,COUNT(1) number FROM x_time_share_order WHERE `status` ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND begin_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY return_park_id
+		UNION ALL
+		SELECT actual_return_car_park_id,COUNT(1) FROM x_day_rent_order WHERE order_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND actual_taken_car_time &gt;=#{startTime} AND actual_return_car_time &lt;=#{endTime}
+		</if>
+		 GROUP BY actual_return_car_park_id)a GROUP BY a.pId)b,x_park p WHERE b.pId=p.id ORDER BY b.number DESC
+	</select>
+	<!-- 充电网点使用情况 -->
+	<select id="ParkUseByCharging" parameterType="java.util.Map" resultMap="ParkUseDetailVoResultMap" >
+		SELECT b.number parkUserTime,p.name FROM (SELECT a.pId,SUM(number)number FROM(
+		SELECT station_id pId,COUNT(1)number FROM c_charging_order WHERE charging_status ='finish' 
+		<if test="startTime !=null and endTime !=null">
+			AND start_time &gt;=#{startTime} AND end_time &lt;=#{endTime}
+		</if>
+		 GROUP BY station_id)a GROUP BY a.pId)b,x_park p WHERE b.pId=p.id ORDER BY b.number DESC
+	</select>
+	
+</mapper>   

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.longOrderParam.LongOrderParamMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.longOrderParam.LongOrderParam" >
+    <id column="id" property="id"  />
+    <result column="level_code" property="levelCode"  />
+    <result column="car_type_id" property="carTypeId"  />
+    <result column="budget_amount" property="budgetAmount"  />
+    <result column="budget_time" property="budgetTime"  />
+    <result column="create_time" property="createTime"  />
+    <result column="create_id" property="createId"  />
+    <result column="city_code" property="cityCode" />
+    <result column="valid_status" property="validStatus" />
+  </resultMap>
+  <resultMap type="com.iber.portal.vo.longOrderParam.LongOrderParamVo" id="BaseResultMapVO" extends="BaseResultMap">
+  	<result column="carTypeName" property="carTypeName"/>
+  	<result column="levelName" property="levelName"/>
+  	<result column="createName" property="createName"/>
+  	<result column="cityName" property="cityName"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, level_code, car_type_id, budget_amount, budget_time, create_time, create_id, 
+    city_code,valid_status
+  </sql>
+  <select id="getVoAllNum"  resultType="java.lang.Integer">
+  	select
+  	 count(1) 
+  	 from   	x_long_order_param lop
+  	where lop.valid_status = '1'
+  	<if test="levelCode != null and levelCode != '' ">
+  		and lop.level_code = #{levelCode}
+  	</if>
+  	<if test="carTypeId != null and carTypeId != '' " >
+  		and lop.car_type_id = #{carTypeId}
+  	</if>
+  	<if test="cityCode != null and cityCode != '' " >
+  		and lop.city_code = #{cityCode}
+  	</if>
+  </select>
+  <select id="selectVoPager" resultMap="BaseResultMapVO">
+  	select 
+  		lop.id, lop.level_code, lop.car_type_id, lop.budget_amount, lop.budget_time, lop.create_time, lop.create_id, 
+    	lop.city_code,lop.valid_status ,concat(xct.brance,xct.type) as carTypeName,xml.name as levelName,
+    	xsu.name as createName,xc.name as cityName
+  	from  
+  		x_long_order_param lop 
+  		left join x_sys_user xsu on lop.create_id = xsu.id 
+  		left join x_car_type xct on lop.car_type_id = xct.id 
+  		left join x_city xc on lop.city_code = xc.code 
+  		left join x_member_level xml on xml.level_code = lop.level_code
+  	where lop.valid_status = '1'
+  	<if test="levelCode != null and levelCode != '' ">
+  		and lop.level_code = #{levelCode}
+  	</if>
+  	<if test="carTypeId != null and carTypeId != '' " >
+  		and lop.car_type_id = #{carTypeId}
+  	</if>
+  	<if test="cityCode != null and cityCode != '' " >
+  		and lop.city_code = #{cityCode}
+  	</if>
+  	order by lop.create_time desc 
+  	<if test="offset != null and rows != null">
+		limit #{offset}, #{rows}
+	</if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_long_order_param
+    where id = #{id}
+  </select>
+  <select id="selectLongOrderParamRecords" resultType="java.lang.Integer">
+  	select count(1) from x_long_order_param 
+  	where valid_status ='1'
+  	<if test="cityCode != null and cityCode != '' ">
+  		and city_code =#{cityCode}
+  	</if>
+  	<if test="levelCode != null and levelCode != '' ">
+  		and level_code = #{levelCode}
+  	</if>
+  	<if test="carTypeId != null and carTypeId != '' ">
+  		 and car_type_id = #{carTypeId}
+  	</if>
+  	<if test="id !=null">
+  		and id != #{id}
+  	</if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_long_order_param
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.longOrderParam.LongOrderParam" >
+    insert into x_long_order_param (id, level_code, car_type_id, 
+      budget_amount, budget_time, create_time, 
+      create_id, city_code, valid_status)
+    values (#{id}, #{levelCode}, #{carTypeId}, 
+      #{budgetAmount}, #{budgetTime}, #{createTime}, 
+      #{createId}, #{cityCode}, #{validStatus})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.longOrderParam.LongOrderParam" >
+    insert into x_long_order_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="levelCode != null" >
+        level_code,
+      </if>
+      <if test="carTypeId != null" >
+        car_type_id,
+      </if>
+      <if test="budgetAmount != null" >
+        budget_amount,
+      </if>
+      <if test="budgetTime != null" >
+        budget_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="validStatus != null" >
+        valid_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="levelCode != null" >
+        #{levelCode},
+      </if>
+      <if test="carTypeId != null" >
+        #{carTypeId},
+      </if>
+      <if test="budgetAmount != null" >
+        #{budgetAmount},
+      </if>
+      <if test="budgetTime != null" >
+        #{budgetTime},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createId != null" >
+        #{createId},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode},
+      </if>
+      <if test="validStatus != null" >
+        #{validStatus},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.longOrderParam.LongOrderParam" >
+    update x_long_order_param
+    <set >
+      <if test="levelCode != null" >
+        level_code = #{levelCode},
+      </if>
+      <if test="carTypeId != null" >
+        car_type_id = #{carTypeId},
+      </if>
+      <if test="budgetAmount != null" >
+        budget_amount = #{budgetAmount},
+      </if>
+      <if test="budgetTime != null" >
+        budget_time = #{budgetTime},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode},
+      </if>
+      <if test="validStatus != null" >
+        valid_status = #{validStatus},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.longOrderParam.LongOrderParam" >
+    update x_long_order_param
+    set level_code = #{levelCode},
+      car_type_id = #{carTypeId},
+      budget_amount = #{budgetAmount},
+      budget_time = #{budgetTime},
+      create_time = #{createTime},
+      create_id = #{createId},
+      valid_status = #{validStatus},
+      city_code = #{cityCode}
+    where id = #{id}
+  </update>
+</mapper>

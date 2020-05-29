@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.overall.OverallMemberMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.overall.OverallMember" >
+    <id column="id" property="id"   />
+    <result column="user_num" property="userNum"   />
+    <result column="register_num" property="registerNum"   />
+    <result column="audit_num" property="auditNum"   />
+    <result column="charge_member_num" property="chargeMemberNum"   />
+    <result column="deposit" property="deposit"   />
+    <result column="balance" property="balance"   />
+    <result column="actual_income" property="actualIncome"   />
+    <result column="income" property="income"   />
+    <result column="online_member_num" property="onlineMemberNum"   />
+    <result column="online_money" property="onlineMoney"   />
+    <result column="refund_member_num" property="refundMemberNum"   />
+    <result column="refund_money" property="refundMoney"   />
+    <result column="owing_member_num" property="owingMemberNum"   />
+    <result column="owing_money" property="owingMoney"   />
+    <result column="owing_30_member_num" property="owing30MemberNum"   />
+    <result column="owing_30_money" property="owing30Money"   />
+    <result column="channel" property="channel"   />
+    <result column="member_type" property="memberType"   />
+    <result column="city_code" property="cityCode"   />
+    <result column="date_time" property="dateTime"   />
+    <result column="create_time" property="createTime"   />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_num, register_num, audit_num, charge_member_num, deposit, balance, actual_income, income, 
+    online_member_num, online_money, refund_member_num, refund_money, owing_member_num, 
+    owing_money, owing_30_member_num, owing_30_money, channel, member_type, city_code, 
+    date_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bi_overall_member
+    where id = #{id }
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bi_overall_member
+    where id = #{id }
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.overall.OverallMember" >
+    insert into bi_overall_member (id, user_num, register_num, 
+      audit_num, charge_member_num, deposit, 
+      balance, actual_income, income, online_member_num, 
+      online_money, refund_member_num, refund_money, 
+      owing_member_num, owing_money, owing_30_member_num, 
+      owing_30_money, channel, member_type, 
+      city_code, date_time, create_time
+      )
+    values (#{id }, #{userNum }, #{registerNum }, 
+      #{auditNum }, #{chargeMemberNum }, #{deposit }, 
+      #{balance }, #{actualIncome}, #{income }, #{onlineMemberNum }, 
+      #{onlineMoney }, #{refundMemberNum }, #{refundMoney }, 
+      #{owingMemberNum }, #{owingMoney }, #{owing30MemberNum }, 
+      #{owing30Money }, #{channel }, #{memberType }, 
+      #{cityCode }, #{dateTime }, #{createTime }
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.overall.OverallMember" >
+    insert into bi_overall_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userNum != null" >
+        user_num,
+      </if>
+      <if test="registerNum != null" >
+        register_num,
+      </if>
+      <if test="auditNum != null" >
+        audit_num,
+      </if>
+      <if test="chargeMemberNum != null" >
+        charge_member_num,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="actualIncome != null" >
+        actual_income,
+      </if>
+      <if test="income != null" >
+        income,
+      </if>
+      <if test="onlineMemberNum != null" >
+        online_member_num,
+      </if>
+      <if test="onlineMoney != null" >
+        online_money,
+      </if>
+      <if test="refundMemberNum != null" >
+        refund_member_num,
+      </if>
+      <if test="refundMoney != null" >
+        refund_money,
+      </if>
+      <if test="owingMemberNum != null" >
+        owing_member_num,
+      </if>
+      <if test="owingMoney != null" >
+        owing_money,
+      </if>
+      <if test="owing30MemberNum != null" >
+        owing_30_member_num,
+      </if>
+      <if test="owing30Money != null" >
+        owing_30_money,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="memberType != null" >
+        member_type,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="dateTime != null" >
+        date_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id },
+      </if>
+      <if test="userNum != null" >
+        #{userNum },
+      </if>
+      <if test="registerNum != null" >
+        #{registerNum },
+      </if>
+      <if test="auditNum != null" >
+        #{auditNum },
+      </if>
+      <if test="chargeMemberNum != null" >
+        #{chargeMemberNum },
+      </if>
+      <if test="deposit != null" >
+        #{deposit },
+      </if>
+      <if test="balance != null" >
+        #{balance },
+      </if>
+      <if test="actualIncome != null" >
+        #{actualIncome },
+      </if>
+      <if test="income != null" >
+        #{income },
+      </if>
+      <if test="onlineMemberNum != null" >
+        #{onlineMemberNum },
+      </if>
+      <if test="onlineMoney != null" >
+        #{onlineMoney },
+      </if>
+      <if test="refundMemberNum != null" >
+        #{refundMemberNum },
+      </if>
+      <if test="refundMoney != null" >
+        #{refundMoney },
+      </if>
+      <if test="owingMemberNum != null" >
+        #{owingMemberNum },
+      </if>
+      <if test="owingMoney != null" >
+        #{owingMoney },
+      </if>
+      <if test="owing30MemberNum != null" >
+        #{owing30MemberNum },
+      </if>
+      <if test="owing30Money != null" >
+        #{owing30Money },
+      </if>
+      <if test="channel != null" >
+        #{channel },
+      </if>
+      <if test="memberType != null" >
+        #{memberType },
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode },
+      </if>
+      <if test="dateTime != null" >
+        #{dateTime },
+      </if>
+      <if test="createTime != null" >
+        #{createTime },
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.overall.OverallMember" >
+    update bi_overall_member
+    <set >
+      <if test="userNum != null" >
+        user_num = #{userNum },
+      </if>
+      <if test="registerNum != null" >
+        register_num = #{registerNum },
+      </if>
+      <if test="auditNum != null" >
+        audit_num = #{auditNum },
+      </if>
+      <if test="chargeMemberNum != null" >
+        charge_member_num = #{chargeMemberNum },
+      </if>
+      <if test="deposit != null" >
+        deposit = #{deposit },
+      </if>
+      <if test="balance != null" >
+        balance = #{balance },
+      </if>
+      <if test="actualIncome != null" >
+        actual_income = #{actualIncome },
+      </if>
+      <if test="income != null" >
+        income = #{income },
+      </if>
+      <if test="onlineMemberNum != null" >
+        online_member_num = #{onlineMemberNum },
+      </if>
+      <if test="onlineMoney != null" >
+        online_money = #{onlineMoney },
+      </if>
+      <if test="refundMemberNum != null" >
+        refund_member_num = #{refundMemberNum },
+      </if>
+      <if test="refundMoney != null" >
+        refund_money = #{refundMoney },
+      </if>
+      <if test="owingMemberNum != null" >
+        owing_member_num = #{owingMemberNum },
+      </if>
+      <if test="owingMoney != null" >
+        owing_money = #{owingMoney },
+      </if>
+      <if test="owing30MemberNum != null" >
+        owing_30_member_num = #{owing30MemberNum },
+      </if>
+      <if test="owing30Money != null" >
+        owing_30_money = #{owing30Money },
+      </if>
+      <if test="channel != null" >
+        channel = #{channel },
+      </if>
+      <if test="memberType != null" >
+        member_type = #{memberType },
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode },
+      </if>
+      <if test="dateTime != null" >
+        date_time = #{dateTime },
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime },
+      </if>
+    </set>
+    where id = #{id }
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.overall.OverallMember" >
+    update bi_overall_member
+    set user_num = #{userNum },
+      register_num = #{registerNum },
+      audit_num = #{auditNum },
+      charge_member_num = #{chargeMemberNum },
+      deposit = #{deposit },
+      balance = #{balance },
+      actual_income = #{actualIncome },
+      income = #{income },
+      online_member_num = #{onlineMemberNum },
+      online_money = #{onlineMoney },
+      refund_member_num = #{refundMemberNum },
+      refund_money = #{refundMoney },
+      owing_member_num = #{owingMemberNum },
+      owing_money = #{owingMoney },
+      owing_30_member_num = #{owing30MemberNum },
+      owing_30_money = #{owing30Money },
+      channel = #{channel },
+      member_type = #{memberType },
+      city_code = #{cityCode },
+      date_time = #{dateTime },
+      create_time = #{createTime }
+    where id = #{id }
+  </update>
+ 
+  <!-- 查询指点时间currentTime用户数（产生过实际订单的会员） -->
+  <select id="selectInitUserNum" resultMap="BaseResultMap">
+		select 
+			a.city_code, 
+			case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type, 
+			m.register_category channel , 
+			COUNT(DISTINCT a.member_id) user_num, 
+			#{currentTime} date_time 
+		from (
+			select member_id,city_code,order_time from x_time_share_order  where `status` not in( 'cancel','ordered')  and date(order_time) = #{currentTime}
+			UNION ALL
+			select member_id ,city_code , create_time  from  c_charging_order where userType = 'member' and charging_status not in( 'cancel','ordered') and date(create_time) = #{currentTime}
+		)a LEFT JOIN x_member m ON a.member_id = m.id 
+		GROUP BY 
+			a.city_code,(m.enterprise_id is NULL),m.register_category 
+  </select>
+  
+  <!--查询指点时间currentTime 注册会员  -->
+  <select id="selectInitRegisterNum" resultMap="BaseResultMap">
+	  	select 
+			city_code,
+			case (enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel ,
+			COUNT(1) register_num  , 
+			#{currentTime} date_time 
+		from 
+			x_member 
+		where 
+			DATE(create_time) = #{currentTime} 
+		GROUP BY 
+			city_code,(enterprise_id is NULL), register_category 
+	  	
+  </select>
+  
+  <!--查询指点时间currentTime 验证会员  -->
+  <select id="selectInitAuditNum" resultMap="BaseResultMap">
+	  	select 
+			city_code,case (enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel , COUNT(1) audit_num  , #{currentTime}  date_time
+		from 
+			(select id, register_category, enterprise_id, city_code, case (examine_time is null) when 1 then create_time else examine_time end as examine_time from x_member where status != 'experience' ) a 
+		where 
+			DATE(examine_time) = #{currentTime} 
+		GROUP BY 
+			city_code,(enterprise_id is NULL), register_category  
+  </select>
+  
+  <!--查询指点时间currentTime充值会员  -->
+  <select id="selectInitChargeMemberNum" resultMap="BaseResultMap">
+		select 
+			m.city_code, case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type, register_category channel , count(DISTINCT l.member_id) charge_member_num , #{currentTime} date_time
+		from 
+			x_member_charge_log l LEFT JOIN x_member m ON l.member_id = m.id 
+		where 
+			l.trade_status = 0 and  DATE(l.trade_time) = #{currentTime}  
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category 
+  </select>
+
+  <!--查询指点时间currentTime 押金数（充值押金 - 押金退款数）  -->
+  <select id="selectInitDeposit" resultMap="BaseResultMap">
+		select  
+			a.city_code,a.member_type,a.channel,
+			a.charge_member_num 
+			-
+			IFNULL((
+				select b.charge_member_num  FROM
+				(
+					<include refid="dayDepositRefund"/>
+				)b where b.city_code = a.city_code and b.member_type = a.member_type and b.channel = a.channel and b.date_time = a.date_time 
+			) ,0 ) deposit , a.date_time
+		from 
+			(
+				<include refid="dayDeposit"/>
+			)a 
+  </select>
+  
+  <!-- 指点时间currentTime 押金退款数  -->
+  <sql id="dayDepositRefund">
+		select 
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel , SUM(money) charge_member_num,DATE(r.last_handle_time) date_time
+		from 
+			x_member_refund_log r LEFT JOIN x_member m ON r.member_id = m.id 
+		where
+			r.`status` = '3' and date(r.last_handle_time) =  #{currentTime}  and r.charge_category = 'D'
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+  </sql>
+  
+  <!-- 指定时间currentTime 充值押金数  -->
+  <sql id="dayDeposit">
+		select 
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel , SUM(money) charge_member_num, date(trade_time) date_time
+		from 
+			x_member_charge_log c LEFT JOIN x_member m ON c.member_id = m.id 
+		where 
+			c.trade_status = 0  and  date(c.trade_time) = #{currentTime}  and c.charge_category = 'D'
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+  </sql>
+  
+  <!-- 指定时间currentTime余额退款数 -->
+  <sql id="dayBalanceRefund">
+		select 
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel , SUM(money) charge_member_num,DATE(r.last_handle_time) date_time
+		from 
+			x_member_refund_log r LEFT JOIN x_member m ON r.member_id = m.id 
+		where 
+			r.`status` = '3'  and date(r.last_handle_time) = #{currentTime}  and r.charge_category = 'B'
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+  </sql>
+  
+  <!-- 指定时间currentTime余额充值数 -->
+  <sql id="dayBalance">
+		select 
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel , SUM(money) charge_member_num, date(trade_time) date_time
+		from 
+			x_member_charge_log c LEFT JOIN x_member m ON c.member_id = m.id 
+		where 
+			c.trade_status = 0 and  date(c.trade_time) = #{currentTime}  and c.charge_category = 'B'
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+  </sql>
+  
+  <!-- 查询指点时间currentTime 余额数 -->
+  <select id="selectInitBalance" resultMap="BaseResultMap">
+  		select  
+			a.city_code,a.member_type,a.channel,
+			 a.charge_member_num 
+			-
+			IFNULL((
+				select b.charge_member_num  FROM
+				(
+					<include refid="dayBalanceRefund"/>
+				)b where b.city_code = a.city_code and b.member_type = a.member_type and b.channel = a.channel and b.date_time = a.date_time 
+			) ,0 ) balance , a.date_time
+		from 
+			(
+				<include refid="dayBalance"/>
+			)a;
+  </select>
+  
+  <!--查询指定时间currentTime收入  -->
+  <select id="selectInitIncome" resultMap="BaseResultMap">
+  		select
+			a.city_code, a.member_type,a.channel, sum(income) income,sum(actual_income) actual_income, a.date_time 
+		from (
+					select 
+						m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel ,
+						SUM(p.total_pay_money+free_compensation_money) income,SUM(p.pay_money) actual_income,date(p.end_time) date_time
+					from
+						x_time_share_order o INNER JOIN x_time_share_pay p ON o.order_id = p.order_id LEFT JOIN x_member m ON m.id= o.member_id 
+					where
+						o.`status` = 'finish' and p.pay_status = 'finish' and date(p.end_time) = #{currentTime} 
+					GROUP BY
+						m.city_code,(m.enterprise_id is NULL),m.register_category 
+				UNION ALL
+					select  
+						m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,register_category channel ,
+						SUM(o.order_money) income, SUM(o.pay_money) actual_income ,DATE(o.end_time) date_time
+					FROM
+						c_charging_order o LEFT JOIN x_member m ON m.id = o.member_id 
+					WHERE
+						o.charging_status = 'finish' and date(o.end_time) = #{currentTime} 
+					GROUP BY
+						m.city_code,(m.enterprise_id is NULL),m.register_category 
+				) a 
+		GROUP BY   a.city_code,a.member_type,a.channel ,a.date_time
+  </select>
+  
+  <!--查询指定时间currentTime在线支付情况  -->
+  <select id="selectInitOnline" resultMap="BaseResultMap">
+		select 
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,m.register_category channel,COUNT(1) online_member_num , SUM(a.money) online_money,#{currentTime}  date_time
+		from
+			(
+			select member_id ,total_pay_money+free_compensation_money money from x_time_share_pay where pay_status = 'finish' and DATE(end_time) = #{currentTime} 
+			UNION ALL
+			select member_id , order_money money from c_charging_order where charging_status = 'finish' and DATE(end_time) =#{currentTime} 
+			) a LEFT JOIN x_member m  ON a.member_id = m.id
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+  </select>
+ 
+ <!-- 查询指定时间currentTime退款金额 -->
+  <select id="selectInitRefund" resultMap="BaseResultMap">
+		select 
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,m.register_category channel,COUNT(r.id) refund_member_num, SUM(money) refund_money,#{currentTime} date_time
+		from 
+			x_member_refund_log r LEFT JOIN x_member m ON r.member_id = m.id  
+		where 
+			r.`status` = '3' and DATE(r.last_handle_time) = #{currentTime} 
+		GROUP BY m.city_code,(m.enterprise_id is NULL),m.register_category;
+  </select>
+  
+  <!-- 批量插入数据 -->
+  <insert id="insertBatch" parameterType="java.util.List">
+  			<if test="list != null and list.size() > 0" >
+			  INSERT INTO bi_overall_member (user_num, register_num, audit_num, charge_member_num, deposit, balance, actual_income, income, 
+								    online_member_num, online_money, refund_member_num, refund_money, owing_member_num, 
+								    owing_money, owing_30_member_num, owing_30_money, channel, member_type, city_code, 
+								    date_time, create_time)
+			   <trim prefix=" values " suffixOverrides=",">
+					<foreach collection="list" item="item" index="index" separator=",">
+						<trim prefix="(" suffix=")" suffixOverrides=",">
+							<choose>
+								<when test="item.userNum != null and item.userNum != '' ">
+		        					#{item.userNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.registerNum != null and item.registerNum != '' ">
+		        					#{item.registerNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.auditNum != null and item.auditNum != '' ">
+		        					#{item.auditNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.chargeMemberNum != null and item.chargeMemberNum != '' ">
+		        					#{item.chargeMemberNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.deposit != null and item.deposit != '' ">
+		        					#{item.deposit},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.balance != null and item.balance != '' ">
+		        					#{item.balance},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.actualIncome != null and item.actualIncome != '' ">
+		        					#{item.actualIncome},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.income != null and item.income != '' ">
+		        					#{item.income},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.onlineMemberNum != null and item.onlineMemberNum != '' ">
+		        					#{item.onlineMemberNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.onlineMoney != null and item.onlineMoney != '' ">
+		        					#{item.onlineMoney},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.refundMemberNum != null and item.refundMemberNum != '' ">
+		        					#{item.refundMemberNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.refundMoney != null and item.refundMoney != '' ">
+		        					#{item.refundMoney},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.owingMemberNum != null and item.owingMemberNum != '' ">
+		        					#{item.owingMemberNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.owingMoney != null and item.owingMoney != '' ">
+		        					#{item.owingMoney},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.owing30MemberNum != null and item.owing30MemberNum != '' ">
+		        					#{item.owing30MemberNum},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.owing30Money != null and item.owing30Money != '' ">
+		        					#{item.owing30Money},
+		        				</when>
+		        				<otherwise>0,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.channel != null   ">
+		        					#{item.channel},
+		        				</when>
+		        				<otherwise>null,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.memberType != null   ">
+		        					#{item.memberType},
+		        				</when>
+		        				<otherwise>null,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.cityCode != null   ">
+		        					#{item.cityCode},
+		        				</when>
+		        				<otherwise>null,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.dateTime != null   ">
+		        					#{item.dateTime},
+		        				</when>
+		        				<otherwise>null,</otherwise>
+		        			</choose>
+		        			#{item.createTime}
+						</trim>
+					</foreach>
+			  </trim>
+		</if>
+  </insert>
+  	<!-- 查询会员统计记录数 -->
+	<select id="getMemberRecords"  resultType="java.lang.Integer">
+	 	select count(1) from bi_overall_member
+	</select>
+	
+	<!-- 查询欠款统计数据 -->
+	<!-- <select id="selectInitOwing" resultMap="BaseResultMap">
+		SELECT
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,m.register_category channel,
+			count(DISTINCT o.member_id) owingMemberNum,sum(l.pay_money) owingMoney,#{currentTime}  date_time
+		FROM
+			x_time_share_order o
+		LEFT JOIN x_time_share_pay_log l ON o.order_id = l.order_id
+		LEFT JOIN x_member m  ON o.member_id = m.id
+		WHERE
+		 	DATE(o.end_time) <![CDATA[ <= ]]> #{currentTime}
+		AND DATE(l.pay_time) <![CDATA[ > ]]> #{currentTime}
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+	</select> -->
+	
+	<!-- 查询欠款30天数据 -->
+	<!-- <select id="selectInitOwing30" resultMap="BaseResultMap" >
+		SELECT
+			m.city_code,case (m.enterprise_id is NULL) when 1 then 'personal' else 'enterprise' end as member_type,m.register_category channel,
+			count(DISTINCT o.member_id) owing30MemberNum,sum(l.pay_money) owing30Money,#{currentTime}  date_time
+		FROM
+			x_time_share_order o
+		LEFT JOIN x_time_share_pay_log l ON o.order_id = l.order_id
+		LEFT JOIN x_member m  ON o.member_id = m.id
+		WHERE
+			DATE(DATE_ADD(o.end_time, INTERVAL 30 DAY)) <![CDATA[ <= ]]> #{currentTime}
+		AND DATE(l.pay_time) <![CDATA[ > ]]> #{currentTime}
+		GROUP BY
+			m.city_code,(m.enterprise_id is NULL),m.register_category
+	</select> -->
+</mapper>

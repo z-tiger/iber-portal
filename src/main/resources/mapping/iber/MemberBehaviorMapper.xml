@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.member.MemberBehaviorMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberBehavior" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="contri_value" property="contriValue" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="contri_detal" property="contriDetal" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="behavior_id" property="behaviorId" jdbcType="INTEGER" />
+    <result column="is_increase" jdbcType="BIT" property="isIncrease" />
+    <result column="is_ratio" jdbcType="BIT" property="isRatio" />
+    <result column="condition_val" jdbcType="VARCHAR" property="conditionVal" />
+    <result column="condition_type" jdbcType="VARCHAR" property="conditionType" />
+    <result column="behaviorType" jdbcType="VARCHAR" property="behaviorType" />
+    <result column="member_complain" jdbcType="VARCHAR" property="memberComplain" />
+    <result column="employee_complain" jdbcType="VARCHAR" property="employeeComplain" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="update_name" jdbcType="VARCHAR" property="updateName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="can_add" jdbcType="VARCHAR" property="canAdd" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, contri_value, sort, contri_detal, create_id, create_time, update_id, update_time, 
+    behavior_id,is_increase,is_ratio,condition_val,condition_type,member_complain,employee_complain,status,type,can_add
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_behavior
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_behavior
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.member.MemberBehavior" >
+    insert into x_member_behavior
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="contriValue != null" >
+        contri_value,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="contriDetal != null" >
+        contri_detal,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="behaviorId != null" >
+        behavior_id,
+      </if>
+      <if test="isIncrease != null" >
+        is_increase,
+      </if>
+      <if test="isRatio != null" >
+        is_ratio,
+      </if>
+      <if test="conditionVal != null" >
+        condition_val,
+      </if>
+      <if test="conditionType != null" >
+        condition_type,
+      </if>
+      <if test="memberComplain != null" >
+        member_complain,
+      </if>
+      <if test="employeeComplain != null" >
+        employee_complain,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="canAdd != null" >
+        can_add,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="contriValue != null" >
+        #{contriValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="contriDetal != null" >
+        #{contriDetal,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="behaviorId != null" >
+        #{behaviorId,jdbcType=INTEGER},
+      </if>
+      <if test="isIncrease != null" >
+        #{isIncrease,jdbcType=BIT},
+      </if>
+      <if test="isRatio != null" >
+        #{isRatio,jdbcType=BIT},
+      </if>
+      <if test="conditionVal != null" >
+        #{conditionVal,jdbcType=VARCHAR},
+      </if>
+      <if test="conditionType != null" >
+        #{conditionType,jdbcType=VARCHAR},
+      </if>
+      <if test="memberComplain != null" >
+        #{memberComplain,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeComplain != null" >
+        #{employeeComplain,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="canAdd != null" >
+        #{canAdd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.member.MemberBehavior" >
+    update x_member_behavior
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="contriValue != null" >
+        contri_value = #{contriValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="contriDetal != null" >
+        contri_detal = #{contriDetal,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="behaviorId != null" >
+        behavior_id = #{behaviorId,jdbcType=INTEGER},
+      </if>
+      <if test="isIncrease != null" >
+        is_increase = #{isIncrease,jdbcType=BIT},
+      </if>
+      <if test="isRatio != null" >
+        is_ratio = #{isRatio,jdbcType=BIT},
+      </if>
+      <if test="conditionVal != null" >
+        condition_val = #{conditionVal,jdbcType=VARCHAR},
+      </if>
+      <if test="conditionType != null" >
+        condition_type = #{conditionType,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeComplain != null" >
+        employee_complain = #{employeeComplain,jdbcType=VARCHAR},
+      </if>
+      <if test="memberComplain != null" >
+        member_complain = #{memberComplain,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="canAdd != null" >
+        can_add = #{canAdd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getMemberBehaviorList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>,
+     (SELECT `name` FROM x_sys_user WHERE b.create_id = id) create_name,
+	 (SELECT `name` FROM x_sys_user WHERE b.update_id = id) update_name,
+	 (select behavior_name from x_member_behavior_type where b.behavior_id=id ) behaviorType
+    from x_member_behavior b where 1=1
+    <if test="name != null and name != '' ">
+    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%') 
+    </if>
+    <if test="maxContriValue != null and maxContriValue != '' ">
+    	and  contri_value <![CDATA[<=]]> #{maxContriValue,jdbcType=INTEGER}
+    </if>
+    <if test="minContriValue != null and minContriValue != '' ">
+   		 and  contri_value <![CDATA[>=]]> #{minContriValue,jdbcType=INTEGER}
+    </if>
+    <if test="behaviorId != null and behaviorId != '' and  behaviorId != '-1' ">
+    	and behavior_id = #{behaviorId,jdbcType=VARCHAR} 
+    </if>
+    <if test="isIncrease != null and isIncrease != '' ">
+    	and is_increase =#{isIncrease,jdbcType=BIT}
+    </if>
+    <if test="isRatio != null and isRatio != '' ">
+   		 and is_ratio =#{isRatio,jdbcType=BIT} 
+    </if>
+    ORDER BY sort 
+    <if test="from != null and to != null">
+    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="getMemberBehaviorNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(1) from x_member_behavior where 1=1
+     <if test="name != null and name != '' ">
+    	and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%') 
+    </if>
+    <if test="maxContriValue != null and maxContriValue != '' ">
+    	and  contri_value <![CDATA[<=]]> #{maxContriValue,jdbcType=INTEGER}
+    </if>
+    <if test="minContriValue != null and minContriValue != '' ">
+   		 and  contri_value <![CDATA[>=]]> #{minContriValue,jdbcType=INTEGER}
+    </if>
+    <if test="behaviorId != null and behaviorId != '' ">
+    	and behavior_id = #{behaviorId,jdbcType=VARCHAR} 
+    </if>
+    <if test="isIncrease != null and isIncrease != ''  and  isIncrease != '-1' ">
+    	and is_increase =#{isIncrease,jdbcType=BIT}
+    </if>
+    <if test="isRatio != null and isRatio != ''  and  isIncrease != '-1' ">
+   		 and is_ratio =#{isRatio,jdbcType=BIT} 
+    </if>
+  
+  </select>
+  
+ <select id="selectByBehaviorId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select
+   			 <include refid="Base_Column_List"/>,
+   	 (SELECT `name` FROM x_sys_user WHERE b.create_id = id) create_name,
+	 (SELECT `name` FROM x_sys_user WHERE b.update_id = id) update_name,
+	 (select behavior_name from x_member_behavior_type where b.behavior_id=id ) behaviorType
+	 from x_member_behavior b
+	 where behavior_id = #{behaviorId,jdbcType=INTEGER} and status = 1
+  </select>
+  <select id="getCountByBehaviorId"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    	 select
+  		 	count(1)
+		 from x_member_behavior 
+		 where behavior_id = #{behaviorId,jdbcType=INTEGER} and status = 1
+  </select> 
+  <select id="getByBehaviorIdAndCanAdd" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select
+   			 <include refid="Base_Column_List"/>,
+   	 (SELECT `name` FROM x_sys_user WHERE b.create_id = id) create_name,
+	 (SELECT `name` FROM x_sys_user WHERE b.update_id = id) update_name,
+	 (select behavior_name from x_member_behavior_type where b.behavior_id=id ) behaviorType
+	 from x_member_behavior b
+	 where behavior_id = #{behaviorId,jdbcType=INTEGER} and status = 1 and can_add = #{canAdd,jdbcType=INTEGER}
+  </select>
+  <select id="getVaildBehaviorByTypeId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select
+   			 <include refid="Base_Column_List"/>,
+   	 (SELECT `name` FROM x_sys_user WHERE b.create_id = id) create_name,
+	 (SELECT `name` FROM x_sys_user WHERE b.update_id = id) update_name,
+	 (select behavior_name from x_member_behavior_type where b.behavior_id=id ) behaviorType
+	 from x_member_behavior b
+	 where behavior_id = #{behaviorId,jdbcType=INTEGER} and status = 1 
+	 <if test="isMemberComplain != null and isMemberComplain != '' ">
+	 	<choose>
+	 		<when test="isMemberComplain == 0 ">
+	 			 and member_complain = '1' 
+	 		</when>
+	 		<otherwise>
+	 			and employee_complain = '1'
+	 		</otherwise>
+	 	</choose>
+	 </if>
+  </select>
+  
+  <select id="getByType" resultMap="BaseResultMap">
+  		SELECT <include refid="Base_Column_List" />
+			FROM x_member_behavior WHERE type = #{type}
+  </select>
+  <select id="getRescueBehaviorTypeList" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		SELECT id,name
+			FROM x_member_behavior WHERE behavior_id = #{behaviorId} and status = #{status} 
+   </select>
+</mapper>

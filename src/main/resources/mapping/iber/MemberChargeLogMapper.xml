@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MemberChargeLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.MemberChargeLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="INTEGER" />
+    <result column="bank_category" property="bankCategory" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="trade_time" property="tradeTime" jdbcType="TIMESTAMP" />
+    <result column="charge_id" property="chargeId" jdbcType="VARCHAR" />
+    <result column="charge_category" property="chargeCategory" jdbcType="VARCHAR" />
+    <result column="is_refund" property="isRefund"/>
+    <result column="refund_id" property="refundId"/>
+    <result column="mid" property="mid" jdbcType="INTEGER"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="refundMoney" property="refundMoney" jdbcType="INTEGER"/>
+    <result column="applyCreateTime" property="applyCreateTime" jdbcType="TIMESTAMP"/>
+    <result column="phone" property="phone" jdbcType="VARCHAR"/>
+    <result column="last_handle_time" property="lastHandleTime" jdbcType="TIMESTAMP"/>
+    <result column="last_handle_user" property="lastHandleUser" jdbcType="VARCHAR"/>
+    <result column="refund_user_moblie" property="refundUserMoblie" jdbcType="VARCHAR"/>
+    <result column="refundMemberId" property="refundMemberId" jdbcType="INTEGER"/>
+    <result column="is_handle_return" property="isHandleReturn" jdbcType="INTEGER"/>
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR"/>
+    <result column="bank_card" property="bankCard" jdbcType="VARCHAR"/>
+    <result column="is_handle" property="isHandle"/>
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, member_id, money, bank_category, create_time, trade_status, remark, trade_no, 
+    trade_time, charge_id, charge_category,is_refund,refund_id,is_handle
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_charge_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_charge_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.MemberChargeLog" >
+    insert into x_member_charge_log (id, member_id, money, 
+      bank_category, create_time, trade_status, 
+      remark, trade_no, trade_time, 
+      charge_id, charge_category,is_handle,is_refund,refund_id)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{money,jdbcType=INTEGER}, 
+      #{bankCategory,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{tradeStatus,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR}, #{tradeTime,jdbcType=TIMESTAMP}, 
+      #{chargeId,jdbcType=VARCHAR}, #{chargeCategory,jdbcType=VARCHAR},#{isHandle},#{isRefund},#{refundId})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.MemberChargeLog" >
+    insert into x_member_charge_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="bankCategory != null" >
+        bank_category,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="tradeStatus != null" >
+        trade_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="tradeTime != null" >
+        trade_time,
+      </if>
+      <if test="chargeId != null" >
+        charge_id,
+      </if>
+      <if test="chargeCategory != null" >
+        charge_category,
+      </if>
+      <if test="isRefund != null">
+      	is_refund,
+      </if>
+      <if test="refundId != null">
+      	refund_id,
+      </if>
+      <if test="isHandle != null">
+      	is_handle
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="bankCategory != null" >
+        #{bankCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeStatus != null" >
+        #{tradeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargeId != null" >
+        #{chargeId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeCategory != null" >
+        #{chargeCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="isRefund != null">
+      	#{isRefund},
+      </if>
+      <if test="refundId != null">
+      	#{refundId},
+      </if>
+      <if test="isHandle != null">
+      	#{isHandle}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.MemberChargeLog" >
+    update x_member_charge_log
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="bankCategory != null" >
+        bank_category = #{bankCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeStatus != null" >
+        trade_status = #{tradeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargeId != null" >
+        charge_id = #{chargeId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeCategory != null" >
+        charge_category = #{chargeCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="isRefund != null">
+      	is_refund = #{isRefund},
+      </if>
+      <if test="refundId != null">
+      	refund_id = #{refundId},
+      </if>
+      <if test="isHandle != null">
+      	is_handle = #{isHandle}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.MemberChargeLog" >
+    update x_member_charge_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      money = #{money,jdbcType=INTEGER},
+      bank_category = #{bankCategory,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      trade_status = #{tradeStatus,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      charge_id = #{chargeId,jdbcType=VARCHAR},
+      charge_category = #{chargeCategory,jdbcType=VARCHAR},
+      is_refund = #{isRefund},refund_id = #{refundId},is_handle = #{isHandle}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByOrderId" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from x_member_charge_log
+  	where charge_id = #{objId}
+  </select>
+  
+  <select id="selectByRefundId" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" /> from x_member_charge_log where refund_id = #{refundId}
+  </select>
+  
+  <update id="updateIsRefund">
+  	update x_member_charge_log SET is_refund = #{isRefund},refund_id = #{refundId}
+      where
+  	id in
+  	<foreach collection="vos" item="refundVo" open="(" close=")" separator="," index="index">
+  		#{refundVo.chargingId}
+  	</foreach>
+  </update>
+  
+  <select id="selectLogsByRefundId" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" /> from x_member_charge_log where refund_id = #{rid}
+  </select>
+  <!-- 原路退款 明细报表参数 -->
+ <sql id="memberOriginalRefundParameters">
+ 	m.id mid,
+ 	m.name,
+ 	m.phone,
+ 	c.money,
+ 	c.create_time,
+ 	c.money refundMoney,
+ 	r.create_time applyCreateTime,
+ 	r.last_handle_time,
+ 	r.last_handle_user,
+ 	c.bank_category,
+ 	r.refund_user_moblie
+ </sql>
+  <select id="getAllMemberOriginalRefund" resultMap="BaseResultMap" parameterType="java.util.Map">
+	select <include refid="memberOriginalRefundParameters"/>
+	from x_member_charge_log c
+	join x_member_refund_log r on c.refund_id = r.id 
+	and r.is_handle_return = 1 and r.status = '3'
+	join x_member m on m.id = r.member_id
+	<trim prefixOverrides="and">
+		<where>
+			<if test="name != null and name != ''">
+				and m.name like "%"#{name,jdbcType=VARCHAR}"%"
+			</if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                and m.phone =#{phoneNumber}
+            </if>
+			<if test="begin != null and begin != '' ">
+				<![CDATA[and r.last_handle_time >= #{begin,jdbcType=TIMESTAMP}  ]]>
+			</if>
+			<if test="end != null and end != ''">
+				<![CDATA[and r.last_handle_time <= #{end,jdbcType=TIMESTAMP}  ]]>
+			</if>
+		</where>
+	</trim>
+	ORDER BY r.last_handle_time DESC 
+	<if test="offset != null and rows != null">
+		limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+	</if>
+  </select>
+  <select id="getAllMemberOriginalRefundTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(1) from 
+  	(select <include refid="memberOriginalRefundParameters"/>
+	from x_member_charge_log c
+	join x_member_refund_log r on c.refund_id = r.id  
+	and r.is_handle_return = 1 and r.status = '3'
+	join x_member m on m.id = r.member_id 
+	<trim prefixOverrides="and">
+		<where>
+			<if test="name != null and name != ''">
+				and m.name like "%"#{name,jdbcType=VARCHAR}"%"
+			</if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                and m.phone =#{phoneNumber}
+            </if>
+			<if test="begin != null and begin != '' ">
+				<![CDATA[and r.last_handle_time >= #{begin,jdbcType=TIMESTAMP}  ]]>
+			</if>
+			<if test="end != null and end != ''">
+				<![CDATA[and r.last_handle_time <= #{end,jdbcType=TIMESTAMP}  ]]>
+			</if>
+		</where>
+	</trim>
+	ORDER BY r.last_handle_time DESC) total
+  </select>
+  <!--手动退款明细报表参数  -->
+  <sql id="memberManualRefundParameters">
+  	m.id mid,
+  	m.name,
+  	m.phone,
+  	r.money refundMoney,
+ 	r.create_time applyCreateTime,
+ 	r.last_handle_time,
+ 	r.last_handle_user,
+ 	r.bank_name,
+ 	r.bank_card
+  </sql>
+  <select id="getAllMemberManualRefund" resultMap="BaseResultMap" parameterType="java.util.Map">
+	select <include refid="memberManualRefundParameters"/>
+	from x_member_refund_log r INNER JOIN x_member m on r.member_id = m.id and r.status = '3' and r.is_handle_return = 0
+	<trim prefixOverrides="and">
+		<where>
+			<if test="name != null and name != ''">
+				and m.name like "%"#{name,jdbcType=VARCHAR}"%"
+			</if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                and m.phone = #{phoneNumber}
+            </if>
+			<if test="begin != null and begin != '' ">
+				<![CDATA[and r.last_handle_time >= #{begin,jdbcType=TIMESTAMP}  ]]>
+			</if>
+			<if test="end != null and end != ''">
+				<![CDATA[and r.last_handle_time <= #{end,jdbcType=TIMESTAMP}  ]]>
+			</if>
+		</where>
+	</trim>
+	ORDER BY r.last_handle_time DESC 
+	<if test="offset != null and rows != null">
+		limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+	</if> 
+  </select>
+  <select id="getAllMemberManualRefundTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	select count(1) from (
+  	select <include refid="memberManualRefundParameters"/>
+	from x_member_refund_log r INNER JOIN x_member m on r.member_id = m.id and r.status = '3' and r.is_handle_return = 0
+	<trim prefixOverrides="and">
+		<where>
+			<if test="name != null and name != ''">
+				and m.name like "%"#{name,jdbcType=VARCHAR}"%"
+			</if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                and m.phone = #{phoneNumber}
+            </if>
+			<if test="begin != null and begin != '' ">
+				<![CDATA[and r.last_handle_time >= #{begin,jdbcType=TIMESTAMP}  ]]>
+			</if>
+			<if test="end != null and end != ''">
+				<![CDATA[and r.last_handle_time <= #{end,jdbcType=TIMESTAMP}  ]]>
+			</if>
+		</where>
+	</trim>
+	ORDER BY r.last_handle_time DESC 
+	) total
+  </select>
+  
+</mapper>

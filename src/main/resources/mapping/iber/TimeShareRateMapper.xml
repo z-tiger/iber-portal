@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.timeShare.TimeShareRateMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.timeShare.TimeShareRate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="time_unit" property="timeUnit" jdbcType="INTEGER" />
+    <result column="time_rate" property="timeRate" jdbcType="INTEGER" />
+    <result column="time_discount_rate" property="timeDiscountRate" jdbcType="INTEGER" />
+    <result column="miles_rate" property="milesRate" jdbcType="INTEGER" />
+    <result column="other_cost" property="otherCost" jdbcType="INTEGER" />
+    <result column="discount" property="discount" jdbcType="INTEGER" />
+    <result column="time_discount" property="timeDiscount" jdbcType="INTEGER" />
+    <result column="miles_discount" property="milesDiscount" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_user" property="createdUser" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="updated_user" property="updatedUser" jdbcType="VARCHAR" />
+    <result column="min_consump" property="minConsump" jdbcType="INTEGER" />
+    <result column="max_consump" property="maxConsump" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="car_type_id" property="carTypeId" jdbcType="INTEGER" />
+    <result column="car_type_name" property="carTypeName" jdbcType="VARCHAR" />
+    <!-- 品牌 -->
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="free_compensation_price" property="freeCompensationPrice" jdbcType="DOUBLE" />
+    
+    <result column="night_time_rate" property="nightTimeRate" jdbcType="INTEGER" />
+    <result column="night_miles_rate" property="nightMilesRate" jdbcType="INTEGER" />
+    
+    <result column="max_free_compensation_price" property="maxFreeCompensationPrice" jdbcType="DOUBLE" />
+    <result column="discount_start_time" property="discountStartTime" jdbcType="TIMESTAMP" />
+    <result column="discount_end_time" property="discountEndTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, description, time_unit, time_rate, miles_rate, other_cost, discount, time_discount, 
+    miles_discount, status, created_time, created_user, updated_time, updated_user, min_consump, 
+    max_consump, city_code, car_type_id,free_compensation_price,max_free_compensation_price,
+    night_time_rate,night_miles_rate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_time_share_rate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_time_share_rate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.timeShare.TimeShareRate" >
+    insert into x_time_share_rate (id, name, description, 
+      time_unit, time_rate, miles_rate, 
+      other_cost, discount, time_discount, 
+      miles_discount, status, created_time, 
+      created_user, updated_time, updated_user, 
+      min_consump, max_consump, city_code, 
+      car_type_id,free_compensation_price,max_free_compensation_price,night_time_rate,night_miles_rate)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{timeUnit,jdbcType=INTEGER}, #{timeRate,jdbcType=INTEGER}, #{milesRate,jdbcType=INTEGER}, 
+      #{otherCost,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, #{timeDiscount,jdbcType=INTEGER}, 
+      #{milesDiscount,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUser,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUser,jdbcType=VARCHAR}, 
+      #{minConsump,jdbcType=INTEGER}, #{maxConsump,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, 
+      #{carTypeId,jdbcType=INTEGER},#{freeCompensationPrice,jdbcType=DOUBLE} ,#{maxFreeCompensationPrice,jdbcType=DOUBLE} ,
+      #{nightTimeRate,jdbcType=INTEGER} ,#{nightMilesRate,jdbcType=INTEGER} )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.timeShare.TimeShareRate" >
+    insert into x_time_share_rate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="timeUnit != null" >
+        time_unit,
+      </if>
+      <if test="timeRate != null" >
+        time_rate,
+      </if>
+      <if test="milesRate != null" >
+        miles_rate,
+      </if>
+      <if test="otherCost != null" >
+        other_cost,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="timeDiscount != null" >
+        time_discount,
+      </if>
+      <if test="milesDiscount != null" >
+        miles_discount,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="createdUser != null" >
+        created_user,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="updatedUser != null" >
+        updated_user,
+      </if>
+      <if test="minConsump != null" >
+        min_consump,
+      </if>
+      <if test="maxConsump != null" >
+        max_consump,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="carTypeId != null" >
+        car_type_id,
+      </if>
+      <if test="freeCompensationPrice != null" >
+        free_compensation_price,
+      </if>
+      
+      <if test="maxFreeCompensationPrice != null" >
+        max_free_compensation_price,
+      </if>
+      <if test="nightTimeRate != null" >
+        night_time_rate,
+      </if>
+      <if test="nightMilesRate != null" >
+        night_miles_rate,
+      </if>
+      <if test="discountStartTime != null" >
+         discount_start_time,
+      </if>
+      <if test="discountEndTime != null" >
+         discount_end_time,
+      </if>
+      <if test="timeDiscountRate != null" >
+         time_discount_rate  ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="timeUnit != null" >
+        #{timeUnit,jdbcType=INTEGER},
+      </if>
+      <if test="timeRate != null" >
+        #{timeRate,jdbcType=INTEGER},
+      </if>
+      <if test="milesRate != null" >
+        #{milesRate,jdbcType=INTEGER},
+      </if>
+      <if test="otherCost != null" >
+        #{otherCost,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="timeDiscount != null" >
+        #{timeDiscount,jdbcType=INTEGER},
+      </if>
+      <if test="milesDiscount != null" >
+        #{milesDiscount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUser != null" >
+        #{createdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUser != null" >
+        #{updatedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="minConsump != null" >
+        #{minConsump,jdbcType=INTEGER},
+      </if>
+      <if test="maxConsump != null" >
+        #{maxConsump,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="carTypeId != null" >
+        #{carTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensationPrice != null" >
+        #{freeCompensationPrice,jdbcType=DOUBLE},
+      </if>
+      
+      <if test="maxFreeCompensationPrice != null" >
+         #{maxFreeCompensationPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="nightTimeRate != null" >
+        #{nightTimeRate,jdbcType=INTEGER},
+      </if>
+      <if test="nightMilesRate != null" >
+         #{nightMilesRate,jdbcType=INTEGER},
+      </if>
+      <if test="discountStartTime != null" >
+         #{discountStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discountEndTime != null" >
+         #{discountEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeDiscountRate != null" >
+         #{timeDiscountRate,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.timeShare.TimeShareRate" >
+    update x_time_share_rate
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="timeUnit != null" >
+        time_unit = #{timeUnit,jdbcType=INTEGER},
+      </if>
+      <if test="timeRate != null" >
+        time_rate = #{timeRate,jdbcType=INTEGER},
+      </if>
+      <if test="milesRate != null" >
+        miles_rate = #{milesRate,jdbcType=INTEGER},
+      </if>
+      <if test="otherCost != null" >
+        other_cost = #{otherCost,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="timeDiscount != null" >
+        time_discount = #{timeDiscount,jdbcType=INTEGER},
+      </if>
+      <if test="milesDiscount != null" >
+        miles_discount = #{milesDiscount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUser != null" >
+        created_user = #{createdUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUser != null" >
+        updated_user = #{updatedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="minConsump != null" >
+        min_consump = #{minConsump,jdbcType=INTEGER},
+      </if>
+      <if test="maxConsump != null" >
+        max_consump = #{maxConsump,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="carTypeId != null" >
+        car_type_id = #{carTypeId,jdbcType=INTEGER},
+      </if>
+       <if test="freeCompensationPrice != null" >
+        free_compensation_price = #{freeCompensationPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="maxFreeCompensationPrice != null" >
+         max_free_compensation_price = #{maxFreeCompensationPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="nightTimeRate != null" >
+        night_time_rate = #{nightTimeRate,jdbcType=INTEGER},
+      </if>
+      <if test="nightMilesRate != null" >
+         night_miles_rate = #{nightMilesRate,jdbcType=INTEGER},
+      </if>
+      <if test="discountStartTime != null" >
+         discount_start_time = #{discountStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discountEndTime != null" >
+         discount_end_time = #{discountEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeDiscountRate != null" >
+         time_discount_rate = #{timeDiscountRate,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.timeShare.TimeShareRate" >
+    update x_time_share_rate
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      time_unit = #{timeUnit,jdbcType=INTEGER},
+      time_rate = #{timeRate,jdbcType=INTEGER},
+      miles_rate = #{milesRate,jdbcType=INTEGER},
+      other_cost = #{otherCost,jdbcType=INTEGER},
+      discount = #{discount,jdbcType=INTEGER},
+      time_discount = #{timeDiscount,jdbcType=INTEGER},
+      miles_discount = #{milesDiscount,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      created_user = #{createdUser,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      updated_user = #{updatedUser,jdbcType=VARCHAR},
+      min_consump = #{minConsump,jdbcType=INTEGER},
+      max_consump = #{maxConsump,jdbcType=INTEGER},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      car_type_id = #{carTypeId,jdbcType=INTEGER},
+      free_compensation_price =  #{freeCompensationPrice,jdbcType=DOUBLE},
+      
+      max_free_compensation_price = #{maxFreeCompensationPrice,jdbcType=DOUBLE},
+      night_time_rate = #{nightTimeRate,jdbcType=INTEGER},
+      night_miles_rate = #{nightMilesRate,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_time_share_rate where 1=1 
+     <if test="name != null  and name != '' " >
+        and name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+     </if>
+     <if test="cityCode != null and cityCode != '' " >
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,discount_start_time,discount_end_time,time_discount_rate,
+    (select name from x_city c where c.code = a.city_code) city_name,
+    (select type from x_car_type d where d.id = a.car_type_id) car_type_name,
+    (select t.brance from x_car_type t where t.id = a.car_type_id) brand_name
+    from x_time_share_rate a where 1=1 
+    <if test="name != null  and name != '' " >
+        and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+       and a.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    order by a.created_time desc 
+    <if test="from != null and from != '' and to != null and to != ''" >
+    	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <!-- 根据cityCode和carTypeId查车的租赁价格信息 -->
+  <select id="getByCityCodeAndCarTypeId" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+    (select name from x_city c where c.code = a.city_code) city_name,
+    (select type from x_car_type d where d.id = a.car_type_id) car_type_name
+    from x_time_share_rate a where 1=1 
+       and a.city_code = #{cityCode, jdbcType=VARCHAR}
+       and a.car_type_id = #{carTypeId, jdbcType=INTEGER}
+  </select>
+ 
+</mapper>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.activity.LotteryDrawCouponMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.activity.LotteryDrawCoupon" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="coupon_account" property="couponAccount" jdbcType="INTEGER" />
+    <result column="lottery_draw_item_id" property="lotteryDrawItemId" jdbcType="INTEGER" />
+    <result column="balance" property="balance" jdbcType="INTEGER" />
+    <result column="min_use_value" property="minUseValue" />
+    <result column="deadline" property="deadline" jdbcType="INTEGER" />
+    <result column="use_type" property="useType" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="max_balance" property="maxBalance"/>
+    <result column="min_balance" property="minBalance"/>
+    <result column="max_deduction_value" property="maxDeductionValue"/>
+    <result column="editor" property="editor" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, coupon_account, lottery_draw_item_id, balance, convert(min_use_value/100,decimal(10,2)) as min_use_value, deadline, use_type,
+    create_time,convert(max_balance/100,decimal(10,2)) as max_balance,convert(min_balance/100,decimal(10,2)) as min_balance,convert(max_deduction_value/100,decimal(10,2)) as max_deduction_value,editor
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_lottery_draw_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_lottery_draw_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    insert into x_lottery_draw_coupon (id, coupon_account, lottery_draw_item_id, 
+      balance, min_use_value, deadline, 
+      use_type, create_time,max_balance,min_balance,max_deduction_value,editor)
+    values (#{id,jdbcType=INTEGER}, #{couponAccount,jdbcType=INTEGER}, #{lotteryDrawItemId,jdbcType=INTEGER}, 
+      #{balance,jdbcType=INTEGER}, #{minUseValue,jdbcType=INTEGER}, #{deadline,jdbcType=INTEGER}, 
+      #{useType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{maxBalance,jdbcType=INTEGER}, #{minBalance,jdbcType=INTEGER},
+      #{maxDeductionValue,jdbcType=INTEGER},#{editor,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    insert into x_lottery_draw_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="couponAccount != null" >
+        coupon_account,
+      </if>
+      <if test="lotteryDrawItemId != null" >
+        lottery_draw_item_id,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="minUseValue != null" >
+        min_use_value,
+      </if>
+      <if test="deadline != null" >
+        deadline,
+      </if>
+      <if test="useType != null" >
+        use_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="maxBalance != null" >
+        max_balance,
+      </if>
+      <if test="minBalance != null" >
+        min_balance,
+      </if>
+      <if test="maxDeductionValue != null" >
+        max_deduction_value,
+      </if>
+      <if test="editor != null" >
+        editor,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="couponAccount != null" >
+        #{couponAccount,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryDrawItemId != null" >
+        #{lotteryDrawItemId,jdbcType=INTEGER},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="minUseValue != null" >
+        #{minUseValue,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null" >
+        #{deadline,jdbcType=INTEGER},
+      </if>
+      <if test="useType != null" >
+        #{useType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxBalance != null" >
+        #{maxBalance,jdbcType=INTEGER},
+      </if>
+      <if test="minBalance != null" >
+        #{minBalance,jdbcType=INTEGER},
+      </if>
+      <if test="maxDeductionValue != null" >
+        #{maxDeductionValue,jdbcType=INTEGER},
+      </if>
+      <if test="editor != null" >
+        #{editor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    update x_lottery_draw_coupon
+    <set >
+      <if test="couponAccount != null" >
+        coupon_account = #{couponAccount,jdbcType=INTEGER},
+      </if>
+      <if test="lotteryDrawItemId != null" >
+        lottery_draw_item_id = #{lotteryDrawItemId,jdbcType=INTEGER},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="minUseValue != null" >
+        min_use_value = #{minUseValue,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null" >
+        deadline = #{deadline,jdbcType=INTEGER},
+      </if>
+      <if test="useType != null" >
+        use_type = #{useType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxBalance != null" >
+        max_balance = #{maxBalance,jdbcType=INTEGER},
+      </if>
+      <if test="minBalance != null" >
+        min_balance = #{minBalance,jdbcType=INTEGER},
+      </if>
+      <if test="maxDeductionValue != null" >
+        max_deduction_value = #{maxDeductionValue,jdbcType=INTEGER},
+      </if>
+      <if test="editor != null" >
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    update x_lottery_draw_coupon
+    set coupon_account = #{couponAccount,jdbcType=INTEGER},
+      lottery_draw_item_id = #{lotteryDrawItemId,jdbcType=INTEGER},
+      balance = #{balance,jdbcType=INTEGER},
+      min_use_value = #{minUseValue,jdbcType=INTEGER},
+      deadline = #{deadline,jdbcType=INTEGER},
+      use_type = #{useType,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      max_balance = #{maxBalance,jdbcType=INTEGER},
+      min_balance = #{minBalance,jdbcType=INTEGER},
+      max_deduction_value = #{maxDeductionValue,jdbcType=INTEGER},
+      editor = #{editor,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryCouponStrategy" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from x_lottery_draw_coupon xldc
+    where xldc.lottery_draw_item_id = #{id}
+    order by xldc.create_time desc
+    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select COUNT(1) from x_lottery_draw_coupon xldc
+    where xldc.lottery_draw_item_id = #{id}
+  </select>
+</mapper>

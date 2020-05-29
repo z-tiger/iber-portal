@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.qrtz.CalendarsMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.qrtz.Calendars" >
+    <id column="CALENDAR_NAME" property="calendarName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.iber.portal.model.qrtz.Calendars" extends="BaseResultMap" >
+    <result column="CALENDAR" property="calendar" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CALENDAR_NAME
+  </sql>
+  <sql id="Blob_Column_List" >
+    CALENDAR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from qrtz_calendars
+    where CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from qrtz_calendars
+    where CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.qrtz.Calendars" >
+    insert into qrtz_calendars (CALENDAR_NAME, CALENDAR)
+    values (#{calendarName,jdbcType=VARCHAR}, #{calendar,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.qrtz.Calendars" >
+    insert into qrtz_calendars
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="calendarName != null" >
+        CALENDAR_NAME,
+      </if>
+      <if test="calendar != null" >
+        CALENDAR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="calendarName != null" >
+        #{calendarName,jdbcType=VARCHAR},
+      </if>
+      <if test="calendar != null" >
+        #{calendar,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.qrtz.Calendars" >
+    update qrtz_calendars
+    <set >
+      <if test="calendar != null" >
+        CALENDAR = #{calendar,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.iber.portal.model.qrtz.Calendars" >
+    update qrtz_calendars
+    set CALENDAR = #{calendar,jdbcType=LONGVARBINARY}
+    where CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR}
+  </update>
+</mapper>

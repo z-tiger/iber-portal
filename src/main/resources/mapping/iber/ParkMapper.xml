@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.ParkMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.Park" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="park_nums" property="parkNums" jdbcType="INTEGER" />
+    <result column="liable_person" property="liablePerson" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="park_type" property="parkType" jdbcType="VARCHAR" />
+    <result column="fenceName" property="fenceName" jdbcType="VARCHAR" />
+    <result column="fence_id" property="fenceId" jdbcType="INTEGER" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="categoryName" property="categoryName" jdbcType="VARCHAR" />
+    <result column="operatorId" property="operatorId" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="VARCHAR" />
+    <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR" />
+    <result column="park_fee" property="parkFee" jdbcType="INTEGER" />
+    <result column="park_fee_desc" property="parkFeeDesc" jdbcType="VARCHAR" />
+    <result column="cooperation_type" property="cooperationType" jdbcType="INTEGER" />
+    <result column="property_management_company" property="propertyManagementCompany" jdbcType="VARCHAR" />
+    <result column="is_temporary" property="isTemporary" jdbcType="INTEGER" />
+    <result column="run_start_time" property="runStartTime"/>
+    <result column="run_end_time" property="runEndTime"/>
+    <result column="is_run" property="isRun"/>
+    <result column="full_no_parking" property="fullNoParking"/>
+    <result column="status" property="status"/>
+    <result column="is_coexist" property="isCoexist"/>
+    <result column="park_panorama_link" property="parkPanoramaLink"/>
+  </resultMap>
+  <!-- easyui-tree 对象 -->
+  <resultMap id="TreeResultMap" type="com.iber.portal.vo.base.EasyUiTree" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="checked" property="checked" jdbcType="INTEGER" />
+    <result column="attributes" property="attributes" />
+    <result column="children" property="children" />
+  </resultMap>
+  <resultMap id="ParkEquipmentResultMap" type="com.iber.portal.vo.park.ParkTreeVo" extends="TreeResultMap">
+    <result column="equipmentCnt" property="equipmentCnt" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 网点相关统计 -->
+  <resultMap id="ParkTotalResultMap" type="com.iber.portal.vo.park.ParkTotalVo">
+    <result column="parkTotalByType" property="parkTotalByType" jdbcType="INTEGER" />
+    <result column="parkType" property="parkType" jdbcType="INTEGER" />
+    <result column="parkServiceType" property="parkServiceType" jdbcType="INTEGER" />
+    <result column="parkTotalByService" property="parkTotalByService" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="connector_type" property="connector_type" jdbcType="INTEGER" />
+    <result column="connectorTotal" property="connectorTotal" jdbcType="INTEGER" />
+    <result column="brandTotal" property="brandTotal" jdbcType="INTEGER" />
+    <result column="brand_name" property="brand_name" jdbcType="INTEGER" />
+    <result column="websiteTotal" property="websiteTotal" jdbcType="INTEGER" />
+    <result column="websiteTotal" property="websiteTotal" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="parkNum" property="parkNum" jdbcType="INTEGER" />
+    <result column="cityTotal" property="cityTotal" jdbcType="INTEGER" />
+    <result column="areaTotal" property="areaTotal" jdbcType="INTEGER" />
+    </resultMap>
+    
+    <resultMap type="com.iber.portal.vo.charging.ChargingPileVo" id="ChargingPileVoResultMap">
+    	<result column="status" property="status"/>
+    	<result column="connector_type" property="connectorType"/>
+    	<result column="parkName" property="parkName"/>
+    	<result column="address" property="parkAddress"/>
+    	<result column="member_name" property="memberName"/>
+    	<result column="start_time" property="startTime"/>
+    	<result column="connector_id" property="connectorId"/>
+    	<result column="equipment_id" property="equipmentId"/>
+    	<result column="station_id" property="parkId"/>
+    	<result column="latitude" property="latitude"/>
+    	<result column="longitude" property="longitude"/>
+    	<result column="category" property="category"/>
+    	<result column="park_no" property="parkNo"/>
+    	<result column="connector_no" property="connectorNo"/>
+    	<result column="equipment_code" property="equipmentCode"/>
+    	<result column="connector_number" property="connectorNumber"/>
+    	<result column="connector_code" property="connectorCode"/>
+    	<result column="equipment_type" property="equipmentType"/>
+    	<result column="cooperation_type" property="cooperationType"/>
+    	<result column="operatorId" property="operatorId"/>
+    </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, address, park_nums, liable_person, city_code, latitude, longitude,park_type,area_name,area_code,category,remark,operatorId,enterprise_id,
+    park_fee,park_fee_desc,cooperation_type,property_management_company,is_temporary,run_start_time,run_end_time,is_run,full_no_parking,status,is_coexist,park_panorama_link
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = a.city_code) city_name
+    from x_park a
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllParks" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select a.id, name, address, park_nums, liable_person, a.city_code, a.latitude, a.longitude,park_type,xa.area_name,a.area_code,category,remark,operatorId,enterprise_id,
+      park_fee,park_fee_desc,cooperation_type,property_management_company,is_temporary,run_start_time,run_end_time,is_run,full_no_parking,status,is_coexist,park_panorama_link,
+      (select name from x_city c where c.code = a.city_code) city_name,
+      (select name from x_park_category c where c.id = a.category) categoryName,
+      (select f.fence_name from x_electronic_fence_car_group_relation r , x_electronic_fence f  where r.category = 'park' and r.group_id = a.id and r.fence_id = f.id  limit 1	) fenceName,
+      (select f.id from x_electronic_fence_car_group_relation r , x_electronic_fence f  where r.category = 'park' and r.group_id = a.id and r.fence_id = f.id  limit 1	) fence_id,
+      (select e.enterprise_name from x_enterprise e where a.enterprise_id =e.id) enterpriseName
+      from x_park a
+      LEFT JOIN x_area xa on a.area_code = xa.id
+      where 1=1
+      <if test="parkType!=null and parkType !=''">
+        and  a.park_type = #{parkType,jdbcType=VARCHAR}
+      </if>
+      <if test="isTemporary != null and isTemporary !=''">
+      		<choose>
+      			<when test="isTemporary == '1' ">
+      				and a.is_run = '0'
+      			</when>
+      			<otherwise>
+			        and a.is_temporary = #{isTemporary}
+      			</otherwise>
+      		</choose>
+	   </if>
+      <if test="cityCode!=null and cityCode!=''">
+          and a.city_code = #{cityCode,jdbcType=INTEGER}
+      </if>
+      <if test="name!=null and name!=''">
+         and a.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="status != null and status != ''">
+      	 and a.status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="fullNoParking != null and fullNoParking != ''">
+      	 and a.full_no_parking = #{fullNoParking}
+      </if>
+      <if test="gareaCode != null and gareaCode != ''">
+          and xa.id = #{gareaCode}
+      </if>
+      <if test="category != null and category != ''">
+      	 and a.category = #{category}
+      </if>
+      <if test="offset != null and rows != null">
+      	 limit #{offset},#{rows}
+      </if>  
+  </select> 
+  <select id="selectAllParksRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(1)
+      from x_park xp
+      LEFT JOIN x_area xa on xp.area_code = xa.id
+       <trim prefixOverrides="and">
+        <where>
+           <if test="cityCode !=null and cityCode !='' ">
+            and xp.city_code = #{cityCode,jdbcType=VARCHAR}
+           </if>
+           <if test="parkType !=null and parkType !='' ">
+            and park_type = #{parkType,jdbcType=VARCHAR}
+           </if>
+           <if test="isTemporary != null and isTemporary !=''">
+	       <choose>
+      			<when test="isTemporary == '1' ">
+      				and is_run = '0'
+      			</when>
+      			<otherwise>
+			        and is_temporary = #{isTemporary}
+      			</otherwise>
+      		</choose>
+	      </if>
+           <if test="name != null and name !='' ">
+             and name LIKE CONCAT('%', #{name,jdbcType=VARCHAR},'%') 
+           </if>
+           <if test="status != null and status != ''">
+      	 	 and status = #{status,jdbcType=INTEGER}
+     	   </if>
+     	   <if test="fullNoParking != null and fullNoParking != ''">
+	      	 and full_no_parking = #{fullNoParking}
+	       </if>
+           <if test="gareaCode != null and gareaCode != ''">
+             and xa.id = #{gareaCode}
+           </if>
+	       <if test="category != null and category != ''">
+	      	 and category = #{category}
+	       </if>
+        </where>
+     </trim>
+  </select>
+  
+  <select id="selectAllNotPage" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from x_park
+  </select>
+  
+  <select id="selectParkByCityCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select <include refid="Base_Column_List" />
+    from x_park where city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+      select
+      <include refid="Base_Column_List" />,
+      (select name from x_city c where c.code = a.city_code) city_name,
+      (select name from x_park_category c where c.id = a.category) categoryName,
+      (select f.fence_name from x_electronic_fence_car_group_relation r , x_electronic_fence f  where r.category = 'park' and r.group_id = a.id and r.fence_id = f.id  limit 1	) fenceName,
+      (select f.id from x_electronic_fence_car_group_relation r , x_electronic_fence f  where r.category = 'park' and r.group_id = a.id and r.fence_id = f.id  limit 1	) fence_id,
+      (select e.enterprise_name from x_enterprise e where a.enterprise_id =e.id) enterpriseName
+    from x_park a inner join 
+    (select DISTINCT einfo.station_id from c_equipment_info einfo) tt on tt.station_id=a.id 
+    
+     <trim prefixOverrides="and">
+        <where>
+           <if test="cityCode !=null and cityCode !='' ">
+            and city_code = #{cityCode,jdbcType=VARCHAR}
+           </if>
+           <if test="parkType !=null and parkType !='' ">
+            and park_type = #{parkType,jdbcType=VARCHAR}
+           </if>
+           <if test="name != null and name !='' ">
+             and name LIKE CONCAT('%', #{name,jdbcType=VARCHAR},'%') 
+           </if>
+        </where>
+     </trim>
+     <if test="offset!=null and offset!='' and rows != null and rows != ''">
+     	limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+     </if>
+  </select>
+  
+   <select id="selectAllRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+      select count(1)
+      from x_park
+       <trim prefixOverrides="and">
+        <where>
+           <if test="cityCode !=null and cityCode !='' ">
+            and city_code = #{cityCode,jdbcType=VARCHAR}
+           </if>
+           <if test="parkType !=null and parkType !='' ">
+            and park_type = #{parkType,jdbcType=VARCHAR}
+           </if>
+           <if test="name != null and name !='' ">
+             and name LIKE CONCAT('%', #{name,jdbcType=VARCHAR},'%') 
+           </if>
+        </where>
+     </trim>
+   </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_park
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.Park" >
+    insert into x_park (id, name, address, 
+      park_nums, liable_person, city_code, 
+      latitude, longitude,park_type,area_name,area_code,category,remark,operatorId,park_fee,park_fee_desc,run_start_time,run_end_time)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{parkNums,jdbcType=INTEGER}, #{liablePerson,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{parkType,jdbcType=VARCHAR}, #{areaName,jdbcType=VARCHAR}, #{areaCode,jdbcType=VARCHAR},
+      #{category,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},#{operatorId,jdbcType=VARCHAR},#{parkFee,jdbcType=VARCHAR},#{parkFeeDesc,jdbcType=VARCHAR},#{runStartTime},#{runEndTime})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.Park" useGeneratedKeys="true" keyProperty="id" >
+    insert into x_park
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="parkNums != null" >
+        park_nums,
+      </if>
+      <if test="liablePerson != null" >
+        liable_person,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="parkType != null" >
+        park_type,
+      </if>
+       <if test="areaName != null" >
+        area_name,
+      </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
+       <if test="category != null" >
+        category,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="operatorId != null">
+       operatorId,
+      </if>
+     <if test="parkFee != null">
+       park_fee,
+      </if>
+      <if test="parkFeeDesc != null">
+       park_fee_desc, 
+      </if>
+      <if test="cooperationType != null">
+       cooperation_type, 
+      </if>
+      <if test="propertyManagementCompany != null">
+       property_management_company, 
+      </if>
+      <if test="isTemporary != null">
+       is_temporary, 
+      </if>
+      <if test="runStartTime != null">
+       run_start_time, 
+      </if>
+      <if test="runEndTime != null">
+       run_end_time, 
+      </if>
+      <if test="isRun != null">
+       is_run, 
+      </if>
+      <if test="fullNoParking != null">
+        full_no_parking,
+      </if>
+      <if test="parkPanoramaLink != null">
+        park_panorama_link,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="parkNums != null" >
+        #{parkNums,jdbcType=INTEGER},
+      </if>
+      <if test="liablePerson != null" >
+        #{liablePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="parkType != null" >
+        #{parkType,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null">
+      	#{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkFee != null">
+      	#{parkFee,jdbcType=VARCHAR},
+      </if>
+      <if test="parkFeeDesc != null">
+      	#{parkFeeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="cooperationType != null">
+      	#{cooperationType,jdbcType=VARCHAR},
+      </if> 
+      <if test="propertyManagementCompany != null">
+      	#{propertyManagementCompany,jdbcType=VARCHAR},
+      </if> 
+      <if test="isTemporary != null">
+      	#{isTemporary,jdbcType=VARCHAR},
+      </if>  
+      <if test="runStartTime != null">
+       #{runStartTime}, 
+      </if>
+      <if test="runEndTime != null">
+       #{runEndTime}, 
+      </if>
+      <if test="isRun != null">
+       #{isRun},
+      </if>
+      <if test="fullNoParking != null">
+        #{fullNoParking},
+      </if>
+      <if test="parkPanoramaLink != null ">
+      	#{parkPanoramaLink}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.Park" >
+    update x_park
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="parkNums != null" >
+        park_nums = #{parkNums,jdbcType=INTEGER},
+      </if>
+      <if test="liablePerson != null" >
+        liable_person = #{liablePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="parkType != null" >
+        park_type = #{parkType,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+         category = #{category,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null" >
+         operatorId = #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="parkFee != null">
+      	park_fee =#{parkFee,jdbcType=VARCHAR},
+      </if>
+      <if test="parkFeeDesc != null">
+      	park_fee_desc =#{parkFeeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="cooperationType != null">
+      	cooperation_type =#{cooperationType,jdbcType=INTEGER},
+      </if>
+      <if test="propertyManagementCompany != null">
+      	property_management_company =#{propertyManagementCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="isTemporary != null">
+      	is_temporary =#{isTemporary,jdbcType=VARCHAR},
+      </if>
+      <if test="runStartTime != null">
+      	run_start_time =#{runStartTime},
+      </if>
+      <if test="runEndTime != null">
+      	run_end_time =#{runEndTime},
+      </if>
+      <if test="isRun != null">
+      	is_run =#{isRun},
+      </if>
+      <if test="fullNoParking != null">
+        full_no_parking = #{fullNoParking},
+      </if>
+      <if test="status != null">
+      	status = #{status},
+      </if>
+      <if test="isCoexist != null">
+      	is_coexist = #{isCoexist},
+      </if>
+      <if test="parkPanoramaLink != null">
+      	park_panorama_link = #{parkPanoramaLink}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.Park" >
+    update x_park
+    set name = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      park_nums = #{parkNums,jdbcType=INTEGER},
+      liable_person = #{liablePerson,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      area_name = #{areaName,jdbcType=VARCHAR},
+      park_type = #{parkType,jdbcType=VARCHAR},
+      area_code = #{areaCode,jdbcType=VARCHAR},
+      category = #{category,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      operatorId=#{operatorId,jdbcType=VARCHAR},
+      park_fee =#{parkFee,jdbcType=VARCHAR},
+      park_fee_desc =#{parkFeeDesc,jdbcType=VARCHAR},
+      run_start_time =#{runStartTime},
+      run_end_time =#{runEndTime},
+      is_run = #{isRun}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryParkByCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from x_park where case 
+	    when status= 0 and is_run = 1 then status = 1 and is_run = 0 
+	    when status= 1 and is_run = 1 then status = 1
+	    else status= 1 and is_run = 0 end
+     <if test="cityCode != null" >
+       and city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+  </select>
+ 
+   <select id="queryParkByCodeAndType" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from x_park 
+     <if test="cityCode != null" >
+      where category &gt; 1 and  city_code = #{cityCode,jdbcType=VARCHAR} 
+     </if>
+  </select>
+   
+   <select id="queryParkByAreaCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select count(1)
+      from x_park where area_code = #{areaCode,jdbcType=VARCHAR}
+   </select>
+    
+  <select id="queryParkStatusByAreaCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" />
+    from x_park 
+      where area_code = #{areaCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(1) from x_park   where city_code = #{cityCode,jdbcType=VARCHAR}
+    <if test="parkName != null" >
+      and name like CONCAT('%',#{parkName,jdbcType=VARCHAR},'%')
+    </if> 
+  </select>
+  
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> 
+    from x_park where case 
+	    when status= 0 and is_run = 1 then status = 1 and is_run = 0 
+	    when status= 1 and is_run = 1 then status = 1
+	    else status= 1 and is_run = 0 end
+    and city_code = #{cityCode,jdbcType=VARCHAR}
+    <if test="parkName != null" >
+      and name like CONCAT('%',#{parkName,jdbcType=VARCHAR},'%')
+    </if> 
+    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  
+  <!-- 网点名称combogrid(充电设备) -->
+  <select id="getAllParkNameNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(1) from x_park   
+    where  category &gt; 1
+    <if test="cityCode != null and cityCode != ''" >
+    	and city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="parkName != null" >
+      and name like CONCAT('%',#{parkName,jdbcType=VARCHAR},'%')
+    </if> 
+  </select>
+  
+  <select id="getAllParkName" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> 
+    from x_park   
+    where category &gt; 1
+    <if test="cityCode != null and cityCode != ''" >
+    	and city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="parkName != null" >
+      and name like CONCAT('%',#{parkName,jdbcType=VARCHAR},'%')
+    </if> 
+    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+<!-- 根据企业id查询企业所有的停车场 -->
+  <select id="getDataListPark" parameterType="java.util.Map" resultMap="BaseResultMap">
+   select 
+    <include refid="Base_Column_List" /> 
+    from x_park 
+    where enterprise_id=#{id} 
+    limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getDataListParkNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(1) from x_park   
+    where enterprise_id=#{id} 
+  </select>
+	<!--查询企业当前区域类  不属于本企业的停车场 -->
+	<select id="getAllPark" parameterType="java.util.Map" resultMap="BaseResultMap">
+		 select 
+   		 <include refid="Base_Column_List" /> 
+   		 from x_park
+   		 where enterprise_id is null and status=1
+   		 <if test="cityCode!= null and cityCode!= ''" >
+    		and city_code= #{cityCode,jdbcType=VARCHAR}
+   		 </if>
+   		 <if test="parkName != null" >
+     		 and name like CONCAT('%',#{parkName,jdbcType=VARCHAR},'%')
+    	 </if> 
+    	 limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	<select id="getAllParkNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 select count(1) from x_park 
+		 where enterprise_id is null and status=1
+		 <if test="parkName != null" >
+     		 and name like CONCAT('%',#{parkName,jdbcType=VARCHAR},'%')
+    	 </if> 
+    	  <if test="cityCode!= null and cityCode!= ''" >
+    		and city_code= #{cityCode,jdbcType=VARCHAR}
+   		  </if>
+	</select>
+	
+	<!-- 根据企业id、停车场id 给停车场设置所属企业 -->
+	<update id="updateEnterpriseId">
+		update x_park 
+		set enterprise_id=#{enterpriseId}
+        where id=#{id}	
+	</update>
+	
+	<!-- 移除企业所属停车场-->
+  	<update id="deleteEnterprise" parameterType="java.util.Map">
+		update x_park 
+		set enterprise_id=null
+        where id =#{id}	
+	</update>
+	
+	<!-- 根据cityCode和网点合作类型查询网点 -->
+	<select id="getStaionByCityAndCooperationType" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+			from x_park WHERE 1 = 1
+		<if test="cooperationType != null and cooperationType != '' ">
+			AND cooperation_type = #{cooperationType} 
+		</if> 
+		<if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		</if>
+	</select>
+	
+	<!-- 返回easyui-tree对象  根据cityCode和网点合作类型查询网点 -->
+	<select id="getStaionTreeByCityAndCooperationType" parameterType="java.util.Map" resultMap="ParkEquipmentResultMap">
+		SELECT p.id, `name` text, 'closed' state, 
+			(SELECT COUNT(1) FROM c_equipment_info e WHERE e.station_id = p.id) equipmentCnt
+			 FROM x_park p
+			WHERE cooperation_type = #{cooperationType} AND city_code = #{cityCode}
+	</select>
+	<!-- 通过网点类型查询所有的网点(按照全国、地级市划分)-->
+	<select id="queryAllParkByType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+		SELECT d.cooperation_type AS parkType,COUNT(1)parkTotalByType FROM (SELECT * FROM x_park WHERE 1=1
+		<if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		</if>
+		)d  GROUP BY cooperation_type 
+	</select> 
+	
+	<!-- 通过网点类型查询所有的网点(按照省份划分)-->
+	<select id="queryAllProvinceParkByType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+		SELECT d.cooperation_type AS parkType,COUNT(1)parkTotalByType FROM (SELECT * FROM x_park WHERE 1=1
+		<if test="cityCode != null and cityCode != '' ">
+			AND  city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode})) 
+		</if>
+		)d  GROUP BY cooperation_type 
+	</select> 
+	
+	<!-- 通过网点服务类型查询所有的网点 -->
+	<select id="queryAllParkByServiceType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	     SELECT d.category AS parkServiceType,COUNT(1)parkTotalByService
+	      FROM (SELECT * FROM x_park where 1=1
+	      <if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		  </if>
+	      )d  GROUP BY category 
+	</select>
+	
+	<!-- 通过网点服务类型查询所有的网点 (按省份划分)-->
+	<select id="queryAllProvinceParkByServiceType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	     SELECT d.category AS parkServiceType,COUNT(1)parkTotalByService
+	      FROM (SELECT * FROM x_park where 1=1
+	      <if test="cityCode != null and cityCode != '' ">
+			AND city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode}))
+		  </if>
+	      )d  GROUP BY category 
+	</select>  
+	
+	<!-- 根据cityCode获取网点车位总数 -->
+	<select id="queryAllParkCarport" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	     SELECT IFNULL(SUM(park_nums),0)total FROM x_park  where 1=1
+	     <if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		  </if>
+	</select> 
+	
+	<!-- 根据cityCode获取网点车位总数 按照省份划分-->
+	<select id="queryAllProvinceParkCarport" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	     SELECT IFNULL(SUM(park_nums),0)total FROM x_park  where 1=1
+	     <if test="cityCode != null and cityCode != '' ">
+			AND city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode}))
+		  </if>
+	</select> 
+	
+	<!-- 根据cityCode分别统计快慢充的网点车位数(按照全国地级市划分) -->
+	<select id="queryAllParkCarportByConnectorType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT a.connector_type,COUNT(1)connectorTotal FROM
+	     (SELECT * FROM c_connector_info WHERE equipment_id IN(SELECT id FROM c_equipment_info WHERE station_id IN(SELECT id FROM x_park WHERE 1=1
+	      <if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		  </if>
+	      )))a GROUP BY a.connector_type
+	</select>
+	
+	<!-- 根据cityCode分别统计快慢充的网点车位数(按照省份划分) -->
+	<select id="queryAllProvinceParkCarportByConnectorType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT a.connector_type,COUNT(1)connectorTotal FROM
+	     (SELECT * FROM c_connector_info WHERE equipment_id IN(SELECT id FROM c_equipment_info WHERE station_id IN(SELECT id FROM x_park WHERE 1=1
+	      <if test="cityCode != null and cityCode != '' ">
+			AND city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode})) 
+		  </if>
+	      )))a GROUP BY a.connector_type
+	</select>
+	
+	<!--根据cityCode和车辆类型统计网点车位数 --> 
+	<select id="queryAllParkCarportByCarType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT brand_name,IFNULL(COUNT(1),0)brandTotal FROM x_car WHERE lpn IN 
+	    (SELECT lpn FROM x_car_run WHERE 1=1
+	    <if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		</if>
+	     AND STATUS NOT IN ('ordered','useCar','return')) 
+	    GROUP BY brand_name
+	</select>
+	
+	<!--根据cityCode和车辆类型统计网点车位数 (按照省份划分)--> 
+	<select id="queryAllProvinceParkCarportByCarType" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT brand_name,IFNULL(COUNT(1),0)brandTotal FROM x_car WHERE lpn IN 
+	    (SELECT lpn FROM x_car_run WHERE 1=1
+	    <if test="cityCode != null and cityCode != '' ">
+			AND city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+		</if>
+	     AND STATUS NOT IN ('ordered','useCar','return')) 
+	    GROUP BY brand_name
+	</select>
+	
+	<!-- 根据cityCode获取网点个数的总计 -->
+	
+	<select id="queryAllParkNums" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT COUNT(1) AS websiteTotal FROM x_park WHERE 1=1
+	    <if test="cityCode != null and cityCode != '' ">
+			AND city_code = #{cityCode}
+		</if>
+	</select>
+	
+	<!-- 根据cityCode获取网点个数的总计 -->
+	<select id="queryAllProvinceParkNums" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT d.name ,d.code ,c.parkNum FROM 
+	    x_city d  LEFT JOIN (SELECT P_id ,SUM(a.parkNum)parkNum FROM 
+	    x_city b,(SELECT city_code ,COUNT(1)parkNum FROM x_park GROUP BY  city_code)a WHERE a.city_code =b.code  GROUP BY P_id)c ON c.P_id = d.id 
+	     WHERE d.code LIKE('__0000')
+	    <if test="cityCode != null and cityCode != '' ">
+			AND d.code = #{cityCode}
+		</if> 
+	</select>
+	
+	<!-- 根据cityCode查询省下级城市的网点个数的总计 -->
+   <select id="queryAllCityParkNums" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT a.name,a.code,b.cityTotal FROM 
+	    x_city a LEFT JOIN  (SELECT city_code, count(1)cityTotal 
+	    FROM x_park GROUP BY city_code)b ON a.code =b.city_code 
+	    WHERE a.layer='3' 
+	    <if test="name != null and name != '' ">
+			AND a.name = #{name}
+		</if> 
+	</select>
+	
+	<!-- 查询城市下级的区县的网点个数的总计 -->
+	<select id="queryAllareaParkNums" parameterType="java.lang.String" resultMap="ParkTotalResultMap">
+	    SELECT a.name,a.code,b.areaTotal 
+	    FROM x_city a LEFT JOIN(SELECT area_code,COUNT(1) areaTotal  
+	    FROM x_park GROUP BY area_code)b ON a.code = b.area_code WHERE a.layer='4'
+	</select>
+	
+	<select id="getParkDetail" resultMap="BaseResultMap">
+		SELECT p.id,p.name,c.name cityName,p.address,p.park_nums,p.liable_person,p.remark,pc.name categoryName,p.cooperation_type,p.address,p.is_coexist from x_park p LEFT JOIN e_gridding_park_relation g on 
+		p.id = g.park_id left join x_city c on p.city_code = c.code left join x_park_category pc on pc.id = p.category
+		where 1 = 1 AND p.status = 1
+			<if test="gridId != null and gridId != ''">
+				and g.gridding_id = #{gridId} 
+			</if>
+			<if test="parkName != null and parkName != ''">
+				and p.name like concat('%',#{parkName},'%')
+			</if>
+			limit #{from}, #{to}
+	</select>
+	
+	<select id="getMyAllParkNum" resultType="java.lang.Integer">
+		select count(1) from x_park p LEFT JOIN e_gridding_park_relation g on p.id = g.park_id
+		where 1 = 1 and p.status = '1'
+			<if test="gridId != null and gridId != ''">
+				and g.gridding_id = #{gridId} 
+			</if>
+			<if test="parkName != null and parkName != ''">
+				and p.name like concat('%',#{parkName},'%')
+			</if>
+	</select>
+	
+	<select id="selectExceptExistRelation" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+		 from 
+		 x_park p WHERE p.id not in (SELECT park_id FROM e_gridding_park_relation where park_id is not null) and p.status = 1 
+		<if test="_parameter != null and _parameter != ''">
+			and p.city_code = #{_parameter}
+		</if>
+		union 
+		SELECT <include refid="Base_Column_List" /> from x_park p WHERE p.status = 1 and is_coexist = 1  
+		<if test="_parameter != null and _parameter != ''">
+			and p.city_code = #{_parameter}
+		</if>
+	</select>
+	
+	<select id="getAllChargingPileByParkId" resultMap="ChargingPileVoResultMap">
+		SELECT
+			c.id connector_id,p.longitude,p.latitude,p.address,p.id station_id,c.connector_type,e.id equipment_id,p.category,e.connector_number,
+			(SELECT name FROM x_member WHERE id = e.id) memberName,
+			(SELECT start_time FROM c_charging_order WHERE connector_id = c.id AND charging_status = 'ordered') start_time, 
+			ct.`name` cityName,
+			p.`name` parkName,
+			e.equipment_code,
+			c.park_no parkNo,
+			c.connector_no connectorNo,
+			(SELECT m.name FROM c_charging_order o INNER JOIN x_member m WHERE connector_id = c.id and o.member_id = m.id AND charging_status = 'ordered') member_name,
+			c.connector_code,
+			cs.`status`,
+			e.equipment_type
+		FROM
+			c_connector_info c
+		INNER JOIN c_connector_status_info cs ON c.id = cs.connector_id
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id
+		INNER JOIN x_park p ON p.id = e.station_id
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		WHERE p.name =#{parkName}
+	</select>
+	<select id="getCooperationParks" resultMap="ChargingPileVoResultMap">
+	   		SELECT
+			c.id connector_id,p.longitude,p.latitude,p.address,p.id station_id,c.connector_type,e.id equipment_id,p.category,e.connector_number,
+			(SELECT name FROM x_member WHERE id = e.id) memberName,
+			(SELECT start_time FROM c_charging_order WHERE connector_id = c.id AND charging_status = 'ordered') start_time, 
+			ct.`name` cityName,
+			p.`name` parkName,
+			e.equipment_code,
+			c.park_no parkNo,
+			c.connector_no connectorNo,
+			(SELECT m.name FROM c_charging_order o INNER JOIN x_member m WHERE connector_id = c.id and o.member_id = m.id AND charging_status = 'ordered') member_name,
+			c.connector_code,
+			e.equipment_type,
+			p.cooperation_type,
+			p.operatorId
+		FROM
+			c_connector_info c
+		INNER JOIN c_equipment_info e ON c.equipment_id = e.id
+		INNER JOIN x_park p ON p.id = e.station_id and  p.operatorId like 'EAST_%'  
+		INNER JOIN x_city ct ON ct.`code` = p.city_code
+		WHERE p.name =#{parkName}
+	</select>
+
+    <select id="queryParkIdIsTemporary" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT id FROM x_park
+        WHERE is_temporary = 0 AND category = 0 AND city_code = #{cityCode}
+        LIMIT 1
+    </select>
+    
+    <select id="selectTemporaryParks" resultMap="BaseResultMap">
+    	select <include refid="Base_Column_List" /> from x_park where is_temporary = 0 AND category = 0 AND city_code = #{cityCode}
+    </select>
+    
+    <select id="selectParkByName" resultMap="BaseResultMap">
+    	select <include refid="Base_Column_List" /> from x_park where name = #{parkName} limit 1 
+    </select>
+    
+ 
+    <select id="getTotalParks" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select id,name,address from x_park 
+        <if test="name!=null and name !=''">
+        where name like concat('%',#{name,jdbcType=VARCHAR},'%') 
+        </if>
+        limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+    </select>
+	
+	<select id="queryAllParkExcludeTemporary" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from x_park
+	</select>
+	
+	<update id="batchUpdateByParkId">
+		update x_park set is_run = 1 where id in
+		<foreach collection="list"  item="id" separator="," open="(" close=")">
+         	#{id}
+    	</foreach>
+	</update>
+	
+	<update id="batchUpdateByRunParkId">
+		update x_park set is_run = 0 where id in
+		<foreach collection="list"  item="id" separator="," open="(" close=")">
+         	#{id}
+    	</foreach>
+	</update>
+	
+	<select id="queryByPidLpnCount" resultType="java.lang.Integer">
+		select COUNT(r.lpn) from x_park p LEFT JOIN x_car_run r  on p.id = r.park_id and
+		 r.`status` <![CDATA[<>]]> 'useCar'
+		 LEFT JOIN x_car c ON c.lpn = r.lpn
+		 where c.status = 1 AND p.id = #{id,jdbcType=INTEGER}
+	</select>
+	<update id="updateStatus">
+		UPDATE x_park p set p.`status` = #{status} where p.id = #{id}
+	</update>
+    <update id="updateAreaCode">
+        UPDATE x_park p set p.area_code = #{areaId} where p.id in
+        <foreach collection="parkList"  item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="queryParkByCityCodeAndParkName" resultType="com.iber.portal.model.base.Park">
+        select * from x_park xp WHERE xp.name = #{longRentChangeParkName} and xp.city_code = #{cityCode} limit 1
+    </select>
+</mapper>

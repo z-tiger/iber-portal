@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.qrtz.TriggerListenersMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.qrtz.TriggerListenersKey" >
+    <id column="TRIGGER_NAME" property="triggerName" jdbcType="VARCHAR" />
+    <id column="TRIGGER_GROUP" property="triggerGroup" jdbcType="VARCHAR" />
+    <id column="TRIGGER_LISTENER" property="triggerListener" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.iber.portal.model.qrtz.TriggerListenersKey" >
+    delete from qrtz_trigger_listeners
+    where TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR}
+      and TRIGGER_GROUP = #{triggerGroup,jdbcType=VARCHAR}
+      and TRIGGER_LISTENER = #{triggerListener,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.qrtz.TriggerListenersKey" >
+    insert into qrtz_trigger_listeners (TRIGGER_NAME, TRIGGER_GROUP, TRIGGER_LISTENER
+      )
+    values (#{triggerName,jdbcType=VARCHAR}, #{triggerGroup,jdbcType=VARCHAR}, #{triggerListener,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.qrtz.TriggerListenersKey" >
+    insert into qrtz_trigger_listeners
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="triggerName != null" >
+        TRIGGER_NAME,
+      </if>
+      <if test="triggerGroup != null" >
+        TRIGGER_GROUP,
+      </if>
+      <if test="triggerListener != null" >
+        TRIGGER_LISTENER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="triggerName != null" >
+        #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerGroup != null" >
+        #{triggerGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerListener != null" >
+        #{triggerListener,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

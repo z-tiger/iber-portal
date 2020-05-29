@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.overall.OverallAnnualMemberMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.overall.OverallAnnualMember" >
+    <id column="id" property="id"   />
+    <result column="member_total" property="memberTotal"   />
+    <result column="member_lose" property="memberLose"   />
+    <result column="member_add" property="memberAdd"   />
+    <result column="member_audit" property="memberAudit"   />
+    <result column="total_member_lose" property="totalMemberLose"   />
+    <result column="total_member_new" property="totalMemberNew"   />
+    <result column="total_member_audit" property="totalMemberAudit"   />
+    <result column="silence_user" property="silenceUser"   />
+    <result column="lose_user" property="loseUser"   />
+    <result column="total_silence_user" property="totalSilenceUser"   />
+    <result column="total_lose_user" property="totalLoseUser"   />
+    <result column="total_balance" property="totalBalance"   />
+    <result column="total_deposit" property="totalDeposit"   />
+    <result column="total_income" property="totalIncome"   />
+    <result column="balance" property="balance"   />
+    <result column="deposit" property="deposit"   />
+    <result column="income" property="income"   />
+    <result column="add_user" property="addUser"   />
+    <result column="total_user" property="totalUser"   />
+    <result column="audit_user" property="auditUser"   />
+    <result column="time_num" property="timeNum"   />
+    <result column="annual" property="annual"   />
+    <result column="time_type" property="timeType"   />
+    <result column="city_code" property="cityCode"   />
+    <result column="create_time" property="createTime"   />
+  </resultMap>
+   <sql id="Base_Column_List" >
+    id, member_total, member_lose, member_add, member_audit, total_member_lose, total_member_new, 
+    total_member_audit, silence_user, lose_user, total_silence_user, total_lose_user, 
+    total_balance, total_deposit, total_income, balance, deposit, income, add_user, total_user, 
+    audit_user, time_num, annual, time_type, city_code, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bi_overall_annual_member
+    where id = #{id }
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bi_overall_annual_member
+    where id = #{id }
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.overall.OverallAnnualMember" >
+    insert into bi_overall_annual_member (id, member_total, member_lose, 
+      member_add, member_audit, total_member_lose, 
+      total_member_new, total_member_audit, silence_user, 
+      lose_user, total_silence_user, total_lose_user, 
+      total_balance, total_deposit, total_income, 
+      balance, deposit, income, 
+      add_user, total_user, audit_user, 
+      time_num, annual, time_type, 
+      city_code, create_time)
+    values (#{id }, #{memberTotal }, #{memberLose }, 
+      #{memberAdd }, #{memberAudit }, #{totalMemberLose }, 
+      #{totalMemberNew }, #{totalMemberAudit }, #{silenceUser }, 
+      #{loseUser }, #{totalSilenceUser }, #{totalLoseUser }, 
+      #{totalBalance }, #{totalDeposit }, #{totalIncome }, 
+      #{balance }, #{deposit }, #{income }, 
+      #{addUser }, #{totalUser }, #{auditUser }, 
+      #{timeNum }, #{annual }, #{timeType }, 
+      #{cityCode }, #{createTime })
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.overall.OverallAnnualMember" >
+    insert into bi_overall_annual_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberTotal != null" >
+        member_total,
+      </if>
+      <if test="memberLose != null" >
+        member_lose,
+      </if>
+      <if test="memberAdd != null" >
+        member_add,
+      </if>
+      <if test="memberAudit != null" >
+        member_audit,
+      </if>
+      <if test="totalMemberLose != null" >
+        total_member_lose,
+      </if>
+      <if test="totalMemberNew != null" >
+        total_member_new,
+      </if>
+      <if test="totalMemberAudit != null" >
+        total_member_audit,
+      </if>
+      <if test="silenceUser != null" >
+        silence_user,
+      </if>
+      <if test="loseUser != null" >
+        lose_user,
+      </if>
+      <if test="totalSilenceUser != null" >
+        total_silence_user,
+      </if>
+      <if test="totalLoseUser != null" >
+        total_lose_user,
+      </if>
+      <if test="totalBalance != null" >
+        total_balance,
+      </if>
+      <if test="totalDeposit != null" >
+        total_deposit,
+      </if>
+      <if test="totalIncome != null" >
+        total_income,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="income != null" >
+        income,
+      </if>
+      <if test="addUser != null" >
+        add_user,
+      </if>
+      <if test="totalUser != null" >
+        total_user,
+      </if>
+      <if test="auditUser != null" >
+        audit_user,
+      </if>
+      <if test="timeNum != null" >
+        time_num,
+      </if>
+      <if test="annual != null" >
+        annual,
+      </if>
+      <if test="timeType != null" >
+        time_type,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id },
+      </if>
+      <if test="memberTotal != null" >
+        #{memberTotal },
+      </if>
+      <if test="memberLose != null" >
+        #{memberLose },
+      </if>
+      <if test="memberAdd != null" >
+        #{memberAdd },
+      </if>
+      <if test="memberAudit != null" >
+        #{memberAudit },
+      </if>
+      <if test="totalMemberLose != null" >
+        #{totalMemberLose },
+      </if>
+      <if test="totalMemberNew != null" >
+        #{totalMemberNew },
+      </if>
+      <if test="totalMemberAudit != null" >
+        #{totalMemberAudit },
+      </if>
+      <if test="silenceUser != null" >
+        #{silenceUser },
+      </if>
+      <if test="loseUser != null" >
+        #{loseUser },
+      </if>
+      <if test="totalSilenceUser != null" >
+        #{totalSilenceUser },
+      </if>
+      <if test="totalLoseUser != null" >
+        #{totalLoseUser },
+      </if>
+      <if test="totalBalance != null" >
+        #{totalBalance },
+      </if>
+      <if test="totalDeposit != null" >
+        #{totalDeposit },
+      </if>
+      <if test="totalIncome != null" >
+        #{totalIncome },
+      </if>
+      <if test="balance != null" >
+        #{balance },
+      </if>
+      <if test="deposit != null" >
+        #{deposit },
+      </if>
+      <if test="income != null" >
+        #{income },
+      </if>
+      <if test="addUser != null" >
+        #{addUser },
+      </if>
+      <if test="totalUser != null" >
+        #{totalUser },
+      </if>
+      <if test="auditUser != null" >
+        #{auditUser },
+      </if>
+      <if test="timeNum != null" >
+        #{timeNum },
+      </if>
+      <if test="annual != null" >
+        #{annual },
+      </if>
+      <if test="timeType != null" >
+        #{timeType },
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode },
+      </if>
+      <if test="createTime != null" >
+        #{createTime },
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.overall.OverallAnnualMember" >
+    update bi_overall_annual_member
+    <set >
+      <if test="memberTotal != null" >
+        member_total = #{memberTotal },
+      </if>
+      <if test="memberLose != null" >
+        member_lose = #{memberLose },
+      </if>
+      <if test="memberAdd != null" >
+        member_add = #{memberAdd },
+      </if>
+      <if test="memberAudit != null" >
+        member_audit = #{memberAudit },
+      </if>
+      <if test="totalMemberLose != null" >
+        total_member_lose = #{totalMemberLose },
+      </if>
+      <if test="totalMemberNew != null" >
+        total_member_new = #{totalMemberNew },
+      </if>
+      <if test="totalMemberAudit != null" >
+        total_member_audit = #{totalMemberAudit },
+      </if>
+      <if test="silenceUser != null" >
+        silence_user = #{silenceUser },
+      </if>
+      <if test="loseUser != null" >
+        lose_user = #{loseUser },
+      </if>
+      <if test="totalSilenceUser != null" >
+        total_silence_user = #{totalSilenceUser },
+      </if>
+      <if test="totalLoseUser != null" >
+        total_lose_user = #{totalLoseUser },
+      </if>
+      <if test="totalBalance != null" >
+        total_balance = #{totalBalance },
+      </if>
+      <if test="totalDeposit != null" >
+        total_deposit = #{totalDeposit },
+      </if>
+      <if test="totalIncome != null" >
+        total_income = #{totalIncome },
+      </if>
+      <if test="balance != null" >
+        balance = #{balance },
+      </if>
+      <if test="deposit != null" >
+        deposit = #{deposit },
+      </if>
+      <if test="income != null" >
+        income = #{income },
+      </if>
+      <if test="addUser != null" >
+        add_user = #{addUser },
+      </if>
+      <if test="totalUser != null" >
+        total_user = #{totalUser },
+      </if>
+      <if test="auditUser != null" >
+        audit_user = #{auditUser },
+      </if>
+      <if test="timeNum != null" >
+        time_num = #{timeNum },
+      </if>
+      <if test="annual != null" >
+        annual = #{annual },
+      </if>
+      <if test="timeType != null" >
+        time_type = #{timeType },
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode },
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime },
+      </if>
+    </set>
+    where id = #{id }
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.overall.OverallAnnualMember" >
+    update bi_overall_annual_member
+    set member_total = #{memberTotal },
+      member_lose = #{memberLose },
+      member_add = #{memberAdd },
+      member_audit = #{memberAudit },
+      total_member_lose = #{totalMemberLose },
+      total_member_new = #{totalMemberNew },
+      total_member_audit = #{totalMemberAudit },
+      silence_user = #{silenceUser },
+      lose_user = #{loseUser },
+      total_silence_user = #{totalSilenceUser },
+      total_lose_user = #{totalLoseUser },
+      total_balance = #{totalBalance },
+      total_deposit = #{totalDeposit },
+      total_income = #{totalIncome },
+      balance = #{balance },
+      deposit = #{deposit },
+      income = #{income },
+      add_user = #{addUser },
+      total_user = #{totalUser },
+      audit_user = #{auditUser },
+      time_num = #{timeNum },
+      annual = #{annual },
+      time_type = #{timeType },
+      city_code = #{cityCode },
+      create_time = #{createTime }
+    where id = #{id }
+  </update>
+  
+  <!-- 查询记录 通过年度和时间类型 month  quarter  -->
+  <select id="selectByAnnualAndTimeType" resultMap="BaseResultMap">
+  	select 
+  		<include refid="Base_Column_List"/>
+  	from  
+  		 bi_overall_annual_member 
+  	where 
+  		 annual = #{annual } and time_type = #{timeType }  and time_num = #{timeNum}
+  </select>
+  
+  <!--查询会员总数  -->
+  <select id="selectInitDayTotalMember" resultMap="BaseResultMap">
+  		select 
+  			city_code,COUNT(1) member_total, #{annual}  annual ,'month' time_type ,#{month} time_num 
+  		from 
+  			x_member
+		 <choose>
+			<when test="month == 12">
+				where create_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+			</when>
+			<otherwise>
+				where create_time <![CDATA[ < ]]> concat(#{annual},"-",(#{month}+1),'-01') 
+			</otherwise>
+		</choose>
+  		GROUP BY city_code
+  </select>
+  
+  <!--查询会员总数  -->
+  <select id="selectInitDayTotalMemberByQuarter" resultMap="BaseResultMap">
+  		select 
+  			city_code,COUNT(1) member_total, #{annual}  annual ,'quarter' time_type ,#{quarter} time_num 
+  		from 
+  			x_member
+  		<choose>
+				<when test="quarter == 4">
+						where create_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+				</when>
+				<otherwise>
+						where create_time <![CDATA[ < ]]> concat(#{annual},"-",(#{quarter}*3+1),'-01') 
+				</otherwise>
+		</choose>
+  			<!--  where year(create_time) <![CDATA[ <= ]]> #{annual}  and quarter(create_time) <![CDATA[ <= ]]> #{quarter} -->
+  		GROUP BY city_code
+  </select>
+  
+  <!--查询年度新增会员总数  -->
+  <select id="selectInitAnnualAddMember" resultMap="BaseResultMap">
+  		select
+			 city_code ,COUNT(1) total_member_new ,  #{annual}  annual ,'month' time_type  , #{month} time_num 
+		from 
+			x_member  
+		where 
+		 	 year(create_time) = #{annual} 
+		GROUP BY city_code  
+  </select>
+  
+  <!--查询年度新增会员总数  -->
+  <select id="selectInitAnnualAddMemberByQuarter" resultMap="BaseResultMap">
+  		select
+			 city_code ,COUNT(1) total_member_new ,  #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+		from 
+			x_member  
+		where  
+			year(create_time) = #{annual}  
+		GROUP BY city_code 
+  </select>
+  
+  <!--查询新增会员  -->
+  <select id="selectInitDayAddMember" resultMap="BaseResultMap">
+  		select
+ 		 	city_code ,COUNT(1) member_add ,  #{annual}  annual ,'month' time_type  , #{month} time_num 
+		from 
+			x_member 
+		where 
+			year(create_time) = #{annual} and month(create_time) = #{month}
+		GROUP BY city_code
+  </select>
+  
+  <!--查询新增会员  -->
+  <select id="selectInitDayAddMemberByQuarter" resultMap="BaseResultMap">
+  		select
+ 		 	city_code ,COUNT(1) member_add ,  #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+		from 
+			x_member 
+		where 
+			year(create_time) = #{annual} and quarter(create_time) = #{quarter}
+		GROUP BY city_code 
+  </select>
+  
+  <!--查询年度新增认证会员总数 -->
+  <select id="selectInitAnnualAuditMember" resultMap="BaseResultMap">
+  		select
+  			 a.city_code ,COUNT(1) total_member_audit ,  #{annual}  annual ,'month' time_type  , #{month} time_num 
+  		from 
+  			(select city_code,CASE (examine_time is null ) WHEN 1 then  create_time else examine_time end as examine_time from x_member where  status != 'experience' ) a
+  		where
+  			 year(a.examine_time) = #{annual}
+  		GROUP BY a.city_code
+  </select>
+  
+  <!--查询年度新增认证会员总数 -->
+  <select id="selectInitAnnualAuditMemberByQuarter" resultMap="BaseResultMap">
+  		select
+  			 a.city_code ,COUNT(1) total_member_audit ,  #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+  		from 
+  			(select city_code,CASE (examine_time is null ) WHEN 1 then  create_time else examine_time end as examine_time from x_member where  status != 'experience' ) a
+  		where 
+  			year(a.examine_time) = #{annual} 
+  		GROUP BY a.city_code
+  </select>
+  
+  <!--查询新增认证会员  -->
+  <select id="selectInitDayAuditMember" resultMap="BaseResultMap">
+  		select
+  			 a.city_code ,COUNT(1) member_audit ,  #{annual}  annual ,'month' time_type  , #{month} time_num 
+  		from 
+  			(select city_code,CASE (examine_time is null ) WHEN 1 then  create_time else examine_time end as examine_time from x_member where  status != 'experience' ) a
+  		where 
+  			year(a.examine_time) = #{annual} and month(a.examine_time) = #{month}
+  		GROUP BY a.city_code	
+  </select>
+  
+  <!--查询新增认证会员  -->
+  <select id="selectInitDayAuditMemberByQuarter" resultMap="BaseResultMap">
+  		select
+  			 a.city_code ,COUNT(1) member_audit ,  #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+  		from 
+  			(select city_code,CASE (examine_time is null ) WHEN 1 then  create_time else examine_time end as examine_time from x_member where  status != 'experience' ) a
+  		where 
+  			year(a.examine_time) = #{annual} and QUARTER(a.examine_time) = #{quarter}	
+  		GROUP BY a.city_code
+  </select>
+   
+  <!-- 查询年度流失会员总数  -->
+  <select id="selectInitAnnualLoseMember" resultMap="BaseResultMap">
+		SELECT
+			m.city_code , COUNT(DISTINCT l.member_id) total_member_lose,  #{annual}  annual ,'month' time_type  , #{month} time_num 
+		FROM
+			x_member_refund_log l
+		LEFT JOIN x_member m ON l.member_id = m.id
+		WHERE
+			l.charge_category = 'D'
+		AND l.STATUS IN(1, 3, 5)
+		AND year(l.create_time) = #{annual}
+		AND m.level_code IN(
+			SELECT
+				member_level
+			FROM
+				x_member_deposit
+			WHERE
+				deposit_value > 0
+		)
+		GROUP BY m.city_code 
+  </select>
+  
+  <!-- 查询年度流失会员总数  -->
+  <select id="selectInitAnnualLoseMemberByQuarter" resultMap="BaseResultMap">
+		SELECT
+			m.city_code , COUNT(DISTINCT l.member_id) total_member_lose,  #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+		FROM
+			x_member_refund_log l
+		LEFT JOIN x_member m ON l.member_id = m.id
+		WHERE
+			l.charge_category = 'D'
+		AND l.STATUS IN(1, 3, 5)
+		AND year(l.create_time) = #{annual}
+		AND m.level_code IN(
+			SELECT
+				member_level
+			FROM
+				x_member_deposit
+			WHERE
+				deposit_value > 0
+		)
+		GROUP BY m.city_code 
+  </select>
+ 
+  <!-- 查询流失会员  -->
+  <select id="selectInitDayLoseMember" resultMap="BaseResultMap">
+  	SELECT
+		m.city_code , COUNT(DISTINCT l.member_id) member_lose,  #{annual}  annual ,'month' time_type  , #{month} time_num 
+	FROM
+		x_member_refund_log l
+	LEFT JOIN x_member m ON l.member_id = m.id
+	WHERE
+		l.charge_category = 'D'
+	AND l. STATUS IN(1, 3, 5)
+	AND month(l.create_time) =  #{month} 
+	AND year(l.create_time) = #{annual} 
+	AND m.level_code IN(
+		SELECT
+			member_level
+		FROM
+			x_member_deposit
+		WHERE
+			deposit_value > 0
+	)
+	
+	GROUP BY m.city_code 
+  </select>
+  
+  <!-- 查询流失会员  -->
+  <select id="selectInitDayLoseMemberByQuarter" resultMap="BaseResultMap">
+  	SELECT
+		m.city_code , COUNT(DISTINCT l.member_id) member_lose,  #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+	FROM
+		x_member_refund_log l
+	LEFT JOIN x_member m ON l.member_id = m.id
+	WHERE
+		l.charge_category = 'D'
+	AND l. STATUS IN(1, 3, 5)
+	AND quarter(l.create_time) =  #{quarter} 
+	AND year(l.create_time) = #{annual} 
+	AND m.level_code IN(
+		SELECT
+			member_level
+		FROM
+			x_member_deposit
+		WHERE
+			deposit_value > 0
+	)
+	GROUP BY m.city_code 
+  </select>
+  
+  <!-- 查询按年余额与押金  -->
+  <select id="selectInitAnnualBalanceOrDeposit" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select a.city_code, 
+ 	  	<if test="category == 'B'.toString() ">
+ 	  		IFNULL(a.money,0)-IFNULL(b.money,0) total_balance ,
+ 	  	</if>
+	  	<if test="category == 'D'.toString() ">
+ 	  		IFNULL(a.money,0)-IFNULL(b.money,0) total_deposit ,
+	  	</if>	
+  		a.annual,a.time_type,a.time_num  from
+  		 (
+		SELECT	
+			IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money,  #{annual}  annual ,'month' time_type  ,  #{month} time_num  
+		FROM
+			x_member_charge_log l LEFT JOIN x_member m ON l.member_id = m.id 
+		WHERE 	
+			 YEAR(l.create_time) = #{annual} AND l.trade_status = 0 AND l.charge_category = #{category}
+		GROUP BY IFNULL(m.city_code,'') 
+		) a 
+		LEFT JOIN 
+		(
+		select
+			IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money,  #{annual}  annual ,'month' time_type  ,  #{month} time_num 
+		from 
+			x_member_refund_log l LEFT JOIN x_member m ON l.member_id = m.id 
+		where 
+			YEAR(l.last_handle_time) =  #{annual} AND l.status = 3 AND l.charge_category = #{category}
+		GROUP BY IFNULL(m.city_code,'') 
+		) b
+		 ON a.city_code = b.city_code and a.time_num = b.time_num and a.annual = b.annual
+	 GROUP BY a.city_code
+	
+  </select>
+  
+  <!-- 查询按年余额与押金  -->
+  <select id="selectInitAnnualBalanceOrDepositByQuarter" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select a.city_code, 
+ 	  	<if test="category == 'B'.toString() ">
+ 	  		IFNULL(a.money,0)-IFNULL(b.money,0) total_balance ,
+ 	  	</if>
+	  	<if test="category == 'D'.toString() ">
+ 	  		IFNULL(a.money,0)-IFNULL(b.money,0) total_deposit ,
+	  	</if>	
+  		a.annual,a.time_type,a.time_num  from (
+		SELECT	
+			IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money, #{annual}  annual ,'quarter' time_type  , #{quarter} time_num  
+		FROM
+			x_member_charge_log l LEFT JOIN x_member m ON l.member_id = m.id 
+		WHERE 	
+			 YEAR(l.create_time) = #{annual} AND l.trade_status = 0 AND l.charge_category = #{category}
+		GROUP BY IFNULL(m.city_code,'')
+		) a
+		 LEFT JOIN 
+		(
+		select
+			IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money, #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+		from 
+			x_member_refund_log l LEFT JOIN x_member m ON l.member_id = m.id 
+		where 
+			YEAR(l.last_handle_time) = #{annual} AND l.status = 3 AND l.charge_category = #{category}
+		GROUP BY IFNULL(m.city_code,'') 
+	) b ON a.city_code = b.city_code and a.time_num = b.time_num and a.annual = b.annual
+	 GROUP BY a.city_code
+  </select>
+  
+  <!-- 查询余额与押金  -->
+  <select id="selectInitDayBalanceOrDeposit" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select a.city_code, 
+  		<if test="category == 'B'.toString() ">
+	  		IFNULL(a.money,0)-IFNULL(b.money,0) balance ,
+	  	</if>
+	  	<if test="category == 'D'.toString() ">
+	  		IFNULL(a.money,0)-IFNULL(b.money,0) deposit ,
+	  	</if>	
+  		a.annual,a.time_type,a.time_num  from (
+			SELECT	
+				IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money, #{annual}  annual ,'month' time_type  , #{month} time_num  
+			FROM
+				x_member_charge_log l LEFT JOIN x_member m ON l.member_id = m.id 
+			WHERE 	
+				l.trade_status = 0 AND l.charge_category = #{category} and month(l.create_time) = #{month} and YEAR(l.create_time) = #{annual}
+			GROUP BY IFNULL(m.city_code,'') 
+			) a
+			left join
+			(
+			select
+				IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money, #{annual}  annual ,'month' time_type  , #{month} time_num 
+			from 
+				x_member_refund_log l LEFT JOIN x_member m ON l.member_id = m.id 
+			where 
+				l.status = 3 AND l.charge_category = #{category} and  month(l.last_handle_time) = #{month} and YEAR(l.last_handle_time) = #{annual}
+			GROUP BY IFNULL(m.city_code,'')  
+		) b
+		 ON a.city_code = b.city_code and a.time_num = b.time_num and a.annual = b.annual
+		 GROUP BY a.city_code,annual,time_num
+  </select>
+  
+  <!-- 查询余额与押金  -->
+  <select id="selectInitDayBalanceOrDepositByQuarter" resultMap="BaseResultMap" parameterType="java.lang.String">
+  		select a.city_code, 
+  		<if test="category == 'B'.toString() ">
+	  		IFNULL(a.money,0)-IFNULL(b.money,0) balance ,
+	  	</if>
+	  	<if test="category == 'D'.toString() ">
+	  		IFNULL(a.money,0)-IFNULL(b.money,0) deposit ,
+	  	</if>	
+  		a.annual,a.time_type,a.time_num  from (
+			SELECT	
+				IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0)  money, #{annual}  annual ,'quarter' time_type  , #{quarter} time_num  
+			FROM
+				x_member_charge_log l LEFT JOIN x_member m ON l.member_id = m.id  
+			WHERE 	
+				l.trade_status = 0 AND l.charge_category = #{category} and QUARTER(l.create_time) = #{quarter} and YEAR(l.create_time) = #{annual}
+			GROUP BY IFNULL(m.city_code,'') 
+			) a
+			
+			left join
+			(
+			select
+				IFNULL(m.city_code,'') city_code, IFNULL(SUM(money),0) money, #{annual}  annual ,'quarter' time_type  , #{quarter} time_num 
+			from 
+				x_member_refund_log l LEFT JOIN x_member m ON l.member_id = m.id 
+			where 
+				l.status = 3 AND l.charge_category = #{category}  and QUARTER(l.last_handle_time) = #{quarter} and YEAR(l.last_handle_time) = #{annual}
+			GROUP BY IFNULL(m.city_code,'') 
+	) b
+	 ON a.city_code = b.city_code and a.time_num = b.time_num and a.annual = b.annual
+	 GROUP BY a.city_code,annual,time_num
+  </select>
+  
+  <select id="selectInitAnnualIncome" resultMap="BaseResultMap">
+  	select a.city_code, sum(money) total_income,'month' time_type,time_num,annual  from (
+		select	
+			p.city_code, SUM(total_pay_money+free_compensation_money) money , #{month} time_num ,#{annual} annual 
+		from 
+			x_time_share_pay p LEFT JOIN x_time_share_order o ON  p.order_id = o.order_id 
+		where 
+			p.pay_status = 'finish' and o.`status` = 'finish'	and YEAR(p.end_time) = #{annual}
+		GROUP BY p.city_code 
+		UNION ALL
+		select 
+			city_code, SUM(order_money) money , #{month} time_num ,#{annual} annual 
+		from  
+			c_charging_order 
+		WHERE 
+			charging_status = 'finish' and YEAR(end_time)  = #{annual}
+		GROUP BY city_code
+	) a GROUP BY a.city_code,annual
+  </select>
+  
+  <select id="selectInitAnnualIncomeByQuarter" resultMap="BaseResultMap">
+  	select a.city_code, sum(money) total_income,'quarter' time_type,time_num,annual  from (
+		select	p.city_code, SUM(total_pay_money+free_compensation_money) money ,#{quarter} time_num ,#{annual} annual 
+		from x_time_share_pay p LEFT JOIN x_time_share_order o ON  p.order_id = o.order_id 
+		where p.pay_status = 'finish' and o.`status` = 'finish'	and YEAR(p.end_time) = #{annual}
+		GROUP BY p.city_code 
+		UNION ALL
+		select city_code, SUM(order_money) money , #{quarter} time_num ,#{annual} annual 
+		from  c_charging_order 
+		WHERE charging_status = 'finish' and YEAR(end_time) = #{annual}
+		GROUP BY city_code
+	) a GROUP BY a.city_code,annual
+  </select>
+ 
+  <select id="selectInitDayIncome" resultMap="BaseResultMap">
+	  	select a.city_code, sum(money) income,'month' time_type,time_num,annual  from (
+			select	p.city_code, SUM(total_pay_money+free_compensation_money) money ,#{month} time_num ,#{annual} annual 
+			from x_time_share_pay p LEFT JOIN x_time_share_order o ON  p.order_id = o.order_id 
+			where p.pay_status = 'finish' and o.`status` = 'finish'	 and month(p.end_time) = #{month} and YEAR(p.end_time) = #{annual}
+			GROUP BY p.city_code
+			UNION ALL
+			select city_code, SUM(order_money) money , #{month} time_num ,#{annual}  annual 
+			from  c_charging_order 
+			WHERE charging_status = 'finish'  and month(end_time)= #{month} and YEAR(end_time) = #{annual} 
+			GROUP BY city_code 
+		) a GROUP BY a.city_code, annual ,time_num
+  </select>
+  
+  <select id="selectInitDayIncomeByQuarter" resultMap="BaseResultMap">
+	  	select a.city_code, sum(money) income,'quarter' time_type,time_num,annual  from (
+			select	p.city_code, SUM(total_pay_money+free_compensation_money) money ,#{quarter} time_num ,#{annual} annual 
+			from x_time_share_pay p LEFT JOIN x_time_share_order o ON  p.order_id = o.order_id 
+			where p.pay_status = 'finish' and o.`status` = 'finish'	and quarter(p.end_time) = #{quarter} and YEAR(p.end_time) = #{annual}	
+			GROUP BY p.city_code
+			UNION ALL
+			select city_code, SUM(order_money) money , #{quarter} time_num ,#{annual} annual 
+			from  c_charging_order 
+			WHERE charging_status = 'finish'  and 	quarter(end_time) = #{quarter} and YEAR(end_time) = #{annual}
+			GROUP BY city_code 
+		) a GROUP BY a.city_code, annual ,time_num
+  </select>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		<if test="list != null and list.size() > 0">
+			INSERT INTO bi_overall_annual_member ( member_total, member_lose,
+			member_add,
+			member_audit, total_member_lose, total_member_new,
+			total_member_audit, silence_user, lose_user, total_silence_user, total_lose_user,
+			total_balance, total_deposit, total_income, balance, deposit, income,
+			add_user, total_user, audit_user, time_num, annual, time_type,
+			city_code, create_time)
+			<trim prefix=" values " suffixOverrides=",">
+				<foreach collection="list" item="item" index="index"
+					separator=",">
+					<trim prefix="(" suffix=")" suffixOverrides=",">
+						<choose>
+							<when test="item.memberTotal != null and item.memberTotal != '' ">
+								#{item.memberTotal},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.memberLose != null and item.memberLose != '' ">
+								#{item.memberLose},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.memberAdd != null and item.memberAdd != '' ">
+								#{item.memberAdd},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.memberAudit != null and item.memberAudit != '' ">
+								#{item.memberAudit},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when
+								test="item.totalMemberLose != null and item.totalMemberLose != '' ">
+								#{item.totalMemberLose},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when
+								test="item.totalMemberNew != null and item.totalMemberNew != '' ">
+								#{item.totalMemberNew},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when
+								test="item.totalMemberAudit != null and item.totalMemberAudit != '' ">
+								#{item.totalMemberAudit},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.silenceUser != null and item.silenceUser != '' ">
+								#{item.silenceUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.loseUser != null and item.loseUser != '' ">
+								#{item.loseUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when
+								test="item.totalSilenceUser != null and item.totalSilenceUser != '' ">
+								#{item.totalSilenceUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.totalLoseUser != null and item.totalLoseUser != '' ">
+								#{item.totalLoseUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.totalBalance != null and item.totalBalance != '' ">
+								#{item.totalBalance},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.totalDeposit != null and item.totalDeposit != '' ">
+								#{item.totalDeposit},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.totalIncome != null and item.totalIncome != '' ">
+								#{item.totalIncome},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.balance != null and item.balance != '' ">
+								#{item.balance},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.deposit != null and item.deposit != '' ">
+								#{item.deposit},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.income != null and item.income != '' ">
+								#{item.income},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.addUser != null and item.addUser != '' ">
+								#{item.addUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.totalUser != null and item.totalUser != '' ">
+								#{item.totalUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.auditUser != null and item.auditUser != '' ">
+								#{item.auditUser},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.timeNum != null   ">
+								#{item.timeNum},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.annual != null   ">
+								#{item.annual},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.timeType != null  ">
+								#{item.timeType},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.cityCode != null   ">
+								#{item.cityCode},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						#{item.createTime}
+					</trim>
+				</foreach>
+			</trim>
+		</if>
+	</insert>
+  
+  	<select id="selectInitOverallAnnualMember" resultMap="BaseResultMap">
+		select
+			 m.city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{month} time_num,'month' time_type 
+		from 
+		(
+			select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+			UNION ALL
+			select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+		) a  left join x_member m on m.id= a.member_id  
+		<!-- where  year(a.end_time) <![CDATA[ <= ]]> #{annual} and month(a.end_time)  <![CDATA[ <= ]]> #{month} -->
+		<choose>
+			<when test="month == 12">
+				where a.end_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+			</when>
+			<otherwise>
+				where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{month}+1),'-01') 
+			</otherwise>
+		</choose>
+		GROUP BY m.city_code;
+  	</select>
+  	
+  	<select id="selectInitOverallAnnualMemberByQuarter" resultMap="BaseResultMap">
+		select 
+			m.city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{quarter} time_num,'quarter' time_type 
+		from (
+			select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+			UNION ALL
+			select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+		) a   left join x_member m on m.id= a.member_id  
+		<!-- where  year(a.end_time) <![CDATA[ <= ]]> #{annual} and quarter(a.end_time)  <![CDATA[ <= ]]> #{quarter} -->
+		<choose>
+			<when test="quarter == 4">
+				where a.end_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+			</when>
+			<otherwise>
+				where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{quarter}*3+1),'-01') 
+			</otherwise>
+		</choose>
+		GROUP BY m.city_code;
+  	</select>
+  
+  	<select id="selectInitAddUser" resultMap="BaseResultMap">
+			
+			select
+				 a.city_code,(IFNULL(a.total_user,0)-IFNULL(b.total_user,0)) add_user, a.annual,a.time_num,a.time_type 
+			from 
+			(
+					select IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{month} time_num,'month' time_type 
+					from (
+						select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+						UNION ALL
+						select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+					) a  left join x_member m on m.id= a.member_id  
+					
+					<choose>
+						<when test="month == 12">
+							where a.end_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+						</when>
+						<otherwise>
+							where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{month}+1),'-01') 
+						</otherwise>
+					</choose>
+						
+					GROUP BY IFNULL(m.city_code,'') 
+			)a,
+			(
+				select IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{month} time_num,'month' time_type from (
+					select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+					UNION ALL
+					select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+					
+					) a  left join x_member m on m.id= a.member_id  
+					where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",#{month},'-01') 
+						
+					GROUP BY IFNULL(m.city_code,'') 
+			) b
+			where a.city_code = b.city_code and a.annual = b.annual and a.time_num = b.time_num 
+  	</select>
+  	
+  	<select id="selectInitAddUserByQuarter" resultMap="BaseResultMap">
+  	
+  	select   a.city_code,(IFNULL(a.total_user,0)-IFNULL(b.total_user,0)) add_user, a.annual,a.time_num,a.time_type from 
+  			(
+				select 
+					IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{quarter} time_num,'quarter' time_type 
+				from 
+				(
+				select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+				UNION ALL
+				select member_id, city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+				) a  left join x_member m on m.id= a.member_id  
+				<choose>
+					<when test="quarter == 4">
+							where a.end_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+					</when>
+					<otherwise>
+						where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{quarter}*3+1),'-01') 
+					</otherwise>
+				</choose>
+				GROUP BY IFNULL(m.city_code,'') 
+			)a,
+			(
+				select 
+					IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{quarter} time_num,'quarter' time_type 
+				from (
+					select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+					UNION ALL
+					select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+					) a  left join x_member m on m.id= a.member_id  
+					where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{quarter}*3-2),"-01")
+					GROUP BY IFNULL(m.city_code,'')
+			) b
+		where a.city_code = b.city_code and a.annual =b.annual and a.time_num = b.time_num 
+			
+  	</select>
+
+  	<select id="selectInitAuditUserByQuarter" resultMap="BaseResultMap">
+		
+  		select 
+  			a.city_code,(IFNULL(a.total_user,0)-IFNULL(b.total_user,0)) audit_user, a.annual,a.time_num,a.time_type 
+  		from (
+				select IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{quarter} time_num,'quarter' time_type from (
+				select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+				UNION ALL
+				select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+				) a  left join x_member m on m.id= a.member_id  
+				<choose>
+					<when test="quarter == 4">
+						where a.end_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+					</when>
+					<otherwise>
+						where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{quarter}*3+1),'-01') 
+					</otherwise>
+				</choose>
+					and  m.status != 'experience' 
+				GROUP BY IFNULL(m.city_code,'') 
+			)a,
+			(
+				select IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{quarter} time_num,'quarter' time_type from (
+					select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+					UNION ALL
+					select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+					) a  left join x_member m on m.id= a.member_id  
+				where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{quarter}*3-2),"-01")
+					and  m.status != 'experience' 
+				GROUP BY IFNULL(m.city_code,'')
+			) b
+		where a.city_code = b.city_code and a.annual =b.annual and a.time_num = b.time_num 
+			
+  	</select>
+  	
+  	<select id="selectInitAuditUser" resultMap="BaseResultMap">
+		
+			select a.city_code,(IFNULL(a.total_user,0)-IFNULL(b.total_user,0)) audit_user, a.annual,a.time_num,a.time_type from (
+					select IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{month} time_num,'month' time_type from (
+					select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+					UNION ALL
+					select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+					) a  left join x_member m on m.id= a.member_id  
+					
+					<choose>
+						<when test="month == 12">
+							where a.end_time <![CDATA[ < ]]> concat((#{annual}+1),"-01-01") 
+						</when>
+						<otherwise>
+							where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",(#{month}+1),'-01') 
+						</otherwise>
+					</choose>
+							and  m.status != 'experience' 
+					GROUP BY IFNULL(m.city_code,'')
+			)a,
+			(
+				select IFNULL(m.city_code,'') city_code, COUNT(DISTINCT a.member_id) total_user,#{annual} annual,#{month} time_num,'month' time_type from (
+					select member_id,city_code,end_time from x_time_share_order o where o.`status` = 'finish' 
+					UNION ALL
+					select member_id,city_code,end_time from c_charging_order o where o.charging_status = 'finish'
+					
+					) a  left join x_member m on m.id= a.member_id  
+					where a.end_time <![CDATA[ < ]]> concat(#{annual},"-",#{month},'-01') 
+						and  m.status != 'experience' 	
+					GROUP BY IFNULL(m.city_code,'') 
+			) b
+			where a.city_code = b.city_code and a.annual =b.annual and a.time_num = b.time_num 
+  	</select>
+  	
+</mapper>

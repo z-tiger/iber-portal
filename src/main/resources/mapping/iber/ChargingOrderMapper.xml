@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.pile.ChargingOrderMapper">
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.pile.ChargingOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="station_id" jdbcType="INTEGER" property="stationId" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="pile_id" jdbcType="INTEGER" property="pileId" />
+    <result column="power" jdbcType="INTEGER" property="power" />
+    <result column="cost" jdbcType="INTEGER" property="cost" />
+    <result column="time" jdbcType="INTEGER" property="time" />
+    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, order_id, station_id, member_id, pile_id, power, cost, time, begin_time, end_time, 
+    status, city_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x_charging_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from x_charging_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.pile.ChargingOrder">
+    insert into x_charging_order (id, order_id, station_id, 
+      member_id, pile_id, power, 
+      cost, time, begin_time, 
+      end_time, status, city_code
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{stationId,jdbcType=INTEGER}, 
+      #{memberId,jdbcType=INTEGER}, #{pileId,jdbcType=INTEGER}, #{power,jdbcType=INTEGER}, 
+      #{cost,jdbcType=INTEGER}, #{time,jdbcType=INTEGER}, #{beginTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.pile.ChargingOrder">
+    insert into x_charging_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="stationId != null">
+        station_id,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="pileId != null">
+        pile_id,
+      </if>
+      <if test="power != null">
+        power,
+      </if>
+      <if test="cost != null">
+        cost,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="beginTime != null">
+        begin_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="cityCode != null">
+        city_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="stationId != null">
+        #{stationId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="pileId != null">
+        #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="power != null">
+        #{power,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null">
+        #{cost,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=INTEGER},
+      </if>
+      <if test="beginTime != null">
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null">
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.pile.ChargingOrder">
+    update x_charging_order
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="stationId != null">
+        station_id = #{stationId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="pileId != null">
+        pile_id = #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="power != null">
+        power = #{power,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null">
+        cost = #{cost,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=INTEGER},
+      </if>
+      <if test="beginTime != null">
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null">
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.pile.ChargingOrder">
+    update x_charging_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      station_id = #{stationId,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      pile_id = #{pileId,jdbcType=INTEGER},
+      power = #{power,jdbcType=INTEGER},
+      cost = #{cost,jdbcType=INTEGER},
+      time = #{time,jdbcType=INTEGER},
+      begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map" >
+  select * from (
+     select 
+     <include refid="Base_Column_List" />,
+     (select name from x_city c where c.code = a.city_code) city_name,
+     (select name from x_member d where d.id = a.member_id) name
+     from x_charging_order a ) t
+     where 1 = 1
+     <if test="name != null and name != '' " >
+       and t.name = #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+      and t.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="orderId != null and orderId != '' " >
+      and t.order_id = #{orderId,jdbcType=VARCHAR}
+    </if>
+     order by t.begin_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from (
+     select 
+     <include refid="Base_Column_List" />,
+     (select name from x_city c where c.code = a.city_code) city_name,
+     (select name from x_member d where d.id = a.member_id) name
+     from x_charging_order a ) t
+     where 1 = 1
+     <if test="name != null and name != '' " >
+       and t.name = #{name,jdbcType=VARCHAR}
+     </if>
+     <if test="cityCode != null and cityCode != '' " >
+       and t.city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+     <if test="orderId != null and orderId != '' " >
+       and t.order_id = #{orderId,jdbcType=VARCHAR}
+     </if>
+  </select>
+</mapper>

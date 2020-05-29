@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.ad.AdBaseMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.ad.AdBase" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="simple_context" property="simpleContext" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="adp_name" property="adpName" jdbcType="VARCHAR" />
+    <result column="point_name" property="pointName" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="VARCHAR" />
+    <result column="integral" property="integral" jdbcType="INTEGER" />
+    <result column="ad_pid" property="adPid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="point_id" property="pointId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, simple_context, is_show, integral, ad_pid, create_time, point_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_ad_base
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_ad_base
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.ad.AdBase" >
+    insert into x_ad_base (id, title, simple_context, 
+      is_show, integral, ad_pid, 
+      create_time, point_id)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{simpleContext,jdbcType=VARCHAR}, 
+      #{isShow,jdbcType=VARCHAR}, #{integral,jdbcType=INTEGER}, #{adPid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{pointId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.ad.AdBase" >
+    insert into x_ad_base
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="simpleContext != null" >
+        simple_context,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+      <if test="integral != null" >
+        integral,
+      </if>
+      <if test="adPid != null" >
+        ad_pid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="pointId != null" >
+        point_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="simpleContext != null" >
+        #{simpleContext,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="integral != null" >
+        #{integral,jdbcType=INTEGER},
+      </if>
+      <if test="adPid != null" >
+        #{adPid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pointId != null" >
+        #{pointId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.ad.AdBase" >
+    update x_ad_base
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="simpleContext != null" >
+        simple_context = #{simpleContext,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="integral != null" >
+        integral = #{integral,jdbcType=INTEGER},
+      </if>
+      <if test="adPid != null" >
+        ad_pid = #{adPid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pointId != null" >
+        point_id = #{pointId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.ad.AdBase" >
+    update x_ad_base
+    set title = #{title,jdbcType=VARCHAR},
+      simple_context = #{simpleContext,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=VARCHAR},
+      integral = #{integral,jdbcType=INTEGER},
+      ad_pid = #{adPid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      point_id = #{pointId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from (SELECT a.*,b.city_code from x_ad_base a LEFT JOIN x_ad_position b on a.ad_pid = b.id) t where 1=1 
+    <if test="title != null and title != '' " >
+        and t.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and t.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="adPid != null and adPid != '' " >
+        and t.ad_pid = #{adPid,jdbcType=VARCHAR}
+    </if>
+    <if test="isShow != null and isShow != '' " >
+        and t.is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and t.create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and t.create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select ad_point_name from x_ad_point x where x.id = t.point_id) point_name,
+    (select `name` from x_ad_position y where y.id = t.ad_pid) adp_name
+    from (SELECT a.*,b.city_code from x_ad_base a LEFT JOIN x_ad_position b on a.ad_pid = b.id) t where 1=1 
+    <if test="title != null and title != '' " >
+        and t.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and t.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="adPid != null and adPid != '' " >
+        and t.ad_pid = #{adPid,jdbcType=VARCHAR}
+    </if>
+    <if test="isShow != null and isShow != '' " >
+        and t.is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and t.create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and t.create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+     order by t.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  <select id="getPreview" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select ad_point_name from x_ad_point x where x.id = t.point_id) point_name,
+    (select `name` from x_ad_position y where y.id = t.ad_pid) adp_name
+    from (SELECT a.*,b.city_code from x_ad_base a LEFT JOIN x_ad_position b on a.ad_pid = b.id) t where 1=1 
+    <if test="title != null and title != '' " >
+        and t.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and t.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="adPid != null and adPid != '' " >
+        and t.ad_pid = #{adPid,jdbcType=VARCHAR}
+    </if>
+    <if test="isShow != null and isShow != '' " >
+        and t.is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and t.create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and t.create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+     order by t.create_time desc
+  </select>
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.versions.VersionsCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.versions.VersionsCategory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, create_id, create_time, update_id, update_time, remark, CODE
+  </sql>
+ 
+   <sql id="Base_Column_List_Record">
+	count(1) counts
+  </sql> 
+  
+    <sql id="Base_Column_Category_List" >
+    ver.id, ver.name, ver.create_time,  ver.update_time, ver.remark, ver.CODE,
+    cate.name as create_name,up.name as update_name
+  </sql> 
+    
+    
+  <select id="selectByPrimaryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_versions_category
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+ 
+   <select id="selectByPrimaryCategory" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_versions_category
+    <if test="id != null and id != ''" >
+     where ID = #{id,jdbcType=INTEGER}
+    </if>   
+  </select>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_Category_List" />
+    from  x_versions_category ver
+    LEFT JOIN  
+    (select vc.id,su.name from x_versions_category vc
+     LEFT JOIN x_sys_user  su ON vc.create_id=su.id) cate ON ver.id=cate.id
+    LEFT JOIN  
+    (select vc.id,su.name from x_versions_category vc
+     LEFT JOIN x_sys_user  su ON vc.update_id=su.id) up ON ver.id=up.id 
+    			<trim prefixOverrides="and">
+			<where>
+		      <if test="id != null and id != ''" >
+		    	and id = #{id,jdbcType=INTEGER}
+		      </if>	
+			</where>
+		   </trim>
+		limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+   </select>
+  
+ 	<select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List_Record" />
+    from  x_versions_category ver
+    LEFT JOIN  
+    (select vc.id,su.name from x_versions_category vc
+     LEFT JOIN x_sys_user  su ON vc.create_id=su.id) cate ON ver.id=cate.id
+    LEFT JOIN  
+    (select vc.id,su.name from x_versions_category vc
+     LEFT JOIN x_sys_user  su ON vc.update_id=su.id) up ON ver.id=up.id 
+    			<trim prefixOverrides="and">
+			<where>
+		      <if test="id != null and id != ''" >
+		    	and id = #{id,jdbcType=INTEGER}
+		      </if>	
+			</where>
+		   </trim>
+	</select>  
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_versions_category
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.versions.VersionsCategory" >
+    insert into x_versions_category (id, name, create_id, 
+      create_time, update_id, update_time, 
+      remark, CODE)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.versions.VersionsCategory" >
+    insert into x_versions_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.versions.VersionsCategory" >
+    update x_versions_category
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.versions.VersionsCategory" >
+    update x_versions_category
+    set name = #{name,jdbcType=VARCHAR},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      CODE = #{code,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

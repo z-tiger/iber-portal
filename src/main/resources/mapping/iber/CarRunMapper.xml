@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarRunMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarRun" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="pile_id" property="pileId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="speed" property="speed" jdbcType="VARCHAR" />
+    <result column="bat_status" property="batStatus" jdbcType="VARCHAR" />
+    <result column="door_status" property="doorStatus" jdbcType="VARCHAR" />
+    <result column="endurance_mileage" property="enduranceMileage" jdbcType="DOUBLE" />
+    <result column="rest_battery" property="restBattery" jdbcType="DOUBLE" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="is_online" property="isOnline" jdbcType="VARCHAR" />
+    
+    <result column="small_battery_voltage" property="smallBatteryVoltage" jdbcType="VARCHAR" />
+    <result column="small_battery_charge_status" property="smallBatteryChargeStatus" jdbcType="VARCHAR" />
+    <result column="carSignal" property="carSignal" jdbcType="VARCHAR" />
+    <result column="safeBeltStatus" property="safeBeltStatus" jdbcType="VARCHAR" />
+    <result column="readyStatus" property="readyStatus" jdbcType="VARCHAR" />
+    <result column="gear" property="gear" jdbcType="VARCHAR" />
+    <result column="handBreakStatus" property="handBreakStatus" jdbcType="VARCHAR" />
+    <result column="lightStatus" property="lightStatus" jdbcType="VARCHAR" />
+    <result column="windowStatus" property="windowStatus" jdbcType="VARCHAR" />
+    <result column="trunkStatus" property="trunkStatus" jdbcType="VARCHAR" />
+    <result column="cpuTemperature" property="cpuTemperature" jdbcType="VARCHAR" />
+  	<result column="mileage" property="mileage" jdbcType="DOUBLE"/>
+  	<result column="address" property="address"/>
+  	<result column="update_time" property="updateTime"/>
+  	<result column="preoffline" property="preOffline"/>
+    <result column="tf_card_exist" property="tfCardExist" jdbcType="INTEGER"/>
+    <result column="latest_order_mileage" property="latestOrderMileage" />
+    <result column="latest_order_time" property="latestOrderTime" />
+    <result column="getui_status" property="getuiStatus"/>
+    <result column="cid" property="cid"/>
+    <result column="long_rent_status" property="longRentStatus"/>
+    <result column="total_kg" property="totalKg"/>
+    <result column="version" property="version"/>
+  </resultMap>
+    <resultMap id="CarRunResultMap" type="com.iber.portal.vo.car.CarRunVo" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="pile_id" property="pileId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="speed" property="speed" jdbcType="VARCHAR" />
+    <result column="bat_status" property="batStatus" jdbcType="VARCHAR" />
+    <result column="door_status" property="doorStatus" jdbcType="VARCHAR" />
+    <result column="endurance_mileage" property="enduranceMileage" jdbcType="DOUBLE" />
+    <result column="rest_battery" property="restBattery" jdbcType="DOUBLE" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="is_online" property="isOnline" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="cpuTemperature" property="cpuTemperature" jdbcType="VARCHAR" />
+    <result column="preoffline" property="preOffline"/>
+    <result column="tf_card_exist" property="tfCardExist" jdbcType="INTEGER"/>
+    <result column="preoffline_reason" property="preofflineReason"/>
+  </resultMap>
+  <resultMap id="CarRunStatusMap" type="com.iber.portal.vo.car.CarStatusVo" >
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="extandResultMap" type="com.iber.portal.vo.car.CarRunExtendVo" extends="BaseResultMap">
+  	<result column="park_latitude" property="parkLatitude"/>
+  	<result column="park_longitude" property="parkLongitude"/>
+  	<result column="park_name" property="parkName"/>
+  </resultMap>
+  <!-- 车辆运营统计 -->
+  <resultMap id="CarRunNumVoMap" type="com.iber.portal.vo.car.CarRunNumVo" >
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="brance" property="brance" jdbcType="VARCHAR" />
+    <result column="emptyTotal" property="emptyTotal" jdbcType="INTEGER" />
+    <result column="runTotal" property="runTotal" jdbcType="INTEGER" />
+    <result column="maintenanceTotal" property="maintenanceTotal" jdbcType="INTEGER" />
+    <result column="dayRentTotal" property="dayRentTotal" jdbcType="INTEGER" />
+    <result column="timeShareTotal" property="timeShareTotal" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="repairTotal" property="repairTotal" jdbcType="INTEGER" />
+    <result column="maintainTotal" property="maintainTotal" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="carRunAnalysisMap" type="com.iber.portal.vo.car.carRunAnalysisVo" >
+    <result column="rentCarNumber" property="rentCarNumber" jdbcType="BIGINT" />
+    <result column="orderTotal" property="orderTotal" jdbcType="BIGINT" />
+    <result column="timeTotal" property="timeTotal" jdbcType="BIGINT" />
+    <result column="moneyTotal" property="moneyTotal" jdbcType="BIGINT" />
+    <result column="totalCarSum" property="totalCarSum" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap type="com.iber.portal.vo.car.LowRestBatteryCarVo" id="lowRestBatteryCarResultmMap">
+  	<result column="park_id" property="parkId"/>
+  	<result column="lpn" property="lpn" />
+  	<result column="rest_battery" property="restBattery" />
+  	<result column="parkName" property="parkName" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, order_id, lpn, park_id, pile_id, status, latitude, longitude, speed, bat_status, 
+    door_status, endurance_mileage, rest_battery, city_code, member_id, is_online,
+    small_battery_voltage,small_battery_charge_status,carSignal,safeBeltStatus,readyStatus,
+    gear,handBreakStatus,lightStatus,windowStatus,trunkStatus,cpuTemperature,address,tf_card_exist,
+    mileage ,latest_order_mileage,latest_order_time,getui_status,cid,long_rent_status
+  </sql>
+    <sql id="CarRun_Column_List" >
+    id, order_id, lpn, park_id, pile_id, status, latitude, longitude, speed, bat_status, 
+    door_status, endurance_mileage, rest_battery, city_code, member_id, is_online, address
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="queryCarRunByMemberId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_run
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByLpn" parameterType="java.lang.String">
+     delete from x_car_run where lpn = #{lpn,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.iber.portal.model.car.CarRun" >
+    insert into x_car_run (id, order_id, lpn, 
+      park_id, pile_id, status, 
+      latitude, longitude, speed, 
+      bat_status, door_status, endurance_mileage, 
+      rest_battery, city_code, member_id, 
+      is_online)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{lpn,jdbcType=VARCHAR}, 
+      #{parkId,jdbcType=INTEGER}, #{pileId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{speed,jdbcType=VARCHAR}, 
+      #{batStatus,jdbcType=VARCHAR}, #{doorStatus,jdbcType=VARCHAR}, #{enduranceMileage,jdbcType=DOUBLE}, 
+      #{restBattery,jdbcType=DOUBLE}, #{cityCode,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, 
+      #{isOnline,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarRun" >
+    insert into x_car_run
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="pileId != null" >
+        pile_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="speed != null" >
+        speed,
+      </if>
+      <if test="batStatus != null" >
+        bat_status,
+      </if>
+      <if test="doorStatus != null" >
+        door_status,
+      </if>
+      <if test="enduranceMileage != null" >
+        endurance_mileage,
+      </if>
+      <if test="restBattery != null" >
+        rest_battery,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="isOnline != null" >
+        is_online,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="pileId != null" >
+        #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="batStatus != null" >
+        #{batStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="doorStatus != null" >
+        #{doorStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="enduranceMileage != null" >
+        #{enduranceMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="restBattery != null" >
+        #{restBattery,jdbcType=DOUBLE},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="isOnline != null" >
+        #{isOnline,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarRun" >
+    update x_car_run
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="pileId != null" >
+        pile_id = #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        speed = #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="batStatus != null" >
+        bat_status = #{batStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="doorStatus != null" >
+        door_status = #{doorStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="enduranceMileage != null" >
+        endurance_mileage = #{enduranceMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="restBattery != null" >
+        rest_battery = #{restBattery,jdbcType=DOUBLE},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="isOnline != null" >
+        is_online = #{isOnline,jdbcType=VARCHAR},
+      </if>
+      <if test="preOffline != null">
+      	preOffline = #{preOffline,jdbcType=VARCHAR},
+      </if>
+      <if test="longRentStatus != null">
+        long_rent_status = #{longRentStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.CarRun" >
+    update x_car_run
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      park_id = #{parkId,jdbcType=INTEGER},
+      pile_id = #{pileId,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      speed = #{speed,jdbcType=VARCHAR},
+      bat_status = #{batStatus,jdbcType=VARCHAR},
+      door_status = #{doorStatus,jdbcType=VARCHAR},
+      endurance_mileage = #{enduranceMileage,jdbcType=DOUBLE},
+      rest_battery = #{restBattery,jdbcType=DOUBLE},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      is_online = #{isOnline,jdbcType=VARCHAR},
+      preOffline = #{preOffline,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="queryCarRunByCity" parameterType="java.util.Map" resultMap="CarRunResultMap">
+     select
+     r.* , p.address,
+     CASE when
+     r.preoffline = 1 THEN (SELECT SUBSTR(reason,6) from x_car_preoffline p WHERE r.lpn = p.lpn and p.`status` = 2 ORDER BY create_time desc LIMIT 1)
+     ELSE '' end as preoffline_reason
+     from x_car_run r , x_park p , x_car car
+     where r.park_id = p.id AND r.lpn = car.lpn AND car.status = 1
+     <if test="cityCode != null" >
+     	and r.city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+  </select>
+  <select id="queryCarRun" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    cr.id, cr.order_id, cr.lpn, cr.park_id, cr.pile_id, cr.status, cr.latitude, cr.longitude, cr.speed, cr.bat_status, 
+    cr.door_status, cr.endurance_mileage, cr.rest_battery, cr.city_code, cr.member_id, cr.is_online,
+    cr.small_battery_voltage,cr.small_battery_charge_status,cr.carSignal,cr.safeBeltStatus,cr.readyStatus,
+    cr.gear,cr.handBreakStatus,cr.lightStatus,cr.windowStatus,cr.trunkStatus,cr.cpuTemperature,cr.address,cr.update_time
+    from x_car_run cr 
+    where cr.lpn = #{lpn,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="queryCarRunByPackId" parameterType="java.util.Map" resultMap="BaseResultMap">
+   	select 
+   	 <include refid="Base_Column_List" />
+    from x_car_run
+    where 
+     status not in ('ordered','return','useCar','repair','maintain')
+     <if test="parkId != null and parkId !=''">
+        and park_id = #{parkId,jdbcType=INTEGER}
+     </if>
+  </select>
+  
+     <select id="queryCarRunStatusByCityCode" parameterType="java.util.Map" resultMap="CarRunStatusMap">
+   select status , count(1) total from x_car_run 
+   	<if test="cityCode != null" >
+  	 	where city_code=#{cityCode,jdbcType=VARCHAR}
+  	 </if>
+   group by status 
+  </select>
+  
+  <select id="queryCarRunStatusByPackId" parameterType="java.util.Map" resultMap="BaseResultMap">
+   	select 
+   	 <include refid="Base_Column_List" />
+    from x_car_run
+    where status = #{status,jdbcType=VARCHAR} and park_id = #{parkId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <update id="updateCarRunStatusByLpn" parameterType="java.util.Map">
+    update x_car_run set status=#{status,jdbcType=VARCHAR},preOffline=0 where lpn = #{lpn,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <update id="updateParkInfo">
+     update x_car_run set park_id =  #{parkId,jdbcType=INTEGER} where id= #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryCarLpnByStatus" parameterType="java.util.Map" resultMap="BaseResultMap"> 
+  	select r.lpn from x_car_run r , x_car c where r.lpn = c.lpn and c.model_id = #{modelId,jdbcType=INTEGER}  and r.city_code = #{cityCode,jdbcType=VARCHAR} and r.park_id = #{parkId,jdbcType=INTEGER} and r.`status` = 'empty'
+  </select>
+  
+  <select id="queryParkCarByAreaCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1) from x_car_run  where park_id in ( select id from x_park  where area_code = #{areaCode,jdbcType=VARCHAR} )
+  </select>
+  
+  <select id="queryCarRunStatusByAreaCode" parameterType="java.lang.String" resultMap="CarRunStatusMap">
+    select count(1) total , status from x_car_run where park_id in ( 
+		select id from x_park where area_code = #{areaCode,jdbcType=VARCHAR})
+	 group by status 
+  </select>
+  
+  <!-- 根据车牌 查询车辆状态 -->
+  
+  <select id="selectStatusByLpn" parameterType="java.lang.String" resultType="java.lang.String">
+  	select status from x_car_run where lpn=#{lpn}
+  </select>
+  
+  
+  
+  <!--根据车辆类型查询运营车辆数据（cityCode区分）-->
+  <select id="queryRunCarNum" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	SELECT COUNT(1) total,c.type,c.brance FROM x_car a,x_car_run b ,x_car_type c 
+  	WHERE b.status not IN ('repair','maintain')
+  	<if test="cityCode != null" >
+  	 	and b.city_code=#{cityCode,jdbcType=VARCHAR}
+  	 </if>
+  	AND a.lpn =b.lpn AND a.model_id =c.id GROUP BY c.type,c.brance
+  </select>
+  <!-- 根据车辆类型查询运营车辆数据（按照省份划分） -->
+  <select id="queryProvinceRunCarNuma" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	SELECT COUNT(1) total,c.type,c.brance FROM x_car a,x_car_run b ,x_car_type c 
+  	WHERE b.status not IN ('repair','maintain')
+  	<if test="cityCode != null" >
+  	 	and b.city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+  	</if>
+  	AND a.lpn =b.lpn AND a.model_id =c.id GROUP BY c.type,c.brance
+  </select>
+  
+  <!--根据订单类型查询运营车辆数据（cityCode区分）-->
+  <select id="queryorderTypeListStatisticsRun" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	 SELECT (SELECT COUNT(1) FROM x_car_run WHERE order_id LIKE '%-DR-%' 
+  	 <if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	 </if>
+  	 )dayRentTotal,
+  	(SELECT COUNT(1) FROM x_car_run WHERE order_id LIKE '%-TS-%'
+  	 <if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	 </if>
+  	 )timeShareTotal FROM DUAL
+  </select>
+  
+   <!--根据订单类型查询运营车辆数据（按照省份划分）-->
+   <select id="queryProvinceorderTypeListRun" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	 SELECT (SELECT COUNT(1) FROM x_car_run a  WHERE a. order_id LIKE '%-DR-%' 
+  	 <if test="cityCode != null" >
+  	 	and a.city_code in (SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+  	 </if>
+  	 )dayRentTotal,
+  	(SELECT COUNT(1) FROM x_car_run a WHERE a.order_id LIKE '%-TS-%'
+  	 <if test="cityCode != null" >
+  	 	and a.city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+  	 </if>
+  	 )timeShareTotal FROM DUAL
+  </select>
+  
+  
+  
+  <!--根据会员类型查询运营车辆数据（按照全国、地级市划分）-->
+  <select id="queryMemberTypeListStatisticsRun" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	 SELECT 
+  	(SELECT COUNT(1) FROM x_member m WHERE id IN (SELECT  member_id FROM x_car_run WHERE status IN('ordered','useCar','return')
+  	 <if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	 </if>
+  	) AND m.enterprise_id IS NOT NULL)enterpriseTotal,
+	(SELECT COUNT(1) FROM x_member m WHERE id IN (SELECT  member_id FROM x_car_run WHERE status IN('ordered','useCar','return')
+	<if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	</if>
+	) AND m.enterprise_id IS  NULL)personTotal FROM dual;
+  </select>
+  
+   <!--根据会员类型查询运营车辆数据（按照省份划分）-->
+  <select id="queryProvinceMemberTypeListStatisticsRun" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	 SELECT 
+  	(SELECT COUNT(1) FROM x_member m WHERE id IN (SELECT  member_id FROM x_car_run WHERE status IN('ordered','useCar','return')
+  	 <if test="cityCode != null" >
+  	 	and city_code in (SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+  	 </if>
+  	) AND m.enterprise_id IS NOT NULL)enterpriseTotal,
+	(SELECT COUNT(1) FROM x_member m WHERE id IN (SELECT  member_id FROM x_car_run WHERE status IN('ordered','useCar','return')
+	<if test="cityCode != null" >
+  	 	and city_code in (SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+  	</if>
+	) AND m.enterprise_id IS  NULL)personTotal FROM dual;
+  </select>
+  
+   <!-- 根据车辆状态查询车辆总数情况（cityCode区分） -->
+   <select id="queryCarStatusListStatisticsSum" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	SELECT (SELECT COUNT(1) FROM x_car_run a WHERE a.status ='empty' 
+  	<if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	</if>
+  	) emptyTotal,  
+	(SELECT COUNT(1) FROM x_car_run a WHERE a.status NOT IN ('repair','maintain','empty')
+	<if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	</if>
+	) runTotal ,
+	(SELECT COUNT(1) FROM x_car_run a WHERE a.status ='repair'
+	<if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	</if>
+	)repairTotal ,
+	(SELECT COUNT(1) FROM x_car_run a WHERE a.status ='maintain'
+	<if test="cityCode != null" >
+  	 	and city_code=#{cityCode,jdbcType=VARCHAR}
+  	</if>
+	)maintainTotal  FROM DUAL
+  </select>
+  
+  <!-- 根据省份名称查询code -->
+  <select id="queryCodeByName" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	  select code from x_city where name=#{name,jdbcType=VARCHAR} and layer=#{level,jdbcType=INTEGER}
+  </select>
+  
+  
+  <!-- 根据车辆状态查询车辆总数情况（省级区分） -->
+   <select id="provinceCarStatusListStatisticsSum" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+  	SELECT (SELECT COUNT(1) FROM x_car_run a WHERE a.status ='empty' 
+  	<if test="cityCode != null" >
+  	 	and city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city WHERE CODE =#{cityCode,jdbcType=VARCHAR}))
+  	</if>
+  	) emptyTotal,  
+	(SELECT COUNT(1) FROM x_car_run a WHERE a.status NOT IN ('repair','maintain','empty')
+	<if test="cityCode != null" >
+  	 	and city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city WHERE CODE =#{cityCode,jdbcType=VARCHAR}))
+  	</if>
+	) runTotal ,
+	(SELECT COUNT(1) FROM x_car_run a WHERE a.status ='repair'
+	<if test="cityCode != null" >
+  	 	and city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city WHERE CODE =#{cityCode,jdbcType=VARCHAR}))
+  	</if>
+	)repairTotal ,
+	(SELECT COUNT(1) FROM x_car_run a WHERE a.status ='maintain'
+	<if test="cityCode != null" >
+  	 	and city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city WHERE CODE =#{cityCode,jdbcType=VARCHAR}))
+  	</if>
+	)maintainTotal 
+	  FROM DUAL
+  </select>
+  
+   <!-- 根据车辆类型查询车辆总数情况（cityCode区分按照全国、地级市划分） -->
+  <select id="queryCarTypeListStatisticsSum" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+   	SELECT COUNT(1) total,c.type,c.brance FROM x_car a,x_car_run b ,x_car_type c 
+  	where 1=1
+  	<if test="cityCode != null" >
+  	 	and b.city_code=#{cityCode,jdbcType=VARCHAR}
+  	</if>
+  	AND a.lpn =b.lpn AND a.model_id =c.id GROUP BY c.type,c.brance
+  </select> 
+  
+  <!-- 根据车辆类型查询车辆总数情况（cityCode区分按照省份划分） -->
+  <select id="queryProvinceCarTypeListStatisticsSum" parameterType="java.lang.String" resultMap="CarRunNumVoMap">
+   	SELECT COUNT(1) total,c.type,c.brance FROM x_car a,x_car_run b ,x_car_type c 
+  	where 1=1
+  	<if test="cityCode != null" >
+  	 	and b.city_code in(SELECT CODE FROM x_city WHERE P_id IN(SELECT id FROM x_city  WHERE CODE =#{cityCode,jdbcType=VARCHAR})) 
+  	</if>
+  	AND a.lpn =b.lpn AND a.model_id =c.id GROUP BY c.type,c.brance
+  </select> 
+  
+  <!-- 查询运营中的车辆总数 -->
+  <select id="selectCountByStatus" resultType="java.lang.Integer">
+  	select count(1) from x_car_run where status = "useCar" or status = "ordered" or status = "return"
+  </select>
+  
+  <select id="selectByLpn" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  	from x_car_run
+  	where lpn = #{lpn,jdbcType=VARCHAR} and status in 
+  	<foreach collection="status" item="status" open="(" separator="," close=")">
+  		#{status}
+  	</foreach>
+  </select>
+  
+  <!-- 查询空闲的车辆 -->
+  <select id="selectCarRunList" resultMap="extandResultMap">
+  	select
+  	cr.id, cr.order_id, cr.lpn, cr.park_id, cr.pile_id, cr.status, cr.latitude, cr.longitude, cr.speed, cr.bat_status, 
+    cr.door_status, cr.endurance_mileage, cr.rest_battery, cr.city_code, cr.member_id, cr.is_online,
+    cr.small_battery_voltage, cr.small_battery_charge_status, cr.carSignal, cr.safeBeltStatus, cr.readyStatus,
+    cr.gear, cr.handBreakStatus, cr.lightStatus, cr.windowStatus, cr.trunkStatus, cr.cpuTemperature,
+  	 p.latitude park_latitude, p.longitude park_longitude, p.name park_name
+  	from x_car_run cr left join x_park p on cr.park_id = p.id
+  	where cr.status not in ('ordered','useCar') or cr.`status` is NULL
+  </select>
+  <!-- 根据cityCode筛选 -->
+  <sql id="sql_where_cityCode">
+	  <if test="cityCode != null and cityCode !=''">
+		 		<choose>
+					<when test="level== 2 ">   
+						AND city_code IN
+						(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+						) 	
+					</when>
+					<otherwise>
+						AND city_code = #{cityCode}
+					</otherwise>
+				</choose>
+	  </if>
+  </sql>
+  
+  <!--根据cityCode获取订单车辆数  -->
+  <select id="getOrderCarNumber" parameterType="java.util.Map" resultMap="carRunAnalysisMap">
+  		SELECT IFNULL(COUNT(a.lpn),0)rentCarNumber FROM (SELECT DISTINCT(lpn) FROM x_time_share_order WHERE  status ='finish' <include refid="sql_where_cityCode"/> 
+  		and  end_time &gt;= CURRENT_DATE()
+		UNION 
+		SELECT DISTINCT(lpn) FROM x_day_rent_order WHERE order_status ='finish' <include refid="sql_where_cityCode"/>
+		and actual_return_car_time &gt;= CURRENT_DATE()
+		)a
+  </select>
+  
+  <!--根据cityCode获取订单总数  -->
+  <select id="getOrderNumber" parameterType="java.util.Map" resultMap="carRunAnalysisMap">
+  		SELECT IFNULL(SUM(a.total),0) orderTotal FROM (SELECT count(1)total FROM x_time_share_order WHERE STATUS='finish'<include refid="sql_where_cityCode"/>
+  		and  end_time &gt;= CURRENT_DATE()
+		UNION ALL
+		SELECT COUNT(1)total FROM x_day_rent_order  WHERE order_status ='finish' <include refid="sql_where_cityCode"/>
+		and actual_return_car_time &gt;= CURRENT_DATE()
+		)a
+  </select>
+  
+  <!--根据cityCode获取订单时长  -->
+  <select id="getOrderTime" parameterType="java.util.Map" resultMap="carRunAnalysisMap">
+  		SELECT IFNULL(SUM(timeTotal),0)timeTotal FROM (SELECT SUM(total_minute) timeTotal FROM x_time_share_pay where 1=1 <include refid="sql_where_cityCode"/>
+  		and  end_time &gt;= CURRENT_DATE()
+		UNION ALL 
+		SELECT SUM(rent_timeout)*60 timeTotal FROM x_day_rent_order_extend WHERE pay_status='finish' 
+			<if test="cityCode != null and cityCode !=''">
+				AND order_id in(SELECT order_id FROM x_day_rent_order WHERE 1=1 
+					<if test="level == 2">
+						AND order_id in(SELECT order_id FROM x_day_rent_order WHERE city_code IN
+						(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+						WHERE cc.code = m.city_code))
+					</if>
+					<if test="level != 2">
+						AND order_id in(SELECT order_id FROM x_day_rent_order WHERE city_code=#{cityCode})
+					</if>
+				)
+			</if>
+			and create_time &gt;= CURRENT_DATE()
+		)a
+  </select>
+  
+  <!--根据cityCode获取订单收入  -->
+  <select id="getOrderIncome" parameterType="java.util.Map" resultMap="carRunAnalysisMap">
+  		SELECT IFNULL(SUM(moneyTotal)/100,0) moneyTotal FROM (SELECT SUM(pay_money) moneyTotal FROM x_time_share_pay WHERE pay_status='finish' <include refid="sql_where_cityCode"/>
+		and  end_time &gt;= CURRENT_DATE()
+		UNION ALL 
+		SELECT SUM(pay_money)/100 moneyTotal FROM x_day_rent_order_extend WHERE pay_status='finish'
+		and create_time &gt;= CURRENT_DATE()
+		)a
+  </select>
+  
+  <select id="getAllCarInfo" parameterType="java.lang.Double" resultMap="BaseResultMap">
+   select <include refid="Base_Column_List"/> 
+   from x_car_run  where rest_battery &lt;=#{restBbattery} and status not in('ordered','useCar','return') and bat_status='0'
+  </select>
+  
+  <select id="queryCarRunByLpn" resultMap="BaseResultMap">
+  	select 
+    cr.id, cr.order_id, cr.lpn, cr.park_id, cr.pile_id, cr.status, cr.latitude, cr.longitude, cr.speed, cr.bat_status, 
+    cr.door_status, cr.endurance_mileage, cr.rest_battery, cr.city_code, cr.member_id, cr.is_online,
+    cr.small_battery_voltage,cr.small_battery_charge_status,cr.carSignal,cr.safeBeltStatus,cr.readyStatus,
+    cr.gear,cr.handBreakStatus,cr.lightStatus,cr.windowStatus,cr.trunkStatus,cr.cpuTemperature,
+    (SELECT max(mileage) FROM x_car_run_log WHERE  lpn =#{lpn}) mileage,cr.preoffline preoffline
+    from x_car_run cr  
+    where cr.lpn = #{lpn}
+  </select>
+  
+  <select id="queryCarOrderId" parameterType="java.lang.String" resultType="java.lang.String">
+ 		select order_id from x_car_run where lpn =#{lpn}
+  </select>
+  
+  <select id="getCarInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		select <include refid="Base_Column_List"/>,total_kg,version  from x_car_run where lpn=#{lpn} limit 1
+  </select>
+  
+  
+  <sql id="period_actual_return_car_time">
+	<if test="period != null and period != '' ">
+		<choose>
+			<when test="period == 'last_month' ">
+			 and	DATE_FORMAT(actual_return_car_time,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')
+			</when>
+			<when test="period == 'last_week' ">
+			<!-- and	 YEARWEEK(DATE_FORMAT(actual_return_car_time,'%Y-%m-%d')) = YEARWEEK(now())-1 -->
+			 and  actual_return_car_time <![CDATA[>=]]>date_sub(curdate(),INTERVAL WEEKDAY(curdate())+7 DAY) and actual_return_car_time <![CDATA[<]]> date_sub(curdate(),INTERVAL WEEKDAY(curdate()) DAY)
+			</when>
+			<otherwise>
+			and	 DATE(actual_return_car_time) = (CURRENT_DATE() - INTERVAL 1 DAY)
+			</otherwise>
+		</choose>
+	</if>
+  </sql>
+  <sql id="period_end_time">
+	 <if test="period != null and period != '' ">
+		<choose>
+			<when test="period == 'last_month' ">
+			and 	date_format(end_time,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')
+			</when> 
+			<when test="period == 'last_week' ">
+		<!-- 	and YEARWEEK(date_format(end_time,'%Y-%m-%d')) = YEARWEEK(now())-1 -->
+			and  end_time <![CDATA[>=]]>date_sub(curdate(),INTERVAL WEEKDAY(curdate())+7 DAY) and end_time <![CDATA[<]]> date_sub(curdate(),INTERVAL WEEKDAY(curdate()) DAY)
+			</when>
+			<otherwise>
+			and  date(end_time)= (CURRENT_DATE() - INTERVAL 1 DAY)
+			</otherwise>
+		</choose>
+	</if> 
+  </sql>
+  
+  <sql id="period_create_time">
+	 <if test="period != null and period != '' ">
+		<choose>
+			 <when test="period == 'last_month' ">
+			 and	date_format(create_time,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')
+			</when> 
+			<when test="period == 'last_week' ">
+			<!-- and	 YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())-1 -->
+				and  create_time <![CDATA[>=]]>date_sub(curdate(),INTERVAL WEEKDAY(curdate())+7 DAY) and create_time <![CDATA[<]]> date_sub(curdate(),INTERVAL WEEKDAY(curdate()) DAY)
+			</when>
+			<otherwise>
+			 and	date(create_time) = (CURRENT_DATE() - INTERVAL 1 DAY)
+			</otherwise>
+		</choose>
+	</if> 
+  </sql>
+  <sql id="statistics_begin_time">
+  		<if test="period != null and period != '' ">
+			<choose>
+				 <when test="period == 'last_month' "><!-- 上月第一天 -->
+				CAST(DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH ) AS DATETIME)
+				</when> 
+				<when test="period == 'last_week' "><!-- 上周一 -->
+				 date_sub(curdate(),INTERVAL WEEKDAY(curdate())+7 DAY)
+				</when>
+				<otherwise>
+				(CURRENT_DATE() - INTERVAL 1 DAY)
+				</otherwise>
+			</choose>
+		</if>
+  </sql>
+  <select id="getCarRunStatistics" parameterType="java.util.Map" resultMap="carRunAnalysisMap">
+   select 
+		  ( SELECT IFNULL(COUNT(a.lpn),0) rentCarNumber FROM ( select  DISTINCT(lpn) from 
+		  		( SELECT DISTINCT(lpn) FROM x_time_share_order WHERE  status ='finish' <include refid="sql_where_cityCode"/> 
+	  		  		<include refid="period_end_time"/> 
+					UNION 
+				  SELECT DISTINCT(lpn) FROM x_day_rent_order WHERE order_status ='finish' <include refid="sql_where_cityCode"/>
+					<include refid="period_actual_return_car_time"/> 
+			    ) tem1
+			)a	
+		) rentCarNumber,
+		
+		 (  SELECT IFNULL(SUM(b.total),0) orderTotal FROM (SELECT count(1)total FROM x_time_share_order WHERE STATUS='finish'<include refid="sql_where_cityCode"/>
+	  		  <include refid="period_end_time"/> 
+			UNION ALL
+			SELECT COUNT(1) total FROM x_day_rent_order  WHERE order_status ='finish' <include refid="sql_where_cityCode"/>
+			 <include refid="period_actual_return_car_time"/>
+			)b
+		) orderTotal,
+		
+		(
+			SELECT IFNULL(SUM(timeTotal),0)timeTotal FROM (
+				select SUM(totalMinute)  timeTotal from (select 
+				case when begin_time <![CDATA[>=]]> <include refid='statistics_begin_time'/> then TIMESTAMPDIFF(MINUTE,begin_time,end_time)
+				ELSE TIMESTAMPDIFF(MINUTE,<include refid='statistics_begin_time'/>,end_time) END totalMinute
+				from x_time_share_order where `status` = 'finish' <include refid="period_end_time"/>   <include refid="sql_where_cityCode"/>
+				) a 
+	  		    
+					UNION ALL 
+				select SUM(rent_timeout)*60 timeTotal FROM x_day_rent_order where order_status = 'finish'
+				<include refid="sql_where_cityCode"/>
+				 <include refid="period_actual_return_car_time"/>
+				
+			)c
+		) timeTotal,
+		(
+			SELECT IFNULL(SUM(moneyTotal)/100,0) moneyTotal FROM (SELECT SUM(total_pay_money) moneyTotal FROM x_time_share_pay WHERE pay_status='finish' <include refid="sql_where_cityCode"/>
+			   <include refid="period_end_time"/> 
+			UNION ALL 
+			SELECT SUM(order_money)/100 moneyTotal FROM x_day_rent_order_extend WHERE pay_status='finish'
+			 <include refid="period_create_time"/>
+			)d
+		) moneyTotal  ,
+		(
+			SELECT COUNT(1) FROM x_car_run _run 
+			where  _run.status in('empty','useCar','return','ordered')
+				<include refid="sql_where_cityCode"/>
+			
+		) totalCarSum
+		from
+		  DUAL
+  </select>
+
+  <!-- 判断充电车辆(x_car_repair中status = '3')电量达到设置百分比时，车辆自动上线(car_run.status置为empty,car_repair.status = '3')，更新车辆状态  -->
+  <update id="updateCarOnlineWhileElectricEnough" parameterType="java.util.Map">
+  	UPDATE x_car_run cr 
+	 INNER JOIN x_car_repair rep ON cr.lpn = rep.lpn AND rep.`status` = '3'
+		SET cr.`status` = 'empty',  rep.`status` = '0'
+	 WHERE cr.`status` <![CDATA[ <> ]]> 'empty' AND cr.rest_battery <![CDATA[ >= ]]> #{lowerLimit}
+		AND cr.lpn IN 
+			(
+				SELECT c.lpn FROM x_car c 
+					INNER JOIN x_car_type ct ON ct.id = c.model_id AND ct.type = #{carType}
+					INNER JOIN c_charging_order o ON o.lpn = c.lpn AND o.charging_status = 'charging'
+					INNER JOIN c_equipment_info e ON e.id = o.equipment_id AND e.equipment_type = 1 
+			)
+  </update>
+
+  <!-- 判断充电车辆(x_car_repair中status = '3')电量达到设置百分比时，车辆自动上线(car_run.status置为empty,car_repair.status = '3')，更新车辆状态  -->
+  <update id="updateCarOnlineWhileCharging" >
+    UPDATE x_car_run cr
+	 INNER JOIN x_car_repair rep ON cr.lpn = rep.lpn AND rep.`status` = '3'
+	 INNER JOIN (
+			SELECT c.lpn, ct.online_lower_limit FROM x_car c
+					INNER JOIN x_car_type ct ON ct.id = c.model_id
+		) a ON cr.lpn = a.lpn
+		SET cr.`status` = 'empty',  rep.`status` = '0', rep.end_time = NOW()
+         WHERE cr.`status` = 'charging'
+            AND cr.rest_battery <![CDATA[ >= ]]> a.online_lower_limit
+            AND (cr.order_id IS NULL OR LENGTH(TRIM(cr.order_id)) = 0)
+  </update>
+
+
+  <select id="selectLowRestBatteryList" resultMap="lowRestBatteryCarResultmMap">
+  	SELECT r.park_id,r.lpn,r.rest_battery,p.name parkName FROM x_car_run r JOIN x_park p on p.id = r.park_id WHERE r.lpn not in (SELECT t.lpn FROM e_task_info t WHERE t.`status` =2 AND t.task_type = 3) and r.rest_battery <![CDATA[ < ]]> #{restBatteryLevel}
+  	and r.status in ('empty','charging')
+  </select>
+  
+  <select id="selectLowRestBatteryListByBetweenThirtyAndfifty" resultMap="lowRestBatteryCarResultmMap">
+  	SELECT r.park_id,r.lpn,r.rest_battery,p.name parkName FROM x_car_run r JOIN x_park p on p.id = r.park_id WHERE r.lpn not in (SELECT t.lpn FROM e_task_info t WHERE t.`status` =2 AND t.task_type = 3) and r.rest_battery <![CDATA[ >= ]]> #{restBatteryDownLevel} and r.rest_battery <![CDATA[ <= ]]> #{restBatteryUpLevel}
+  	and r.status in ('empty','charging')
+  </select>
+  
+  <select id="selectALL" resultMap="BaseResultMap" >
+  	select 
+  		<include refid="Base_Column_List" />
+    from x_car_run 
+  </select>
+  
+  <update id="updateLatestOrderMileage">
+  
+  	update x_car_run set latest_order_mileage = mileage , latest_order_time = NOW() where lpn = #{lpn}
+  </update>
+  
+  <update id="updateGetuiStatusByLpn">
+  	update x_car_run  set getui_status = #{getuiStatus} where lpn = #{lpn}
+  </update>
+
+    <select id="selectCarStatus" resultType="string">
+  	SELECT r.status from x_car_run r where r.lpn = #{lpn,jdbcType=VARCHAR}
+  </select>
+
+    <update id="updateCarRunParkId">
+        UPDATE  x_car_run set park_id = #{parkId} where id = #{id}
+    </update>
+
+    <update id="updateCarRunStatusAndOrderIdByLpn" parameterType="java.util.Map">
+        update x_car_run set
+        order_id=#{orderId,jdbcType=VARCHAR} ,member_id=#{memberId,jdbcType=VARCHAR}
+        <if test="status != null and status != ''" >
+            ,status=#{status,jdbcType=VARCHAR}
+        </if>
+         where lpn = #{lpn,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateVersionIsEmpy">
+        update x_car_run set version = version + 1 where lpn = #{lpn} and version = #{version} and id = #{id} and status='empty'
+    </update>
+
+    <select id="selectCarRunStatus" resultType="com.iber.portal.model.car.report.RunStatusVo">
+        select COUNT(case when xcr.`status`='useCar' or xcr.`status`='ordered' THEN 1 else null end) as useCar,
+        COUNT(case when xcr.`status`='repair' THEN 1 else null end) as repair,
+        COUNT(case when xcr.`status`='maintain' THEN 1 else null end) as maintain,
+        COUNT(case when xcr.`status`='charging' THEN 1 else null end) as batStatus
+        from x_car_run xcr
+        INNER JOIN x_car xc on xc.lpn = xcr.lpn and xc.`status`=1
+    </select>
+
+    <select id="selectCarRunSmallBatteryLossDetailRun" resultType="com.iber.portal.model.car.report.CarRunSmallBatteryDetail">
+        <![CDATA[
+        select (CASE WHEN locate("employee", xcr.order_id) = 0 THEN xm.name else eei.name end )as memberName,
+        (CASE WHEN locate("employee", xcr.order_id) = 0 THEN  xm.phone else eei.phone end ) as memberPhone,
+        xcr.lpn lpn,xc.brand_name brandName,xcr.small_battery_voltage/10 as smallBattery from x_car_run xcr
+        LEFT JOIN x_member xm on (xm.id = xcr.member_id and locate("employee", xcr.order_id) = 0  )
+        LEFT JOIN e_employee_info eei on (eei.id = xcr.member_id and locate("TS", xcr.order_id) = 0 )
+        INNER JOIN x_car xc on xc.lpn = xcr.lpn and xc.`status`=1
+        WHERE (xcr.`status`='useCar' or xcr.`status`='ordered') and xcr.small_battery_voltage <=#{small_battery_loss}
+        ]]>
+    </select>
+
+    <select id="selectCarRunSmallBatteryLossDetailEmpty" resultType="com.iber.portal.model.car.report.CarRunSmallBatteryDetail">
+        <![CDATA[
+        select xcr.lpn lpn,xc.brand_name brandName,
+        (CASE WHEN xcr.`status`='empty' THEN '空闲' WHEN xcr.`status`='maintain' THEN '维护中' WHEN xcr.`status`='charging' THEN '补电中' end) as status,
+        xcr.small_battery_voltage/10 as smallBattery from x_car_run xcr
+        INNER JOIN x_car xc on xc.lpn = xcr.lpn and xc.`status`=1
+        where (xcr.`status`='empty' or xcr.`status`='maintain'or xcr.`status`='charging') and xcr.small_battery_voltage <=#{small_battery_loss}
+        ]]>
+    </select>
+
+    <select id="selectUseCarRestBattery" resultType="com.iber.portal.model.car.report.CarRunSmallBatteryDetail">
+        select (CASE WHEN locate("employee", xcr.order_id) = 0 THEN xm.name else eei.name end )as memberName,
+        (CASE WHEN locate("employee", xcr.order_id) = 0 THEN  xm.phone else eei.phone end ) as memberPhone,
+        xcr.lpn ,xc.brand_name brandName, xcr.rest_battery restBattery from x_car_run xcr
+        LEFT JOIN x_member xm on (xm.id = xcr.member_id and locate("employee", xcr.order_id) = 0  )
+        LEFT JOIN e_employee_info eei on (eei.id = xcr.member_id and locate("TS", xcr.order_id) = 0 )
+        INNER JOIN x_car xc on xc.lpn = xcr.lpn and xc.`status`=1
+        WHERE  (xcr.`status`='useCar' or xcr.`status`='ordered') and (
+        <foreach collection="CarReportQuery" item="item"  separator="or">
+             (xcr.rest_battery <![CDATA[ <= ]]> #{item.minBattery} and xc.brand_name = #{item.brandName})
+        </foreach>
+        )
+    </select>
+    <select id="selectEmptyAndChargingRestBattery" resultType="HashMap">
+
+        select xcr.lpn as lpn from x_car_run xcr
+        INNER JOIN x_car xc on xc.lpn = xcr.lpn and xc.`status`=1
+        WHERE  (xcr.`status`='empty' or xcr.`status`='charging') and xcr.bat_status=0 and (
+        <foreach collection="CarReportQuery" item="item"  separator="or">
+            (xcr.rest_battery <![CDATA[ <= ]]> #{item.minBattery} and xc.brand_name = #{item.brandName})
+        </foreach>
+        )
+    </select>
+
+    <update id="updateCarRunStatusById">
+    	UPDATE x_car_run cr SET cr.`status` = 'empty' WHERE cr.id = #{id}
+    </update>
+    <select id="selectIdByCarApplyStatus" resultType="java.lang.Integer" parameterType="String">
+    	SELECT cr.id FROM x_car_run cr WHERE cr.`status` IN ('repair','charging','maintain') AND lpn = #{lpn}
+    </select>
+
+    <select id="selectCarRunSmallBatteryLossDetail" resultType="com.iber.portal.model.car.report.CarRunSmallBatteryDetail">
+        <![CDATA[
+        select xm.name as memberName,
+        xm.phone  as memberPhone,
+        xcr.order_id as orderId,xcr.lpn as lpn
+        from x_car_run xcr
+        LEFT JOIN x_member xm on (xm.id = xcr.member_id )
+        INNER JOIN x_car xc on xc.lpn = xcr.lpn and xc.`status`=1
+        WHERE (xcr.`status`='useCar') and xcr.small_battery_voltage <=#{small_battery_loss}
+        ]]>
+    </select>
+</mapper>

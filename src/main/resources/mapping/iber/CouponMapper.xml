@@ -1,0 +1,1028 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.coupon.CouponMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.coupon.Coupon">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="coupon_no" property="couponNo" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="member_id" property="memberId" jdbcType="INTEGER" />
+		<result column="use_status" property="useStatus" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="DOUBLE" />
+		<result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+		<result column="use_time" property="useTime" jdbcType="TIMESTAMP" />
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="memberName" property="memberName" jdbcType="VARCHAR" />
+		<result column="memberPhone" property="memberPhone" jdbcType="VARCHAR" />
+		<result column="status1" property="status1" jdbcType="VARCHAR" />
+        <result column="create_id" property="createId" jdbcType="INTEGER"/>
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+		<result column="sysUserName" property="sysUserName" jdbcType="VARCHAR"/>
+		<result column="use_type" property="useType" jdbcType="INTEGER"/>
+		<result column="issue_authority" property="issueAuthority" jdbcType="INTEGER"/>
+		<result column="min_use_value" property="minUseValue" jdbcType="INTEGER"/>
+		<result column="max_deduction_value" property="maxDeductionValue" jdbcType="INTEGER"/>
+		<result column="apply_dep" property="applyDep" jdbcType="VARCHAR"/>
+		<result column="apply_user" property="applyUser" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 优惠券报表 -->
+	<resultMap id="CouponReportResultMap" type="com.iber.portal.vo.report.CouponReport" extends="BaseResultMap">
+      <result column="totalNum" property="totalNum" jdbcType="DOUBLE" />
+      <result column="totalAmount" property="totalAmount" jdbcType="DOUBLE" />
+      <result column="collectedNum" property="collectedNum" jdbcType="DOUBLE" />
+      <result column="collectedAmount" property="collectedAmount" jdbcType="DOUBLE" />
+      <result column="usedNum" property="usedNum" jdbcType="DOUBLE" />
+      <result column="usedAmount" property="usedAmount" jdbcType="DOUBLE" />
+      <result column="invalidNum" property="invalidNum" jdbcType="DOUBLE" />
+      <result column="invalidAmount" property="invalidAmount" jdbcType="DOUBLE" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+		id, coupon_no, title, description, start_time, end_time, status,
+		create_time, member_id,apply_dep,apply_user,
+		use_status, balance, batch_no, use_time, city_code,type,item_code,use_type,category,max_deduction_value
+	</sql>
+	
+	<sql id="query_Column_List">
+		a.id, a.coupon_no, a.title, a.description, a.start_time, a.end_time, a.status,
+		a.create_time, a.member_id,a.create_id,a.max_deduction_value,a.apply_dep,a.apply_user,
+		a.use_status, a.balance, a.batch_no, a.use_time, a.city_code,a.type,a.item_code,a.use_type,a.issue_authority,a.min_use_value,category
+	</sql>
+	
+	<!-- 优惠券报表 -->
+	<sql id="Report_Column_List">
+		C.id, C.coupon_no, C.title, C.description, C.start_time, C.end_time, C.status,
+		C.create_time, C.member_id,
+		C.use_status, C.balance, C.batch_no, C.use_time, C.city_code, C.type, C.item_code,
+		COUNT(1) totalNum,  SUM(C.balance) totalAmount, 
+		COUNT( IF( C.status = '1' , 1, NULL ) ) collectedNum, 
+		SUM( IF( C.status = '1' , C.balance, 0 ) ) collectedAmount, 
+		COUNT( IF( C.use_status = '1' , 1, NULL ) ) usedNum, 
+		SUM( IF( C.use_status = '1' , C.balance, 0 ) ) usedAmount, 
+		COUNT( IF( C.status = '2' , 1, NULL ) ) invalidNum, 
+		SUM( IF( C.status = '2' , C.balance, 0 ) ) invalidAmount
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_coupon
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByCouponNo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_coupon
+		where coupon_no=#{couponNo} limit 1;
+	</select>
+	<select id="selectCanUsing" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_coupon
+		where member_id = #{memberId,jdbcType=INTEGER} and end_time >=
+		#{currentTime,jdbcType=VARCHAR} and use_status =
+		#{useStatus,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from x_coupon
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.iber.portal.model.coupon.Coupon">
+		insert into x_coupon (id, coupon_no, title,
+		description, start_time, end_time,
+		status, create_time, member_id,
+		use_status, balance, batch_no,
+		use_time, city_code,type,item_code)
+		values (#{id,jdbcType=INTEGER}, #{couponNo,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{memberId,jdbcType=INTEGER},
+		#{useStatus,jdbcType=VARCHAR}, #{balance,jdbcType=DOUBLE}, #{batchNo,jdbcType=VARCHAR},
+		#{useTime,jdbcType=TIMESTAMP},
+		#{cityCode,jdbcType=VARCHAR},#{type,jdbcType=INTEGER},
+		#{item_code,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.iber.portal.model.coupon.Coupon">
+		insert into x_coupon
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="couponNo != null">
+				coupon_no,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="useStatus != null">
+				use_status,
+			</if>
+			<if test="balance != null">
+				balance,
+			</if>
+			<if test="batchNo != null">
+				batch_no,
+			</if>
+			<if test="useTime != null">
+				use_time,
+			</if>
+			<if test="cityCode != null">
+				city_code,
+			</if>
+
+			<if test="type != null">
+				type,
+			</if>
+			<if test="itemCode != null">
+				item_code,
+			</if>
+			
+            <if test="createId != null">
+				create_id,
+			</if>
+			<if test="useType != null">
+				use_type,
+			</if>
+			<if test="issueAuthority != null">
+				issue_authority,
+			</if>
+			<if test="minUseValue != null">
+				min_use_value,
+			</if>
+			<if test="category != null">
+				category,
+			</if>
+			<if test="maxDeductionValue != null">
+				max_deduction_value,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="couponNo != null">
+				#{couponNo,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memberId != null">
+				#{memberId,jdbcType=INTEGER},
+			</if>
+			<if test="useStatus != null">
+				#{useStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="balance != null">
+				#{balance,jdbcType=DOUBLE},
+			</if>
+			<if test="batchNo != null">
+				#{batchNo,jdbcType=VARCHAR},
+			</if>
+			<if test="useTime != null">
+				#{useTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cityCode != null">
+				#{cityCode,jdbcType=VARCHAR},
+			</if>
+
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="itemCode != null">
+				#{itemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="useType != null">
+				#{useType,jdbcType=INTEGER},
+			</if>
+			<if test="issueAuthority != null">
+				#{issueAuthority,jdbcType=INTEGER},
+			</if>
+			<if test="minUseValue != null">
+				#{minUseValue,jdbcType=INTEGER},
+			</if>
+			<if test="category != null">
+				#{category,jdbcType=INTEGER},
+			</if>
+			<if test="maxDeductionValue != null">
+				#{maxDeductionValue,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.coupon.Coupon">
+		update x_coupon
+		<set>
+			<if test="couponNo != null">
+				coupon_no = #{couponNo,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=INTEGER},
+			</if>
+			<if test="useStatus != null">
+				use_status = #{useStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="balance != null">
+				balance = #{balance,jdbcType=DOUBLE},
+			</if>
+			<if test="batchNo != null">
+				batch_no = #{batchNo,jdbcType=VARCHAR},
+			</if>
+			<if test="useTime != null">
+				use_time = #{useTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cityCode != null">
+				city_code = #{cityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="itemCode != null">
+				item_code = #{itemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="useType != null">
+				use_type = #{useType,jdbcType=INTEGER},
+			</if>
+			<if test="category != null">
+				category = #{category,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.coupon.Coupon">
+		update x_coupon
+		set coupon_no = #{couponNo,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		start_time = #{startTime,jdbcType=TIMESTAMP},
+		end_time = #{endTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		member_id = #{memberId,jdbcType=INTEGER},
+		use_status = #{useStatus,jdbcType=VARCHAR},
+		balance = #{balance,jdbcType=DOUBLE},
+		batch_no = #{batchNo,jdbcType=VARCHAR},
+		use_time = #{useTime,jdbcType=TIMESTAMP},
+		city_code = #{cityCode,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		item_code = #{itemCode,jdbcType=VARCHAR},
+		category = #{category,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_coupon a left join x_member m on a.member_id=m.id  where 1=1
+		<if test="title != null and titel != '' ">
+			and a.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and a.coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and a.status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and a.use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and a.batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			and a.member_id in(select m.id from x_member m where m.name LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="memberPhone != null and memberPhone != '' ">
+			and a.member_id =(select m.id from x_member m where  m.phone = #{memberPhone,jdbcType=VARCHAR})
+		</if>
+		<if test="minAmount != null and minAmount !=''">
+		    and a.balance &gt;= #{minAmount,jdbcType=DOUBLE}
+		</if>
+	    <if test="maxAmount != null and maxAmount !=''">
+		    and a.balance &lt;= #{maxAmount,jdbcType=DOUBLE}
+		</if>
+	</select>
+    <select id="getAllList" resultMap="BaseResultMap">
+       select 
+       <include refid="Base_Column_List" />
+       from x_coupon
+    </select>
+	<select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="query_Column_List" />
+		,a.status status1,
+		(select `name` from x_sys_user where id = a.create_id) sysUserName,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		 m.name memberName,m.phone  memberPhone
+		from x_coupon a left join x_member m on a.member_id=m.id  where  1=1
+		<if test="title != null and titel != '' ">
+			and a.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and a.coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and a.status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and a.use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and a.batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			and a.member_id in(select m.id from x_member m where m.name LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="memberPhone != null and memberPhone != '' ">
+			and a.member_id =(select m.id from x_member m where  m.phone = #{memberPhone,jdbcType=VARCHAR})
+		</if>
+		<if test="minAmount != null and minAmount !=''">
+		    and a.balance &gt;= #{minAmount,jdbcType=DOUBLE}
+		</if>
+	    <if test="maxAmount != null and maxAmount !=''">
+		    and a.balance &lt;= #{maxAmount,jdbcType=DOUBLE}
+		</if>
+	    <if test="applyDep != null and applyDep !=''">
+		    and a.apply_dep = #{applyDep,jdbcType=DOUBLE}
+		</if>
+		order by a.status asc,a.use_status asc,a.create_time desc limit
+		#{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据会员id 查询对应的优惠券 -->
+	<select id="getAllNumUserId" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_coupon a left join x_member m on a.member_id=m.id  
+		where a.issue_authority in (-1,#{sysUserId,jdbcType=INTEGER}) and 1= 1
+		<!-- select count(1) from (
+			select
+		<include refid="query_Column_List" />
+		,a.status status1,
+		(select `name` from x_sys_user where id = a.create_id) sysUserName,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		 m.name memberName,m.phone  memberPhone
+		from x_coupon a left join x_member m on a.member_id=m.id  where a.issue_authority in (-1,#{sysUserId,jdbcType=INTEGER})
+		and 1=1 -->
+		<if test="title != null and titel != '' ">
+			and a.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and a.coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and a.status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and a.use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and a.batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			and a.member_id in(select m.id from x_member m where m.name LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="memberPhone != null and memberPhone != '' ">
+			and a.member_id =(select m.id from x_member m where  m.phone = #{memberPhone,jdbcType=VARCHAR})
+		</if>
+		<if test="minAmount != null and minAmount !=''">
+		    and a.balance &gt;= #{minAmount,jdbcType=DOUBLE}
+		</if>
+	    <if test="maxAmount != null and maxAmount !=''">
+		    and a.balance &lt;= #{maxAmount,jdbcType=DOUBLE}
+		</if>
+		<if test="applyDep != null and applyDep !=''">
+		    and a.apply_dep = #{applyDep,jdbcType=DOUBLE}
+		</if>
+		<!-- order by a.status asc,a.use_status asc,a.create_time desc
+		)tab -->
+	</select>
+	<select id="getAllUserId" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="query_Column_List" />
+		,a.status status1,
+		(select `name` from x_sys_user where id = a.create_id) sysUserName,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		 m.name memberName,m.phone  memberPhone
+		from x_coupon a left join x_member m on a.member_id=m.id  where  1=1 and a.issue_authority in (-1,#{sysUserId,jdbcType=INTEGER})
+		<if test="title != null and titel != '' ">
+			and a.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and a.coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and a.status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and a.use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and a.batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			and a.member_id in(select m.id from x_member m where m.name LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="memberPhone != null and memberPhone != '' ">
+			and a.member_id =(select m.id from x_member m where  m.phone = #{memberPhone,jdbcType=VARCHAR})
+		</if>
+		<if test="minAmount != null and minAmount !=''">
+		    and a.balance &gt;= #{minAmount,jdbcType=DOUBLE}
+		</if>
+	    <if test="maxAmount != null and maxAmount !=''">
+		    and a.balance &lt;= #{maxAmount,jdbcType=DOUBLE}
+		</if>
+		<if test="applyDep != null and applyDep !=''">
+		    and a.apply_dep = #{applyDep,jdbcType=DOUBLE}
+		</if>
+		order by a.status asc,a.use_status asc,a.create_time desc limit
+		#{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查批次号为batchNo的共有多少张未领取的且未失效的优惠券数 -->
+	<select id="getUncollectedCountByBatchNo" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		select count(1)
+		from x_coupon where batch_no = #{batchNo, jdbcType=VARCHAR}
+		<![CDATA[and TO_DAYS(end_time) > TO_DAYS(NOW())]]> 
+		and status = '0'
+	</select>
+
+	<!-- 查批次号为batchNo的未领取的且未失效的优惠券 -->
+	<select id="getUncollectedByBatchNo" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_coupon where batch_no = #{batchNo, jdbcType=VARCHAR}
+		<!-- <![CDATA[and TO_DAYS(end_time) > TO_DAYS(NOW())]]>  -->
+		and ((now() BETWEEN start_time and end_time) or <![CDATA[TO_DAYS(end_time) > TO_DAYS(NOW())]]>)
+		and status = '0'
+	</select>
+	<!-- 根据id来更新是否作废的状态 -->
+	<update id="updateById" parameterType="java.lang.Integer">
+		update x_coupon set status = #{status,jdbcType=VARCHAR}  where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据批次号  会员id查询是否领取 -->
+	<select id="findById" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1)
+		from x_coupon
+		where member_id = #{memberId,jdbcType=INTEGER} and batch_no=#{batchNo,jdbcType=VARCHAR}
+	</select>
+	<!-- 在[begin , end]之间的优惠券数量 -->
+	<!-- <select id="getAllNumInTime" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_coupon where 1=1
+		<if test="title != null and titel != '' ">
+			and title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="couponNo != null and couponNo != '' ">
+			and coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null  and status != '' ">
+			and status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+	</select> -->
+	<select id="getAllNumInTime" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+	select count(1) from (
+		select
+		a.*
+		,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		m.name memberName,m.phone  memberPhone
+		from  x_coupon a left join x_member m on a.member_id=m.id  where  1=1
+		<if test="title != null and titel != '' ">
+			and a.title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and a.coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and a.status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and a.use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and a.batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			and a.member_id in(select m.id from x_member m where m.name LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND a.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND a.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+		order by a.status asc,a.use_status asc,a.create_time desc
+	)total
+	</select>
+
+	<!-- 在[begin , end]之间的优惠券 -->
+	<!-- <select id="getAllInTime" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		(select name from x_member m where m.id = a.member_id) memberName
+		from x_coupon a where 1=1
+		<if test="title != null and titel != '' ">
+			and title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+		order by status asc,use_status asc,create_time desc limit
+		#{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select> -->
+	<select id="getAllInTime" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		a.*
+		,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		m.name memberName,m.phone  memberPhone
+		from  x_coupon a left join x_member m on a.member_id=m.id  where  1=1
+		<if test="title != null and titel != '' ">
+			and a.title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="couponNo != null  and couponNo != '' ">
+			and a.coupon_no = #{couponNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and a.status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="useStatus != null and useStatus != '' ">
+			and a.use_status = #{useStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="batchNo != null and batchNo != '' ">
+			and a.batch_no = #{batchNo,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="memberName != null and memberName != '' ">
+			and a.member_id in(select m.id from x_member m where m.name LIKE CONCAT('%', #{memberName,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="begin != null and begin != '' ">
+			<![CDATA[ AND a.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end != '' ">
+			<![CDATA[ AND a.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+		</if>
+		order by status asc,use_status asc,create_time desc limit
+		#{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据title来分组 -->
+	<select id="getGroupByTitle" resultMap="CouponReportResultMap"
+		parameterType="java.util.Map">
+		SELECT <include refid="Report_Column_List" /> 
+			FROM x_coupon C
+		LEFT JOIN x_coupon_item CIT ON CIT.itemCode = C.item_code
+			WHERE 1 = 1
+			<if test="cityCode != null and cityCode != '' ">
+				and C.city_code = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			 
+			<if test="begin != null and begin != '' ">
+				<![CDATA[ AND C.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="end != null and end != '' ">
+				<![CDATA[ AND C.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+			</if>
+			<!-- 
+			<if test="begin != null and begin != '' ">
+				<![CDATA[ AND TO_DAYS(C.start_time) <= TO_DAYS(#{begin, jdbcType=TIMESTAMP}) ]]>
+			</if>
+			<if test="end != null and end != '' ">
+				<![CDATA[ AND TO_DAYS(C.end_time) >= TO_DAYS(#{end, jdbcType=TIMESTAMP}) ]]>
+			</if>
+			  -->
+			<if test="title != null and title != '' ">
+				AND C.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+			</if>
+			 
+			GROUP BY C.title 
+			ORDER BY C.create_time DESC
+			limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+			
+	</select>
+	
+	<!-- 获取报表统计条数 -->
+<!-- 	<select id="getReportCount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT COUNT(1)
+			FROM x_coupon C
+		LEFT JOIN x_coupon_item CIT ON CIT.itemCode = C.item_code
+			WHERE 1 = 1
+			<if test="cityCode != null and cityCode != '' ">
+				and C.city_code = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			 
+			<if test="begin != null and begin != '' ">
+				<![CDATA[ AND C.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="end != null and end != '' ">
+				<![CDATA[ AND C.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+			</if>
+			
+			<if test="begin != null and begin != '' ">
+				<![CDATA[ AND TO_DAYS(C.start_time) <= TO_DAYS(#{begin, jdbcType=TIMESTAMP}) ]]>
+			</if>
+			<if test="end != null and end != '' ">
+				<![CDATA[ AND TO_DAYS(C.end_time) >= TO_DAYS(#{end, jdbcType=TIMESTAMP}) ]]>
+			</if>
+			 
+			<if test="title != null and title != '' ">
+				AND C.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+			</if>
+	</select> -->
+	<select id="getReportCount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from (
+				SELECT <include refid="Report_Column_List" /> 
+			FROM x_coupon C
+		LEFT JOIN x_coupon_item CIT ON CIT.itemCode = C.item_code
+			WHERE 1 = 1
+			<if test="cityCode != null and cityCode != '' ">
+				and C.city_code = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			 
+			<if test="begin != null and begin != '' ">
+				<![CDATA[ AND C.start_time >= #{begin, jdbcType=TIMESTAMP} ]]>
+			</if>
+			<if test="end != null and end != '' ">
+				<![CDATA[ AND C.end_time <= #{end, jdbcType=TIMESTAMP} ]]>
+			</if>
+			
+			<if test="begin != null and begin != '' ">
+				<![CDATA[ AND TO_DAYS(C.start_time) <= TO_DAYS(#{begin, jdbcType=TIMESTAMP}) ]]>
+			</if>
+			<if test="end != null and end != '' ">
+				<![CDATA[ AND TO_DAYS(C.end_time) >= TO_DAYS(#{end, jdbcType=TIMESTAMP}) ]]>
+			</if>
+			 
+			<if test="title != null and title != '' ">
+				AND C.title LIKE CONCAT(CONCAT('%', #{title,jdbcType=VARCHAR}),'%')
+			</if>
+			GROUP BY C.title 
+			ORDER BY C.create_time DESC
+		)total
+		
+	</select>	
+	
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO x_coupon
+			(coupon_no, title, description, start_time, end_time, status, create_time, member_id,
+			use_status, balance, batch_no, use_time, city_code,type,item_code,category,max_deduction_value)
+			<trim prefix=" values " suffixOverrides=",">
+			<foreach collection="list" item="item" index="index"
+				separator=",">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					<choose>
+						<when test="item.couponNo != null">
+							#{item.couponNo},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.title != null">
+							#{item.title},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.description != null">
+							#{item.description},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.startTime != null">
+							#{item.startTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.endTime != null">
+							#{item.endTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.status != null">
+							#{item.status},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.createTime != null">
+							#{item.createTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.memberId != null">
+							#{item.memberId},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.useStatus != null">
+							#{item.useStatus},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.balance != null">
+							#{item.balance},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.batchNo != null">
+							#{item.batchNo},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.useTime != null">
+							#{item.useTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.cityCode != null">
+							#{item.cityCode,jdbcType=VARCHAR},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.type != null">
+							#{item.type,jdbcType=INTEGER},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.itemCode != null">
+							#{item.itemCode,jdbcType=VARCHAR},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.category != null">
+							#{item.category,jdbcType=INTEGER},
+						</when>
+						<otherwise>0,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.maxDeductionValue != null">
+							#{item.maxDeductionValue,jdbcType=INTEGER},
+						</when>
+						<otherwise>0,</otherwise>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</insert>
+	<insert id="insertFourFiveStartBatch" parameterType="java.util.List">
+		INSERT into 
+		x_coupon(city_code,coupon_no,title,member_id,balance,batch_no,start_time,end_time,status,use_status,create_time,type,item_code,use_type,min_use_value,category,max_deduction_value,strategy_id)
+		<trim prefix="values" suffixOverrides=",">
+			<foreach collection="list" item="item" separator="," index="index">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					<choose>
+						<when test="item.cityCode != null">
+							#{item.cityCode,jdbcType=VARCHAR},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.couponNo != null">
+							#{item.couponNo},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.title != null">
+							#{item.title},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.memberId != null">
+							#{item.memberId},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.balance != null">
+							#{item.balance},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.batchNo != null">
+							#{item.batchNo},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.startTime != null">
+							#{item.startTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.endTime != null">
+							#{item.endTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.status != null">
+							#{item.status},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.useStatus != null">
+							#{item.useStatus},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.createTime != null">
+							#{item.createTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.type != null">
+							#{item.type,jdbcType=INTEGER},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.itemCode != null">
+							#{item.itemCode,jdbcType=VARCHAR},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.useType != null">
+							#{item.useType,jdbcType=INTEGER},
+						</when>
+						<otherwise>null,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.minUseValue != null">
+							#{item.minUseValue,jdbcType=INTEGER},
+						</when>
+						<otherwise>null,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.category != null">
+							#{item.category,jdbcType=INTEGER},
+						</when>
+						<otherwise>0,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.maxDeductionValue != null">
+							#{item.maxDeductionValue,jdbcType=INTEGER},
+						</when>
+						<otherwise>0,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.strategyId != null">
+							#{item.strategyId,jdbcType=INTEGER},
+						</when>
+						<otherwise>null,</otherwise>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</insert>
+	<!-- 根据memberId和title查已发放的优惠券数据 -->
+	<select id="getCntByTitleAndMemberId" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(1) FROM x_coupon WHERE member_id = #{memberId} AND title = #{title}
+	</select>
+	<select id="selectRecordByItemCodeAndMemberId" resultType="int">
+		select count(1) from x_coupon where member_id = #{memberId} AND item_code = #{itemCode} 
+	</select>
+	<select id="selectRecordsBymemberIdAndstrategyId" resultType="java.lang.Integer">
+  		SELECT COUNT(1) FROM x_coupon WHERE member_id = #{memberId} AND strategy_id = #{strategyId}	
+    </select>
+
+</mapper>

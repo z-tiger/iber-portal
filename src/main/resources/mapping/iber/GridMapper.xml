@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.dispatcher.GridMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.dispatcher.Grid">
+		<result column="id" property="id" jdbcType="INTEGER"/>
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="city_name" property="cityName" jdbcType="VARCHAR"/>
+		<result column="scope" property="scope" jdbcType="VARCHAR"/>
+		<result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+		<result column="park_number" property="parkNumber" jdbcType="INTEGER"/>
+		<result column="dispatcher_number" property="dispatcherNumber" jdbcType="INTEGER"/> 
+	</resultMap>
+	
+	<resultMap type="com.iber.portal.model.task.EmployeeOnGrid" id="EmployeeOnGridResultMap">
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="city_code" property="cityCode"/>
+		<collection property="employees" column="id" ofType="com.iber.portal.model.dispatcher.Employee" select="com.iber.portal.dao.dispatcher.EmployeeMapper.selectDispatherByGridId"/>
+	</resultMap>
+
+	<!-- 查询网格列表 -->
+	<select id="queryPageList" resultMap="BaseResultMap">
+		SELECT 
+			g.id,
+			g.name,
+			g.city_code,
+			g.scope,
+			c.name city_name,
+			g.update_time,
+			g.create_time,
+			s.name createUser,
+			si.name updateUser,
+			tmp.cnt park_number,
+			employee_tmp.cnt dispatcher_number
+		FROM e_gridding_info g LEFT JOIN 
+			(
+				SELECT
+					COUNT(1) cnt, g.id gridding_id
+				FROM
+				e_gridding_park_relation gp
+					LEFT JOIN e_gridding_info g ON gp.gridding_id = g.id
+					INNER JOIN x_park p on p.id = gp.park_id where p.`status` = 1
+					GROUP BY g.id
+			) tmp on g.id = tmp.gridding_id LEFT JOIN 
+			(SELECT	COUNT(1) cnt, eg.gridding_id eg_gridding_id
+				FROM
+					e_employee_gridding_relation eg
+					LEFT JOIN e_gridding_info g ON eg.gridding_id = g.id
+					LEFT JOIN e_employee_info e ON eg.employee_id = e.id
+				WHERE e.type = '1' and e.status != 'freeze' 
+					GROUP BY eg.gridding_id
+			) employee_tmp on employee_tmp.eg_gridding_id = g.id 
+			LEFT JOIN x_sys_user s on g.createId = s.id 
+			LEFT JOIN x_sys_user si on g.updateId = si.id
+			LEFT JOIN x_city c on g.city_code = c.code
+			<where>
+				<if test='gridName != null and gridName != "" '>
+					g.name like concat('%', #{gridName},'%')
+				</if>
+			</where>
+			limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询网格总数 -->
+	<select id="getAllNum" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM (
+			SELECT 
+				g.id,
+				g.NAME,
+				g.scope,
+				g.city_code,
+				g.update_time,
+				g.create_time,
+				s.name createName,
+				si.name updateName,
+				tmp.cnt park_cnt,
+				employee_tmp.cnt employee_cnt
+			FROM e_gridding_info g LEFT JOIN 
+				(
+					SELECT
+						COUNT(1) cnt, g.id gridding_id
+					FROM
+					e_gridding_park_relation gp
+						LEFT JOIN e_gridding_info g ON gp.gridding_id = g.id
+						GROUP BY g.id
+				) tmp on g.id = tmp.gridding_id LEFT JOIN 
+				(
+					SELECT
+						COUNT(1) cnt, eg.gridding_id eg_gridding_id
+					FROM
+						e_employee_gridding_relation eg
+						LEFT JOIN e_gridding_info g ON eg.gridding_id = g.id
+						LEFT JOIN e_employee_info e ON eg.employee_id = e.id
+					WHERE e.type = '1'
+						GROUP BY eg.gridding_id
+				) employee_tmp on employee_tmp.eg_gridding_id = g.id 
+				LEFT JOIN x_sys_user s on g.createId = s.id 
+				LEFT JOIN x_sys_user si on g.updateId = si.id
+				<where>
+					<if test='gridName != null and gridName != "" '>
+						g.name = #{gridName}
+					</if>
+				</where>
+			) tmp
+	</select>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.iber.portal.model.dispatcher.Grid">
+		insert into e_gridding_info
+		(name, scope, city_code, createId, create_time)
+		values(#{name}, #{scope}, #{cityCode}, #{createId}, #{createTime})
+	</insert>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		SELECT 
+			g.id,
+			g.name,
+			g.city_code,
+			g.scope,
+			c.name city_name,
+			g.update_time,
+			g.create_time,
+			s.name createUser,
+			si.name updateUser
+		FROM e_gridding_info g 
+			LEFT JOIN x_sys_user s on g.createId = s.id 
+			LEFT JOIN x_sys_user si on g.updateId = si.id
+			LEFT JOIN x_city c on g.city_code = c.code
+		where g.id = #{grid_id}
+	</select>
+	
+	<delete id="deleteGrid">
+		delete from
+		e_gridding_info where id = #{id}
+	</delete>
+	
+	<update id="update">
+		update e_gridding_info
+		set name=#{name},scope=#{scope},city_code=#{cityCode},updateId=#{updateId},update_time=#{updateTime}
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteParkOnGrid">
+		delete from e_gridding_park_relation
+		where gridding_id = #{gridId} and park_id = #{parkId}
+	</delete>
+	
+	<delete id="deleteDispatcherOnGrid">
+		delete from e_employee_gridding_relation
+		where gridding_id = #{gridId} and employee_id = #{dispatcherId}
+	</delete>
+	
+	<update id="manageGridAdministration">
+		update e_employee_gridding_relation
+		set is_manager = 1
+		where employee_id = #{dispatherId}
+	</update>
+	
+	<update id="cancelGridAdministration">
+		update e_employee_gridding_relation
+		set is_manager = 2
+		where employee_id = #{dispatherId}
+	</update>
+	
+	<select id="selectEmployeeOnGrid" resultMap="EmployeeOnGridResultMap">
+		select id,name,city_code from e_gridding_info 
+		<where>
+			<if test="_parameter !='00'">
+				city_code = #{_parameter}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteGridParkRelationByParkId">
+	    delete from e_gridding_park_relation
+		    where park_id = #{parkId}
+	</delete>
+	
+</mapper>   

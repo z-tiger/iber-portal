@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.charging.ChargingOrderPayLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.charging.ChargingOrderPayLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="trade_time" property="tradeTime" jdbcType="TIMESTAMP" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="pay_id" property="payId" jdbcType="VARCHAR" />
+    <result column="acp_trace_no" property="acpTraceNo" jdbcType="VARCHAR" />
+    <result column="acp_settle_date" property="acpSettleDate" jdbcType="VARCHAR" />
+    <result column="acp_settle_amt" property="acpSettleAmt" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, pay_type, pay_status, pay_time, trade_no, trade_time, pay_money, order_type, 
+    create_time, member_id, pay_id, acp_trace_no, acp_settle_date, acp_settle_amt
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from c_charging_order_pay_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from c_charging_order_pay_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.charging.ChargingOrderPayLog" >
+    insert into c_charging_order_pay_log (id, order_id, pay_type, 
+      pay_status, pay_time, trade_no, 
+      trade_time, pay_money, order_type, 
+      create_time, member_id, pay_id, 
+      acp_trace_no, acp_settle_date, acp_settle_amt
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, 
+      #{payStatus,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, #{tradeNo,jdbcType=VARCHAR}, 
+      #{tradeTime,jdbcType=TIMESTAMP}, #{payMoney,jdbcType=INTEGER}, #{orderType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{memberId,jdbcType=INTEGER}, #{payId,jdbcType=VARCHAR}, 
+      #{acpTraceNo,jdbcType=VARCHAR}, #{acpSettleDate,jdbcType=VARCHAR}, #{acpSettleAmt,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.charging.ChargingOrderPayLog" >
+    insert into c_charging_order_pay_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="tradeTime != null" >
+        trade_time,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="payId != null" >
+        pay_id,
+      </if>
+      <if test="acpTraceNo != null" >
+        acp_trace_no,
+      </if>
+      <if test="acpSettleDate != null" >
+        acp_settle_date,
+      </if>
+      <if test="acpSettleAmt != null" >
+        acp_settle_amt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="payId != null" >
+        #{payId,jdbcType=VARCHAR},
+      </if>
+      <if test="acpTraceNo != null" >
+        #{acpTraceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleDate != null" >
+        #{acpSettleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleAmt != null" >
+        #{acpSettleAmt,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.ChargingOrderPayLog" >
+    update c_charging_order_pay_log
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeNo != null" >
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeTime != null" >
+        trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="payId != null" >
+        pay_id = #{payId,jdbcType=VARCHAR},
+      </if>
+      <if test="acpTraceNo != null" >
+        acp_trace_no = #{acpTraceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleDate != null" >
+        acp_settle_date = #{acpSettleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="acpSettleAmt != null" >
+        acp_settle_amt = #{acpSettleAmt,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.charging.ChargingOrderPayLog" >
+    update c_charging_order_pay_log
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      trade_time = #{tradeTime,jdbcType=TIMESTAMP},
+      pay_money = #{payMoney,jdbcType=INTEGER},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      member_id = #{memberId,jdbcType=INTEGER},
+      pay_id = #{payId,jdbcType=VARCHAR},
+      acp_trace_no = #{acpTraceNo,jdbcType=VARCHAR},
+      acp_settle_date = #{acpSettleDate,jdbcType=VARCHAR},
+      acp_settle_amt = #{acpSettleAmt,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

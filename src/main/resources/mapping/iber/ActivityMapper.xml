@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.activity.ActivityMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.activity.Activity">
+		<result column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR"/>
+		<result column="remark" property="remark" />
+		<result column="url" property="url" />
+		<result column="imgUrl" property="imgUrl" />
+		<result column="startTime" property="startTime" />
+		<result column="endTime" property="endTime" />
+		<result column="status" property="status" />
+		<result column="createId" property="createId" />
+		<result column="createTime" property="createTime" />
+		<result column="updateId" property="updateId" />
+		<result column="updateTime" property="updateTime" />
+		<result column="code" property="code"/>
+		<result column="createSysUserName" property="createSysUserName" />
+		<result column="updateSysUserName" property="updateSysUserName" />
+		<result column="sd_name" property="sdName"/><!--活动名 -->
+		<result column="city_name" property="cityName"/><!-- 城市名 -->
+	</resultMap> 
+
+	<sql id="Base_Column_List">
+		id,title,remark,url,imgUrl,startTime,endTime,status,createId,createTime,updateId,updateTime,code,city_code
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.iber.portal.model.activity.Activity">
+		insert into
+		x_activity(id,city_code,title,remark,url,imgUrl,startTime,endTime,status,createId,createTime,updateId,updateTime,code)
+		values(#{id},#{cityCode},#{title},#{remark},#{url},#{imgUrl},#{startTime},#{endTime},#{status},#{createId},#{createTime},#{updateId},#{updateTime},#{code})
+	</insert>
+	<insert id="insertSelective" parameterType="com.iber.portal.model.activity.Activity" >
+    insert into x_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl,
+      </if>
+      <if test="startTime != null" >
+        startTime,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createId != null" >
+        createId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateId != null" >
+        updateId,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.activity.Activity" >
+    update x_activity
+    <set >
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        startTime = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="createId != null" >
+        createId = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        updateId = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from x_activity where id = #{id}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+		update x_activity set city_code = #{cityCode},
+		title=#{title},remark=#{remark},url=#{url},imgUrl=#{imgUrl},startTime=#{startTime},endTime=#{endTime},status=#{status},createId=#{createId},updateId=#{updateId},updateTime=now(),
+		code=#{code}
+		where id=#{id}
+	</update>
+
+	<!-- 根据id查询 活动 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select 
+		<include refid="Base_Column_List" />,city_code
+		from x_activity where id = #{id}
+	</select>
+
+	<!-- 活动 列表总数 -->
+	<select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT count(1) FROM x_activity act 
+		INNER JOIN x_sys_dic sd on sd.`code` = act.`code` 
+		INNER JOIN x_city c on c.`code` = act.city_code
+		<where>
+			<if test="title!=null and title!='' ">
+				and act.title like concat('%',#{title},'%') 
+			</if>
+			<if test="status != null and status != ''">
+				and act.status = #{status}
+			</if>
+			<if test="code != null and code != ''">
+				and act.code = #{code}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询活动列表 -->
+	<select id="queryPageList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT act.*,sd.`name` sd_name,c.`name` city_name 
+		FROM x_activity act 
+		INNER JOIN x_sys_dic sd on sd.`code` = act.`code` 
+		INNER JOIN x_city c on c.`code` = act.city_code
+		<where>
+			<if test="title!=null and title!='' ">
+				and act.title like concat('%',#{title},'%') 
+			</if>
+			<if test="status != null and status != ''">
+				and act.status = #{status}
+			</if>
+			<if test="code != null and code != ''">
+				and act.code = #{code}
+			</if>
+		</where>
+		order by act.createTime
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取最新的有效且未过期的活动  -->
+	<select id="getLatestActivity" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+		 FROM x_activity WHERE status = 1 
+		 	<![CDATA[ AND endTime > NOW() ORDER BY startTime DESC LIMIT 1 ]]>
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		 FROM x_activity
+	</select>
+	
+	<select id="selectByCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_activity
+		where code = #{code}
+	</select>
+	<!-- 获取状态为开启的活动  -->
+    <select id="selectStartingActivity" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select <include refid="Base_Column_List" />
+		 FROM x_activity 
+		 <if test="status!=null and status !=''">
+		    where status = 1
+		 </if>
+	</select>
+	<select id="selectActivityByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT act.* FROM x_activity act where act.city_code = #{cityCode} 
+	</select>
+	<select id="selecIdenticalCity" resultMap="BaseResultMap" parameterType="string">
+		select act.status,act.startTime,act.endTime FROM x_activity act where act.city_code = #{cityCode}
+	</select>
+	<select id="selectByIdCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT * FROM x_activity a WHERE a.city_code = #{cityCode} AND a.id  <![CDATA[<>]]> #{id}
+	</select>
+</mapper>   

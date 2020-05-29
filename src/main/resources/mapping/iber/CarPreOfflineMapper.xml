@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarPreOfflineMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarPreOffline" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="principal_id" property="principalId" jdbcType="INTEGER" />
+    <result column="principal_name" property="principalName" jdbcType="VARCHAR" />
+    <result column="principal_phone" property="principalPhone" jdbcType="VARCHAR" />
+    
+    <result column="offline_type" property="offlineType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="predict_time" property="predictTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+       id,lpn,city_code,principal_id,principal_name,principal_phone,create_time,create_user,
+       offline_type,end_time,predict_time,reason,status,update_time,update_user,update_user_id
+  </sql>
+<!--   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" > -->
+<!-- 	 select  -->
+<!-- 	    <include refid="Base_Column_List" /> -->
+<!-- 	 from x_car_preoffline -->
+<!-- 	    where id = #{id,jdbcType=INTEGER} -->
+<!--   </select> -->
+  
+   <select id="selectPreOfflineRecordByLpn" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	 select 
+	    <include refid="Base_Column_List" />
+	 from x_car_preoffline
+	   where lpn = #{lpn,jdbcType=VARCHAR} and status = #{status,jdbcType=VARCHAR} limit 1
+  </select>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarPreOffline" >
+    update x_car_preoffline
+    <set>
+      <if test="principalId != null" >
+        principal_id = #{principalId,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="principalName != null" >
+        principal_name = #{principalName,jdbcType=VARCHAR},
+      </if>
+      <if test="principalPhone != null" >
+        principal_phone = #{principalPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="predictTime != null" >
+        predict_time = #{predictTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="offlineType != null" >
+        offline_type = #{offlineType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarRun" >
+    insert into x_car_preoffline
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="principalId != null" >
+        principal_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="principalName != null" >
+        principal_name,
+      </if>
+      <if test="principalPhone != null" >
+        principal_phone,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="predictTime != null" >
+        predict_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="offlineType != null" >
+        offline_type,
+      </if>
+      <if test="reason != null" >
+       reason,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="principalId != null" >
+        #{principalId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="principalName != null" >
+        #{principalName,jdbcType=VARCHAR},
+      </if>
+      <if test="principalPhone != null" >
+        #{principalPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="predictTime != null" >
+        #{predictTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="offlineType != null" >
+         #{offlineType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

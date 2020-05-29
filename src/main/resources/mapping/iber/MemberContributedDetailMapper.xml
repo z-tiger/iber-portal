@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.member.MemberContributedDetailMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap"
+		type="com.iber.portal.model.member.MemberContributedDetail">
+		<id column="id" property="id" />
+		<result column="member_id" property="memberId" />
+		<result column="type" property="type" />
+		<result column="contributed_val_delta" property="contributedValDelta" />
+		<result column="obj_id" property="objId" />
+		<result column="create_time" property="createTime" />
+		<result column="hadCancel" property="hadCancel"/>
+	</resultMap>
+	<resultMap type="com.iber.portal.vo.member.MemberVo" id="memberResultMap">
+		<result column="memberId" property="memberId"/>
+		<result column="cityName" property="cityName"/>
+		<result column="memberName" property="memberName"/>
+		<result column="phone" property="phone"/>
+		<result column="level_code" property="levelCode"/>
+		<result column="memberContributedVal" property="memberContributedVal"/>
+	</resultMap>
+	
+	<resultMap type="com.iber.portal.vo.member.MemberContributedDetailVo" id="MemberContributedDetailResultMap">
+		<id column="id" property="id"/>
+		<result column="contributed_val_delta" property="contributeVal"/>
+		<result column="is_increase" property="isIncrease"/>
+		<result column="childrenName" property="childrenName"/>
+		<result column="parentName" property="parentName"/>
+		<result column="create_time" property="createTime"/>
+		<result column="createName" property="createName"/>
+	</resultMap>
+	<!-- x_member_contributed_detail table all fields -->
+	<sql id="Base_Column_List">
+		id,member_id,type,contributed_val_delta,obj_id,create_time,hadCancel
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert"
+		parameterType="com.iber.portal.model.member.MemberContributedDetail">
+		insert into
+		x_member_contributed_detail(id,member_id,type,contributed_val_delta,obj_id,create_time)
+		values(#{id},#{memberId},#{type},#{contributedValDelta},#{objId},#{createTime})
+	</insert>
+
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		x_member_contributed_detail where id = #{id}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		x_member_contributed_detail set
+		member_id=#{memberId},type=#{type},contributed_val_delta=#{contributedValDelta},obj_id=#{objId},create_time=#{createTime},hadCancel = #{hadCancel}
+		where id=#{id}
+	</update>
+
+	<!-- 根据id查询 会员贡献值明细表 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_member_contributed_detail where id = #{id}
+	</select>
+
+		<!-- 会员贡献值明细表 列表总数 -->
+	<select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1)
+		from x_member m join x_member_card mc on m.id = mc.member_id
+		<trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+					and m.city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="memberLevel != null and memberLevel != '' ">
+					and m.level_code = #{memberLevel}
+				</if>
+				<if test="phone != null and phone !='' ">
+					and m.phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test=" memberName != null and memberName !=''">
+					and m.name like concat('%',#{memberName},'%')
+				</if>
+			</where>
+		</trim>
+	</select>
+
+	<!-- 查询会员贡献值明细表列表 -->
+	<select id="queryPageList" resultMap="memberResultMap" parameterType="java.util.Map">
+		select m.id memberId,
+		(select name from x_city where code = m.city_code) cityName,
+		m.name memberName, m.phone, m.level_code levelCode, mc.contributedVal memberContributedVal
+		from x_member m join x_member_card mc on m.id = mc.member_id
+		<trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+					and m.city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="memberLevel != null and memberLevel != '' ">
+					and m.level_code = #{memberLevel}
+				</if>
+				<if test="phone != null and phone !='' ">
+					and m.phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test=" memberName != null and memberName !=''">
+					and m.name like concat('%',#{memberName},'%')
+				</if>
+			</where>
+		</trim>
+		<if test="from != null and to != null">
+ 		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER} 
+		</if>
+	</select>
+
+	<insert id="insertSelective"
+		parameterType="com.iber.portal.model.member.MemberContributedDetail">
+		insert into x_member_contributed_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberId != null and memberId != '' ">
+				member_id,
+			</if>
+			<if test="type != null and type != '' ">
+				type,
+			</if>
+			<if test="contributedValDelta != null and contributedValDelta != '' ">
+				contributed_val_delta,
+			</if>
+			<if test="objId != null and objId != '' ">
+				obj_id,
+			</if>
+			<if test="createTime != null and createTime != '' ">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberId != null and memberId != '' ">
+				#{memberId},
+			</if>
+			<if test="type != null and type != '' ">
+				#{type},
+			</if>
+			<if test="contributedValDelta != null and contributedValDelta != '' ">
+				#{contributedValDelta},
+			</if>
+			<if test="objId != null and objId != '' ">
+				#{objId},
+			</if>
+			<if test="createTime != null and createTime != '' ">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into x_member_contributed_detail
+		(member_id, type, contributed_val_delta, obj_id, create_time)
+		<trim prefix=" values " suffixOverrides=",">
+			<foreach collection="list" item="item" index="index"
+				separator=",">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					<choose>
+						<when test="item.memberId != null">
+							#{item.memberId,jdbcType=INTEGER},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.type != null">
+							#{item.type,jdbcType=VARCHAR},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.contributedValDelta != null">
+							#{item.contributedValDelta},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.objId != null">
+							#{item.objId,jdbcType=VARCHAR},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.createTime != null">
+							#{item.createTime,jdbcType=TIMESTAMP},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</insert>
+
+	
+	<!-- 查会员ID为memberId的会员，在本月因分享好友而获得贡献值提升的次数 -->
+	<select id="getShareCntByMemberIdInThisMonth" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM x_member_contributed_detail 
+		WHERE member_id = #{memberId} AND  type = 'MEMBER_CONTRIBUTED_SHARE' 
+			AND create_time <![CDATA[  >=  ]]>
+				CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) 
+	</select>
+
+	<!-- 获取关联ID == objId 的记录数  -->
+	<select id="getCntByTypeAndObjId" parameterType="java.lang.String" resultType="int">
+		SELECT COUNT(1) FROM x_member_contributed_detail 
+			WHERE obj_id = #{objId} AND type = #{type}
+	</select>
+	
+	<select id="queryMemberContributedDetailByMember" resultMap="MemberContributedDetailResultMap">
+		SELECT d.contributed_val_delta,b.is_increase,b.`name` childrenName,t.behavior_name parentName,d.create_time,
+		(case when d.create_id is null then null else (SELECT name FROM x_sys_user WHERE id = d.create_id) end ) createName
+		FROM x_member_contributed_detail d JOIN x_member_behavior b on d.type = b.type JOIN x_member_behavior_type t on t.id = b.behavior_id where d.member_id = #{memberId} 
+		<if test="behaviourName != null and behaviourName != ''">
+			and b.name = #{behaviourName}
+		</if>
+		order by d.create_time desc
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<select id="getAllMemberContributedDetailByMember" resultType="java.lang.Integer">
+		select count(1) from x_member_contributed_detail d JOIN x_member_behavior b on d.type = b.type where member_id = #{memberId}
+		<if test="behaviourName != null and behaviourName != ''">
+			and b.name = #{behaviourName}
+		</if>
+	</select>
+
+	<select id="queryDecreaseContributedDetail" resultMap="MemberContributedDetailResultMap">
+		SELECT d.id,d.contributed_val_delta,b.is_increase,b.`name` childrenName,t.behavior_name parentName,d.create_time,
+		(case when d.create_id is null then null else (SELECT name FROM x_sys_user WHERE id = d.create_id) end ) createName
+		FROM x_member_contributed_detail d JOIN x_member_behavior b on d.type = b.type JOIN x_member_behavior_type t on t.id = b.behavior_id where b.is_increase = 0 and d.member_id = #{memberId} and d.hadCancel = 0
+		<if test="behaviourName != null and behaviourName != ''">
+			and b.name = #{behaviourName}
+		</if>
+		order by d.create_time desc
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<select id="getAllDecreaseContributedDetailNum" resultType="java.lang.Integer">
+		select count(1) from x_member_contributed_detail d JOIN x_member_behavior b on d.type = b.type where member_id = #{memberId} and b.is_increase = 0 and d.hadCancel = 0
+		<if test="behaviourName != null and behaviourName != ''">
+			and b.name = #{behaviourName}
+		</if>
+	</select>
+	
+	<select id="queryContributedDetail" resultMap="MemberContributedDetailResultMap">
+		SELECT d.id,d.contributed_val_delta,b.is_increase,b.`name` childrenName,t.behavior_name parentName,d.create_time,
+		(case when d.create_id is null then null else (SELECT name FROM x_sys_user WHERE id = d.create_id) end ) createName
+		FROM x_member_contributed_detail d JOIN x_member_behavior b on d.type = b.type JOIN x_member_behavior_type t on t.id = b.behavior_id where d.member_id = #{memberId}
+		<if test="behaviourName != null and behaviourName != ''">
+			and b.name = #{behaviourName}
+		</if>
+		order by d.create_time desc
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<select id="getAllContributedDetailNum" resultType="java.lang.Integer">
+		select count(1) from x_member_contributed_detail d JOIN x_member_behavior b on d.type = b.type where member_id = #{memberId}
+		<if test="behaviourName != null and behaviourName != ''">
+			and b.name = #{behaviourName}
+		</if>
+	</select>
+	<select id="queryIsHave" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from x_member_contributed_detail where date(create_time) <![CDATA[>=]]> (date_add(curdate(), interval - day(curdate()) + 1 day)) 
+		and date(create_time) <![CDATA[<=]]> (last_day(curdate()) ) and type ='MEMBER_CULTURE_USECAR'
+	</select>
+ 
+
+	<select id="queryOneWeakConsumeContributedSum" resultType="com.iber.portal.vo.member.MemberContributedDetailVo">
+		SELECT
+			member_id id,
+			SUM(contributed_val_delta) contributeVal
+		FROM
+			x_member_contributed_detail
+		WHERE type = 'CONSUMPTION'
+		AND create_time <![CDATA[ >= ]]> #{start} AND create_time <![CDATA[ < ]]> #{end}
+		GROUP BY member_id
+	</select>
+
+	<delete id="deleteOneWeakConsumeContribute" parameterType="java.util.Map">
+		DELETE FROM x_member_contributed_detail
+		WHERE type = 'CONSUMPTION'
+		AND create_time <![CDATA[ >= ]]> #{start} AND create_time <![CDATA[ < ]]> #{end}
+	</delete>
+
+	<delete id="deleteConsumeContribute" parameterType="java.util.Map">
+		DELETE FROM x_member_contributed_detail
+		WHERE type = 'CONSUMPTION'
+	</delete>
+
+	<select id="queryMinCreateTime" resultType="date">
+		SELECT MIN(create_time) FROM x_member_contributed_detail
+	</select>
+	<select id="selectRecordsByTypeAndMemberId" resultType="java.lang.Integer">
+		select count(1) from x_member_contributed_detail where type = #{type}  and member_id=#{memberId}
+	</select>
+</mapper>   

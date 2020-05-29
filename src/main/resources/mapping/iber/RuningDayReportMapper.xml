@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.operationReport.RuningDayReportMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.operationReport.RuningDayReport" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="driver_idcard" property="driverIdcard" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="head_photo_url" property="headPhotoUrl" jdbcType="VARCHAR" />
+    <result column="driver_idcard_photo_url" property="driverIdcardPhotoUrl" jdbcType="VARCHAR" />
+    <result column="idcard_photo_url" property="idcardPhotoUrl" jdbcType="VARCHAR" />
+    <result column="finger_print" property="fingerPrint" jdbcType="VARCHAR" />
+    <result column="register_ip" property="registerIp" jdbcType="VARCHAR" />
+    <result column="register_category" property="registerCategory" jdbcType="VARCHAR" />
+    <result column="accout_status" property="accoutStatus" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+    <result column="enterprise_check_status" property="enterpriseCheckStatus" jdbcType="VARCHAR" />
+    <result column="is_drive" property="isDrive" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="register_counts" property="registerCounts" jdbcType="INTEGER" />
+    <result column="queryTime" property="queryTime" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 月注册会员 -->
+  <select id="countsMonthRegiterMember" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(1) counts FROM x_member a WHERE DATE_FORMAT(a.create_time, '%Y-%m') =#{queryMonthTime,jdbcType=TIMESTAMP}
+  </select>
+  
+  <!-- 今日注册会员 -->
+  <select id="countsDayRegiterMeber" resultType="java.lang.Integer">
+  SELECT COUNT(1) counts  FROM x_member a WHERE a.create_time &gt;= #{queryDaySTime,jdbcType=TIMESTAMP} AND a.create_time &lt;= #{queryDayETime,jdbcType=TIMESTAMP}
+  </select>
+  
+  <!-- BEN YUE CHONG ZHI -->
+  <select id="countsMonthChargeMember" parameterType="java.lang.String" resultType="java.lang.Integer">
+  SELECT COUNT(1) COUNTS FROM (SELECT DISTINCT MEMBER_ID FROM x_member_charge_log 
+        WHERE DATE_FORMAT(create_time, '%Y-%m') =#{queryMonthTime,jdbcType=TIMESTAMP}  AND trade_status='0') tab
+  </select>
+  
+  <select id="countsDayChargeMember"  resultType="java.lang.Integer">
+  select count(1) counts from (select distinct MEMBER_ID from x_member_charge_log 
+    where create_time &gt;= #{queryDaySTime,jdbcType=TIMESTAMP} 
+     and  create_time &lt;= #{queryDayETime,jdbcType=TIMESTAMP} and  trade_status='0' )tab
+  </select>
+  
+  <select id="countsCar" resultType="java.lang.Integer">
+     select count(1) counts from x_car
+  </select>
+  
+  <select id="countsRunCar" resultType="java.lang.Integer">
+     select count(1) counts from x_car_run where status is not null and status not in ('empty','repair','maintain')
+  </select>
+  
+  <select id="countsMonthUseCarRecords" parameterType="java.lang.String" resultType="java.lang.Integer"> 
+   select count(1) counts from  x_time_share_order where DATE_FORMAT(order_time, '%Y-%m') =#{queryMonthTime,jdbcType=TIMESTAMP} 
+  </select>
+  
+  
+  <select id="countsDayUseCarRecords"  resultType="java.lang.Integer">
+   select count(1) from   x_time_share_order where order_time &gt;= #{queryDaySTime,jdbcType=TIMESTAMP} 
+     and  order_time &lt;= #{queryDayETime,jdbcType=TIMESTAMP} 
+  </select>
+  
+  
+  <select id="countsMonthUseCarTimes" parameterType="java.lang.String" resultType="java.lang.Double" >
+   select ifnull(sum(total_minute),0) from x_time_share_pay  where   DATE_FORMAT(begin_time, '%Y-%m') =#{queryMonthTime,jdbcType=TIMESTAMP} 
+  </select>
+  
+  <select id="countsDayUseCarTimes" resultType="java.lang.Double" >
+   select ifnull(sum(total_minute),0) from x_time_share_pay where 
+     begin_time &gt;= #{queryDaySTime,jdbcType=TIMESTAMP} 
+     and  begin_time &lt;= #{queryDayETime,jdbcType=TIMESTAMP} 
+  </select>
+  
+  <sql id="Base_Column_List" >
+    id, name, sex, password, phone, email, idcard, driver_idcard, status, head_photo_url, 
+    driver_idcard_photo_url, idcard_photo_url, finger_print, register_ip, register_category, 
+    accout_status, city_code, enterprise_id, member_level, enterprise_check_status, is_drive, 
+    create_time, remark
+  </sql>
+  
+  <sql id="Base_Column_List_Record" >
+    count(1) as register_counts
+  </sql>
+    
+   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List_Record" />
+		from x_member me
+       <trim prefixOverrides="and" >
+       <where>
+         	<![CDATA[and me.member_level != 'account']]> 
+         	<if test="queryTime != null and queryTime != ''" >
+		    	and me.create_time like "%"#{queryTime,jdbcType=TIMESTAMP}"%"
+		    </if> 
+	   </where> 
+      </trim>
+  </select>
+ 
+ 
+   <select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+		from x_member me
+       <trim prefixOverrides="and" >
+       <where>
+         	<![CDATA[and me.member_level != 'account']]>  
+		 <if test="beginTime != null and beginTime != ''" >
+		    <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		 </if>
+		 <if test="endTime != null and endTime != ''" >
+		    <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		 </if>   
+	   </where> 
+      </trim>
+  </select>
+</mapper>

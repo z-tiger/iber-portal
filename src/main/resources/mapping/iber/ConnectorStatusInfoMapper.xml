@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.charging.ConnectorStatusInfoMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.charging.ConnectorStatusInfo" >
+	<result column="id" property="id"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="connector_id" property="connectorId"/>
+	<result column="connector_code" property="connectorCode"/>
+	<result column="status" property="status"/>
+	<result column="current_a" property="currentA"/>
+	<result column="current_b" property="currentB"/>
+	<result column="current_c" property="currentC"/>
+	<result column="voltage_a" property="voltageA"/>
+	<result column="voltage_b" property="voltageB"/>
+	<result column="voltage_c" property="voltageC"/>
+	<result column="park_status" property="parkStatus"/>
+	<result column="lock_status" property="lockStatus"/>
+	<result column="SOC" property="soc"/>
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+</resultMap>
+       
+<!-- c_connector_status_info table all fields -->
+<sql id="Base_Column_List" >
+	 id,create_time,create_id,update_time,update_id,connector_id,status,current_a,current_b,current_c,voltage_a,voltage_b,voltage_c,park_status,lock_status,SOC,connector_code
+</sql>
+
+<sql id="query_Column_List" >
+	 c.id,c.create_time,c.create_id,c.update_time,c.update_id,c.connector_id,c.status,c.current_a,c.current_b,c.current_c,c.voltage_a,c.voltage_b,c.voltage_c,c.park_status,c.lock_status,c.SOC,c.connector_code
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.charging.ConnectorStatusInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+  insert into c_connector_status_info(id,create_time,create_id,connector_id,status,current_a,current_b,current_c,voltage_a,voltage_b,voltage_c,park_status,lock_status,SOC,connector_code)
+ values(#{id},#{createTime},#{createId},#{connectorId},#{status},#{currentA},#{currentB},#{currentC},#{voltageA},#{voltageB},#{voltageC},#{parkStatus},#{lockStatus},#{soc},#{connectorCode})
+</insert>
+ <insert id="insertSelective" parameterType="com.iber.portal.model.charging.ConnectorStatusInfo" >
+    insert into c_connector_status_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="connectorId != null" >
+        connector_id,
+      </if>
+      <if test="connectorCode != null" >
+        connector_code,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="currentA != null" >
+        current_A,
+      </if>
+      <if test="currentB != null" >
+        current_B,
+      </if>
+      <if test="currentC != null" >
+        current_C,
+      </if>
+      <if test="voltageA != null" >
+        voltage_A,
+      </if>
+      <if test="voltageB != null" >
+        voltage_B,
+      </if>
+      <if test="voltageC != null" >
+        voltage_C,
+      </if>
+      <if test="parkStatus != null" >
+        park_status,
+      </if>
+      <if test="lockStatus != null" >
+        lock_status,
+      </if>
+      <if test="soc != null" >
+        SOC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="connectorId != null" >
+        #{connectorId,jdbcType=INTEGER},
+      </if>
+      <if test="connectorCode != null" >
+        #{connectorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="currentA != null" >
+        #{currentA,jdbcType=INTEGER},
+      </if>
+      <if test="currentB != null" >
+        #{currentB,jdbcType=INTEGER},
+      </if>
+      <if test="currentC != null" >
+        #{currentC,jdbcType=INTEGER},
+      </if>
+      <if test="voltageA != null" >
+        #{voltageA,jdbcType=INTEGER},
+      </if>
+      <if test="voltageB != null" >
+        #{voltageB,jdbcType=INTEGER},
+      </if>
+      <if test="voltageC != null" >
+        #{voltageC,jdbcType=INTEGER},
+      </if>
+      <if test="parkStatus != null" >
+        #{parkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lockStatus != null" >
+        #{lockStatus,jdbcType=INTEGER},
+      </if>
+      <if test="soc != null" >
+        #{soc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.ConnectorStatusInfo" >
+    update c_connector_status_info
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="connectorId != null" >
+        connector_id = #{connectorId,jdbcType=INTEGER},
+      </if>
+      <if test="connectorCode != null" >
+        connector_code = #{connectorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="currentA != null" >
+        current_A = #{currentA,jdbcType=INTEGER},
+      </if>
+      <if test="currentB != null" >
+        current_B = #{currentB,jdbcType=INTEGER},
+      </if>
+      <if test="currentC != null" >
+        current_C = #{currentC,jdbcType=INTEGER},
+      </if>
+      <if test="voltageA != null" >
+        voltage_A = #{voltageA,jdbcType=INTEGER},
+      </if>
+      <if test="voltageB != null" >
+        voltage_B = #{voltageB,jdbcType=INTEGER},
+      </if>
+      <if test="voltageC != null" >
+        voltage_C = #{voltageC,jdbcType=INTEGER},
+      </if>
+      <if test="parkStatus != null" >
+        park_status = #{parkStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lockStatus != null" >
+        lock_status = #{lockStatus,jdbcType=INTEGER},
+      </if>
+      <if test="soc != null" >
+        SOC = #{soc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+<!-- 根据接口id删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from c_connector_status_info where connector_id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update c_connector_status_info set create_time=#{createTime},create_id=#{createId},update_time=#{updateTime},update_id=#{updateId},connector_id=#{connectorId},status=#{status},current_a=#{currentA},current_b=#{currentB},current_c=#{currentC},voltage_a=#{voltageA},voltage_b=#{voltageB},voltage_c=#{voltageC},park_status=#{parkStatus},lock_status=#{lockStatus},SOC=#{soc} where id=#{id}
+</update>
+
+<!-- 更新 -->
+<update id="updateByStatusKey" parameterType="java.lang.Integer">
+	update c_connector_status_info set update_time=#{updateTime},update_id=#{updateId},status=#{status},connector_code=#{connectorCode},lock_status=#{lockStatus} where connector_id=#{connectorId}
+</update>
+<!-- 根据id查询 充电设备接口状态 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from c_connector_status_info where id = #{id}
+</select>
+
+<!-- 充电设备接口状态 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from c_connector_status_info c where 1=1 
+ 	<if test="connectorId != '' and connectorId != null">
+		and connector_id=#{connectorId,jdbcType=INTEGER}
+	</if>
+	<if test="status != null and status != '' ">
+		and status=#{status,jdbcType=INTEGER}
+	</if>
+ 
+</select>
+  	
+<!-- 查询充电设备接口状态列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="query_Column_List"/>,
+	(select u.name from x_sys_user u where u.id = c.create_id) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id) update_name
+	from c_connector_status_info c where 1 =1 
+	<if test="  connectorId != null and connectorId != '' " >
+		and c.connector_id=#{connectorId,jdbcType=INTEGER}
+	</if>
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}	 
+</select>
+<!-- 根据接口id查询状态 -->
+<select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+	 select 
+	 <include refid="query_Column_List"/>
+	 from c_connector_status_info c where c.connector_id =#{id} 
+</select>
+ 
+ <!-- 根据充电桩id删除对应的 接口状态信息 -->
+ <delete id="deleteByEquipmentId" parameterType="java.lang.Integer">
+	delete from c_connector_status_info where connector_id in (select id from c_connector_info where equipment_id=#{id})
+</delete> 	
+ 
+ <!-- 根据id查询 充电设备接口状态 -->
+<select id="queryByconnectorCodeAndId"  resultMap="BaseResultMap" >
+	select <include refid="Base_Column_List" /> 
+	 from c_connector_status_info where connector_code = #{connectorCode} and connector_id = #{connectorId}
+</select>
+</mapper>   

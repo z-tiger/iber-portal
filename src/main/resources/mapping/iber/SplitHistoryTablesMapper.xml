@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.SplitHistoryTablesMapper">
+	
+	<select id="queryCmdInfoCnt" resultType="int">
+		SELECT COUNT(1) FROM c_cmd_info
+	</select>
+	
+	<select id="queryCarRunLogCnt" resultType="int">
+		SELECT COUNT(1) FROM x_car_run_log
+	</select>
+	
+	<select id="querySysWarnCnt" resultType="int">
+		SELECT COUNT(1) FROM x_sys_warn_info
+	</select>
+
+	<!-- 创建新的历史表，表名后是增加时间信息的  -->
+	<update id="createNewHistoryTable" parameterType="java.util.Map">
+		CREATE TABLE ${newTableName} AS 
+			SELECT * FROM ${origTableName} WHERE create_time <![CDATA[ < ]]> #{latestTime}
+	</update>
+
+	<!-- 删除原表中create_time < latestTime 的记录  -->
+	<update id="deleteOrigTableRecords" parameterType="java.util.Map">
+		DELETE FROM ${origTableName} WHERE create_time <![CDATA[ < ]]> #{latestTime}
+	</update>
+
+</mapper>

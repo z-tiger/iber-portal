@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.operationReport.MemberConsumptionMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.operationReport.MemberConsumption" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="member_id" property="memberId" jdbcType="INTEGER" />
+        <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+        <result column="use_date" property="useDate" jdbcType="TIMESTAMP" />
+        <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="total_mileage" property="totalMileage" jdbcType="VARCHAR" />
+        <result column="total_minute" property="totalMinute" jdbcType="INTEGER" />
+        <result column="pay_money" property="payMoney" jdbcType="VARCHAR" />
+        <result column="coupon_no" property="couponNo" jdbcType="VARCHAR" />
+        <result column="coupon_balance" property="couponBalance" jdbcType="VARCHAR" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+        <result column="total_pay_money" property="totalPayMoney" jdbcType="DOUBLE" />
+        <result column="reduction_pay_money" property="reductionPayMoney" jdbcType="INTEGER" />
+        <result column="rate_id" property="rateId" jdbcType="INTEGER" />
+        <result column="integral_num" property="integralNum" jdbcType="INTEGER" />
+        <result column="integral_mny" property="integralMny" jdbcType="INTEGER" />
+        <result column="total_mileage_cost" property="totalMileageCost" jdbcType="INTEGER" />
+        <result column="total_minute_cost" property="totalMinuteCost" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+        <result column="money" property="money" jdbcType="INTEGER" />
+        <result column="last_charge_time" property="lastChargeTime" jdbcType="TIMESTAMP" />
+        <result column="integral" property="integral" jdbcType="INTEGER" />
+        <result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="free_compensation_money" property="freeCompensateMoney" jdbcType="DOUBLE" />
+        <result column="total_minute_sum" property="totalMinuteSum"/>
+        <result column="total_mileage_sum" property="totalMileageSum"/>
+        <result column="pay_money_sum" property="payMoneySum"/>
+        <result column="total_pay_money_sum" property="totalPayMoneySum"/>
+        <result column="coupon_balance_sum" property="couponBalanceSum"/>
+        <result column="free_compensate_money_sum" property="freeCompensateMoneySum"/>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    tsp.lpn, c.name as cityName ,car.brand_name as brandName ,
+    me.id,tsp.member_id, tsp.begin_time as use_date, truncate(IFNULL(tsp.coupon_balance,0)/100,2)coupon_balance, tsp.begin_time, tsp.end_time, round(tsp.total_mileage,2) as total_mileage,tsp.total_minute , 
+    truncate(IFNULL(tsp.pay_money,0)/100,2)as pay_money,me.name,me.sex, substring(me.idcard,7,6) as idcard,me.phone,truncate(IFNULL(tsp.total_pay_money + tsp.free_compensation_money,0)/100,2)total_pay_money ,tsp.pay_type,truncate(IFNULL(tsp.free_compensation_money,0)/100,2)free_compensation_money
+  </sql>
+
+   <sql id="Base_Column_List_Record" >
+    count(1) counts
+   </sql>  
+   
+  <resultMap id="memberChargingResultMap" type="com.iber.portal.model.operationReport.MemberConsumption" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+    <result column="integral" property="integral" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="charging_amount" property="chargingAmount" jdbcType="INTEGER" />
+    <result column="charging_time" property="chargingTime" jdbcType="INTEGER" />
+    <result column="pay_money" property="payMoney" jdbcType="VARCHAR" />
+    <result column="order_money" property="orderMoney" jdbcType="VARCHAR" />
+    <result column="coupon_value" property="couponValue" jdbcType="VARCHAR" />
+    <result column="charging_amount_sum" property="chargingAmountSum"/>
+    <result column="charging_time_sum" property="chargingTimeSum"/>
+    <result column="order_money_sum" property="orderMoneySum"/>
+    <result column="pay_money_sum" property="payMoneySum"/>
+    <result column="coupon_money_sum" property="couponMoneySum"/>
+
+      <result column="brand_name" property="brandName"/>
+      <result column="name" property="cityName"/>
+
+  </resultMap>
+
+  
+  <sql id="memberCharging_Column_List" >
+    me.id,tsp.member_id,me.name,me.phone,me.sex,tsp.start_time, tsp.charging_amount, tsp.charging_time,truncate(IFNULL(tsp.order_money,0)/100,2)order_money ,
+    truncate(IFNULL(tsp.pay_money,0)/100,2)pay_money,truncate(IFNULL(tsp.coupon_value,0)/100,2)coupon_value
+  </sql>
+  
+  <sql id="time_share_base_select">
+  	from x_time_share_pay tsp
+    LEFT JOIN x_member me ON tsp.member_id=me.id
+      JOIN x_city c ON c.code=me.city_code
+      JOIN x_car car ON car.lpn=tsp.lpn
+     <trim prefixOverrides="and" >
+       <where>
+
+       		<!-- <![CDATA[ total_pay_money > 0  ]]>  -->
+		  	<if test="name != null and name != ''" >
+		    	and me.name like CONCAT("%",#{name,jdbcType=VARCHAR},"%")
+		    </if>
+           <if test="phoneNumber != null and phoneNumber != ''" >
+               and me.phone = #{phoneNumber}
+           </if>
+           <if test="cityName != null and cityName != ''" >
+               and c.name  like CONCAT("%",#{cityName,jdbcType=VARCHAR},"%")
+           </if>
+           <if test="brandName != null and brandName != ''" >
+               and car.brand_name like CONCAT("%",#{brandName,jdbcType=VARCHAR},"%")
+           </if>
+		   <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and tsp.begin_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>      
+	    </where> 
+       </trim>
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+      <include refid="Base_Column_List" />,
+
+      (SELECT contributedVal from x_member_card where member_id = tsp.member_id)integral,
+
+      (SELECT l.name from x_member_level l where l.level_code = me.level_code) member_level,
+      <!-- (SELECT l.name from x_member_level l where l.integral_up_limit &gt;= (SELECT contributedVal from x_member_card where member_id = tsp.member_id) and l.integral_down_limit &lt;=(SELECT contributedVal from x_member_card where member_id = tsp.member_id))member_level,
+       -->
+    (select sum(total_minute) <include refid="time_share_base_select"/>) total_minute_sum,
+    (select truncate(sum(tsp.total_mileage),2) <include refid="time_share_base_select"/>) total_mileage_sum,
+    (select truncate(IFNULL(sum(tsp.pay_money),0)/100,2) <include refid="time_share_base_select"/>) pay_money_sum,
+    (select sum(p.total_pay_money) from (select truncate((tsp.total_pay_money + tsp.free_compensation_money)/100,2) as total_pay_money  <include refid="time_share_base_select"/>) p) total_pay_money_sum,
+    (select truncate(IFNULL(sum(tsp.coupon_balance),0)/100,2) <include refid="time_share_base_select"/>) coupon_balance_sum,
+    (select sum(a.free_compensation_money) from  (select truncate(IFNULL(tsp.free_compensation_money,0)/100,2) as free_compensation_money  <include refid="time_share_base_select"/>) a) free_compensate_money_sum
+    <!-- (select truncate(IFNULL(sum(tsp.free_compensation_money),0)/100,2) <include refid="time_share_base_select"/>)  -->
+    <include refid="time_share_base_select"/>
+
+      ORDER BY tsp.begin_time DESC
+      <if test="page != null and size != null">
+     limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+      </if>
+  </select>
+
+   <select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+    from x_time_share_pay tsp
+       LEFT JOIN x_member me ON tsp.member_id=me.id
+       JOIN x_city c ON c.code=me.city_code
+       JOIN x_car car ON car.lpn=tsp.lpn
+--     LEFT JOIN x_member me ON tsp.member_id=me.id
+     <trim prefixOverrides="and" >
+       <where>
+		  	<if test="name != null and name != ''" >
+		    	and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+		    </if>
+           <if test="phoneNumber != null and phoneNumber != ''" >
+               and me.phone =#{phoneNumber}
+           </if>
+
+		   <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and tsp.begin_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>      
+	    </where> 
+       </trim>
+  </select>
+  
+  <select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    (SELECT contributedVal from x_member_card where member_id = tsp.member_id)integral,
+<!--     (SELECT l.name from x_member_level l where l.integral_up_limit &gt;= (SELECT contributedVal from x_member_card where member_id = tsp.member_id) and l.integral_down_limit &lt;=(SELECT contributedVal from x_member_card where member_id = tsp.member_id))member_level
+ -->  
+  (SELECT l.name from x_member_level l where l.level_code = me.level_code) member_level
+   from x_time_share_pay tsp
+    LEFT JOIN x_member me ON tsp.member_id=me.id
+      JOIN x_city c ON c.code=me.city_code
+      JOIN x_car car ON car.lpn=tsp.lpn
+     <trim prefixOverrides="and" >
+       <where>
+		  	<if test="name != null and name != ''" >
+		    	and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+		    </if>
+           <if test="phoneNumber != null and phoneNumber != ''" >
+               and me.phone =#{phoneNumber}
+           </if>
+           <if test="cityName != null and cityName != ''" >
+               and c.name  like CONCAT("%",#{cityName,jdbcType=VARCHAR},"%")
+           </if>
+           <if test="brandName != null and brandName != ''" >
+               and car.brand_name like CONCAT("%",#{brandName,jdbcType=VARCHAR},"%")
+           </if>
+
+		   <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and tsp.begin_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>      
+	    </where> 
+       </trim>
+      ORDER BY tsp.begin_time DESC
+ </select>
+<!--  <select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     select 
+    <include refid="Base_Column_List" />
+    from x_time_share_pay tsp
+    LEFT JOIN x_member me ON tsp.member_id=me.id
+     <trim prefixOverrides="and" >
+       <where>
+		  	<if test="name != null and name != ''" >
+		    	and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+		    </if>
+		   <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and tsp.begin_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>      
+	    </where> 
+       </trim>
+      ORDER BY tsp.begin_time DESC
+     </select> -->
+ 	<sql id="elec_base_select">
+ 		from c_charging_order tsp
+    	LEFT JOIN x_member me ON tsp.member_id=me.id
+        LEFT JOIN x_city c ON c.code=me.city_code
+        LEFT JOIN x_car car ON car.lpn=tsp.lpn
+	     <!-- <trim prefixOverrides="and" >
+	       <where> -->
+	       where tsp.charging_status = 'finish' 
+			  	<if test="name != null and name != ''" >
+			    	and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+			    </if>
+               <if test="phoneNumber != null and phoneNumber != ''" >
+                   and me.phone = #{phoneNumber}
+               </if>
+               <if test="cityName != null and cityName != ''" >
+                   and c.name like "%"#{cityName,jdbcType=VARCHAR}"%"
+               </if>
+               <if test="brandName != null and brandName != ''" >
+                   and car.brand_name like "%"#{brandName,jdbcType=VARCHAR}"%"
+               </if>
+			   <if test="beginTime != null and beginTime != ''" >
+			        <![CDATA[and tsp.start_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+			    </if>
+			    <if test="endTime != null and endTime != ''" >
+			       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+			    </if>      
+		   <!--  </where> 
+	       </trim> -->
+ 	</sql>
+   <!-- 会员充电明细报表 --> 
+     <select id="selectChargingCapitalByPrimaryKey" resultMap="memberChargingResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="memberCharging_Column_List" />,
+    (SELECT contributedVal from x_member_card where member_id = tsp.member_id)integral,
+<!--     (SELECT l.name from x_member_level l where l.integral_up_limit &gt;= (SELECT contributedVal from x_member_card where member_id = tsp.member_id) and l.integral_down_limit &lt;=(SELECT contributedVal from x_member_card where member_id = tsp.member_id))member_level,
+ --> 
+ 	(SELECT l.name from x_member_level l where l.level_code = me.level_code) member_level,
+    (select sum(tsp.charging_amount) <include refid="elec_base_select"/>) charging_amount_sum,
+    (select sum(tsp.charging_time) <include refid="elec_base_select"/>) charging_time_sum,
+    (select truncate(IFNULL(sum(tsp.order_money),0)/100,2) <include refid="elec_base_select"/>) order_money_sum,
+    (select truncate(IFNULL(sum(tsp.pay_money),0)/100,2) <include refid="elec_base_select"/>) pay_money_sum,
+    (select truncate(IFNULL(sum(tsp.coupon_value),0)/100,2) <include refid="elec_base_select"/>) coupon_money_sum
+    <include refid="elec_base_select"/> 
+      ORDER BY tsp.start_time DESC
+      <if test="page != null and size != null">
+     limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+      </if>
+  </select>
+  <select id="selectChargingCapitalCountByPrimaryKey" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(1) 
+   	   <include refid="elec_base_select"/>
+  </select>
+  
+  <select id="selectChargingCapitalByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+    from c_charging_order tsp
+    LEFT JOIN x_member me ON tsp.member_id=me.id
+     <trim prefixOverrides="and" >
+       <where>
+		  	<if test="name != null and name != ''" >
+		    	and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+		    </if>
+           <if test="phoneNumber != null and phoneNumber != ''" >
+               and me.phone= #{phoneNumber}
+           </if>
+		   <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and tsp.start_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>      
+	    </where> 
+       </trim>
+  </select>
+  
+  <select id="selectChargingCapitalByPrimaryKeyExcel" resultMap="memberChargingResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="memberCharging_Column_List" />,
+    (SELECT contributedVal from x_member_card where member_id = tsp.member_id)integral,
+<!--     (SELECT l.name from x_member_level l where l.integral_up_limit &gt;= (SELECT contributedVal from x_member_card where member_id = tsp.member_id) and l.integral_down_limit &lt;=(SELECT contributedVal from x_member_card where member_id = tsp.member_id))member_level
+ -->  
+ 	(SELECT l.name from x_member_level l where l.level_code = me.level_code) member_level
+   from c_charging_order tsp
+    LEFT JOIN x_member me ON tsp.member_id=me.id
+     <trim prefixOverrides="and" >
+       <where>
+		  	<if test="name != null and name != ''" >
+		    	and me.name like "%"#{name,jdbcType=VARCHAR}"%"
+		    </if>
+           <if test="phoneNumber != null and phoneNumber != ''" >
+               and me.phone =#{phoneNumber}
+           </if>
+		   <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and tsp.start_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and tsp.end_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>      
+	    </where> 
+       </trim>
+      ORDER BY tsp.start_time DESC
+ </select>
+   
+</mapper>

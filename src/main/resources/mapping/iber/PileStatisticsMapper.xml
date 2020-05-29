@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.pile.PileStatisticsMapper" >
+	<resultMap  id="BaseResultMap" type="com.iber.portal.vo.pile.PileStatisticsVo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+   	    <result column="pileNums" property="pileNums" jdbcType="INTEGER" />
+   	    <result column="name" property="name" jdbcType="VARCHAR" />
+   	    <result column="code" property="code" jdbcType="VARCHAR" />
+   	    <result column="type" property="type" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap  id="PileStatisticMap" type="com.iber.portal.model.pile.PileCountDetail">
+		<id column="id" property="id"  />
+   	    <result column="member_id" property="memberId" />
+   	    <result column="order_number" property="orderNumber" />
+   	    <result column="member_level" property="memberLevel" />
+   	    <result column="member_type" property="memberType"/>
+   	    <result column="money" property="money"/>
+   	    <result column="count_time" property="countTime"/>
+   	    <result column="hour" property="hour" />
+   	    <result column="count_type" property="countType"/>
+   	    <result column="relatedOrderId" property="relatedOrderId"/>
+   	    <result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<resultMap id="PileCountDateVoMap" type="com.iber.portal.vo.pile.PileCountDataVo" >
+		<id column="id" property="id"  />
+		<id column="todayCnt" property="todayCnt"/>
+		<id column="yesterdayCnt" property="yesterdayCnt"/>
+		<id column="thisMonthCnt" property="thisMonthCnt"/>
+		<id column="lastMonthCnt" property="lastMonthCnt"/>
+		<id column="totalCnt" property="totalCnt"/>
+		<id column="currTime" property="currTime"/>
+		<id column="currDate" property="currDate"/>
+	</resultMap>
+	
+  	<select id="getPileNums" parameterType="java.lang.String" resultMap="BaseResultMap" >
+  		 select  count(1) pileNums from c_equipment_info where 1=1
+  		 <if test="_parameter !=null and _parameter !=''">
+  		 	and station_id  in(select id from x_park where city_code =#{cityCode,jdbcType=VARCHAR})
+  		 </if>
+  	</select>
+  	
+  	<select id="getProvincePileNums" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT h.name,h.code,IFNULL(g.nums,0)pileNums FROM(SELECT f.p_id,SUM(f.nums)nums FROM(SELECT d.city_code,d.nums,e.p_id FROM (SELECT c.city_code,COUNT(1)nums FROM (SELECT a.id,b.city_code FROM c_equipment_info a,x_park b WHERE a.station_id = b.id)c GROUP BY c.city_code)d,x_city e WHERE d.city_code = e.code)f
+			GROUP BY f.p_id)g RIGHT JOIN x_city h ON g.p_id = h.id  
+			WHERE h.layer = 2 
+			<if test="_parameter !=null and _parameter !=''">
+  		 		and  h.code=#{cityCode,jdbcType=VARCHAR}
+  			 </if>
+  	</select>
+  	
+  	<select id="getCityPileNums" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT c.code,c.name,IFNULL(d.nums,0)pileNums FROM (SELECT code,name FROM x_city WHERE p_id =(SELECT id FROM x_city WHERE code =#{cityCode,jdbcType=VARCHAR}))c
+  		 LEFT JOIN (SELECT COUNT(1)nums,b.city_code FROM c_equipment_info a,x_park b WHERE a.station_id = b.id GROUP BY b.city_code)d  ON c.code = d.city_code
+  	</select>
+  	
+  	<select id="getAreaPileNums" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT c.code,c.name,IFNULL(d.nums,0)pileNums FROM (SELECT code,name FROM x_city WHERE p_id =(SELECT id FROM x_city WHERE code =#{cityCode,jdbcType=VARCHAR}))c 
+			LEFT JOIN (SELECT COUNT(1)nums,b.area_code FROM c_equipment_info a,x_park b WHERE a.station_id = b.id GROUP BY b.area_code)d  ON c.code = d.area_code
+  	</select>
+    
+    <select id="getCityPileType" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT equipment_type type,COUNT(1)pileNums FROM c_equipment_info  where  1=1
+  		<if test="_parameter !=null and _parameter !=''">
+  		 		and  station_id in(select id from x_park where city_code=#{cityCode,jdbcType=VARCHAR})
+  		 </if>
+  		GROUP BY equipment_type
+  	</select>
+  	
+  	<select id="getCityPileServiceType" parameterType="java.lang.String" resultMap="BaseResultMap" >
+  		SELECT c.cooperation_type type,COUNT(1) pileNums FROM(SELECT a.equipment_code,b.cooperation_type,b.city_code  FROM c_equipment_info a  
+  		 JOIN x_park b ON  a.station_id = b.id  where 1 = 1
+  		 <if test="_parameter !=null and _parameter !=''">
+  		 		and  b.city_code=#{cityCode,jdbcType=VARCHAR}
+  		 </if>
+  		 )c 
+  		GROUP BY c.cooperation_type
+  	</select>
+  	
+  	<select id="getCityConncetorType" parameterType="java.lang.String" resultMap="BaseResultMap" >
+  		SELECT connector_type type,COUNT(1) pileNums FROM c_connector_info  WHERE 1 = 1
+  			<if test="_parameter !=null and _parameter !=''">
+  		 		and  equipment_id in(select id from c_equipment_info where station_id in(select id from x_park where city_code=#{cityCode,jdbcType=VARCHAR}))
+  			</if>
+  		GROUP BY connector_type
+  	</select>
+  	
+  	<select id="getCityConncetorStatusType" parameterType="java.lang.String" resultMap="BaseResultMap" >
+  		SELECT status type,COUNT(1) pileNums FROM c_connector_status_info WHERE 1=1 
+  			<if test="_parameter !=null and _parameter !=''">
+				AND  connector_id IN (SELECT id FROM c_connector_info WHERE equipment_id 
+				IN(SELECT id FROM c_equipment_info WHERE equipment_id in(select id from c_equipment_info where station_id 
+				in(select id from x_park where city_code=#{cityCode,jdbcType=VARCHAR}))))
+			</if>
+		GROUP BY status
+  	</select>
+  	
+  	<select id="getProvincePileType" parameterType="java.lang.String" resultMap="BaseResultMap" >
+  		SELECT equipment_type type,COUNT(1)pileNums FROM c_equipment_info  where  1=1
+  		and  station_id in(select id from x_park where city_code in(SELECT code FROM x_city WHERE p_id =(SELECT id FROM x_city WHERE code=#{cityCode,jdbcType=VARCHAR})))
+  		GROUP BY equipment_type
+  	</select>
+  	
+  	<select id="getProvincePileServiceType" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT c.cooperation_type type,COUNT(1) pileNums FROM(SELECT a.equipment_code,b.cooperation_type,b.city_code  FROM c_equipment_info a  
+  		 JOIN x_park b ON  a.station_id = b.id  where 1 = 1
+  		 	and  b.city_code in(SELECT code FROM x_city WHERE p_id =(SELECT id FROM x_city WHERE code=#{cityCode,jdbcType=VARCHAR}))
+  		 )c 
+  		GROUP BY c.cooperation_type
+  	</select>
+  	
+  	<select id="getProvinceConncetorType" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT connector_type type,COUNT(1) pileNums FROM c_connector_info  WHERE 1 = 1
+  		 and  equipment_id in(select id from c_equipment_info where station_id 
+  		 in(select id from x_park where city_code in(SELECT code FROM x_city
+		 WHERE p_id =(SELECT id FROM x_city WHERE code=#{cityCode,jdbcType=VARCHAR}))))
+  		GROUP BY connector_type
+  	</select>
+  	
+  	<select id="getProvinceConncetorStatusType" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT status type,COUNT(1) pileNums FROM c_connector_status_info WHERE 1=1 
+		AND  connector_id IN (SELECT id FROM c_connector_info WHERE equipment_id 
+		IN(SELECT id FROM c_equipment_info WHERE equipment_id in(select id from c_equipment_info where station_id 
+		in(select id from x_park where city_code in(SELECT code FROM x_city
+		 WHERE p_id =(SELECT id FROM x_city WHERE code=#{cityCode}))))))
+		GROUP BY status
+  	</select>
+  	
+  	
+  	
+  	
+  	<select id="queryChargingTimes" resultMap="PileStatisticMap">
+  		SELECT a.member_id ,a.relatedOrderId,a.chargeSeq order_number,HOUR(end_time)hour,DATE(end_time)count_time,1 count_type ,b.level_code,IF(b.enterprise_id,2,1)member_type,c.city_code
+  		FROM  c_charging_order a JOIN x_member b on a.member_id = b.id  JOIN x_park c ON a.station_id = c.id
+  		where userType = 'member' and charging_status ='finish' AND a.end_time >(SELECT MAX(create_time) FROM c_pile_count_detail)
+		UNION ALL
+		SELECT a.member_id ,a.relatedOrderId,a.chargeSeq order_number,HOUR(end_time)hour,DATE(end_time)count_time,1 count_type,null level_code,3 member_type,b.city_code
+		FROM  c_charging_order a JOIN  x_park b ON a.station_id = b.id
+		where userType = 'employee' and charging_status ='finish' AND a.end_time >(SELECT MAX(create_time) FROM c_pile_count_detail)
+  	</select>
+  	<select id="queryChargingPerson" resultMap="PileStatisticMap">
+  		SELECT b.member_id,b.count_time,b.hour,2 count_type ,c.level_code,IF(c.enterprise_id,2,1)member_type,d.city_code FROM 
+		(SELECT DISTINCT(a.member_id),DATE(end_time)count_time ,HOUR(end_time)hour,station_id from c_charging_order a WHERE a.end_time >(SELECT MAX(create_time) FROM c_pile_count_detail) AND userType = 'member' and charging_status ='finish')b LEFT JOIN x_member c ON b.member_id = c.id join
+		x_park d ON b.station_id = d.id 
+		UNION ALL
+		SELECT b.member_id,b.count_time,b.hour,2 count_type ,null level_code,3 member_type,d.city_code FROM 
+		(SELECT DISTINCT(a.member_id),DATE(end_time)count_time ,HOUR(end_time)hour,station_id from c_charging_order a WHERE userType = 'employee' and charging_status ='finish' AND a.end_time >(SELECT MAX(create_time) FROM c_pile_count_detail) )b LEFT JOIN x_member c ON b.member_id = c.id
+		join x_park d ON b.station_id = d.id  ORDER BY count_time,hour
+  	</select>
+  	<select id="queryChargingKWH" resultMap="PileStatisticMap">
+  		SELECT a.member_id ,a.relatedOrderId,a.chargeSeq order_number,HOUR(end_time)hour,DATE(end_time)count_time,3 count_type ,b.level_code,IF(b.enterprise_id,2,1)member_type,c.city_code,IFNULL(a.charging_amount,0)money 
+  		FROM  c_charging_order a JOIN x_member b on a.member_id = b.id  JOIN x_park c ON a.station_id = c.id where userType = 'member' and charging_status ='finish' AND a.end_time >(SELECT MAX(create_time) FROM c_pile_count_detail)
+		UNION ALL
+		SELECT a.member_id,a.relatedOrderId ,a.chargeSeq order_number,HOUR(end_time)hour,DATE(end_time)count_time,3 count_type,null level_code,3 member_type,b.city_code,IFNULL(a.charging_amount,0)money 
+		FROM  c_charging_order a JOIN  x_park b ON a.station_id = b.id where userType = 'employee' and charging_status ='finish' AND a.end_time >(SELECT MAX(create_time) FROM c_pile_count_detail)
+  	</select>
+  	<select id="queryChargingIncome" resultMap="PileStatisticMap">
+  		SELECT a.member_id ,c.relatedOrderId,a.order_id order_number,HOUR(pay_time)hour,DATE(pay_time)count_time,4 count_type ,b.level_code,IF(b.enterprise_id,2,1)member_type,c.city_code,IFNULL(a.pay_money,0)money
+		 FROM  c_charging_order_pay_log a JOIN x_member b on a.member_id = b.id  JOIN c_charging_order c ON a.order_id = c.chargeSeq where a.pay_time >(SELECT MAX(create_time) FROM c_pile_count_detail) 
+		AND a.pay_status ='1' and charging_status ='finish'
+	</select>
+	<insert id="insertSelective" parameterType="com.iber.portal.model.pile.PileCountDetail">
+		insert into c_pile_count_detail
+		(
+		 		<if test="memberId != null and memberId != '' ">
+	        		member_id
+	        	</if>
+	        	<if test="cityCode != null and cityCode != '' ">
+	        		, city_code
+	        	</if>
+	        	<if test="orderNumber != null and orderNumber != '' ">
+	        		, order_number
+	        	</if>
+	        	<if test="memberLevel != null and memberLevel != '' ">
+	        		, member_level
+	        	</if>
+	        	<if test="memberType != null and memberType != '' ">
+	        		, member_type
+	        	</if>
+	        	<if test="money != null and money != '' ">
+	        		, money
+	        	</if>
+	        	<if test="countTime != null and countTime != '' ">
+	        		, count_time
+	        	</if>
+	        	<if test="hour != null and hour != '' ">
+	        		, hour
+	        	</if>
+	        	<if test="countType != null and countType != '' ">
+	        		, count_type
+	        	</if>
+	        	<if test="relatedOrderId != null and relatedOrderId != '' ">
+	        		, relatedOrderId
+	        	</if>
+	        		, create_time
+		 	)
+		 values  
+		        (
+		        <if test="memberId != null and memberId != '' ">
+	        		#{memberId}
+	        	</if>
+	        	<if test="cityCode != null and cityCode != '' ">
+	        		, #{cityCode}
+	        	</if>
+	        	<if test="orderNumber != null and orderNumber != '' ">
+	        		, #{orderNumber}
+	        	</if>
+	        	<if test="memberLevel != null and memberLevel != '' ">
+	        		, #{memberLevel}
+	        	</if>
+	        	<if test="memberType != null and memberType != '' ">
+	        		, #{memberType}
+	        	</if>
+	        	<if test="money != null and money != '' ">
+	        		, #{money}
+	        	</if>
+	        	<if test="countTime != null and countTime != '' ">
+	        		, #{countTime}
+	        	</if>
+	        	<if test="hour != null and hour != '' ">
+	        		, #{hour}
+	        	</if>
+	        	<if test="countType != null and countType != '' ">
+	        		,#{countType}
+	        	</if>
+	        	<if test="relatedOrderId != null and relatedOrderId != '' ">
+	        		,#{relatedOrderId}
+	        	</if>
+	        		,#{createTime}
+		        )  
+	</insert>
+	
+	<!-- 帅选条件公用sql PileCount表格 -->	
+	 <sql id="sql_where_cQuery">
+	 	<if test="memberType !=null and memberType !=''">
+			<choose>
+				<when test="memberType == 1">
+					AND userType = 'member' AND  member_id in (SELECT id FROM x_member WHERE enterprise_id IS NULL )
+				</when>
+				<when test="memberType == 2">
+					AND userType = 'member' AND  member_id in (SELECT id FROM x_member WHERE enterprise_id IS NOT NULL )
+				</when>
+				<otherwise>
+					AND userType = 'employee'
+				</otherwise>
+			</choose>
+		</if>
+		<if test="memberLevel !=null and memberLevel !=''">
+			AND  member_id in(SELECT id FROM x_member WHERE level_code = #{memberLevel})
+		</if>
+		<if test="cityCode != null and cityCode !=''">
+	 		<choose>
+				<when test="level== 2 ">   
+					AND station_id in(SELECT id FROM x_park WHERE city_code IN
+					(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+					WHERE cc.code = a.city_code))
+				</when>
+				<otherwise>
+					AND station_id in(SELECT id FROM x_park WHERE city_code = #{cityCode})
+				</otherwise>
+			</choose>
+	 	</if>
+	 	<if test="returnCar != null and returnCar != '' ">
+	 		<choose>
+	 			<when test="returnCar == 1 ">and relatedOrderId is not null  </when>
+	 			<otherwise>
+	 				and relatedOrderId  is null 
+	 			</otherwise>
+	 		</choose>
+	 	</if>
+	 </sql>
+	 
+	 <sql id="sql_where_outQuery">
+	 	<if test="returnCar != null and returnCar != '' ">
+	 		<choose>
+	 			<when test="returnCar == 1">and relatedOrderId is not null  </when>
+	 			<otherwise>
+	 				and relatedOrderId  is null 
+	 			</otherwise>
+	 		</choose>
+	 	</if>
+	 	<if test="memberType !=null and memberType !=''">
+			 AND member_type =#{memberType}
+		</if>
+		<if test="memberLevel !=null and memberLevel !=''">
+			 AND  member_level =#{memberLevel} 
+		</if>
+		<if test="cityCode != null and cityCode !=''">
+	 		<choose>
+				<when test="level== 2 ">   
+					AND  city_code IN
+					(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+					WHERE cc.code = a.city_code)
+				</when>
+				<otherwise>
+					AND  city_code = #{cityCode}
+				</otherwise>
+			</choose>
+	 	</if>
+	 </sql>
+	 
+	 <sql id="sql_where_income_cQuery">
+	 	<if test="memberType !=null and memberType !=''">
+			<choose>
+				<when test="memberType == 1">
+					and EXISTS(select 1 from x_member  where x_member.id =member_id and  enterprise_id IS NULL) 
+					and EXISTS(select 1 from c_charging_order where chargeSeq = order_id and userType = 'member' )
+				</when>
+				<when test="memberType == 2">
+						and EXISTS(select 1 from x_member  where x_member.id =member_id and  enterprise_id IS not NULL )
+					and EXISTS(select 1 from c_charging_order where chargeSeq = order_id and  userType = 'member')
+				</when>
+				<otherwise>
+					and EXISTS(select 1 from c_charging_order where chargeSeq = order_id and  userType = 'employee')
+				</otherwise>
+			</choose>
+		</if>
+		<if test="memberLevel !=null and memberLevel !=''">
+			AND  member_id in(SELECT id FROM x_member WHERE level_code =#{memberLevel})
+		</if>
+		<if test="cityCode != null and cityCode !=''">
+	 		<choose>
+				<when test="level== 2 ">   
+					AND order_id in(SELECT chargeSeq FROM c_charging_order WHERE city_code IN
+					(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+					WHERE cc.code = a.city_code))
+				</when>
+				<otherwise>
+					AND order_id in(SELECT chargeSeq FROM c_charging_order WHERE city_code = #{cityCode})
+				</otherwise>
+			</choose>
+	 	</if>
+	 	<if test="returnCar != null and returnCar != '' ">
+	 		<choose>
+	 			<when test="returnCar == 1"> 
+	 				and EXISTS(select 1 from c_charging_order where chargeSeq = order_id and relatedOrderId is not null )
+	 			</when>
+	 			<otherwise>
+	 				and EXISTS(select 1 from c_charging_order where chargeSeq = order_id and relatedOrderId is  null  )
+	 			</otherwise>
+	 		</choose>
+	 	</if>
+	 </sql>
+	 
+	 
+	<select id="getAllChargingTimesData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT 
+		(SELECT COUNT(1) from  c_charging_order WHERE charging_status='finish' AND end_time  <![CDATA[ >= ]]> CURDATE() AND end_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) <include refid="sql_where_cQuery"/>)todayCnt,
+		(SELECT COUNT(1) from c_pile_count_detail where count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) AND hour<![CDATA[ <= ]]> HOUR(CURTIME())  AND count_type=1 <include refid="sql_where_outQuery"/> )yesterdayCnt,
+		(SELECT COUNT(1) from  c_charging_order WHERE charging_status='finish' AND end_time <![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) AND end_time <![CDATA[ <= ]]>sysdate() <include refid="sql_where_cQuery"/>)thisMonthCnt,
+		(SELECT COUNT(1) from c_pile_count_detail where count_time<![CDATA[ >= ]]>CAST(DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH ) AS DATE) AND count_time <![CDATA[ <= ]]> date_sub(curdate(),interval 1 MONTH) AND count_type=1 <include refid="sql_where_outQuery"/>)lastMonthCnt,
+		(SELECT COUNT(1) from c_charging_order WHERE charging_status='finish' <include refid="sql_where_cQuery"/>)totalCnt FROM DUAL
+	</select>
+	
+	<select id="getAllChargingPersonData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT (SELECT COUNT(DISTINCT(member_id)) from  c_charging_order WHERE charging_status='finish' AND end_time  <![CDATA[ >= ]]> CURDATE() AND end_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) <include refid="sql_where_cQuery"/>)todayCnt,
+		(SELECT COUNT(DISTINCT(member_id)) from c_pile_count_detail where count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) AND hour<![CDATA[ <= ]]> HOUR(CURTIME())  AND count_type=1 <include refid="sql_where_outQuery"/> )yesterdayCnt,
+		(SELECT COUNT(DISTINCT(member_id)) from  c_charging_order WHERE charging_status='finish' AND end_time <![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) AND end_time <![CDATA[ <= ]]>sysdate() <include refid="sql_where_cQuery"/>)thisMonthCnt,
+		(SELECT COUNT(DISTINCT(member_id)) from c_pile_count_detail where count_time<![CDATA[ >= ]]>CAST(DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH ) AS DATE) AND count_time <![CDATA[ <= ]]> date_sub(curdate(),interval 1 MONTH) AND count_type=1 <include refid="sql_where_outQuery"/>)lastMonthCnt,
+		(SELECT COUNT(DISTINCT(member_id)) from c_charging_order WHERE charging_status='finish' <include refid="sql_where_cQuery"/>)totalCnt FROM DUAL
+		
+	</select>
+	
+	<select id="getAllChargingKWHData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+	    SELECT 
+	    (SELECT SUM(charging_amount) from  c_charging_order WHERE charging_status='finish' AND end_time  <![CDATA[ >= ]]> CURDATE() AND end_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) <include refid="sql_where_cQuery"/>)todayCnt,
+		(SELECT SUM(money) from c_pile_count_detail where count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) AND hour<![CDATA[ <= ]]> HOUR(CURTIME())  AND count_type=3 <include refid="sql_where_outQuery"/> )yesterdayCnt,
+		(SELECT SUM(charging_amount)  from  c_charging_order WHERE charging_status='finish' AND end_time <![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) AND end_time <![CDATA[ <= ]]>sysdate() <include refid="sql_where_cQuery"/>)thisMonthCnt,
+		(SELECT SUM(money) from c_pile_count_detail where count_time<![CDATA[ >= ]]>CAST(DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH ) AS DATE) AND count_time <![CDATA[ <= ]]> date_sub(curdate(),interval 1 MONTH) AND count_type=3 <include refid="sql_where_outQuery"/>)lastMonthCnt,
+		(SELECT SUM(charging_amount) from c_charging_order WHERE charging_status='finish' <include refid="sql_where_cQuery"/>)totalCnt FROM DUAL
+		    
+	</select>
+	
+	<select id="getAllChargingIncomeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		 SELECT 
+		 (SELECT SUM(pay_money)/100 from  c_charging_order_pay_log WHERE pay_status='1' AND pay_time  <![CDATA[ >= ]]> CURDATE() AND pay_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) <include refid="sql_where_income_cQuery"/>)todayCnt,
+		(SELECT SUM(money)/100 from c_pile_count_detail where count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) AND hour<![CDATA[ <= ]]> HOUR(CURTIME())  AND count_type=4 <include refid="sql_where_outQuery"/> )yesterdayCnt,
+		(SELECT SUM(pay_money)/100  from  c_charging_order_pay_log WHERE pay_status='1' AND pay_time <![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) AND pay_time <![CDATA[ <= ]]>sysdate() <include refid="sql_where_income_cQuery"/>)thisMonthCnt,
+		(SELECT SUM(money)/100 from c_pile_count_detail where count_time<![CDATA[ >= ]]>CAST(DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH ) AS DATE) AND count_time <![CDATA[ <= ]]> date_sub(curdate(),interval 1 MONTH) AND count_type=4 <include refid="sql_where_outQuery"/>)lastMonthCnt,
+		(SELECT SUM(pay_money)/100 from c_charging_order_pay_log WHERE pay_status='1' <include refid="sql_where_income_cQuery"/>)totalCnt FROM DUAL
+	</select>
+	
+	<!-- 折线图数据 -->
+	<select id="getAllTodayChargingTimeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT COUNT(1) todayCnt,HOUR(end_time)currTime  FROM c_charging_order  WHERE end_time <![CDATA[ >= ]]>CURDATE() AND end_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) AND charging_status in('noPay','finish')  <include refid="sql_where_cQuery"/>
+		 GROUP BY HOUR(end_time)
+	</select>
+	<select id="getAllYesterdayChargingTimeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT  COUNT(1)yesterdayCnt,hour currTime  FROM c_pile_count_detail WHERE count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY )   
+		AND count_type=1 <include refid="sql_where_outQuery"/>   GROUP BY hour
+	</select>
+	<select id="getAllThisMonthChargingTimeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT COUNT(1) thisMonthCnt, DAY(end_time) currDate FROM c_charging_order  WHERE  end_time<![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) 
+		AND end_time <![CDATA[ <= ]]>sysdate() AND charging_status in('noPay','finish') <include refid="sql_where_cQuery"/> GROUP BY DAY(end_time)
+	</select>
+	<select id="getAllLastMonthChargingTimeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT COUNT(1) lastMonthCnt,DAY(count_time) currDate FROM c_pile_count_detail  
+		WHERE date_format(count_time,'%Y-%m') = date_format(date_sub(curdate(),interval 1 MONTH),'%Y-%m')  AND count_type=1 <include refid="sql_where_outQuery"/> GROUP BY DAY(count_time)
+	</select>
+	
+	
+	<select id="getAllTodayChargingPersonData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT COUNT(DISTINCT(member_id)) todayCnt,HOUR(end_time)currTime  FROM c_charging_order  WHERE end_time <![CDATA[ >= ]]>CURDATE() AND end_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) AND charging_status in('noPay','finish')  <include refid="sql_where_cQuery"/>
+		 GROUP BY HOUR(end_time)
+	</select>
+	<select id="getAllYesterdayChargingPersonData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT  COUNT(DISTINCT(member_id))yesterdayCnt,hour currTime  FROM c_pile_count_detail WHERE count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) 
+		AND count_type=1 <include refid="sql_where_outQuery"/>   GROUP BY hour
+	</select>
+	<select id="getAllThisMonthChargingPersonData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT COUNT(DISTINCT(member_id)) thisMonthCnt, DAY(end_time) currDate FROM c_charging_order  WHERE  end_time<![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) 
+		AND end_time <![CDATA[ <= ]]>sysdate() AND charging_status in('noPay','finish') <include refid="sql_where_cQuery"/> GROUP BY DAY(end_time)
+	</select>
+	<select id="getAllLastMonthChargingPersonData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT COUNT(DISTINCT(member_id)) lastMonthCnt,DAY(count_time) currDate FROM c_pile_count_detail 
+		WHERE date_format(count_time,'%Y-%m') = date_format(date_sub(curdate(),interval 1 MONTH),'%Y-%m') AND count_type=1 <include refid="sql_where_outQuery"/> GROUP BY DAY(count_time)
+	</select>
+	
+	
+	
+	<select id="getAllTodayChargingKWHData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT SUM(charging_amount) todayCnt,HOUR(end_time)currTime  FROM c_charging_order  WHERE end_time <![CDATA[ >= ]]>CURDATE() AND end_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) AND charging_status in('noPay','finish')  <include refid="sql_where_cQuery"/>
+		 GROUP BY HOUR(end_time)
+	</select>
+	<select id="getAllYesterdayChargingKWHData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT  SUM(money)yesterdayCnt,hour currTime  FROM c_pile_count_detail WHERE count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) 
+		AND count_type=3 <include refid="sql_where_outQuery"/>   GROUP BY hour
+	</select>
+	<select id="getAllThisMonthChargingKWHData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT SUM(charging_amount) thisMonthCnt, DAY(end_time) currDate FROM c_charging_order  WHERE  end_time<![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) 
+		AND end_time <![CDATA[ <= ]]>sysdate() AND charging_status in('noPay','finish') <include refid="sql_where_cQuery"/> GROUP BY DAY(end_time)
+	</select>
+	<select id="getAllLastMonthChargingKWHData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT SUM(money) lastMonthCnt,DAY(count_time) currDate FROM c_pile_count_detail  
+		WHERE date_format(count_time,'%Y-%m') = date_format(date_sub(curdate(),interval 1 MONTH),'%Y-%m')
+		AND count_type=3 <include refid="sql_where_outQuery"/> GROUP BY DAY(count_time)
+	</select>
+	
+	
+	<select id="getAllTodayChargingIncomeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT SUM(pay_money)/100 todayCnt,HOUR(pay_time)currTime  FROM c_charging_order_pay_log  WHERE pay_time <![CDATA[ >= ]]>CURDATE() AND pay_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY ) AND pay_status='1'  <include refid="sql_where_income_cQuery"/>
+		 GROUP BY HOUR(pay_time)
+	</select>
+	<select id="getAllYesterdayChargingIncomeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT  SUM(money)/100 yesterdayCnt,hour currTime  FROM c_pile_count_detail WHERE count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY )  
+		AND count_type=4 <include refid="sql_where_outQuery"/>   GROUP BY hour
+	</select>
+	<select id="getAllThisMonthChargingIncomeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT SUM(pay_money)/100 thisMonthCnt, DAY(pay_time) currDate FROM c_charging_order_pay_log  
+		WHERE  pay_time<![CDATA[ >= ]]>CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME) 
+		AND pay_time <![CDATA[ <= ]]>sysdate()  AND pay_status='1' <include refid="sql_where_income_cQuery"/> GROUP BY DAY(pay_time)
+	</select>
+	<select id="getAllLastMonthChargingIncomeData" parameterType="java.util.Map" resultMap="PileCountDateVoMap">
+		SELECT SUM(money)/100 lastMonthCnt,DAY(count_time) currDate FROM c_pile_count_detail  
+		WHERE date_format(count_time,'%Y-%m') = date_format(date_sub(curdate(),interval 1 MONTH),'%Y-%m')
+		 AND count_type=4 <include refid="sql_where_outQuery"/> GROUP BY DAY(count_time)
+	</select>
+	
+	
+	<select id="getProPileNums" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select  count(1) pileNums from c_equipment_info where 
+  		  station_id  in(select id from x_park where city_code 
+  		 in(SELECT code FROM x_city WHERE p_id =(SELECT id FROM x_city WHERE code=#{cityCode,jdbcType=VARCHAR})))
+  		 
+    </select>
+  	<select id="getConnectorNums" parameterType="java.lang.String" resultMap="BaseResultMap">
+   		SELECT COUNT(1) pileNums FROM c_connector_info  WHERE 1 = 1
+  		<if test="_parameter !=null and _parameter !=''">
+  		 	and  equipment_id in(select id from c_equipment_info where station_id in(select id from x_park where city_code=#{cityCode,jdbcType=VARCHAR}))
+  		</if>
+   </select>
+  	<select id="getProvinceConnectorNums" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT COUNT(1) pileNums FROM c_connector_info  WHERE 
+  		equipment_id in(select id from c_equipment_info where station_id in(select id from x_park where city_code in(SELECT code FROM x_city WHERE p_id =(SELECT id FROM x_city WHERE code=#{cityCode,jdbcType=VARCHAR}))))
+  		
+  	</select>
+  	 	
+  	<insert id="insertBatch" parameterType="java.util.List">
+		<if test="list != null and list.size() > 0" >
+			  INSERT INTO c_pile_count_detail (member_id, relatedOrderId,city_code, order_number, member_level, member_type, money, count_time, hour, count_type, create_time)
+			   <trim prefix=" values " suffixOverrides=",">
+					<foreach collection="list" item="item" index="index" separator=",">
+						<trim prefix="(" suffix=")" suffixOverrides=",">
+							<choose>
+								<when test="item.memberId != null and item.memberId != '' ">
+		        					#{item.memberId},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.relatedOrderId != null and item.relatedOrderId != '' ">
+		        					#{item.relatedOrderId},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.cityCode != null and item.cityCode != '' ">
+		        					#{item.cityCode},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.orderNumber != null and item.orderNumber != '' ">
+		        					#{item.orderNumber},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.memberLevel != null and item.memberLevel != '' ">
+		        					#{item.memberLevel},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.memberType != null and item.memberType != '' ">
+		        					#{item.memberType},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.money != null and item.money != '' ">
+		        					#{item.money},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.countTime != null and item.countTime != '' ">
+		        					#{item.countTime},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.hour != null and item.hour != '' ">
+		        					#{item.hour},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+							<choose>
+								<when test="item.countType != null and item.countType != '' ">
+		        					#{item.countType},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			#{item.createTime}
+						</trim>
+					</foreach>
+			  </trim>
+		</if>
+	</insert>
+</mapper>   

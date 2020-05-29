@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.evaluate.OrderEvaluateLabelMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.evaluate.OrderEvaluateLabel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="star" property="star" jdbcType="INTEGER" />
+    <result column="label" property="label" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, star, label, type
+  </sql>
+  
+   <sql id="Base_Column_List_Record">
+	count(1) counts
+  </sql>
+  
+   <select id="selectByPrimaryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_order_evaluate_label
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from x_order_evaluate_label
+ 			<trim prefixOverrides="and">
+			<where>
+		      <if test="type != null and type != ''" >
+		    	and type = #{type,jdbcType=VARCHAR}
+		      </if>
+			    <if test="star != null and star != ''" >
+		    	and star = #{star,jdbcType=INTEGER}
+		       </if>
+		       <if test="label  != null and label  != ''">
+				 and label like "%"#{label,jdbcType=VARCHAR}"%"
+				</if>	
+			</where>
+		   </trim>
+		ORDER BY type DESC  , star ASC 
+		limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+    </select>
+ 
+ 	<select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List_Record" />
+        from x_order_evaluate_label
+ 			<trim prefixOverrides="and">
+			<where>
+		      <if test="type != null and type != ''" >
+		    	and type = #{type,jdbcType=VARCHAR}
+		      </if>
+			    <if test="star != null and star != ''" >
+		    	and star = #{star,jdbcType=INTEGER}
+		       </if>
+		       <if test="label  != null and label  != ''">
+				 and label like "%"#{label,jdbcType=VARCHAR}"%"
+				</if>	
+			</where>
+		   </trim>
+	</select> 
+	
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_order_evaluate_label
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.evaluate.OrderEvaluateLabel" >
+    insert into x_order_evaluate_label (id, star, label, 
+      type)
+    values (#{id,jdbcType=INTEGER}, #{star,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.evaluate.OrderEvaluateLabel" >
+    insert into x_order_evaluate_label
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="star != null" >
+        star,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=INTEGER},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.evaluate.OrderEvaluateLabel" >
+    update x_order_evaluate_label
+    <set >
+      <if test="star != null" >
+        star = #{star,jdbcType=INTEGER},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.evaluate.OrderEvaluateLabel" >
+    update x_order_evaluate_label
+    set star = #{star,jdbcType=INTEGER},
+      label = #{label,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

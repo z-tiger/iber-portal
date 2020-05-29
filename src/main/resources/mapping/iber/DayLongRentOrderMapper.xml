@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayLongRentOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.LongRentOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="unpaid_attached_cnt" property="unpaidAttachedCnt" jdbcType="TINYINT" />
+    <result column="changed_car_times" property="changedCarTimes" jdbcType="TINYINT" />
+    <result column="order_money" property="orderMoney" jdbcType="INTEGER" />
+    <result column="coupon_no" property="couponNo" jdbcType="VARCHAR" />
+    <result column="coupon_balance" property="couponBalance" jdbcType="INTEGER" />
+    <result column="discount_money" property="discountMoney" jdbcType="INTEGER" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="rent_money" property="rentMoney" jdbcType="INTEGER" />
+    <result column="free_compensate_money" property="freeCompensateMoney" jdbcType="INTEGER" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="invoice_status" property="invoiceStatus" jdbcType="TINYINT" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="mileage" property="mileage" jdbcType="DOUBLE" />
+    <result column="duration" property="duration" jdbcType="TINYINT" />
+    <result column="relet_no" property="reletNo" jdbcType="TINYINT" />
+    <result column="extend_ts_order_id" property="extendTsOrderId" jdbcType="VARCHAR" />
+    <result column="take_car_time" property="takeCarTime" jdbcType="TIMESTAMP" />
+    <result column="take_park_id" property="takeParkId" jdbcType="INTEGER" />
+    <result column="return_car_time" property="returnCarTime" jdbcType="TIMESTAMP" />
+    <result column="return_car_park_id" property="returnCarParkId" jdbcType="INTEGER" />
+    <result column="remind_times" property="remindTimes" jdbcType="TINYINT" />
+    <result column="latest_remind" property="latestRemind" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+  
+	<result column="city_name" property="cityName"/>
+	<result column="member_name" property="memberName"/>
+	<result column="park_name" property="parkName"/>
+	<result column="type" property="type"/>
+	<result column="phone" property="phone"/>
+	<result column="returnTime" property="returnTime"/>
+	<result column="returnTimes" property="returnTimes"/>
+	<!-- 续租优惠券面值、续租订单金额、续租不计免赔、续租折扣金额 -->
+	<result column="reletCouponBalance" property="reletCouponBalance"/>
+	<result column="reletDiscountMoney" property="reletDiscountMoney"/>
+	<result column="reletFreeMoney" property="reletFreeMoney"/>
+	<result column="reletOrderMoney" property="reletOrderMoney"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, member_id, city_code, model_id, lpn, unpaid_attached_cnt, changed_car_times, 
+    order_money, coupon_no, coupon_balance, discount_money, pay_money, pay_type, rent_money, 
+    free_compensate_money, order_status, pay_status, invoice_status, begin_time, end_time, 
+    mileage, duration, relet_no, extend_ts_order_id, take_car_time, take_park_id, return_car_time, 
+    return_car_park_id, remind_times, latest_remind, create_time, version
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_long_rent_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_long_rent_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.LongRentOrder" >
+    insert into x_long_rent_order (id, order_id, member_id, 
+      city_code, model_id, lpn, 
+      unpaid_attached_cnt, changed_car_times, order_money, 
+      coupon_no, coupon_balance, discount_money, 
+      pay_money, pay_type, rent_money, 
+      free_compensate_money, order_status, pay_status, 
+      invoice_status, begin_time, end_time, 
+      mileage, duration, relet_no, 
+      extend_ts_order_id, take_car_time, take_park_id, 
+      return_car_time, return_car_park_id, remind_times, 
+      latest_remind, create_time, version
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, 
+      #{cityCode,jdbcType=VARCHAR}, #{modelId,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, 
+      #{unpaidAttachedCnt,jdbcType=TINYINT}, #{changedCarTimes,jdbcType=TINYINT}, #{orderMoney,jdbcType=INTEGER}, 
+      #{couponNo,jdbcType=VARCHAR}, #{couponBalance,jdbcType=INTEGER}, #{discountMoney,jdbcType=INTEGER}, 
+      #{payMoney,jdbcType=INTEGER}, #{payType,jdbcType=VARCHAR}, #{rentMoney,jdbcType=INTEGER}, 
+      #{freeCompensateMoney,jdbcType=INTEGER}, #{orderStatus,jdbcType=VARCHAR}, #{payStatus,jdbcType=VARCHAR}, 
+      #{invoiceStatus,jdbcType=TINYINT}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{mileage,jdbcType=DOUBLE}, #{duration,jdbcType=TINYINT}, #{reletNo,jdbcType=TINYINT}, 
+      #{extendTsOrderId,jdbcType=VARCHAR}, #{takeCarTime,jdbcType=TIMESTAMP}, #{takeParkId,jdbcType=INTEGER}, 
+      #{returnCarTime,jdbcType=TIMESTAMP}, #{returnCarParkId,jdbcType=INTEGER}, #{remindTimes,jdbcType=TINYINT}, 
+      #{latestRemind,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.LongRentOrder" >
+    insert into x_long_rent_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="unpaidAttachedCnt != null" >
+        unpaid_attached_cnt,
+      </if>
+      <if test="changedCarTimes != null" >
+        changed_car_times,
+      </if>
+      <if test="orderMoney != null" >
+        order_money,
+      </if>
+      <if test="couponNo != null" >
+        coupon_no,
+      </if>
+      <if test="couponBalance != null" >
+        coupon_balance,
+      </if>
+      <if test="discountMoney != null" >
+        discount_money,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="rentMoney != null" >
+        rent_money,
+      </if>
+      <if test="freeCompensateMoney != null" >
+        free_compensate_money,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status,
+      </if>
+      <if test="beginTime != null" >
+        begin_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="mileage != null" >
+        mileage,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="reletNo != null" >
+        relet_no,
+      </if>
+      <if test="extendTsOrderId != null" >
+        extend_ts_order_id,
+      </if>
+      <if test="takeCarTime != null" >
+        take_car_time,
+      </if>
+      <if test="takeParkId != null" >
+        take_park_id,
+      </if>
+      <if test="returnCarTime != null" >
+        return_car_time,
+      </if>
+      <if test="returnCarParkId != null" >
+        return_car_park_id,
+      </if>
+      <if test="remindTimes != null" >
+        remind_times,
+      </if>
+      <if test="latestRemind != null" >
+        latest_remind,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="unpaidAttachedCnt != null" >
+        #{unpaidAttachedCnt,jdbcType=TINYINT},
+      </if>
+      <if test="changedCarTimes != null" >
+        #{changedCarTimes,jdbcType=TINYINT},
+      </if>
+      <if test="orderMoney != null" >
+        #{orderMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponNo != null" >
+        #{couponNo,jdbcType=VARCHAR},
+      </if>
+      <if test="couponBalance != null" >
+        #{couponBalance,jdbcType=INTEGER},
+      </if>
+      <if test="discountMoney != null" >
+        #{discountMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="rentMoney != null" >
+        #{rentMoney,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensateMoney != null" >
+        #{freeCompensateMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceStatus != null" >
+        #{invoiceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mileage != null" >
+        #{mileage,jdbcType=DOUBLE},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=TINYINT},
+      </if>
+      <if test="reletNo != null" >
+        #{reletNo,jdbcType=TINYINT},
+      </if>
+      <if test="extendTsOrderId != null" >
+        #{extendTsOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="takeCarTime != null" >
+        #{takeCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeParkId != null" >
+        #{takeParkId,jdbcType=INTEGER},
+      </if>
+      <if test="returnCarTime != null" >
+        #{returnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnCarParkId != null" >
+        #{returnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="remindTimes != null" >
+        #{remindTimes,jdbcType=TINYINT},
+      </if>
+      <if test="latestRemind != null" >
+        #{latestRemind,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.LongRentOrder" >
+    update x_long_rent_order
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="unpaidAttachedCnt != null" >
+        unpaid_attached_cnt = #{unpaidAttachedCnt,jdbcType=TINYINT},
+      </if>
+      <if test="changedCarTimes != null" >
+        changed_car_times = #{changedCarTimes,jdbcType=TINYINT},
+      </if>
+      <if test="orderMoney != null" >
+        order_money = #{orderMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponNo != null" >
+        coupon_no = #{couponNo,jdbcType=VARCHAR},
+      </if>
+      <if test="couponBalance != null" >
+        coupon_balance = #{couponBalance,jdbcType=INTEGER},
+      </if>
+      <if test="discountMoney != null" >
+        discount_money = #{discountMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="rentMoney != null" >
+        rent_money = #{rentMoney,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensateMoney != null" >
+        free_compensate_money = #{freeCompensateMoney,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status = #{invoiceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="beginTime != null" >
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mileage != null" >
+        mileage = #{mileage,jdbcType=DOUBLE},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=TINYINT},
+      </if>
+      <if test="reletNo != null" >
+        relet_no = #{reletNo,jdbcType=TINYINT},
+      </if>
+      <if test="extendTsOrderId != null" >
+        extend_ts_order_id = #{extendTsOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="takeCarTime != null" >
+        take_car_time = #{takeCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeParkId != null" >
+        take_park_id = #{takeParkId,jdbcType=INTEGER},
+      </if>
+      <if test="returnCarTime != null" >
+        return_car_time = #{returnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnCarParkId != null" >
+        return_car_park_id = #{returnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="remindTimes != null" >
+        remind_times = #{remindTimes,jdbcType=TINYINT},
+      </if>
+      <if test="latestRemind != null" >
+        latest_remind = #{latestRemind,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="latestChangedCarTime != null" >
+        latest_changed_car_time = #{latestChangedCarTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.LongRentOrder" >
+    update x_long_rent_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      unpaid_attached_cnt = #{unpaidAttachedCnt,jdbcType=TINYINT},
+      changed_car_times = #{changedCarTimes,jdbcType=TINYINT},
+      order_money = #{orderMoney,jdbcType=INTEGER},
+      coupon_no = #{couponNo,jdbcType=VARCHAR},
+      coupon_balance = #{couponBalance,jdbcType=INTEGER},
+      discount_money = #{discountMoney,jdbcType=INTEGER},
+      pay_money = #{payMoney,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      rent_money = #{rentMoney,jdbcType=INTEGER},
+      free_compensate_money = #{freeCompensateMoney,jdbcType=INTEGER},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      invoice_status = #{invoiceStatus,jdbcType=TINYINT},
+      begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      mileage = #{mileage,jdbcType=DOUBLE},
+      duration = #{duration,jdbcType=TINYINT},
+      relet_no = #{reletNo,jdbcType=TINYINT},
+      extend_ts_order_id = #{extendTsOrderId,jdbcType=VARCHAR},
+      take_car_time = #{takeCarTime,jdbcType=TIMESTAMP},
+      take_park_id = #{takeParkId,jdbcType=INTEGER},
+      return_car_time = #{returnCarTime,jdbcType=TIMESTAMP},
+      return_car_park_id = #{returnCarParkId,jdbcType=INTEGER},
+      remind_times = #{remindTimes,jdbcType=TINYINT},
+      latest_remind = #{latestRemind,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      version = #{version,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <sql id="DayLongOrderColumn">
+  	xro.id,
+	(SELECT c.`name` FROM x_city c WHERE c.`code` = xro.city_code ) AS city_name,
+	xro.order_id,
+	m.`name` member_name,
+	m.phone,
+	(SELECT ct.type FROM x_car_type ct WHERE ct.id = xro.model_id ) AS type,
+	(SELECT lro.extend_ts_order_id FROM x_long_rent_order lro WHERE lro.order_id = xro.order_id
+	ORDER BY lro.create_time DESC LIMIT 1) AS extend_ts_order_id,
+	GROUP_CONCAT(xro.lpn) AS lpn,
+	xro.return_car_time,
+	(SELECT p.`name` FROM x_park p WHERE p.id = xro.take_park_id) AS park_name,
+	xro.take_car_time,
+	xro.order_status,
+	GROUP_CONCAT(xro.pay_status) AS pay_status,
+	SUM(
+		xro.order_money
+	)order_money,
+	SUM(
+		xro.free_compensate_money
+	)free_compensate_money,
+	SUM(
+		xro.order_money + xro.free_compensate_money
+	)pay_money,
+	xro.changed_car_times,
+	xro.relet_no,
+	xro.create_time,
+	xro.begin_time,
+	xro.end_time,
+	xro.return_car_time AS returnTimes,
+	(SELECT lro.return_car_time FROM x_long_rent_order lro WHERE lro.order_id = xro.order_id and lro.pay_status = 'finish'
+	ORDER BY lro.create_time DESC LIMIT 1) AS returnTime
+  </sql>
+  <select id="selectAllDayLongOrder" resultMap="BaseResultMap" parameterType="java.util.Map">
+	  	SELECT <include refid="DayLongOrderColumn"/>
+		FROM x_long_rent_order xro
+		INNER JOIN x_member m ON  xro.member_id = m.id
+		WHERE 1 = 1
+			<if test="cityCode != null and cityCode != ''" >
+				and xro.city_code = #{cityCode,jdbcType=VARCHAR}
+			</if> 
+			<if test="lpn != null and lpn !='' ">
+			    and xro.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="memberName != null and memberName !='' " >
+		     	and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+			</if> 
+			<if test="phone != null and phone != '' " >
+			    and m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="orderStatus != null and orderStatus != '' " >
+			    and xro.order_status = #{orderStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="bt != null and bt != '' " >
+		        and xro.begin_time &gt;= #{bt}
+		    </if>
+		    <if test="et != null and et != '' " >
+		       	and xro.begin_time &lt;= #{et}
+		    </if>
+		    GROUP BY xro.order_id
+		    ORDER BY xro.create_time DESC limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER} 
+  </select>
+  <select id="selectCountDayOrder" resultType="java.lang.Integer" parameterType="java.util.Map">
+  			SELECT COUNT(1) FROM 
+  			( 
+  				SELECT <include refid="DayLongOrderColumn"/>
+				FROM x_long_rent_order xro
+				INNER JOIN x_member m ON  xro.member_id = m.id
+				WHERE 1 = 1
+				<if test="cityCode != null and cityCode != ''" >
+					and xro.city_code = #{cityCode,jdbcType=VARCHAR}
+				</if> 
+				<if test="lpn != null and lpn !='' ">
+				    and xro.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="memberName != null and memberName !='' " >
+			     	and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+				</if> 
+				<if test="phone != null and phone != '' " >
+				    and m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="orderStatus != null and orderStatus != '' " >
+				    and xro.order_status = #{orderStatus,jdbcType=VARCHAR}
+				</if>
+				<if test="bt != null and bt != '' " >
+			        and xro.begin_time &gt;= #{bt}
+			    </if>
+			    <if test="et != null and et != '' " >
+			       	and xro.begin_time &lt;= #{et}
+			    </if>
+		    	GROUP BY xro.order_id
+  			) T
+  </select>
+  <sql id="timeshareColumns">
+	 xro.id,tsp.order_id,tsp.begin_time,tsp.end_time,tsp.end_time AS return_car_time,'-1' AS relet_no,
+     (tsp.pay_money-tsp.free_compensation_money) As order_money,tsp.free_compensation_money AS free_compensate_money,
+     tsp.pay_money,xro.create_time
+  </sql>
+  <sql id="dayRentColumns">
+  	 xro.id,xro.order_id,xro.begin_time,xro.end_time,xro.return_car_time,xro.relet_no,
+	 xro.order_money,xro.free_compensate_money,(xro.order_money + xro.free_compensate_money) AS pay_money,xro.create_time
+  </sql>
+  <select id="selectReletNoDetail" resultMap="BaseResultMap" parameterType="java.util.Map">
+      SELECT t.* FROM (
+      <choose>
+      	<when test="extendTsOrderId != null and extendTsOrderId != '' and orderStatus == 'finish' ">
+      	  SELECT <include refid="timeshareColumns"/> FROM x_long_rent_order xro
+	      INNER JOIN x_time_share_pay tsp ON xro.extend_ts_order_id = tsp.order_id
+		  WHERE
+	      <if test="orderId != null and orderId != ''">
+	          xro.order_id = #{orderId}
+	      </if>
+	      UNION ALL
+	      SELECT <include refid="dayRentColumns"/>  FROM x_long_rent_order xro
+		  WHERE xro.pay_status = 'finish' and
+	      <if test="orderId != null and orderId != ''">
+	          xro.order_id = #{orderId}
+	      </if>
+      	</when>
+      	<otherwise>
+    		SELECT <include refid="dayRentColumns"/>  FROM x_long_rent_order xro
+		  	WHERE xro.pay_status = 'finish'  and
+	      	<if test="orderId != null and orderId != ''">
+	          xro.order_id = #{orderId}
+	      	</if>
+      	</otherwise>
+      </choose>
+      
+      ) t limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+
+  </select>
+  <select id="selectDetailCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+      SELECT COUNT(1) FROM (
+		<choose>
+	      	<when test="extendTsOrderId != null and extendTsOrderId != '' and orderStatus == 'finish' ">
+	      	  SELECT <include refid="timeshareColumns"/> FROM x_long_rent_order xro
+		      INNER JOIN x_time_share_pay tsp ON xro.extend_ts_order_id = tsp.order_id
+			  WHERE
+		      <if test="orderId != null and orderId != ''">
+		          xro.order_id = #{orderId}
+		      </if>
+		      UNION ALL
+		      SELECT <include refid="dayRentColumns"/>  FROM x_long_rent_order xro
+			  WHERE xro.pay_status = 'finish'
+		      <if test="orderId != null and orderId != ''">
+		          and xro.order_id = #{orderId}
+		      </if>
+	      	</when>
+	      	<otherwise>
+      			SELECT <include refid="dayRentColumns"/>  FROM x_long_rent_order xro
+			  	WHERE xro.pay_status = 'finish'  and
+		      	<if test="orderId != null and orderId != ''">
+		          xro.order_id = #{orderId}
+	      		</if>
+      	</otherwise>
+      </choose>
+      ) t
+  </select>
+  <select id="beforeExpireWarn" resultType="Map">
+      SELECT xro.id,xro.begin_time AS beginTime,xro.return_car_time AS returnCarTime,m.`name`,m.phone,
+      xro.relet_no AS reletNo,xro.duration AS duration,xro.member_id AS memberId,xro.remind_times AS remindTimes
+      FROM x_long_rent_order xro INNER JOIN x_member m ON m.id = xro.member_id 
+      WHERE xro.order_status = 'useCar' 
+      <!-- AND (<![CDATA[NOW() >= xro.begin_time ]]> AND <![CDATA[ NOW() <= xro.return_car_time ]]>) -->
+  </select>
+
+  <select id="selectLatestByOrderId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from x_long_rent_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+    and order_status ='useCar' order by create_time desc limit 1
+  </select>
+
+  <update id="updateRemindTimes">
+  	UPDATE x_long_rent_order xro SET xro.remind_times = xro.remind_times + 1,xro.latest_remind = now() WHERE xro.id = #{id}
+  </update>
+  <update id="batchUpdateRemindTimesByOrderId">
+	UPDATE x_long_rent_order xro SET xro.remind_times = xro.remind_times + 1,xro.latest_remind = now() WHERE xro.id IN
+	<foreach collection="list"  item="id" separator="," open="(" close=")">
+        #{id}
+   	</foreach>
+  </update>
+
+
+    <select id="selectUsingOrderByOrderId" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM x_long_rent_order
+    WHERE order_id = #{orderId} and order_status = "useCar"
+  </select>
+
+  <select id="selectLatestByOrderIdAndLpn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from x_long_rent_order
+    where order_id = #{orderId,jdbcType=VARCHAR} and lpn = #{lpn,jdbcType=VARCHAR}
+    and order_status ='useCar' order by create_time asc limit 1
+  </select>
+  <select id="selectLastedOrderbyLpn" resultMap="BaseResultMap">
+	  select <include refid="Base_Column_List" />
+	  from x_long_rent_order
+	    where lpn = #{lpn}
+	    and order_status in ('finish','useCar') order by create_time desc limit 1
+  </select>
+
+  <update id="updateChangeCarMsg" parameterType="com.iber.portal.model.dayRent.LongRentOrder">
+    update x_long_rent_order
+    <set >
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="changedCarTimes != null" >
+        changed_car_times = #{changedCarTimes,jdbcType=TINYINT},
+      </if>
+      <if test="latestChangedCarTime != null" >
+        latest_changed_car_time = #{latestChangedCarTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where  order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 日租收入报表 -->
+  <sql id="dayRentOrderSql">
+  	c.`name` AS cityName ,xro.begin_time,xro.return_car_time AS returnTimes,
+	(SELECT lro.return_car_time FROM x_long_rent_order lro WHERE lro.order_id = xro.order_id and lro.pay_status = 'finish'
+	ORDER BY lro.create_time DESC LIMIT 1) AS returnTime,xro.order_id,m.`name` AS memberName,m.phone,ct.type,
+	GROUP_CONCAT(xro.lpn) AS lpn,GROUP_CONCAT(xro.pay_status) AS pay_status,
+	xro.order_money AS orderMoney ,xro.free_compensate_money AS freeCompensateMoney,
+	SUM(xro.order_money + xro.free_compensate_money) AS payMoney,xro.coupon_balance,xro.discount_money,
+	xro.pay_type,xro.invoice_status,t.coupon_balance AS reletCouponBalance,t.discount_money AS reletDiscountMoney,
+	t.free_compensate_money AS reletFreeMoney,t.order_money AS reletOrderMoney
+  </sql>
+  <select id="selectDayRentOrderInCome" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT <include refid="dayRentOrderSql"/> FROM x_long_rent_order xro 
+	INNER JOIN x_city c ON c.`code` = xro.city_code
+	INNER JOIN x_car_type ct ON ct.id = xro.model_id
+	INNER JOIN x_member m ON m.id = xro.member_id LEFT JOIN 
+	(SELECT xro2.order_id ,xro2.coupon_balance,xro2.free_compensate_money,xro2.order_money,
+	xro2.discount_money FROM x_long_rent_order xro2 WHERE xro2.pay_status = 'finish' AND xro2.relet_no = 1 ) t ON t.order_id = xro.order_id
+	WHERE xro.pay_status = 'finish' AND xro.order_status = 'finish' 
+	<if test="cityCode != null and cityCode != ''" >
+		AND xro.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if> 
+	<if test="lpn != null and lpn !='' ">
+	    AND xro.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="memberName != null and memberName !='' " >
+     	AND m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+	</if> 
+	<if test="phone != null and phone != '' " >
+	    AND m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="invoiceStatus != null and invoiceStatus != '' " >
+		<choose>
+			<when test="invoiceStatus==1">
+				AND xro.invoice_status IN ('0','1')
+			</when>
+			<when test="invoiceStatus==3">
+				AND xro.invoice_status = '3'
+			</when>
+			<otherwise>
+				AND xro.invoice_status = '2'
+			</otherwise>					
+		</choose>
+	</if>
+	<if test="bt != null and bt != '' " >
+        AND xro.begin_time &gt;= #{bt}
+    </if>
+    <if test="et != null and et != '' " >
+       	AND xro.begin_time &lt;= #{et}
+    </if>
+	GROUP BY xro.order_id 
+	ORDER BY xro.create_time DESC 
+	<if test="from != null and to != null">
+	LIMIT #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER} 
+	</if>
+  </select>
+  <select id="selectDayRentOrderInComeCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT COUNT(DISTINCT xro.order_id) FROM x_long_rent_order xro 
+	INNER JOIN x_city c ON c.`code` = xro.city_code
+	INNER JOIN x_car_type ct ON ct.id = xro.model_id
+	INNER JOIN x_member m ON m.id = xro.member_id LEFT JOIN 
+	(SELECT xro2.order_id ,xro2.coupon_balance,xro2.free_compensate_money,xro2.order_money,
+	xro2.discount_money FROM x_long_rent_order xro2 WHERE xro2.pay_status = 'finish' AND xro2.relet_no = 1 ) t ON t.order_id = xro.order_id
+	WHERE xro.pay_status = 'finish' AND xro.order_status = 'finish' 
+	<if test="cityCode != null and cityCode != ''" >
+		AND xro.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if> 
+	<if test="lpn != null and lpn !='' ">
+	    AND xro.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="memberName != null and memberName !='' " >
+     	AND m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+	</if> 
+	<if test="phone != null and phone != '' " >
+	    AND m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="invoiceStatus != null and invoiceStatus != '' " >
+	   <choose>
+			<when test="invoiceStatus==1">
+				AND xro.invoice_status IN ('0','1')
+			</when>
+			<when test="invoiceStatus==3">
+				AND xro.invoice_status = '3'
+			</when>
+			<otherwise>
+				AND xro.invoice_status = '2'
+			</otherwise>					
+		</choose>
+	</if>
+	<if test="bt != null and bt != '' " >
+        AND xro.begin_time &gt;= #{bt}
+    </if>
+    <if test="et != null and et != '' " >
+       	AND xro.begin_time &lt;= #{et}
+    </if>
+  </select>
+  <!-- 日租收入总合计 -->
+  <select id="selectTotalSum" parameterType="java.util.Map" resultMap="BaseResultMap" >
+  	SELECT 
+  	case when #{searchType} = 0 then "总合计" when #{searchType} = 1 then "合计" else "" end as cityName,
+	SUM(tt.orderMoney) orderMoney,
+	SUM(tt.freeCompensateMoney) freeCompensateMoney,
+	SUM(tt.payMoney) payMoney,
+	SUM(tt.coupon_balance) coupon_balance,
+	SUM(tt.discount_money) discount_money,
+	SUM(tt.reletCouponBalance) reletCouponBalance,
+	SUM(tt.reletDiscountMoney) reletDiscountMoney,
+	SUM(tt.reletFreeMoney) reletFreeMoney,
+	SUM(tt.reletOrderMoney) reletOrderMoney FROM 
+	(<include refid="totalSumColumn"></include>) tt
+  </select>
+  <sql id="totalSumColumn">
+  		SELECT xro.order_money AS orderMoney ,xro.free_compensate_money AS freeCompensateMoney,
+		SUM(xro.order_money + xro.free_compensate_money) AS payMoney,xro.coupon_balance,xro.discount_money,
+		t.coupon_balance AS reletCouponBalance,t.discount_money AS reletDiscountMoney,
+		t.free_compensate_money AS reletFreeMoney,t.order_money AS reletOrderMoney
+		FROM x_long_rent_order xro 
+		INNER JOIN x_city c ON c.`code` = xro.city_code
+		INNER JOIN x_car_type ct ON ct.id = xro.model_id
+		INNER JOIN x_member m ON m.id = xro.member_id LEFT JOIN 
+		(SELECT xro2.order_id ,xro2.coupon_balance,xro2.free_compensate_money,xro2.order_money,
+		xro2.discount_money FROM x_long_rent_order xro2 WHERE xro2.pay_status = 'finish' AND xro2.relet_no = 1 ) t ON t.order_id = xro.order_id
+		WHERE xro.pay_status = 'finish' AND xro.order_status = 'finish' 
+		<if test="cityCode != null and cityCode != ''" >
+		AND xro.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+		    AND xro.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="memberName != null and memberName !='' " >
+	     	AND m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="phone != null and phone != '' " >
+		    AND m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="invoiceStatus != null and invoiceStatus != '' " >
+		   <choose>
+				<when test="invoiceStatus==1">
+					AND xro.invoice_status IN ('0','1')
+				</when>
+				<when test="invoiceStatus==3">
+					AND xro.invoice_status = '3'
+				</when>
+				<otherwise>
+					AND xro.invoice_status = '2'
+				</otherwise>					
+			</choose>
+		</if>
+		<if test="bt != null and bt != '' " >
+	        AND xro.begin_time &gt;= #{bt}
+	    </if>
+	    <if test="et != null and et != '' " >
+	       	AND xro.begin_time &lt;= #{et}
+	    </if>
+		GROUP BY xro.order_id 
+		ORDER BY xro.create_time DESC
+		<if test="from != null and to != null">
+			LIMIT #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER} 
+		</if>
+  </sql>
+</mapper>

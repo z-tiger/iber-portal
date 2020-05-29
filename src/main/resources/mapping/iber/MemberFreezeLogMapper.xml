@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.member.MemberFreezeLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberFreezeLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="freezeLogVoResultMap" type="com.iber.portal.vo.member.MemberFreezeLogVo">
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="reason" property="reason"/>
+    <result column="status" property="status"/>
+    <result column="cityName" property="cityName"/>
+    <result column="name" property="name"/>
+    <result column="phone" property="phone"/>
+    <result column="createName" property="createName"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, create_time, create_id, reason,status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_freeze_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_freeze_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.member.MemberFreezeLog" >
+    insert into x_member_freeze_log (id, member_id, create_time, 
+      create_id, reason,status)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createId,jdbcType=INTEGER}, #{reason,jdbcType=VARCHAR},#{status})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.member.MemberFreezeLog" >
+    insert into x_member_freeze_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.member.MemberFreezeLog" >
+    update x_member_freeze_log
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.member.MemberFreezeLog" >
+    update x_member_freeze_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_id = #{createId,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAllFreezeLog" resultMap="freezeLogVoResultMap">
+    SELECT c.`name` cityName,m.`name`,m.phone,f.reason,s.`name` createName,f.`status`,f.create_time createTime  FROM x_member_freeze_log f
+    JOIN x_member m on f.member_id = m.id LEFT JOIN x_city c on m.city_code = c.`code` JOIN x_sys_user s on f.create_id = s.id
+    <where>
+      <if test="name != null and name != ''">
+        m.name like CONCAT('%',#{name},'%')
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+        and m.city_code = #{cityCode}
+      </if>
+      <if test="phone != null and phone != ''">
+        and m.phone = #{phone}
+      </if>
+      <if test="reason != null and reason != ''">
+        and f.reason like CONCAT('%',#{reason},'%')
+      </if>
+    </where>
+    order by f.create_time desc
+    <if test="offset != null and rows != null">
+      limit #{offset},#{rows}
+    </if>
+  </select>
+
+  <select id="selecAllRecords" resultType="java.lang.Integer">
+    SELECT count(1) FROM x_member_freeze_log f JOIN x_member m on f.member_id = m.id
+    <where>
+      <if test="name != null and name != ''">
+        m.name like CONCAT('%',#{name},'%')
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+        and m.city_code = #{cityCode}
+      </if>
+      <if test="phone != null and phone != ''">
+        and m.phone = #{phone}
+      </if>
+      <if test="reason != null and reason != ''">
+        and f.reason like CONCAT('%',#{reason},'%')
+      </if>
+    </where>
+  </select>
+</mapper>

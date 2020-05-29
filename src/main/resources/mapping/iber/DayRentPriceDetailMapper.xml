@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayRentPriceDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.DayRentPriceDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="curr_date" property="currDate" jdbcType="DATE" />
+    <result column="actual_price" property="actualPrice" jdbcType="INTEGER" />
+    <result column="base_price" property="basePrice" jdbcType="INTEGER" />
+    <result column="insurance_price" property="insurancePrice" jdbcType="INTEGER" />
+    <result column="procedure_price" property="procedurePrice" jdbcType="INTEGER" />
+    <result column="remote_price" property="remotePrice" jdbcType="INTEGER" />
+    <result column="free_compensation_price" property="freeCompensationPrice" jdbcType="INTEGER" />
+    <result column="timeout_price" property="timeoutPrice" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="model_name" property="modelName" jdbcType="VARCHAR" />
+    <!-- 品牌 -->
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_code, model_id, curr_date, actual_price, base_price, insurance_price, procedure_price, 
+    remote_price, free_compensation_price, timeout_price, update_time, update_user
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_price_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+   <select id="selectBycurrDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_price_detail
+    where curr_date = #{currDate,jdbcType=VARCHAR} and  city_code = #{cityCode,jdbcType=VARCHAR}
+    and model_id = #{modeId,jdbcType=INTEGER}
+  </select>
+  <select id="queryDayRentPriceDetails" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_price_detail
+    where city_code = #{cityCode,jdbcType=VARCHAR}
+    and model_id = #{modeId,jdbcType=INTEGER}
+    order by curr_date desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_day_rent_price_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.DayRentPriceDetail" >
+    insert into x_day_rent_price_detail (id, city_code, model_id, 
+      curr_date, actual_price, base_price, 
+      insurance_price, procedure_price, remote_price, 
+      free_compensation_price, timeout_price, update_time, 
+      update_user)
+    values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{modelId,jdbcType=INTEGER}, 
+      #{currDate,jdbcType=DATE}, #{actualPrice,jdbcType=INTEGER}, #{basePrice,jdbcType=INTEGER}, 
+      #{insurancePrice,jdbcType=INTEGER}, #{procedurePrice,jdbcType=INTEGER}, #{remotePrice,jdbcType=INTEGER}, 
+      #{freeCompensationPrice,jdbcType=INTEGER}, #{timeoutPrice,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.DayRentPriceDetail" >
+    insert into x_day_rent_price_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="currDate != null" >
+        curr_date,
+      </if>
+      <if test="actualPrice != null" >
+        actual_price,
+      </if>
+      <if test="basePrice != null" >
+        base_price,
+      </if>
+      <if test="insurancePrice != null" >
+        insurance_price,
+      </if>
+      <if test="procedurePrice != null" >
+        procedure_price,
+      </if>
+      <if test="remotePrice != null" >
+        remote_price,
+      </if>
+      <if test="freeCompensationPrice != null" >
+        free_compensation_price,
+      </if>
+      <if test="timeoutPrice != null" >
+        timeout_price,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="currDate != null" >
+        #{currDate,jdbcType=DATE},
+      </if>
+      <if test="actualPrice != null" >
+        #{actualPrice,jdbcType=INTEGER},
+      </if>
+      <if test="basePrice != null" >
+        #{basePrice,jdbcType=INTEGER},
+      </if>
+      <if test="insurancePrice != null" >
+        #{insurancePrice,jdbcType=INTEGER},
+      </if>
+      <if test="procedurePrice != null" >
+        #{procedurePrice,jdbcType=INTEGER},
+      </if>
+      <if test="remotePrice != null" >
+        #{remotePrice,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensationPrice != null" >
+        #{freeCompensationPrice,jdbcType=INTEGER},
+      </if>
+      <if test="timeoutPrice != null" >
+        #{timeoutPrice,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.DayRentPriceDetail" >
+    update x_day_rent_price_detail
+    <set >
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="currDate != null" >
+        curr_date = #{currDate,jdbcType=DATE},
+      </if>
+      <if test="actualPrice != null" >
+        actual_price = #{actualPrice,jdbcType=INTEGER},
+      </if>
+      <if test="basePrice != null" >
+        base_price = #{basePrice,jdbcType=INTEGER},
+      </if>
+      <if test="insurancePrice != null" >
+        insurance_price = #{insurancePrice,jdbcType=INTEGER},
+      </if>
+      <if test="procedurePrice != null" >
+        procedure_price = #{procedurePrice,jdbcType=INTEGER},
+      </if>
+      <if test="remotePrice != null" >
+        remote_price = #{remotePrice,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensationPrice != null" >
+        free_compensation_price = #{freeCompensationPrice,jdbcType=INTEGER},
+      </if>
+      <if test="timeoutPrice != null" >
+        timeout_price = #{timeoutPrice,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.DayRentPriceDetail" >
+    update x_day_rent_price_detail
+    set city_code = #{cityCode,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=INTEGER},
+      curr_date = #{currDate,jdbcType=DATE},
+      actual_price = #{actualPrice,jdbcType=INTEGER},
+      base_price = #{basePrice,jdbcType=INTEGER},
+      insurance_price = #{insurancePrice,jdbcType=INTEGER},
+      procedure_price = #{procedurePrice,jdbcType=INTEGER},
+      remote_price = #{remotePrice,jdbcType=INTEGER},
+      free_compensation_price = #{freeCompensationPrice,jdbcType=INTEGER},
+      timeout_price = #{timeoutPrice,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getByCityCodeAndCarTypeId" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />,
+  	(select type from x_car_type d where d.id = p.model_id) model_name,
+    (select t.brance from x_car_type t where t.id = p.model_id) brand_name
+  	from x_day_rent_price_detail p
+  	where p.city_code = #{cityCode} and p.model_id = #{carTypeId} and unix_timestamp(p.curr_date) = #{date}
+  </select>
+</mapper>

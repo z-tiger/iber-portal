@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.charging.OperatorInfoMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.charging.OperatorInfo" >
+	<result column="id" property="id"/>
+	<result column="operatorid" property="operatorId"/>
+	<result column="name" property="name"/>
+	<result column="phone1" property="phone1"/>
+	<result column="phone2" property="phone2"/>
+	<result column="registerAddress" property="registerAddress"/>
+	<result column="remark" property="remark"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_create" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+	<result column="url" property="url"/>
+	<result column="run_divide_into" property="runDivideInto" jdbcType="VARCHAR" />
+</resultMap>
+
+       
+<!-- c_operator_info table all fields -->
+<sql id="Base_Column_List" >
+	 id,operatorId,name,phone1,phone2,registerAddress,remark,create_time,create_id,update_create,update_id,url,run_divide_into
+</sql>
+
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.charging.OperatorInfo" >
+  insert into c_operator_info(operatorId,name,phone1,phone2,registerAddress,remark,create_time,create_id,update_create,update_id,url,run_divide_into)
+ values(#{operatorId},#{name},#{phone1},#{phone2},#{registerAddress},#{remark},#{createTime},#{createId},#{updateTime},#{updateId},#{url},#{runDivideInto})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from c_operator_info where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update c_operator_info set operatorId=#{operatorId},name=#{name},phone1=#{phone1},phone2=#{phone2},registerAddress=#{registerAddress},remark=#{remark},update_create=#{updateTime},update_id=#{updateId},url=#{url},run_divide_into=#{runDivideInto}  where id=#{id}
+</update>
+
+<!-- 根据id查询 电桩运营商 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from c_operator_info where id = #{id}
+</select>
+
+<!-- 电桩运营商 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from c_operator_info c where 1=1 
+ 	<if test="name != null and name != '' " >
+        and c.name like CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+    </if>
+	<if test="registerAddress != null and registerAddress != '' " >
+       and c.registerAddress like CONCAT(CONCAT('%', #{registerAddress,jdbcType=VARCHAR}),'%') 
+    </if>
+ 
+</select>
+  	
+<!-- 查询电桩运营商列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="Base_Column_List"/>,
+	(select u.name from x_sys_user u where u.id = c.create_id) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id) update_name
+	from c_operator_info c  where 1 =1
+	<if test="name!=null and name!='' ">
+	   and c.name like CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+	</if> 
+	<if	test="registerAddress!=null and registerAddress!=''">
+	   and c.registerAddress like CONCAT(CONCAT('%', #{registerAddress,jdbcType=VARCHAR}),'%') 
+	</if> 
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+  <!-- 查询所有的运营商组织机构代码 -->
+  <select id="getAllOperatorInfo" resultMap="BaseResultMap" >
+  	select  operatorId from  c_operator_info
+  </select>
+  
+  <!-- 查询所有的运营商名称 -->
+  <select id="getAllOperatorName" resultMap="BaseResultMap">
+  	select name from  c_operator_info
+  </select>
+  
+  <select id="selectIdByName" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select id   from  c_operator_info where name=#{name}
+  </select>
+</mapper>   

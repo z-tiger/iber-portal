@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.overall.OverallCarMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.overall.OverallCar">
+		<id column="id" property="id" />
+		<result column="car_num" property="carNum" />
+		<result column="car_run_num" property="carRunNum" />
+		<result column="maintain_num" property="maintainNum" />
+		<result column="repair_num" property="repairNum" />
+		<result column="rent_car_num" property="rentCarNum" />
+		<result column="rent_num" property="rentNum" />
+		<result column="rent_member_num" property="rentMemberNum" />
+		<result column="order_num" property="orderNum" />
+		<result column="order_car_num" property="orderCarNum" />
+		<result column="order_member_num" property="orderMemberNum" />
+		<result column="rent_timelong" property="rentTimelong" />
+		<result column="rent_mileage" property="rentMileage" />
+		<result column="pay_money" property="payMoney" />
+		<result column="order_money" property="orderMoney" />
+		<result column="city_code" property="cityCode" />
+		<result column="car_type" property="carType" />
+		<result column="date_time" property="dateTime" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, car_num, car_run_num, maintain_num, repair_num, rent_car_num,
+		rent_num, rent_member_num,
+		order_num, order_car_num, order_member_num, rent_timelong, rent_mileage,
+		pay_money, order_money,
+		city_code, date_time, create_time,car_type
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from bi_overall_car
+		where id = #{id }
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from bi_overall_car
+		where id = #{id }
+	</delete>
+	<insert id="insert" parameterType="com.iber.portal.model.overall.OverallCar">
+		insert into bi_overall_car (id, car_num, car_run_num,
+		maintain_num, repair_num, rent_car_num,
+		rent_num, rent_member_num, order_num, order_car_num,
+		order_member_num, rent_timelong, rent_mileage,
+		pay_money, order_money, city_code,
+		date_time, create_time,car_type)
+		values (#{id }, #{carNum }, #{carRunNum },
+		#{maintainNum }, #{repairNum }, #{rentCarNum },
+		#{rentNum }, #{rentMemberNum }, #{orderNum }, #{orderCarNum },
+		#{orderMemberNum }, #{rentTimelong }, #{rentMileage },
+		#{payMoney }, #{orderMoney }, #{cityCode },
+		#{dateTime }, #{createTime },#{carType})
+	</insert>
+	<insert id="insertSelective" parameterType="com.iber.portal.model.overall.OverallCar">
+		insert into bi_overall_car
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="carNum != null">
+				car_num,
+			</if>
+			<if test="carRunNum != null">
+				car_run_num,
+			</if>
+			<if test="maintainNum != null">
+				maintain_num,
+			</if>
+			<if test="repairNum != null">
+				repair_num,
+			</if>
+			<if test="rentCarNum != null">
+				rent_car_num,
+			</if>
+			<if test="rentNum != null">
+				rent_num,
+			</if>
+			<if test="rentMemberNum != null">
+				rent_member_num,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="orderCarNum != null">
+				order_car_num,
+			</if>
+			<if test="orderMemberNum != null">
+				order_member_num,
+			</if>
+			<if test="rentTimelong != null">
+				rent_timelong,
+			</if>
+			<if test="rentMileage != null">
+				rent_mileage,
+			</if>
+			<if test="payMoney != null">
+				pay_money,
+			</if>
+			<if test="orderMoney != null">
+				order_money,
+			</if>
+			<if test="cityCode != null">
+				city_code,
+			</if>
+			<if test="dateTime != null">
+				date_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="carType != null">
+				car_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id },
+			</if>
+			<if test="carNum != null">
+				#{carNum },
+			</if>
+			<if test="carRunNum != null">
+				#{carRunNum },
+			</if>
+			<if test="maintainNum != null">
+				#{maintainNum },
+			</if>
+			<if test="repairNum != null">
+				#{repairNum },
+			</if>
+			<if test="rentCarNum != null">
+				#{rentCarNum },
+			</if>
+			<if test="rentNum != null">
+				#{rentNum },
+			</if>
+			<if test="rentMemberNum != null">
+				#{rentMemberNum },
+			</if>
+			<if test="orderNum != null">
+				#{orderNum },
+			</if>
+			<if test="orderCarNum != null">
+				#{orderCarNum },
+			</if>
+			<if test="orderMemberNum != null">
+				#{orderMemberNum },
+			</if>
+			<if test="rentTimelong != null">
+				#{rentTimelong },
+			</if>
+			<if test="rentMileage != null">
+				#{rentMileage },
+			</if>
+			<if test="payMoney != null">
+				#{payMoney },
+			</if>
+			<if test="orderMoney != null">
+				#{orderMoney },
+			</if>
+			<if test="cityCode != null">
+				#{cityCode },
+			</if>
+			<if test="dateTime != null">
+				#{dateTime },
+			</if>
+			<if test="createTime != null">
+				#{createTime },
+			</if>
+			<if test="carType != null">
+				#{carType },
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.overall.OverallCar">
+		update bi_overall_car
+		<set>
+			<if test="carNum != null">
+				car_num = #{carNum },
+			</if>
+			<if test="carRunNum != null">
+				car_run_num = #{carRunNum },
+			</if>
+			<if test="maintainNum != null">
+				maintain_num = #{maintainNum },
+			</if>
+			<if test="repairNum != null">
+				repair_num = #{repairNum },
+			</if>
+			<if test="rentCarNum != null">
+				rent_car_num = #{rentCarNum },
+			</if>
+			<if test="rentNum != null">
+				rent_num = #{rentNum },
+			</if>
+			<if test="rentMemberNum != null">
+				rent_member_num = #{rentMemberNum },
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum },
+			</if>
+			<if test="orderCarNum != null">
+				order_car_num = #{orderCarNum },
+			</if>
+			<if test="orderMemberNum != null">
+				order_member_num = #{orderMemberNum },
+			</if>
+			<if test="rentTimelong != null">
+				rent_timelong = #{rentTimelong },
+			</if>
+			<if test="rentMileage != null">
+				rent_mileage = #{rentMileage },
+			</if>
+			<if test="payMoney != null">
+				pay_money = #{payMoney },
+			</if>
+			<if test="orderMoney != null">
+				order_money = #{orderMoney },
+			</if>
+			<if test="cityCode != null">
+				city_code = #{cityCode },
+			</if>
+			<if test="dateTime != null">
+				date_time = #{dateTime },
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime },
+			</if>
+			<if test="carType != null">
+				car_type = #{carType },
+			</if>
+		</set>
+		where id = #{id }
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.overall.OverallCar">
+		update bi_overall_car
+		set car_num = #{carNum },
+		car_run_num = #{carRunNum },
+		maintain_num = #{maintainNum },
+		repair_num = #{repairNum },
+		rent_car_num = #{rentCarNum },
+		rent_num = #{rentNum },
+		rent_member_num = #{rentMemberNum },
+		order_num = #{orderNum },
+		order_car_num = #{orderCarNum },
+		order_member_num = #{orderMemberNum },
+		rent_timelong = #{rentTimelong },
+		rent_mileage = #{rentMileage },
+		pay_money = #{payMoney },
+		order_money = #{orderMoney },
+		city_code = #{cityCode },
+		date_time = #{dateTime },
+		create_time = #{createTime },
+		car_type = #{carType }
+		where id = #{id }
+	</update>
+
+	<!-- 查询指定时间currentTime车辆数 -->
+	<select id="selectInitCarNum" resultMap="BaseResultMap">
+		select
+		r.city_code,
+		c.model_id car_type ,
+		COUNT( DISTINCT c.lpn) car_num ,
+		#{currentTime} date_time
+		from
+		x_car c INNER JOIN x_car_run r ON c.lpn = r.lpn
+		where
+		date(c.create_time) <![CDATA[ <= ]]>
+		#{currentTime}
+		GROUP BY r.city_code,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime运营车辆数 -->
+	<select id="selectInitCarRunNum" resultMap="BaseResultMap">
+		select
+		r.city_code,c.model_id car_type ,COUNT( DISTINCT c.lpn) car_run_num , #{currentTime}
+		date_time
+		from
+		x_car c INNER JOIN x_car_run r ON c.lpn = r.lpn
+		where
+		date(c.create_time) <![CDATA[ <= ]]>
+		#{currentTime}
+		and c.lpn not in(select DISTINCT lpn from x_car_repair where
+		date(start_time) <![CDATA[ <= ]]>
+		#{currentTime} and date(end_time) <![CDATA[ > ]]>
+		#{currentTime})
+		GROUP BY r.city_code,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime维护车辆数 -->
+	<select id="selectInitRepairNum" resultMap="BaseResultMap">
+		select
+		r.city_code,c.model_id car_type , COUNT( DISTINCT c.lpn) repair_num ,#{currentTime}
+		date_time
+		from
+		x_car c INNER JOIN x_car_run r ON c.lpn = r.lpn inner join x_car_repair cr
+		on cr.lpn = c.lpn
+		where
+		date(cr.start_time) <![CDATA[ <= ]]>
+		#{currentTime} and cr.end_time  <![CDATA[ > ]]>
+		#{currentTime}
+		GROUP BY r.city_code,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime车辆被租次数 -->
+	<select id="selectInitRentCarNum" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, COUNT(DISTINCT o.lpn) rent_car_num ,
+		#{currentTime} date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		o.`status` not in('ordered','cancel') and date(o.order_time) = #{currentTime}
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime租车人数 -->
+	<select id="selectInitRentMemberNum" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, COUNT(DISTINCT o.member_id)
+		rent_member_num , #{currentTime} date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		o.`status` not in('ordered','cancel') and date(o.order_time) = #{currentTime}
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime租车次数 -->
+	<select id="selectInitRentNum" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, COUNT(DISTINCT o.id) rent_num , #{currentTime}
+		date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		o.`status` not in('ordered','cancel') and date(o.order_time) = #{currentTime}
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime预约次数 -->
+	<select id="selectInitOrderNum" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, COUNT(DISTINCT o.id) order_num , #{currentTime}
+		date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		date(o.order_time) = #{currentTime}
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime预约人数 -->
+	<select id="selectInitOrderMemberNum" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, COUNT(DISTINCT o.member_id)
+		order_member_num ,#{currentTime} date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		date(o.order_time) = #{currentTime}
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime预约车辆数 -->
+	<select id="selectInitOrderCarNum" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, COUNT(DISTINCT o.lpn) order_car_num ,
+		#{currentTime} date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		date(o.order_time) = #{currentTime}
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime 租车时长 -->
+	<select id="selectInitRentTimelong" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id
+		car_type,SUM(TIMESTAMPDIFF(MINUTE,o.begin_time,o.end_time))
+		rent_timelong, #{currentTime} date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn
+		where
+		o.`status` = 'finish' and date(o.order_time) = #{currentTime}
+		GROUP BY
+		o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime 租车里程 -->
+	<select id="selectInitRentMileage" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type,SUM(p.total_mileage) rent_mileage,#{currentTime}
+		date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn LEFT JOIN x_time_share_pay p ON
+		o.order_id = p.order_id
+		where
+		o.`status` = 'finish' and date(o.order_time) = #{currentTime}
+		GROUP BY
+		o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime 租车订单总额 -->
+	<select id="selectInitOrderMoney" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type,
+		SUM(p.total_pay_money+p.free_compensation_money) order_money,
+		#{currentTime} date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn LEFT JOIN x_time_share_pay p ON
+		o.order_id = p.order_id
+		where
+		o.`status` = 'finish' and date(o.order_time) = #{currentTime} and p.pay_status =
+		'finish'
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 查询指定时间currentTime 租车支付金额 -->
+	<select id="selectInitPayMoney" resultMap="BaseResultMap">
+		select
+		o.city_code ,c.model_id car_type, SUM(p.pay_money) pay_money, #{currentTime}
+		date_time
+		from
+		x_time_share_order o LEFT JOIN x_car c ON o.lpn = c.lpn LEFT JOIN x_time_share_pay p ON
+		o.order_id = p.order_id
+		where
+		o.`status` = 'finish' and date(o.order_time) = #{currentTime} and p.pay_status =
+		'finish'
+		GROUP BY o.city_code ,c.model_id
+	</select>
+
+	<!-- 批量插入数据 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		<if test="list != null and list.size() > 0">
+			INSERT INTO bi_overall_car ( car_num, car_run_num, maintain_num,
+			repair_num, rent_car_num, rent_num, rent_member_num,
+			order_num,
+			order_car_num, order_member_num, rent_timelong, rent_mileage,
+			pay_money, order_money, date_time, car_type, city_code, create_time)
+			<trim prefix=" values " suffixOverrides=",">
+				<foreach collection="list" item="item" index="index"
+					separator=",">
+					<trim prefix="(" suffix=")" suffixOverrides=",">
+						<choose>
+							<when test="item.carNum != null and item.carNum != '' ">
+								#{item.carNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.carRunNum != null and item.carRunNum != '' ">
+								#{item.carRunNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.maintainNum != null and item.maintainNum != '' ">
+								#{item.maintainNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.repairNum != null and item.repairNum != '' ">
+								#{item.repairNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.rentCarNum != null and item.rentCarNum != '' ">
+								#{item.rentCarNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.rentNum != null and item.rentNum != '' ">
+								#{item.rentNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.rentMemberNum != null and item.rentMemberNum != '' ">
+								#{item.rentMemberNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.orderNum != null and item.orderNum != '' ">
+								#{item.orderNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.orderCarNum != null and item.orderCarNum != '' ">
+								#{item.orderCarNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when
+								test="item.orderMemberNum != null and item.orderMemberNum != '' ">
+								#{item.orderMemberNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.rentTimelong != null and item.rentTimelong != '' ">
+								#{item.rentTimelong},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.rentMileage != null and item.rentMileage != '' ">
+								#{item.rentMileage},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.payMoney != null and item.payMoney != '' ">
+								#{item.payMoney},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.orderMoney != null and item.orderMoney != '' ">
+								#{item.orderMoney},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.dateTime != null ">
+								#{item.dateTime},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.carType != null  ">
+								#{item.carType},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.cityCode != null ">
+								#{item.cityCode},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						#{item.createTime}
+					</trim>
+				</foreach>
+			</trim>
+		</if>
+	</insert>
+
+	<!-- 获取总体分析记录数 -->
+	<select id="getInitRecords" resultType="java.lang.Integer">
+		select IFNULL(sum(cnt),0)
+		FROM (
+		select COUNT(1) cnt from
+		bi_overall_annual_member
+		UNION ALL
+		select
+		COUNT(1) from bi_overall_car
+		UNION ALL
+		select COUNT(1) from
+		bi_overall_member
+		UNION ALL
+		select COUNT(1) from bi_overall_pile
+		)a
+	</select>
+
+	<!-- 查询车辆分析记录数 -->
+	<select id="getCarRecords" resultType="java.lang.Integer">
+		select count(1) from
+		bi_overall_car
+	</select>
+</mapper>

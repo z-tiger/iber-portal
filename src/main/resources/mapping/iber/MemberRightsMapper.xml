@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.member.MemberRightsMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberRights">
+		<result column="id" property="id" />
+		<result column="rights_name" property="rightsName" />
+		<result column="icon_url" property="iconUrl" />
+		<result column="type" property="type" />
+		<result column="desc_url" property="descUrl" />
+		<result column="value" property="value" />
+		<result column="number" property="number" />
+		<result column="create_id" property="createId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_id" property="updateId" />
+		<result column="update_time" property="updateTime" />
+		<result column="create_name" property="createName" />
+		<result column="update_name" property="updateName" />
+		<result column="gray_icon_url" property="grayIconUrl" />
+		<result column="isUseInBirthday" property="isUseInBirthday"/>
+
+	</resultMap>
+	
+	
+	<resultMap id="MemberCouponResultMap"
+		type="com.iber.portal.vo.member.MemberCouponVo">
+		<result column="memberId" property="memberId" />
+		<result column="value" property="value" />
+		<result column="number" property="number" />
+		<result column="levelName" property="levelName" />
+		<result column="phone" property="phone" />
+	</resultMap>
+
+	<!-- x_member_rights table all fields -->
+	<sql id="Base_Column_List">
+		id,rights_name,icon_url,type,desc_url,value,number,create_id,create_time,update_id,update_time,gray_icon_url,isUseInBirthday
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.iber.portal.model.member.MemberRights">
+		insert into
+		x_member_rights(id,rights_name,icon_url,type,desc_url,value,number,create_id,create_time,update_id,update_time,gray_icon_url)
+		values(#{id},#{rightsName},#{iconUrl},#{type},#{descUrl},#{value},#{number},#{createId},#{createTime},#{updateId},#{updateTime},#{grayIconUrl})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.iber.portal.model.member.MemberRights">
+		insert into x_member_rights
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="rightsName != null">
+				rights_name,
+			</if>
+			<if test="iconUrl != null">
+				icon_url,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="descUrl != null">
+				desc_url,
+			</if>
+			<if test="value != null">
+				value,
+			</if>
+			<if test="number != null">
+				number,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateId != null">
+				update_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="grayIconUrl != null">
+				gray_icon_url,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="rightsName != null">
+				#{rightsName,jdbcType=VARCHAR},
+			</if>
+			<if test="iconUrl != null">
+				#{iconUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="descUrl != null">
+				#{descUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=INTEGER},
+			</if>
+			<if test="number != null">
+				#{number,jdbcType=INTEGER},
+			</if>
+			<if test="createId != null">
+				#{createId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				#{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="grayIconUrl != null">
+				#{grayIconUrl,jdbcType=VARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+
+
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from x_member_rights where id = #{id}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+		update x_member_rights set
+		rights_name=#{rightsName},icon_url=#{iconUrl},type=#{type},desc_url=#{descUrl},value=#{value},number=#{number},create_id=#{createId},create_time=#{createTime},update_id=#{updateId},update_time=#{updateTime},gray_icon_url=#{grayIconUrl}
+		where id=#{id}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.member.MemberRights">
+		update x_member_rights
+		<set>
+			<if test="rightsName != null">
+				rights_name = #{rightsName,jdbcType=VARCHAR},
+			</if>
+			<if test="iconUrl != null">
+				icon_url = #{iconUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="descUrl != null">
+				desc_url = #{descUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				value = #{value,jdbcType=INTEGER},
+			</if>
+			<if test="number != null">
+				number = #{number,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateId != null">
+				update_id = #{updateId,jdbcType=INTEGER},
+			</if>
+			<if test="grayIconUrl != null">
+				gray_icon_url = #{grayIconUrl,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+
+	<!-- 根据id查询 会员权益 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_member_rights where id = #{id}
+	</select>
+
+	<!-- 会员权益 列表总数 -->
+	<select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_member_rights where 1=1
+
+
+	</select>
+
+	<!-- 查询会员权益列表 -->
+	<select id="queryPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		,
+		(select name from x_sys_user where id=create_id)create_name,
+		(select name from x_sys_user where id=update_id)update_name
+		from x_member_rights where 1 =1
+		<if test="rightsName !=null and rightsName !=''">
+			and rights_name=#{rightsName,jdbcType=VARCHAR}
+		</if>
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询所有的会员权益信息 (权益id，权益名称) -->
+	<select id="queryAllMemberRights" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_member_rights
+	</select>
+
+	
+	<select id="getMemberCoupons" resultMap="MemberCouponResultMap">
+		SELECT m.id memberId, m.phone, mr.`value`, mr.number, ml.`name` levelName 
+			FROM x_member_rights mr 
+			INNER JOIN x_member_level_rights_relation r ON mr.id = r.rights_id 
+			INNER JOIN x_member_level ml ON ml.id = r.level_id
+			INNER JOIN x_member m ON m.level_code = ml.level_code
+		WHERE mr.type = 0
+	</select>
+	
+	<select id="queryMemberRigthtsByMemberLevel" resultMap="BaseResultMap">
+		SELECT mr.*
+	    from x_member_rights mr JOIN x_member_level_rights_relation lr on mr.id = lr.rights_id JOIN x_member_level ml on lr.level_id = ml.id 
+	    WHERE ml.level_code = #{levelCode} and type = 1 order by value desc 
+	</select>
+
+</mapper>   

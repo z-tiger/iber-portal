@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.qrtz.JobListenersMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.qrtz.JobListenersKey" >
+    <id column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+    <id column="JOB_GROUP" property="jobGroup" jdbcType="VARCHAR" />
+    <id column="JOB_LISTENER" property="jobListener" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.iber.portal.model.qrtz.JobListenersKey" >
+    delete from qrtz_job_listeners
+    where JOB_NAME = #{jobName,jdbcType=VARCHAR}
+      and JOB_GROUP = #{jobGroup,jdbcType=VARCHAR}
+      and JOB_LISTENER = #{jobListener,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.qrtz.JobListenersKey" >
+    insert into qrtz_job_listeners (JOB_NAME, JOB_GROUP, JOB_LISTENER
+      )
+    values (#{jobName,jdbcType=VARCHAR}, #{jobGroup,jdbcType=VARCHAR}, #{jobListener,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.qrtz.JobListenersKey" >
+    insert into qrtz_job_listeners
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="jobName != null" >
+        JOB_NAME,
+      </if>
+      <if test="jobGroup != null" >
+        JOB_GROUP,
+      </if>
+      <if test="jobListener != null" >
+        JOB_LISTENER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="jobName != null" >
+        #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobGroup != null" >
+        #{jobGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="jobListener != null" >
+        #{jobListener,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

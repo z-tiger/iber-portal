@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarRunLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarRunLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="pile_id" property="pileId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="speed" property="speed" jdbcType="VARCHAR" />
+    <result column="bat_status" property="batStatus" jdbcType="VARCHAR" />
+    <result column="door_status" property="doorStatus" jdbcType="VARCHAR" />
+    <result column="car_signal" property="carSignal" jdbcType="VARCHAR" />
+    <result column="total_kg" property="totalKg" jdbcType="DOUBLE" />
+    <result column="total_minute" property="totalMinute" jdbcType="DOUBLE" />
+    <result column="endurance_mileage" property="enduranceMileage" jdbcType="DOUBLE" />
+    <result column="rest_battery" property="restBattery" jdbcType="DOUBLE" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="DOUBLE" />
+    <result column="readyStatus" property="readyStatus" jdbcType="VARCHAR" />
+    <result column="tf_card_exist" property="tfCardExist" jdbcType="INTEGER"/>
+  </resultMap>
+    <resultMap id="WarnResultMap" type="com.iber.portal.vo.car.CarWarnVo" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="pile_id" property="pileId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="speed" property="speed" jdbcType="VARCHAR" />
+    <result column="bat_status" property="batStatus" jdbcType="VARCHAR" />
+    <result column="door_status" property="doorStatus" jdbcType="VARCHAR" />
+    <result column="car_signal" property="carSignal" jdbcType="VARCHAR" />
+    <result column="total_kg" property="totalKg" jdbcType="DOUBLE" />
+    <result column="total_minute" property="totalMinute" jdbcType="DOUBLE" />
+    <result column="endurance_mileage" property="enduranceMileage" jdbcType="DOUBLE" />
+    <result column="rest_battery" property="restBattery" jdbcType="DOUBLE" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="tf_card_exist" property="tfCardExist" jdbcType="INTEGER"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, lpn, pile_id, member_id, latitude, longitude, speed, bat_status, door_status,
+    car_signal, total_kg, total_minute, endurance_mileage, rest_battery, order_id,create_time,address,readyStatus,tf_card_exist
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_run_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.car.CarRunLog" >
+    insert into x_car_run_log (id, lpn, pile_id, 
+      member_id, latitude, longitude, 
+      speed, bat_status, door_status, 
+      car_signal, total_kg, total_minute, 
+      endurance_mileage, rest_battery, order_id,create_time,address
+      )
+    values (#{id,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, #{pileId,jdbcType=INTEGER}, 
+      #{memberId,jdbcType=INTEGER}, #{latitude,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, 
+      #{speed,jdbcType=VARCHAR}, #{batStatus,jdbcType=VARCHAR}, #{doorStatus,jdbcType=VARCHAR}, 
+      #{carSignal,jdbcType=VARCHAR}, #{totalKg,jdbcType=DOUBLE}, #{totalMinute,jdbcType=DOUBLE}, 
+      #{enduranceMileage,jdbcType=DOUBLE}, #{restBattery,jdbcType=DOUBLE}, #{orderId,jdbcType=VARCHAR}
+      , #{createTime,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarRunLog" >
+    insert into x_car_run_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="pileId != null" >
+        pile_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="speed != null" >
+        speed,
+      </if>
+      <if test="batStatus != null" >
+        bat_status,
+      </if>
+      <if test="doorStatus != null" >
+        door_status,
+      </if>
+      <if test="carSignal != null" >
+        car_signal,
+      </if>
+      <if test="totalKg != null" >
+        total_kg,
+      </if>
+      <if test="totalMinute != null" >
+        total_minute,
+      </if>
+      <if test="enduranceMileage != null" >
+        endurance_mileage,
+      </if>
+      <if test="restBattery != null" >
+        rest_battery,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="pileId != null" >
+        #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="batStatus != null" >
+        #{batStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="doorStatus != null" >
+        #{doorStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="carSignal != null" >
+        #{carSignal,jdbcType=VARCHAR},
+      </if>
+      <if test="totalKg != null" >
+        #{totalKg,jdbcType=DOUBLE},
+      </if>
+      <if test="totalMinute != null" >
+        #{totalMinute,jdbcType=DOUBLE},
+      </if>
+      <if test="enduranceMileage != null" >
+        #{enduranceMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="restBattery != null" >
+        #{restBattery,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarRunLog" >
+    update x_car_run_log
+    <set >
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="pileId != null" >
+        pile_id = #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        speed = #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="batStatus != null" >
+        bat_status = #{batStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="doorStatus != null" >
+        door_status = #{doorStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="carSignal != null" >
+        car_signal = #{carSignal,jdbcType=VARCHAR},
+      </if>
+      <if test="totalKg != null" >
+        total_kg = #{totalKg,jdbcType=DOUBLE},
+      </if>
+      <if test="totalMinute != null" >
+        total_minute = #{totalMinute,jdbcType=DOUBLE},
+      </if>
+      <if test="enduranceMileage != null" >
+        endurance_mileage = #{enduranceMileage,jdbcType=DOUBLE},
+      </if>
+      <if test="restBattery != null" >
+        rest_battery = #{restBattery,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.CarRunLog" >
+    update x_car_run_log
+    set lpn = #{lpn,jdbcType=VARCHAR},
+      pile_id = #{pileId,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      speed = #{speed,jdbcType=VARCHAR},
+      bat_status = #{batStatus,jdbcType=VARCHAR},
+      door_status = #{doorStatus,jdbcType=VARCHAR},
+      car_signal = #{carSignal,jdbcType=VARCHAR},
+      total_kg = #{totalKg,jdbcType=DOUBLE},
+      total_minute = #{totalMinute,jdbcType=DOUBLE},
+      endurance_mileage = #{enduranceMileage,jdbcType=DOUBLE},
+      rest_battery = #{restBattery,jdbcType=DOUBLE},
+      order_id = #{orderId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryCarRunLogByLpn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run_log
+    where lpn = #{lpn,jdbcType=VARCHAR}
+    and create_time >= CURDATE()
+    order by create_time desc LIMIT 1
+  </select>
+  <select id="queryCarRunLogByLpnAndOrderId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run_log
+    where lpn = #{lpn,jdbcType=VARCHAR}
+    <if test="queryDateFrom != null" >
+        and create_time &gt; #{queryDateFrom,jdbcType=TIMESTAMP}
+     </if>
+     <if test="queryDateTo != null" >
+        and create_time &lt; #{queryDateTo,jdbcType=TIMESTAMP}
+     </if>
+     <if test="orderId != null" >
+        and order_id = #{orderId,jdbcType=VARCHAR}
+     </if>
+     and speed != '0'
+     order by create_time asc
+  </select> 
+  
+   <select id="queryCarRunLogByLpnAndLimit" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run_log
+    where lpn = #{lpn,jdbcType=VARCHAR} and speed != '0'
+    order by create_time desc LIMIT 50
+  </select> 
+  
+  
+  <select id="selectAll" resultMap="WarnResultMap" parameterType="java.util.Map" >
+ 	SELECT
+		c.`name`,
+		l.*
+	FROM
+		x_car_run_log l
+	LEFT JOIN x_car car ON l.lpn = car.lpn
+	LEFT JOIN x_city c ON car.city_code = c.`code`
+	where l.speed > 90
+     <if test="lpn != null and lpn !='' ">
+     	and car.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+     </if>
+     <if test="cityCode != null and cityCode !='' ">
+     	and car.city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+     <if test="queryDateFrom != null and queryDateFrom !='' ">
+     	and l.create_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+     </if>
+     <if test="queryDateTo != null and queryDateTo !='' ">
+     	and l.create_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+     </if>
+    order by create_time desc
+    limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllCarWarnVoRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+     SELECT
+		count(1)
+	 FROM
+		x_car_run_log l
+	 LEFT JOIN x_car car ON l.lpn = car.lpn
+	 LEFT JOIN x_city c ON car.city_code = c.`code`
+     where l.speed > 90
+     <if test="lpn != null and lpn !='' ">
+     	and car.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+     </if>
+     <if test="cityCode != null and cityCode !='' ">
+     	and car.city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+     <if test="queryDateFrom != null and queryDateFrom !='' ">
+     	and l.create_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+     </if>
+     <if test="queryDateTo != null and queryDateTo !='' ">
+     	and l.create_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+  <select id="queryCarRunLogByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_run_log
+    where order_id = #{orderId,jdbcType=VARCHAR}
+    order by create_time desc LIMIT 1
+  </select>
+
+  <select id="queryCarRunLogByLpnAndDate" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT latitude, longitude, speed, bat_status, readyStatus, car_signal
+    FROM x_car_run_log
+    WHERE lpn = #{lpn}
+    AND create_time <![CDATA[ > ]]> #{createTime}
+  </select>
+
+</mapper>

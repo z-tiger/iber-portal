@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.enterprise.EnterpriseExtendMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.enterprise.EnterpriseExtend" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_description" property="checkDescription" jdbcType="VARCHAR" />
+    <result column="use_car_type" property="useCarType" jdbcType="VARCHAR" />
+    <result column="use_car_description" property="useCarDescription" jdbcType="VARCHAR" />
+    <result column="up_car_address" property="upCarAddress" jdbcType="VARCHAR" />
+    <result column="down_car_address" property="downCarAddress" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="up_car_gps" property="upCarGps" jdbcType="VARCHAR" />
+    <result column="down_car_gps" property="downCarGps" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="enterprise_level_id" property="enterpriseLevelId" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="mileage" property="mileage" jdbcType="DOUBLE" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, check_status, check_description, use_car_type, use_car_description, up_car_address, 
+    down_car_address, order_id, up_car_gps, down_car_gps, member_name, start_time, end_time, 
+    enterprise_id, amount, phone, enterprise_level_id, pay_type, lpn, member_id, mileage
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_enterprise_extend
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_enterprise_extend
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.enterprise.EnterpriseExtend" >
+    insert into x_enterprise_extend (id, check_status, check_description, 
+      use_car_type, use_car_description, up_car_address, 
+      down_car_address, order_id, up_car_gps, 
+      down_car_gps, member_name, start_time, 
+      end_time, enterprise_id, amount, 
+      phone, enterprise_level_id, pay_type, 
+      lpn, member_id, mileage
+      )
+    values (#{id,jdbcType=INTEGER}, #{checkStatus,jdbcType=VARCHAR}, #{checkDescription,jdbcType=VARCHAR}, 
+      #{useCarType,jdbcType=VARCHAR}, #{useCarDescription,jdbcType=VARCHAR}, #{upCarAddress,jdbcType=VARCHAR}, 
+      #{downCarAddress,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{upCarGps,jdbcType=VARCHAR}, 
+      #{downCarGps,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR}, #{startTime,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=VARCHAR}, #{enterpriseId,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, 
+      #{phone,jdbcType=VARCHAR}, #{enterpriseLevelId,jdbcType=INTEGER}, #{payType,jdbcType=VARCHAR}, 
+      #{lpn,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{mileage,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.enterprise.EnterpriseExtend" >
+    insert into x_enterprise_extend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="checkDescription != null" >
+        check_description,
+      </if>
+      <if test="useCarType != null" >
+        use_car_type,
+      </if>
+      <if test="useCarDescription != null" >
+        use_car_description,
+      </if>
+      <if test="upCarAddress != null" >
+        up_car_address,
+      </if>
+      <if test="downCarAddress != null" >
+        down_car_address,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="upCarGps != null" >
+        up_car_gps,
+      </if>
+      <if test="downCarGps != null" >
+        down_car_gps,
+      </if>
+      <if test="memberName != null" >
+        member_name,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="enterpriseLevelId != null" >
+        enterprise_level_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="mileage != null" >
+        mileage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDescription != null" >
+        #{checkDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="useCarType != null" >
+        #{useCarType,jdbcType=VARCHAR},
+      </if>
+      <if test="useCarDescription != null" >
+        #{useCarDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="upCarAddress != null" >
+        #{upCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="downCarAddress != null" >
+        #{downCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="upCarGps != null" >
+        #{upCarGps,jdbcType=VARCHAR},
+      </if>
+      <if test="downCarGps != null" >
+        #{downCarGps,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null" >
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseLevelId != null" >
+        #{enterpriseLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="mileage != null" >
+        #{mileage,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.enterprise.EnterpriseExtend" >
+    update x_enterprise_extend
+    <set >
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDescription != null" >
+        check_description = #{checkDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="useCarType != null" >
+        use_car_type = #{useCarType,jdbcType=VARCHAR},
+      </if>
+      <if test="useCarDescription != null" >
+        use_car_description = #{useCarDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="upCarAddress != null" >
+        up_car_address = #{upCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="downCarAddress != null" >
+        down_car_address = #{downCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="upCarGps != null" >
+        up_car_gps = #{upCarGps,jdbcType=VARCHAR},
+      </if>
+      <if test="downCarGps != null" >
+        down_car_gps = #{downCarGps,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null" >
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseLevelId != null" >
+        enterprise_level_id = #{enterpriseLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="mileage != null" >
+        mileage = #{mileage,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.enterprise.EnterpriseExtend" >
+    update x_enterprise_extend
+    set check_status = #{checkStatus,jdbcType=VARCHAR},
+      check_description = #{checkDescription,jdbcType=VARCHAR},
+      use_car_type = #{useCarType,jdbcType=VARCHAR},
+      use_car_description = #{useCarDescription,jdbcType=VARCHAR},
+      up_car_address = #{upCarAddress,jdbcType=VARCHAR},
+      down_car_address = #{downCarAddress,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      up_car_gps = #{upCarGps,jdbcType=VARCHAR},
+      down_car_gps = #{downCarGps,jdbcType=VARCHAR},
+      member_name = #{memberName,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR},
+      enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      enterprise_level_id = #{enterpriseLevelId,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      mileage = #{mileage,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from (
+	    select 
+	    <include refid="Base_Column_List" /> ,
+	    (select city_code from x_time_share_order c where c.order_id = a.order_id) city_code,
+	    (select enterprise_name from x_enterprise d where d.id = a.enterprise_id) enterprise_name
+	    from x_enterprise_extend a ) t where 1=1 
+	    
+	    <if test="cityCode != null and cityCode != '' " >
+	       and t.city_code = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="enterpriseName != null  and enterpriseName != '' " >
+	        and t.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%') 
+	    </if>
+	    
+	    <if test="memberName != null  and memberName != '' " >
+	        and t.member_name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+	    </if>
+	    
+	    <if test="payType != null and payType != '' " >
+	       and t.pay_type = #{payType,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="checkStatus != null and checkStatus != '' " >
+	       and t.check_status = #{checkStatus,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="queryDateFrom != null and queryDateFrom != '' " >
+	       and t.start_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    
+	    <if test="queryDateTo != null and queryDateTo != '' " >
+	       and t.start_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+	    </if>
+  </select>
+  
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select * ,(select name from x_city x where x.code = t.city_code) city_name from (
+    select 
+    <include refid="Base_Column_List" /> ,
+    
+    (select city_code from x_time_share_order c where c.order_id = a.order_id) city_code,
+    (select enterprise_name from x_enterprise d where d.id = a.enterprise_id) enterprise_name
+    from x_enterprise_extend a ) t where 1=1 
+    
+    <if test="cityCode != null and cityCode != '' " >
+       and t.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="enterpriseName != null  and enterpriseName != '' " >
+        and t.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%') 
+    </if>
+    
+    <if test="memberName != null  and memberName != '' " >
+        and t.member_name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+    </if>
+    
+    <if test="payType != null and payType != '' " >
+       and t.pay_type = #{payType,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="checkStatus != null and checkStatus != '' " >
+       and t.check_status = #{checkStatus,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and t.start_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and t.start_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+    
+    order by t.start_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dispatch.DispatcherMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dispatch.Dispatcher" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="name" property="memberName" jdbcType="VARCHAR" />
+    <result column="is_enable" property="isEnable" jdbcType="INTEGER" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    a.id, a.member_id, a.is_enable, a.comment, a.create_time, b.name
+  </sql>
+ 
+   <sql id="Base_Column_List_Record" >
+    count(1) counts
+   </sql>
+ 
+  <sql id="Base_Column_Record_Exist" >
+    id, member_id,is_enable, comment, create_time
+  </sql>
+   
+  <select id="selectByPrimaryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_Record_Exist" />
+    from x_dispatcher
+    where id = #{id,jdbcType=INTEGER}
+  </select> 
+  
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_dispatcher
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dispatch.Dispatcher" >
+    insert into x_dispatcher (id, member_id, 
+      is_enable, comment, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}, 
+    #{comment,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dispatch.Dispatcher" >
+    insert into x_dispatcher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="isEnable != null" >
+        is_enable,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null" >
+        #{isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dispatch.Dispatcher" >
+    update x_dispatcher
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null" >
+        is_enable = #{isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dispatch.Dispatcher" >
+    update x_dispatcher
+    set member_id = #{memberId,jdbcType=INTEGER},
+      is_enable = #{isEnable,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByDispatcherType" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+        from x_dispatcher a
+	    LEFT JOIN x_member b ON a.member_id=b.id
+	    where is_enable ='1'	
+	</select>
+
+
+  <select id="selectByDispatcherPageList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from x_dispatcher a
+     LEFT JOIN x_member b ON a.member_id=b.id
+     <trim prefixOverrides="and" >
+       <where>
+		   <if test="memberName  != null and memberName  != ''" >
+                and b.name like "%"#{memberName,jdbcType=VARCHAR}"%"
+              </if>          
+	   </where> 
+    </trim>
+      ORDER BY create_time DESC
+      limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+   </select>
+  
+   
+   <select id="selectByDispatcherPageListRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+     from x_dispatcher a
+     LEFT JOIN x_member b ON a.member_id=b.id
+     <trim prefixOverrides="and" >
+       <where>
+		   <if test="memberName  != null and memberName  != ''" >
+                and b.name like "%"#{memberName,jdbcType=VARCHAR}"%"
+              </if>          
+	   </where> 
+    </trim>
+  </select>
+
+</mapper>

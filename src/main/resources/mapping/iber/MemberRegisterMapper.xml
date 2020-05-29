@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.operationReport.MemberRegisterMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.operationReport.MemberRegister" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="driver_idcard" property="driverIdcard" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="head_photo_url" property="headPhotoUrl" jdbcType="VARCHAR" />
+    <result column="driver_idcard_photo_url" property="driverIdcardPhotoUrl" jdbcType="VARCHAR" />
+    <result column="idcard_photo_url" property="idcardPhotoUrl" jdbcType="VARCHAR" />
+    <result column="finger_print" property="fingerPrint" jdbcType="VARCHAR" />
+    <result column="register_ip" property="registerIp" jdbcType="VARCHAR" />
+    <result column="register_category" property="registerCategory" jdbcType="VARCHAR" />
+    <result column="accout_status" property="accoutStatus" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+    <result column="enterprise_check_status" property="enterpriseCheckStatus" jdbcType="VARCHAR" />
+    <result column="is_drive" property="isDrive" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, password, phone, email, idcard, driver_idcard, status, head_photo_url, 
+    driver_idcard_photo_url, idcard_photo_url, finger_print, register_ip, register_category, 
+    accout_status, city_code, enterprise_id, member_level, enterprise_check_status, is_drive, 
+    create_time, remark
+  </sql>
+
+  <sql id="Base_Column_List_Main" >
+    s.city_code,s.total, IFNULL(ct.name, '其他') as city_name
+  </sql>
+   
+   <sql id="Base_Column_List_Record" >
+    count(1) counts
+   </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List_Main" />
+    from (select IFNULL(me.city_code, '') as city_code,COUNT(*) as total
+		from x_member me
+       <trim prefixOverrides="and" >
+       <where>
+             status IS NOT NULL
+            <![CDATA[and status <>'']]> 
+            <![CDATA[and me.member_level != 'account']]>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>   
+	   </where> 
+      </trim>
+	 GROUP BY IFNULL(me.city_code, '')) s
+     LEFT JOIN x_city ct ON s.city_code = ct.code
+     limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+  </select>
+  
+    <select id="selectByPrimaryKeyRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+    from (select IFNULL(me.city_code, '') as city_code,COUNT(*) as total
+		from x_member me
+       <trim prefixOverrides="and" >
+       <where>
+         	   status IS NOT NULL
+               <![CDATA[and status <>'']]>  
+         	   <![CDATA[and me.member_level != 'account']]>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>   
+	   </where> 
+      </trim>
+	 GROUP BY IFNULL(me.city_code, '')) s
+     LEFT JOIN x_city ct ON s.city_code = ct.code
+  </select>
+
+  <select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List_Main" />
+    from (select IFNULL(me.city_code, '') as city_code,COUNT(*) as total
+		from x_member me
+       <trim prefixOverrides="and" >
+       <where>
+             status IS NOT NULL
+            <![CDATA[and status <>'']]> 
+              <![CDATA[and me.member_level != 'account']]>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and me.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and me.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>   
+	   </where> 
+      </trim>
+	 GROUP BY IFNULL(me.city_code, '')) s
+     LEFT JOIN x_city ct ON s.city_code = ct.code
+  </select>
+
+  <select id="selectRegisterInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     select 
+     <include refid="Base_Column_List" />
+		from x_member
+       <trim prefixOverrides="and" >
+       <where>
+              status IS NOT NULL
+            <![CDATA[and status <>'']]> 
+            <![CDATA[and member_level != 'account']]>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="cityCode != null and cityCode != ''" >
+	         and city_code =  #{cityCode,jdbcType=VARCHAR}
+		    </if>   
+	   </where> 
+      </trim>
+     limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+  </select>
+  
+    <select id="selectRegisterInfoRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+		from x_member
+       <trim prefixOverrides="and" >
+       <where>
+            status IS NOT NULL
+            <![CDATA[and status <>'']]> 
+            <![CDATA[and member_level != 'account']]>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="cityCode != null and cityCode != ''" >
+	         and city_code =  #{cityCode,jdbcType=VARCHAR}
+		    </if>   
+	   </where> 
+      </trim>
+  </select>
+</mapper>

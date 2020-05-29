@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.order.RentReportMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.vo.order.RentReportVo">
+		<result column="orderId" property="orderId"/>
+		<result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="lpn" property="lpn" jdbcType="VARCHAR" />
+		<result column="cityName" property="cityName" jdbcType="VARCHAR" />
+		<result column="brandName" property="brandName" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="memberId" property="memberId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="totalMinute" property="totalMinute" jdbcType="DOUBLE" />
+		<result column="rate" property="rate" jdbcType="INTEGER" />
+		<result column="payMoney" property="payMoney" jdbcType="DOUBLE" />
+		<result column="couponBalance" property="couponBalance"
+			jdbcType="DOUBLE" />
+		<result column="reductionMoney" property="reductionMoney"
+			jdbcType="DOUBLE" />
+		<result column="freeCompensationMoney" property="freeCompensationMoney"
+			jdbcType="DOUBLE" />
+		<result column="totalPayMoney" property="totalPayMoney"
+			jdbcType="DOUBLE" />
+		<result column="total_minute_sum" property="totalMinuteSum"/>
+		<result column="total_pay_money_sum" property="totalPayMoneySum"/>
+		<result column="coupon_balance_sum" property="couponBalanceSum"/>
+		<result column="nightReductionMoney" property="nightReductionMoney"/>
+		<result column="free_compensation_money_sum" property="freeCompsationMoneySum"/>
+		<result column="pay_money_sum" property="payMoneySum"/>
+		<result column="invoice_status" property="invoiceStatus"/>
+		<result column="invoiceMoney" property="invoiceMoney"/>
+		<result column="totalInvoiceMoney" property="totalInvoiceMoney"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		endTime, lpn, brandName, type, memberId, name, phone, totalMinute, rate,
+		payMoney,
+		couponBalance, freeCompensationMoney, totalPayMoney,invoice_status
+	</sql>
+	<!-- 联合查分时和日租 -->
+	<sql id="selectTsAndDr">
+		(
+			(SELECT      p.order_id as orderId,
+						 p.end_time endTime,
+						 p.invoice_status invoiceStatus,
+						 CONCAT(SUBSTRING(p.lpn, 1, 2),'•',SUBSTRING(p.lpn, 3)) lpn,
+						 c.brand_name brandName,
+						 city.name cityName,
+						 c.type , 
+						 p.member_id memberId,
+						 m.`name` ,
+						 m.phone ,
+						 ROUND(p.total_minute,2) totalMinute,
+					   ROUND(r.time_rate/100,2) rate,
+						 ROUND(p.pay_money/100,2) payMoney ,
+						 ROUND(p.coupon_balance/100,2) couponBalance,
+						 ROUND(p.reduction_pay_money/100,2) reductionMoney,
+						 ROUND(p.free_compensation_money/100,2) freeCompensationMoney,
+						 ROUND(p.total_pay_money/100,2) totalPayMoney,
+						 case p.invoice_status when 3 then ROUND(p.pay_money/100,2) else 0 end as invoiceMoney,
+						 ROUND(p.night_minute_reduction_money/100,2) nightReductionMoney
+					FROM
+						x_time_share_pay p
+						INNER JOIN x_member m ON m.id = p.member_id
+							<if test="name != null and name !='' ">
+								AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+							</if>
+						left JOIN x_car c ON c.lpn = p.lpn
+						INNER JOIN x_time_share_rate r ON r.id = p.rate_id
+						INNER JOIN x_city city ON city.`code` = p.city_code
+							<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+								AND p.city_code = #{cityCode,jdbcType=VARCHAR}
+							</if>
+					WHERE p.pay_status = 'finish'
+						<if test="orderType != null and orderType != ''">
+							<choose>
+								<when test="orderType == 1">
+									AND p.order_id like CONCAT(CONCAT('%', 'TS'),'%')
+								</when>
+								<when test="orderType == 2">
+									AND p.order_id like CONCAT(CONCAT('%', 'DR'),'%')
+								</when>
+							</choose>
+						</if>			
+						<if test="invoiceStatus != null and invoiceStatus !='' ">
+							<choose>
+								<when test="invoiceStatus == 3 ">
+									AND p.invoice_status = #{invoiceStatus} 
+								</when>
+								<otherwise>
+									AND p.invoice_status != 3 
+								</otherwise>
+							</choose>
+						</if>
+						<if test="lpn != null and lpn !='' ">
+							AND p.lpn LIKE CONCAT(CONCAT('%',  #{lpn,jdbcType=VARCHAR}) ,'%')
+						</if>
+						<if test="begin != null and begin !='' ">
+							<![CDATA[ AND p.end_time >= #{begin,jdbcType=TIMESTAMP} ]]>
+						</if>
+						<if test="end != null and end !='' ">
+							<![CDATA[ AND p.end_time < #{end,jdbcType=TIMESTAMP} ]]>
+						</if>
+						AND <![CDATA[ p.total_pay_money > 0 ]]>
+						
+			)
+			UNION ALL 
+			(SELECT o.order_id as orderId,
+				o.actual_return_car_time endTime,
+				0 invoiceStatus,
+						 o.lpn,
+						 c.brand_name brandName,
+						 city.name cityName,
+						 c.type , 
+						 o.member_id memberId,
+						 m.`name` ,
+						 m.phone ,
+						 TIMESTAMPDIFF(MINUTE, o.actual_taken_car_time, o.actual_return_car_time) totalMinute,
+					   ROUND(r.base_price/100,2) rate,
+						 ROUND(e.pay_money/100,2) payMoney ,
+						 ROUND(e.coupon_balance/100,2) couponBalance,
+						 ROUND(e.free_money/100,2) reductionMoney,
+						 ROUND(e.free_compensate_money/100,2) freeCompensationMoney,
+						 ROUND(e.order_money/100,2) totalPayMoney,
+						 0 invoiceMoney,
+						 0 nightReductionMoney
+					FROM
+						x_day_rent_order o 
+						INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+						INNER JOIN x_day_rent_order_pay_log p ON o.order_id = p.order_id 
+							AND p.pay_status = '1'
+						INNER JOIN x_member m ON m.id = o.member_id
+							<if test="name != null and name !='' ">
+								AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+							</if>
+						left JOIN x_car c ON c.lpn = o.lpn
+						INNER JOIN x_day_rent_price r ON r.model_id = o.model_id
+						INNER JOIN x_city city ON city.`code` = o.city_code
+							<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+								AND o.city_code = #{cityCode,jdbcType=VARCHAR}
+							</if>
+					WHERE o.pay_status = 'finish' AND o.order_status='finish'
+						<if test="orderType != null and orderType != ''">
+							<choose>
+								<when test="orderType == 1">
+									AND o.order_id like CONCAT(CONCAT('%', 'TS'),'%')
+								</when>
+								<when test="orderType == 2">
+									AND o.order_id like CONCAT(CONCAT('%', 'DR'),'%')
+								</when>
+							</choose>
+						</if>
+						<if test="lpn != null and lpn !='' ">
+							AND o.lpn LIKE CONCAT(CONCAT('%',  #{lpn,jdbcType=VARCHAR}) ,'%')
+						</if>
+						<if test="begin != null and begin !='' ">
+							<![CDATA[ AND o.actual_return_car_time >= #{begin,jdbcType=TIMESTAMP} ]]>
+						</if>
+						<if test="end != null and end !='' ">
+							<![CDATA[ AND o.actual_return_car_time < #{end,jdbcType=TIMESTAMP} ]]>
+						</if>
+<!-- 						<if test="invoiceStatus != null and invoiceStatus !='' "> -->
+<!-- 							1=2 -->
+<!-- 						</if> -->
+						AND <![CDATA[ e.order_money > 0 ]]>
+	)
+	UNION ALL
+	(
+		SELECT xro.order_id as orderId,
+	    CASE xro.end_time IS NULL WHEN 1 THEN lro.end_time ELSE xro.end_time END AS endTime,
+		xro.invoice_status invoiceStatus,CASE lro.return_car_time IS NULL WHEN 1 THEN xro.lpn ELSE lro.lpn END AS lpn,
+		ct.brance brandName , c.`name` cityName,ct.type ,
+		xro.member_id memberId,m.`name`,m.phone,
+		TIMESTAMPDIFF(MINUTE,xro.begin_time,
+		(CASE xro.end_time IS NULL WHEN 1 THEN lro.end_time ELSE xro.end_time END)) totalMinute,
+		0.00 rate ,
+		ROUND((xro.pay_money+IFNULL(lro.pay_money,0))/100.0,2) payMoney,
+		ROUND((xro.coupon_balance+IFNULL(lro.coupon_balance,0))/100.0,2) couponBalance,
+		ROUND((xro.discount_money+IFNULL(lro.discount_money,0))/100.0,2) reductionMoney,
+		ROUND((xro.free_compensate_money+IFNULL(lro.free_compensate_money,0))/100.0,2) freeCompensationMoney,
+		ROUND((xro.order_money+IFNULL(lro.order_money,0))/100.0,2) totalPayMoney,
+		0 invoiceMoney,
+		0 nightReductionMoney
+		from (select * from x_long_rent_order where relet_no = 0 and pay_status = 'finish'
+		AND order_status = 'finish' ) xro LEFT JOIN
+		(select * from x_long_rent_order where relet_no = 1 and pay_status = 'finish'
+		AND order_status = 'finish' ) lro ON xro.order_id = lro.order_id
+		INNER JOIN x_city c ON c.`code` = xro.city_code
+		<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+			AND xro.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		INNER JOIN x_car_type ct ON
+		ct.id = xro.model_id
+		INNER JOIN x_member m ON m.id = xro.member_id
+		<if test="name != null and name !='' ">
+			AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+		</if>
+		WHERE 1= 1
+		<if test="lpn != null and lpn !='' ">
+			AND (CASE lro.return_car_time IS NULL WHEN 1 THEN xro.lpn ELSE lro.lpn END ) LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="begin != null and begin !='' ">
+			<![CDATA[ AND  (CASE xro.end_time IS NULL WHEN 1 THEN lro.end_time ELSE xro.end_time END) >= #{begin,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="end != null and end !='' ">
+			<![CDATA[ AND  (CASE xro.end_time IS NULL WHEN 1 THEN lro.end_time ELSE xro.end_time END) < #{end,jdbcType=TIMESTAMP} ]]>
+		</if>
+		<if test="orderType != null and orderType != ''">
+			<choose>
+				<when test="orderType == 1">
+					AND xro.order_id like CONCAT(CONCAT('%', 'TS'),'%')
+				</when>
+				<when test="orderType == 2">
+					AND xro.order_id like CONCAT(CONCAT('%', 'DR'),'%')
+				</when>
+			</choose>
+		</if>
+		<if test="invoiceStatus != null and invoiceStatus !='' ">
+			<choose>
+				<when test="invoiceStatus==1">
+					AND xro.invoice_status IN ('0','1')
+				</when>
+				<when test="invoiceStatus==3">
+					AND xro.invoice_status = '3'
+				</when>					
+			</choose>
+		</if>
+		AND <![CDATA[ xro.order_money > 0 ]]>
+	)
+
+	)
+	</sql>
+
+	<!-- 查询  -->
+	<select id="queryRentReport" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT d.*,
+		(select sum(d.totalMinute) from <include refid="selectTsAndDr" /> d) total_minute_sum, 
+		(select sum(d.totalPayMoney) from <include refid="selectTsAndDr" /> d) total_pay_money_sum,
+		(select sum(d.couponBalance) from <include refid="selectTsAndDr" /> d) coupon_balance_sum,
+		(select sum(d.reductionMoney) from <include refid="selectTsAndDr" /> d) reductionMoney,
+		(select sum(d.freeCompensationMoney) from <include refid="selectTsAndDr" /> d) free_compensation_money_sum,
+		(select sum(d.nightReductionMoney) from <include refid="selectTsAndDr" /> d) nightReductionMoney,
+		(select sum(d.payMoney) from <include refid="selectTsAndDr" /> d) pay_money_sum FROM 
+			<include refid="selectTsAndDr" /> d
+		ORDER BY d.endTime DESC
+		<if test="from != null and to != null ">
+			LIMIT #{from, jdbcType=INTEGER}, #{to, jdbcType=INTEGER}  
+		</if>
+	</select>
+	
+	<select id="getRentReportRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(1) FROM
+			<include refid="selectTsAndDr" /> d
+	</select>
+	
+	<!-- 合计统计 -->
+	<select id="getRentTotal" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT SUM(d.totalMinute) totalMinute,
+				SUM(d.totalPayMoney) totalPayMoney,
+				SUM(d.couponBalance) couponBalance,
+				SUM(d.freeCompensationMoney) freeCompensationMoney,
+				SUM(d.nightReductionMoney) nightReductionMoney,
+				SUM(d.reductionMoney) reductionMoney,
+				SUM(d.invoiceMoney) totalInvoiceMoney,
+				SUM(d.payMoney) payMoney FROM
+			<include refid="selectTsAndDr" /> d
+	</select>
+	
+	
+	<!-- 计算合计。本日、本月、本年的   -->
+	<sql id="sql_getAmount">
+		SELECT SUM(totalMinute) totalMinute, SUM(payMoney) payMoney, 
+			SUM(couponBalance) couponBalance, SUM(freeCompensationMoney) freeCompensationMoney,
+			SUM(totalPayMoney) totalPayMoney,SUM(nightReductionMoney) nightReductionMoney,
+			SUM(reductionMoney) reductionMoney, SUM(invoiceMoney) totalInvoiceMoney 
+			from (
+			(SELECT   	 p.order_id as orderId,
+						 p.end_time endTime,
+						 p.lpn ,
+						 c.brand_name brandName,
+						 c.type , 
+						 p.member_id memberId,
+						 m.`name` ,
+						 m.phone ,
+						 ROUND(p.total_minute,2) totalMinute,
+					   ROUND(r.time_rate/100,2) rate,
+						 ROUND(p.pay_money/100,2) payMoney ,
+						 ROUND(p.coupon_balance/100,2) couponBalance,
+						 ROUND(p.reduction_pay_money/100,2) reductionMoney,
+						 ROUND(p.free_compensation_money/100,2) freeCompensationMoney,
+						 ROUND(p.total_pay_money/100,2) totalPayMoney,
+						 case p.invoice_status when 3 then ROUND(p.pay_money/100,2) else 0 end as invoiceMoney,
+						 ROUND(p.night_minute_reduction_money/100,2) nightReductionMoney
+						 
+					FROM
+						x_time_share_pay p
+						INNER JOIN x_member m ON m.id = p.member_id
+							<if test="name != null and name !='' ">
+								AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+							</if>
+						INNER JOIN x_car c ON c.lpn = p.lpn
+						INNER JOIN x_time_share_rate r ON r.id = p.rate_id
+						INNER JOIN x_city city ON city.`code` = p.city_code
+							<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+								AND p.city_code = #{cityCode,jdbcType=VARCHAR}
+							</if>
+					WHERE p.pay_status = 'finish'
+						<if test="orderType != null and orderType != ''">
+							<choose>
+								<when test="orderType == 1">
+									AND p.order_id like CONCAT(CONCAT('%', 'TS'),'%')
+								</when>
+								<when test="orderType == 2">
+									AND p.order_id like CONCAT(CONCAT('%', 'DR'),'%')
+								</when>
+							</choose>
+						</if>
+						<if test="lpn != null and lpn !='' ">
+							AND p.lpn LIKE CONCAT(CONCAT('%',  #{lpn,jdbcType=VARCHAR}) ,'%')
+						</if>
+						<if test="invoiceStatus != null and invoiceStatus !='' ">
+							<choose>
+								<when test="invoiceStatus == 3 ">
+									AND p.invoice_status = #{invoiceStatus} 
+								</when>
+								<otherwise>
+									AND p.invoice_status != 3 
+								</otherwise>
+							</choose>
+						</if>
+						AND <![CDATA[ p.total_pay_money > 0 ]]>
+			)
+			UNION ALL 
+			(SELECT o.order_id as orderId,
+				o.actual_return_car_time endTime,
+						 o.lpn ,
+						 c.brand_name brandName,
+						 c.type , 
+						 o.member_id memberId,
+						 m.`name` ,
+						 m.phone ,
+						 TIMESTAMPDIFF(MINUTE, o.actual_taken_car_time, o.actual_return_car_time) totalMinute,
+					   ROUND(r.base_price/100,2) rate,
+					     ROUND(e.pay_money/100,2) payMoney ,
+						 ROUND(e.coupon_balance/100,2) couponBalance,
+						 ROUND(e.free_money/100,2) reductionMoney,
+						 ROUND(e.free_compensate_money/100,2) freeCompensationMoney,
+						 ROUND(e.order_money/100,2) totalPayMoney,
+						 0 invoiceMoney ,
+						 0 nightReductionMoney
+					FROM
+						x_day_rent_order o 
+						INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+						INNER JOIN x_day_rent_order_pay_log p ON o.order_id = p.order_id 
+							AND p.pay_status = '1'
+						INNER JOIN x_member m ON m.id = o.member_id
+							<if test="name != null and name !='' ">
+								AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+							</if>
+						INNER JOIN x_car c ON c.lpn = o.lpn
+						INNER JOIN x_day_rent_price r ON r.model_id = o.model_id
+						INNER JOIN x_city city ON city.`code` = o.city_code
+							<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+								AND o.city_code = #{cityCode,jdbcType=VARCHAR}
+							</if>
+					WHERE o.pay_status = 'finish' AND o.order_status='finish'
+						<if test="lpn != null and lpn !='' ">
+							AND o.lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%') 
+						</if>
+						<if test="invoiceStatus != null and invoiceStatus !='' ">
+							and 1=2
+						</if>
+						<if test="orderType != null and orderType != ''">
+							<choose>
+								<when test="orderType == 1">
+									AND o.order_id like CONCAT(CONCAT('%', 'TS'),'%')
+								</when>
+								<when test="orderType == 2">
+									AND o.order_id like CONCAT(CONCAT('%', 'DR'),'%')
+								</when>
+							</choose>
+						</if>
+						AND <![CDATA[ e.order_money > 0 ]]>
+			)
+			UNION ALL
+			(
+			select xro.order_id as orderId,
+			CASE xro.end_time IS NULL WHEN 1 THEN lro.end_time ELSE xro.end_time END AS endTime,
+			CASE lro.return_car_time IS NULL WHEN 1 THEN xro.lpn ELSE lro.lpn END AS lpn,
+			ct.brance brandName ,ct.type ,
+			xro.member_id memberId,m.`name`,m.phone,
+			TIMESTAMPDIFF(MINUTE,xro.begin_time,
+			(CASE xro.end_time IS NULL WHEN 1 THEN lro.end_time ELSE xro.end_time END)) totalMinute,
+			0.00 rate ,
+			ROUND((xro.pay_money+IFNULL(lro.pay_money,0))/100.0,2) payMoney,
+			ROUND((xro.coupon_balance+IFNULL(lro.coupon_balance,0))/100.0,2) couponBalance,
+			ROUND((xro.discount_money+IFNULL(lro.discount_money,0))/100.0,2) reductionMoney,
+			ROUND((xro.free_compensate_money+IFNULL(lro.free_compensate_money,0))/100.0,2) freeCompensationMoney,
+			ROUND((xro.order_money+IFNULL(lro.order_money,0))/100.0,2) totalPayMoney,
+			0 invoiceMoney,
+			0 nightReductionMoney
+			from (select * from x_long_rent_order where relet_no = 0 and pay_status = 'finish'
+			AND order_status = 'finish' ) xro LEFT JOIN
+			(select * from x_long_rent_order where relet_no = 1 and pay_status = 'finish'
+			AND order_status = 'finish' ) lro ON xro.order_id = lro.order_id
+			INNER JOIN x_city c ON c.`code` = xro.city_code
+			<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+				AND xro.city_code = #{cityCode,jdbcType=VARCHAR}
+			</if>
+			INNER JOIN x_car_type ct ON
+			ct.id = xro.model_id
+			INNER JOIN x_member m ON m.id = xro.member_id
+			<if test="name != null and name !='' ">
+				AND m.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+			</if>
+			WHERE 1 = 1
+			<if test="lpn != null and lpn !='' ">
+				AND (CASE lro.return_car_time IS NULL WHEN 1 THEN xro.lpn ELSE lro.lpn END) LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="invoiceStatus != null and invoiceStatus !='' ">
+				<choose>
+					<when test="invoiceStatus==1">
+						AND xro.invoice_status IN ('0','1')
+					</when>
+					<when test="invoiceStatus==3">
+						AND xro.invoice_status = '3'
+					</when>					
+				</choose>
+			</if>
+			<if test="orderType != null and orderType != ''">
+				<choose>
+					<when test="orderType == 1">
+						AND xro.order_id like CONCAT(CONCAT('%', 'TS'),'%')
+					</when>
+					<when test="orderType == 2">
+						AND xro.order_id like CONCAT(CONCAT('%', 'DR'),'%')
+					</when>
+				</choose>
+			</if>
+			AND <![CDATA[ xro.order_money > 0 ]]>
+			)
+		) d
+	</sql>
+	<!-- 今天   -->
+	<select id="getTodayAmount" resultMap="BaseResultMap" parameterType="java.util.Map">
+		<include refid="sql_getAmount" />
+			WHERE 
+				<![CDATA[  d.endTime >= ]]> <include refid="commDateSqlMapper.sql_today_begin_datetime" />
+	</select>
+	<!-- 本月   -->
+	<select id="getThisMonthAmount" resultMap="BaseResultMap" parameterType="java.util.Map">
+		<include refid="sql_getAmount" />
+			WHERE 
+				<![CDATA[  d.endTime >= ]]> <include refid="commDateSqlMapper.sql_month_begin_datetime" />
+	</select>
+	<!-- 本年   -->
+	<select id="getThisYearAmount" resultMap="BaseResultMap" parameterType="java.util.Map">
+		<include refid="sql_getAmount" />
+			WHERE 
+				<![CDATA[  d.endTime >= ]]> 
+					CAST(DATE_SUB(CURDATE(),INTERVAL dayofyear(NOW()) - 1 DAY) AS datetime)  
+	</select>
+	
+	
+
+</mapper>

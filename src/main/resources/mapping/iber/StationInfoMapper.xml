@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.charging.StationInfoMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.charging.StationInfo" >
+	<result column="id" property="id"/>
+	<result column="name" property="name"/>
+	<result column="create_time" property="createTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="operator_id" property="operatorId"/>
+	<result column="equipment_owner_id" property="equipmentOwnerId"/>
+	<result column="country_code" property="countryCode"/>
+	<result column="city_code" property="cityCode"/>
+	<result column="address" property="address"/>
+	<result column="station_phone" property="stationPhone"/>
+	<result column="service_phone" property="servicePhone"/>
+	<result column="type" property="type"/>
+	<result column="status" property="status"/>
+	<result column="park_nums" property="parkNums"/>
+	<result column="longitude" property="longitude"/>
+	<result column="latitude" property="latitude"/>
+	<result column="guide" property="guide"/>
+	<result column="construction" property="construction"/>
+	<result column="photo" property="photo"/>
+	<result column="match_cars" property="matchCars"/>
+	<result column="park_info" property="parkInfo"/>
+	<result column="business_hours" property="businessHours"/>
+	<result column="electricity_fee" property="electricityFee"/>
+	<result column="service_fee" property="serviceFee"/>
+	<result column="park_fee" property="parkFee"/>
+	<result column="payment" property="payment"/>
+	<result column="is_order" property="isOrder"/>
+	<result column="remark" property="remark"/>
+	<result column="equipment_infos" property="equipmentInfos"/>
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="update_name" property="updateName" jdbcType="VARCHAR" />
+	<result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+</resultMap>
+       
+<!-- c_station_info table all fields -->
+<sql id="Base_Column_List" >
+	 id,name,create_time,create_id,update_time,update_id,operator_id,equipment_owner_id,country_code,city_code,address,station_phone,service_phone,type,status,park_nums,longitude,latitude,guide,construction,photo,match_cars,park_info,business_hours,electricity_fee,service_fee,park_fee,payment,is_order,remark,equipment_infos
+</sql>
+
+<sql id="query_Column_List" >
+	 c.id,c.name,c.create_time,c.create_id,c.update_time,c.update_id,c.operator_id,c.equipment_owner_id,c.country_code,c.city_code,c.address,c.station_phone,c.service_phone,c.type,c.status,c.park_nums,c.longitude,c.latitude,c.guide,c.construction,c.photo,c.match_cars,c.park_info,c.business_hours,c.electricity_fee,c.service_fee,c.park_fee,c.payment,c.is_order,c.remark,c.equipment_infos
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.charging.StationInfo" >
+  insert into c_station_info(id,name,create_time,create_id,operator_id,equipment_owner_id,country_code,city_code,address,station_phone,service_phone,type,status,park_nums,longitude,latitude,guide,construction,photo,match_cars,park_info,business_hours,electricity_fee,service_fee,park_fee,payment,is_order,remark,equipment_infos)
+ values(#{id},#{name},#{createTime},#{createId},#{operatorId},#{equipmentOwnerId},#{countryCode},#{cityCode}#{address},#{stationPhone},#{servicePhone},#{type},#{status},#{parkNums},#{longitude},#{latitude},#{guide},#{construction},#{photo},#{matchCars},#{parkInfo},#{businessHours},#{electricityFee},#{serviceFee},#{parkFee},#{payment},#{isOrder},#{remark},#{equipmentInfos})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from c_station_info where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update c_station_info set name=#{name},update_time=#{updateTime},update_id=#{updateId},operator_id=#{operatorId},equipment_owner_id=#{equipmentOwnerId},country_code=#{countryCode},address=#{address},station_phone=#{stationPhone},service_phone=#{servicePhone},type=#{type},status=#{status},park_nums=#{parkNums},longitude=#{longitude},latitude=#{latitude},guide=#{guide},construction=#{construction},photo=#{photo},match_cars=#{matchCars},park_info=#{parkInfo},business_hours=#{businessHours},electricity_fee=#{electricityFee},service_fee=#{serviceFee},park_fee=#{parkFee},payment=#{payment},is_order=#{isOrder},remark=#{remark},equipment_infos=#{equipmentInfos} where id=#{id}
+</update>
+
+<!-- 根据id查询 充电站信息 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from c_station_info where id = #{id}
+</select>
+
+<!-- 充电站信息 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from c_station_info c where 1=1 
+ 	<if test="name != null and name != '' " >
+        and c.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="address != null and address != '' " >
+       and c.address= #{address,jdbcType=INTEGER}
+    </if>
+    
+    <if test="cityCode != null and cityCode != '' " >
+        and c.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+ 
+</select>
+  	
+<!-- 查询充电站信息列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="query_Column_List"/>,
+	(select u.name from x_sys_user u where u.id = c.create_id) create_name,
+	(select u.name from x_sys_user u where u.id = c.update_id) update_name,
+	(select o.name from c_operator_info o where o.id = c.operator_id) operator_name
+	from c_station_info c where 1 =1 
+	
+	<if test="name != null and name != '' " >
+        and c.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="address != null and address != '' " >
+        and c.address LIKE CONCAT('%',#{address,jdbcType=VARCHAR},'%')
+    </if>
+    
+    <if test="cityCode != null and cityCode != '' " >
+        and c.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+<!-- 根据名称查询id -->
+<select id="queryIdByName" resultType="java.lang.Integer" parameterType="java.lang.String">
+	select id from c_station_info where name=#{stationName}
+ </select>	
+ <!-- 根据cityCode查询出所有的Station -->
+ <select id="queryByCode"  resultMap="BaseResultMap" parameterType="java.lang.String">
+ 	select id,name from c_station_info where city_code=#{cityCode}
+ </select>
+ 
+</mapper>   

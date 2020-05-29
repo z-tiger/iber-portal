@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.longRent.LongRentRateCalendarMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.longRent.LongRentRateCalendar" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="car_type_id" property="carTypeId" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="CHAR" />
+    <result column="money" property="money" jdbcType="INTEGER" />
+    <result column="rent_date" property="rentDate" jdbcType="DATE" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, car_type_id, city_code, money, rent_date, create_id, create_time, update_id,
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from long_rent_rate_calendar
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from long_rent_rate_calendar
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.longRent.LongRentRateCalendar" >
+    insert into long_rent_rate_calendar (id, car_type_id, city_code, 
+      money, rent_date, create_id, 
+      create_time, update_id, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{carTypeId,jdbcType=INTEGER}, #{cityCode,jdbcType=CHAR}, 
+      #{money,jdbcType=INTEGER}, #{rentDate,jdbcType=DATE}, #{createId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.longRent.LongRentRateCalendar" >
+    insert into long_rent_rate_calendar
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="carTypeId != null" >
+        car_type_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="rentDate != null" >
+        rent_date,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="carTypeId != null" >
+        #{carTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=CHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="rentDate != null" >
+        #{rentDate,jdbcType=DATE},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.longRent.LongRentRateCalendar" >
+    update long_rent_rate_calendar
+    <set >
+      <if test="carTypeId != null" >
+        car_type_id = #{carTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=CHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="rentDate != null" >
+        rent_date = #{rentDate,jdbcType=DATE},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.longRent.LongRentRateCalendar" >
+    update long_rent_rate_calendar
+    set car_type_id = #{carTypeId,jdbcType=INTEGER},
+      city_code = #{cityCode,jdbcType=CHAR},
+      money = #{money,jdbcType=INTEGER},
+      rent_date = #{rentDate,jdbcType=DATE},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <sql id="queryList">
+    <where>
+      <if test="carTypeId != null" >
+        car_type_id = #{carTypeId,jdbcType=INTEGER}
+      </if>
+      <if test="cityCode != null and cityCode != '' " >
+        AND city_code = #{cityCode,jdbcType=CHAR}
+      </if>
+      <if test="from != null" >
+        AND rent_date &gt;= #{from,jdbcType=DATE}
+      </if>
+      <if test="to != null" >
+        AND rent_date &lt;= #{to,jdbcType=DATE}
+      </if>
+    </where>
+  </sql>
+
+  <select id="getList" parameterType="com.iber.portal.vo.longRent.LongRentRateVo" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List"/>
+    FROM long_rent_rate_calendar
+      <include refid="queryList"/>
+    ORDER BY rent_date
+    limit #{start,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+
+  <select id="getCount" parameterType="com.iber.portal.vo.longRent.LongRentRateVo" resultType="int">
+    SELECT COUNT(*) FROM long_rent_rate_calendar
+    <include refid="queryList"/>
+  </select>
+
+  <insert id="batchInsert" parameterType="list">
+    INSERT INTO long_rent_rate_calendar (
+      car_type_id, city_code, money,
+      rent_date, create_id, create_time
+    ) VALUES
+    <foreach collection="list" item="item" separator=",">
+      ( #{item.carTypeId}, #{item.cityCode},
+        #{item.money},#{item.rentDate},
+        #{item.createId}, #{item.createTime}
+      )
+    </foreach>
+  </insert>
+</mapper>

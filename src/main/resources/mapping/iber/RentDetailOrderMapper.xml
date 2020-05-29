@@ -1,0 +1,1002 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.order.RentDetailOrderMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.order.RentDetailOrder">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="lpn" property="lpn" />
+		<result column="brand_name" property="brandName" />
+		<result column="city_code" property="cityCode" />
+		<result column="order_id" property="orderId" />
+		<result column="order_type" property="orderType" />
+		<result column="member_id" property="memberId" />
+		<result column="member_type" property="memberType" />
+		<result column="rent_time" property="rentTime" />
+		<result column="mileage" property="mileage" />
+		<result column="order_money" property="orderMoney" />
+		<result column="pay_money" property="payMoney" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="order_hour" property="orderHour" />
+		<result column="order_day" property="orderDay" />
+		<result column="count_time" property="countTime" />
+		<result column="count_type" property="countType" />
+		<result column="create_time" property="createTime" />
+		<result column="status" property="status" />
+	</resultMap>
+	<!-- 统计VO -->
+	<resultMap id="StatisticsResultMap" type="com.iber.portal.vo.order.RentStatisticsVo">
+		<result column="todayCnt" property="todayCnt" jdbcType="BIGINT" />
+		<result column="yesterdayCnt" property="yesterdayCnt" jdbcType="BIGINT" />
+		<result column="thisMonthCnt" property="thisMonthCnt" jdbcType="BIGINT" />
+		<result column="lastMonthCnt" property="lastMonthCnt" jdbcType="BIGINT" />
+		<result column="totalCnt" property="totalCnt" jdbcType="BIGINT" />
+	</resultMap>
+	<!-- 统计详情VO -->
+	<resultMap id="DetailResultMap" type="com.iber.portal.vo.order.RentCountDetailVo">
+		<result column="cnt" property="cnt" jdbcType="BIGINT" />
+		<result column="order_hour" property="orderHour" jdbcType="INTEGER" />
+		<result column="order_day" property="orderDay" jdbcType="INTEGER" />
+		<result column="count_time" property="countTime" jdbcType="DATE" />
+		
+		<!-- 
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="memberCount" property="memberCount" jdbcType="INTEGER" />
+		<result column="rentTime" property="rentTime" jdbcType="INTEGER" />
+		<result column="mileage" property="mileage" jdbcType="INTEGER" />
+		<result column="income" property="income" jdbcType="INTEGER" />
+		<result column="order_hour" property="orderHour" jdbcType="INTEGER" />
+		<result column="order_day" property="orderDay" jdbcType="INTEGER" />
+		<result column="count_time" property="countTime" jdbcType="DATE" />
+		 -->
+	</resultMap>
+
+	<!-- x_rent_detail_order table all fields -->
+	<sql id="Base_Column_List">
+		id,brand_name,lpn,city_code,order_id,order_type,member_id,member_type,rent_time,mileage,order_money,pay_money,begin_time,end_time,order_hour,count_time,count_type,create_time,order_day,status
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.iber.portal.model.order.RentDetailOrder">
+		insert into x_rent_detail_order
+		(lpn,brand_name,city_code,order_id,order_type,member_id,member_type,rent_time,mileage,order_money,pay_money,begin_time,end_time,order_hour,count_time,count_type,create_time,order_day)
+		values(#{lpn},#{brandName},#{cityCode},#{orderId},#{orderType},#{memberId},#{memberType},#{rentTime},#{mileage},#{orderMoney},#{payMoney},#{beginTime},#{endTime},#{orderHour},#{countTime},#{countType},#{createTime},#{orderDay})
+	</insert>
+
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from x_rent_detail_order where id = #{id}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.order.RentDetailOrder">
+		update x_rent_detail_order set
+		lpn=#{lpn},city_code=#{cityCode},order_id=#{orderId},
+		order_type=#{orderType},member_id=#{memberId},
+		member_type=#{memberType},rent_time=#{rentTime},
+		mileage=#{mileage},order_money=#{orderMoney},
+		pay_money=#{payMoney},begin_time=#{beginTime},
+		end_time=#{endTime},order_hour=#{orderHour},
+		count_time=#{countTime},count_type=#{countType},
+		create_time=#{createTime},
+		order_day=#{orderDay}
+		where id=#{id}
+	</update>
+	
+	<insert id="insertSelective" parameterType="com.iber.portal.model.order.RentDetailOrder">
+		insert into x_rent_detail_order
+		(
+		 		<if test="lpn != null and lpn != '' ">
+	        		lpn
+	        	</if>
+	        	<if test="brandName != null and brandName != '' ">
+	        		, brand_name
+	        	</if>
+	        	<if test="cityCode != null and cityCode != '' ">
+	        		, city_code
+	        	</if>
+	        	<if test="orderId != null and orderId != '' ">
+	        		, order_id
+	        	</if>
+	        	<if test="orderType != null and orderType != '' ">
+	        		, order_type
+	        	</if>
+	        	<if test="memberId != null and memberId != '' ">
+	        		, member_id
+	        	</if>
+	        	<if test="memberType != null or memberType == 0 ">
+	        		, member_type
+	        	</if>
+	        	<if test="rentTime != null and rentTime != '' ">
+	        		, rent_time
+	        	</if>
+	        	<if test="mileage != null and mileage != '' ">
+	        		, mileage
+	        	</if>
+	        	<if test="orderMoney != null and orderMoney != '' ">
+	        		, order_money
+	        	</if>
+	        	<if test="payMoney != null and payMoney != '' ">
+	        		, pay_money
+	        	</if>
+	        	<if test="beginTime != null and beginTime != '' ">
+	        		, begin_time
+	        	</if>
+	        	<if test="endTime != null and endTime != '' ">
+	        		, end_time
+	        	</if>
+	        	<if test="orderHour != null and orderHour != '' ">
+	        		, order_hour
+	        	</if>
+	        	<if test="countTime != null and countTime != '' ">
+	        		, count_time
+	        	</if>
+	        	<if test="countType != null or countType == 0 ">
+	        		, count_type
+	        	</if>
+	        	<if test="createTime != null and createTime != '' ">
+	        		, create_time
+	        	</if>
+	        	<if test="orderDay != null and orderDay != '' ">
+	        		, order_day
+	        	</if>
+		 	)
+		 values  
+		        (
+		        	<if test="lpn != null and lpn != '' ">
+		        		#{lpn}
+		        	</if>
+		        	<if test="brandName != null and brandName != '' ">
+		        		, #{brandName}
+		        	</if>
+		        	<if test="cityCode != null and cityCode != '' ">
+		        		, #{cityCode}
+		        	</if>
+		        	<if test="orderId != null and orderId != '' ">
+		        		, #{orderId}
+		        	</if>
+		        	<if test="orderType != null and orderType != '' ">
+		        		, #{orderType}
+		        	</if>
+		        	<if test="memberId != null and memberId != '' ">
+		        		, #{memberId}
+		        	</if>
+		        	<if test="memberType != null or memberType == 0 ">
+		        		, #{memberType}
+		        	</if>
+		        	<if test="rentTime != null and rentTime != '' ">
+		        		, #{rentTime}
+		        	</if>
+		        	<if test="mileage != null and mileage != '' ">
+		        		, #{mileage}
+		        	</if>
+		        	<if test="orderMoney != null and orderMoney != '' ">
+		        		, #{orderMoney}
+		        	</if>
+		        	<if test="payMoney != null and payMoney != '' ">
+		        		, #{payMoney}
+		        	</if>
+		        	<if test="beginTime != null and beginTime != '' ">
+		        		, #{beginTime}
+		        	</if>
+		        	<if test="endTime != null and endTime != '' ">
+		        		, #{endTime}
+		        	</if>
+		        	<if test="orderHour != null and orderHour != '' ">
+		        		, #{orderHour}
+		        	</if>
+		        	<if test="countTime != null and countTime != '' ">
+		        		, #{countTime}
+		        	</if>
+		        	<if test="countType != null or countType == 0 ">
+		        		, #{countType}
+		        	</if>
+		        	<if test="createTime != null and createTime != '' ">
+		        		, #{createTime}
+		        	</if>
+		        	<if test="orderDay != null and orderDay != '' ">
+		        		, #{orderDay}
+		        	</if>
+		        )  
+	</insert>
+	
+	<!-- 批量插入 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		<if test="list != null and list.size() > 0" >
+		   insert into x_rent_detail_order 
+		 	(lpn, brand_name, city_code, order_id, order_type, member_id, member_type, rent_time,
+		 		mileage, order_money, pay_money, begin_time, end_time, order_hour,
+		 		count_time, count_type, create_time, order_day, status)
+		 <trim prefix=" values " suffixOverrides=",">
+			<foreach collection="list" item="item" index="index"
+				separator=",">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					<choose><when test="item.lpn != null and item.lpn != '' ">
+		        		#{item.lpn},
+		        	</when><otherwise>NULL,</otherwise></choose>
+					<choose><when test="item.brandName != null and item.brandName != '' ">
+		        		#{item.brandName},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.cityCode != null and item.cityCode != '' ">
+		        		#{item.cityCode},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.orderId != null and item.orderId != '' ">
+		        		#{item.orderId},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.orderType != null and item.orderType != '' ">
+		        		#{item.orderType},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.memberId != null and item.memberId != '' ">
+		        		#{item.memberId},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.memberType != null or item.memberType == 0 ">
+		        		#{item.memberType},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.rentTime != null and item.rentTime != '' ">
+		        		#{item.rentTime},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.mileage != null and item.mileage != '' ">
+		        		#{item.mileage},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.orderMoney != null and item.orderMoney != '' ">
+		        		#{item.orderMoney},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.payMoney != null and item.payMoney != '' ">
+		        		#{item.payMoney},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.beginTime != null and item.beginTime != '' ">
+		        		#{item.beginTime},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.endTime != null and item.endTime != '' ">
+		        		#{item.endTime},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.orderHour != null and item.orderHour != '' ">
+		        		#{item.orderHour},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.countTime != null and item.countTime != '' ">
+		        		#{item.countTime},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.countType != null or item.countType == 0 ">
+		        		#{item.countType},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.createTime != null and item.createTime != '' ">
+		        		#{item.createTime},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.orderDay != null and item.orderDay != '' ">
+		        		#{item.orderDay},
+		        	</when><otherwise>NULL,</otherwise></choose>
+		        	<choose><when test="item.status != null and item.status != '' ">
+		        		#{item.status},
+		        	</when><otherwise>NULL,</otherwise></choose>
+				</trim>
+			</foreach>
+		</trim>
+		</if>
+	</insert>
+		
+
+	<!-- 获取已存在传参订单号的记录条量 -->
+	<select id="getCntByOrderId" resultType="java.lang.Integer" 
+		parameterType="java.lang.String">
+		SELECT COUNT(1) FROM x_rent_detail_order WHERE order_id = #{orderId}	
+	</select>
+
+	<!-- 根据id查询 车辆租赁明细 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_rent_detail_order where id = #{id}
+	</select>
+
+	<!-- 车辆租赁明细 列表总数 -->
+	<select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_rent_detail_order
+	</select>
+
+	<!-- 查询车辆租赁明细列表 -->
+	<select id="queryPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from x_rent_detail_order where 1 =1
+
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 获取最后统计的日期时间 -->
+	<select id="getLastCountTime" resultType="java.util.Date">
+		SELECT MAX(create_time) FROM x_rent_detail_order
+	</select>
+	
+	<!-- 收集运营中的车辆租赁数据-->
+	<select id="getCarRentDatas" resultMap="BaseResultMap" >
+		SELECT c.brand_name, c.lpn, c.city_code, cr.order_id, 
+		SUBSTR(cr.order_id, 8, 2) order_type, cr.member_id, 
+		IF(m.enterprise_id IS NULL, 0, 1) member_type
+		 	FROM x_car_run cr 
+		INNER JOIN x_car c ON cr.lpn = c.lpn 
+		INNER JOIN x_member m ON m.id = cr.member_id
+		WHERE cr.`status` NOT IN ('maintain', 'repair')
+	</select>
+	
+	
+	<!-- 统计的数据是: 统计目标日 = 触发统计时刻（0点）前一天的数据 -->
+	<!--  分时订单  -->
+	<!-- 查询当天完成的订单 : 订单开始时间 > 统计目标日0点 and 订单结束时间 先于 触发统计的时间 -->
+	<!-- 此语句可获取当天完成的租赁收入数据：订单开始时间和完成时间都在统计目标日中 -->	
+	<select id="queryTSBeginAndFinishedOnYesterdayCnt" resultMap="BaseResultMap">
+		SELECT o.`status`, o.lpn, c.brand_name, o.city_code, o.order_id, 'TS' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			TIMESTAMPDIFF(MINUTE, o.begin_time, o.end_time) rent_time,
+			o.total_run_mileage mileage, p.total_pay_money order_money, p.pay_money,
+			o.begin_time, o.end_time,
+			HOUR(o.begin_time) order_hour, DAY(o.begin_time) order_day, 
+			DATE(o.begin_time) count_time, o.begin_time create_time
+			 FROM x_time_share_order o 
+			INNER JOIN x_time_share_pay p ON p.order_id = o.order_id
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			
+			WHERE 1 = 1
+				AND DATE(o.begin_time) = <include refid="commDateSqlMapper.sql_yesterday_date" />
+				AND DATE(o.end_time) = <include refid="commDateSqlMapper.sql_yesterday_date" />
+	</select>
+	
+	
+	<!-- 查询跨天完成的订单  1 订单几天前开始,到统计时刻前已完成: 时长 = [统计时刻前一天0点, 订单结束时间]，里程为此时间段内的里程 -->
+	<!-- 此语句可获取跨天完成的租赁收入数据：订单开始时间  小于 统计目标日0点 and 完成时间 先于 统计时刻 -->
+	<select id="queryTSFromMultiDaysAgo2YesterdayCnt" resultMap="BaseResultMap">
+		SELECT o.`status`, o.lpn, c.brand_name, o.city_code, o.order_id, 'TS' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			TIMESTAMPDIFF(MINUTE, <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" /> , o.end_time) rent_time,
+			(MAX(r.mileage) - MIN(r.mileage)) mileage, p.total_pay_money order_money, p.pay_money,
+			o.begin_time, o.end_time,
+			HOUR(o.begin_time) order_hour, DAY(o.begin_time) order_day, 
+			DATE(o.begin_time) count_time, NOW() create_time
+			 FROM x_time_share_order o 
+			INNER JOIN x_time_share_pay p ON p.order_id = o.order_id
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+				<![CDATA[ AND r.create_time >= o.begin_time AND r.create_time <= o.end_time ]]>
+			WHERE 1 = 1
+				<![CDATA[ AND DATE(o.begin_time) <  ]]> <include refid="commDateSqlMapper.sql_yesterday_date" />
+				<![CDATA[ AND DATE(o.end_time) =  ]]> <include refid="commDateSqlMapper.sql_yesterday_date" />
+	</select>
+	
+	<!-- 查询跨天完成的订单  2.1 订单到统计时刻仍未完成，订单为用车状态 and 订单开始时间 先于 统计目标日0点，: 时长 = 24 * 60 min，里程为此时间段内的里程 -->
+	<select id="queryTSFromMultiDaysAgoUnfinishedCnt" resultMap="BaseResultMap">
+		SELECT o.`status`, o.lpn, c.brand_name, o.city_code, o.order_id, 'TS' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			1440 rent_time,
+			(MAX(r.mileage) - MIN(r.mileage)) mileage,
+			o.begin_time, o.end_time,
+			HOUR(o.begin_time) order_hour, DAY(o.begin_time) order_day, 
+			DATE(o.begin_time) count_time, NOW() create_time
+			 FROM x_time_share_order o 
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+				<![CDATA[ AND r.create_time >=  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" /> 
+				<![CDATA[ AND r.create_time <=  ]]> <include refid="commDateSqlMapper.sql_today_begin_datetime" />
+			WHERE o.`status` = 'useCar'
+				<![CDATA[ AND o.begin_time <=  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" />
+	</select>
+	
+	<!-- 查询跨天完成的订单  2.2 订单到统计时刻仍未完成，订单为用车状态 and 订单开始时间 后于 统计目标日0点，: 时长 = [订单开始时刻, 统计时刻]，里程为此时间段内的里程 -->
+	<select id="queryTSFromYesterdayUnfinishedCnt" resultMap="BaseResultMap">
+		SELECT o.`status`, o.lpn, c.brand_name, o.city_code, o.order_id, 'TS' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			TIMESTAMPDIFF(MINUTE, o.begin_time, <include refid="commDateSqlMapper.sql_today_begin_datetime" />) rent_time,
+			(MAX(r.mileage) - MIN(r.mileage)) mileage,
+			o.begin_time, o.end_time,
+			HOUR(o.begin_time) order_hour, DAY(o.begin_time) order_day, 
+			DATE(o.begin_time) count_time, NOW() create_time
+			 FROM x_time_share_order o 
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+				<![CDATA[ AND r.create_time >= o.begin_time ]]> 
+				<![CDATA[ AND r.create_time <=  ]]> <include refid="commDateSqlMapper.sql_today_begin_datetime" />
+			WHERE o.`status` = 'useCar'
+				<![CDATA[ AND o.begin_time >  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" />
+	</select>
+	
+	
+	<!--  日租订单  -->
+	<!-- 查询当天完成的订单 : 订单开始时间 先于 统计目标日0点 and 订单结束时间 后于 触发统计的时间 -->
+	<!-- 此语句可获取当天完成的租赁收入数据：订单开始时间和完成时间都在统计目标日中 -->
+	<select id="queryDRBeginAndFinishedOnYesterdayCnt" resultMap="BaseResultMap">
+		SELECT o.`order_status` status, o.lpn, c.brand_name, o.city_code, o.order_id, 'DR' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			TIMESTAMPDIFF(MINUTE, o.actual_taken_car_time, o.actual_return_car_time) rent_time,
+			(
+				select 
+					MAX(r.mileage) - MIN(r.mileage) 
+				from 
+					x_car_run_log r 
+				where r.order_id = o.order_id and 
+					DATE(r.create_time) =  <include refid="commDateSqlMapper.sql_yesterday_date" />
+			)
+			mileage, e.order_money, p.pay_money,
+			o.actual_taken_car_time begin_time, o.actual_return_car_time end_time,
+			HOUR(o.actual_taken_car_time) order_hour, DAY(o.actual_taken_car_time) order_day,
+			DATE(o.actual_taken_car_time) count_time, NOW() create_time
+			 FROM x_day_rent_order o 
+			INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+			INNER JOIN x_day_rent_order_pay_log p ON p.order_id = o.order_id
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			WHERE 1 = 1 
+				AND DATE(o.actual_taken_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" />
+				AND DATE(o.actual_return_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" />
+	</select>
+	
+	<!-- 查询跨天完成的订单  1 订单几天前开始,到统计时刻前已完成: 时长 = [统计时刻前一天0点, 订单结束时间]，里程为此时间段内的里程 -->
+	<!-- 此语句可获取跨天完成的租赁收入数据：订单开始时间  先于 统计目标日0点 and 完成时间先于 统计时刻 -->
+	<select id="queryDRFromMultiDaysAgo2YesterdayCnt" resultMap="BaseResultMap">
+		SELECT o.`order_status` status, o.lpn, c.brand_name, o.city_code, o.order_id, 'DR' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			TIMESTAMPDIFF(MINUTE, <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" /> , o.actual_return_car_time) rent_time,
+			(MAX(r.mileage) - MIN(r.mileage)) mileage, e.order_money, p.pay_money,
+			o.actual_taken_car_time begin_time, o.actual_return_car_time end_time,
+			HOUR(o.actual_taken_car_time) order_hour, DAY(o.actual_taken_car_time) order_day, 
+			DATE(o.actual_taken_car_time) count_time, NOW() create_time
+			 FROM x_day_rent_order o 
+			INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+			INNER JOIN x_day_rent_order_pay_log p ON p.order_id = o.order_id
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+				<![CDATA[ AND r.create_time >= o.actual_taken_car_time AND r.create_time <= o.actual_return_car_time ]]>
+			WHERE 1 = 1 
+				<![CDATA[ AND o.actual_taken_car_time <  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" />
+				<![CDATA[ AND o.actual_return_car_time <  ]]> <include refid="commDateSqlMapper.sql_today_begin_datetime" />
+				<![CDATA[ AND TIMESTAMPDIFF(HOUR, o.actual_return_car_time, NOW()) < 24 ]]>
+	</select>
+	
+	<!-- 查询跨天完成的订单  2.1 订单到统计时刻仍未完成，订单为用车状态 and 订单开始时间 先于 统计目标日0点，: 时长 = 24 * 60 min，里程为此时间段内的里程 -->
+	<select id="queryDRFromMultiDaysAgoUnfinishedCnt" resultMap="BaseResultMap">
+		SELECT o.`order_status` status, o.lpn, c.brand_name, o.city_code, o.order_id, 'DR' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			1440 rent_time,
+			(MAX(r.mileage) - MIN(r.mileage)) mileage,
+			o.actual_taken_car_time begin_time, o.actual_return_car_time end_time,
+			HOUR(o.actual_taken_car_time) order_hour, DAY(o.actual_taken_car_time) order_day, 
+			DATE(o.actual_taken_car_time) count_time, NOW() create_time
+			 FROM x_day_rent_order o 
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+				<![CDATA[ AND r.create_time >=  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" /> 
+				<![CDATA[ AND r.create_time <=  ]]> <include refid="commDateSqlMapper.sql_today_begin_datetime" />
+			WHERE o.`order_status` = 'useCar'
+				<![CDATA[ AND o.actual_taken_car_time <=  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" />
+	</select>
+	
+	<!-- 查询跨天完成的订单  2.2 订单到统计时刻仍未完成，订单为用车状态 and 订单开始时间 后于 统计目标日0点，: 时长 = [订单开始时刻, 统计时刻]，里程为此时间段内的里程 -->
+	<select id="queryDRFromYesterdayUnfinishedCnt" resultMap="BaseResultMap">
+		SELECT o.`order_status` status, o.lpn, c.brand_name, o.city_code, o.order_id, 'DR' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			TIMESTAMPDIFF(MINUTE, o.actual_taken_car_time, <include refid="commDateSqlMapper.sql_today_begin_datetime" />) rent_time,
+			(MAX(r.mileage) - MIN(r.mileage)) mileage,
+			o.actual_taken_car_time begin_time, o.actual_return_car_time end_time,
+			HOUR(o.actual_taken_car_time) order_hour, DAY(o.actual_taken_car_time) order_day, 
+			DATE(o.actual_taken_car_time) count_time, NOW() create_time
+			 FROM x_day_rent_order o 
+			INNER JOIN x_car c ON c.lpn = o.lpn 
+			INNER JOIN x_member m ON m.id = o.member_id
+			INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+				<![CDATA[ AND r.create_time >= o.actual_taken_car_time ]]> 
+				<![CDATA[ AND r.create_time <=  ]]> <include refid="commDateSqlMapper.sql_today_begin_datetime" />
+			WHERE o.`order_status` = 'useCar'
+				<![CDATA[ AND o.actual_taken_car_time >  ]]> <include refid="commDateSqlMapper.sql_yesterday_begin_datetime" />
+	</select>
+
+	
+	<sql id="sql_where_condition">
+			<if test="brandName != null and brandName != '' ">
+				AND d.brand_name = #{brandName}
+			</if>
+			<if test="orderType != null and orderType != '' ">
+				AND d.order_type = #{orderType}
+			</if>
+			<if test="memberType != null or memberType == 0 ">
+				AND d.member_type = #{memberType}
+			</if>
+			<include refid="sql_chooseByCityLayer" />
+	</sql>
+	
+	<sql id="sql_selectCntOrderByBrandOrderMember">
+		
+		SELECT COUNT(1) cnt, order_hour, order_day, count_time FROM (<include refid="sql_queryCurrDetail" />) d
+			WHERE 1 = 1 <include refid="sql_where_condition" />
+	</sql>
+	
+	
+	<!-- 统计详情，即今天/昨天中每小时的数据，本月/上月中每天的数据  -->
+	<!-- 查询车辆租赁次数的公用SQL  -->
+	<sql id="sql_selectCntDetailByBrandOrderMember">
+		SELECT COUNT(DISTINCT order_id) cnt, order_hour, order_day, count_time FROM x_rent_detail_order d
+			WHERE 1 = 1 <include refid="sql_where_condition" />
+	</sql>
+	<!-- 查询车辆租赁人数的公用SQL  -->
+	<sql id="sql_selectMemberCntDetailByBrandOrderMember">
+		SELECT COUNT(DISTINCT member_id) cnt, order_hour, order_day, count_time FROM x_rent_detail_order d
+			WHERE 1 = 1 <include refid="sql_where_condition" />
+	</sql>
+	<!-- 查询车辆租赁时长的公用SQL  -->
+	<sql id="sql_selectTimeDetailByBrandOrderMember">
+		SELECT IFNULL(SUM(d.rent_time), 0) cnt, order_hour, order_day, date(create_time) count_time FROM x_rent_detail_order d
+			WHERE 1 = 1 <include refid="sql_where_condition" />
+	</sql>
+	<!-- 查询车辆租赁里程的公用SQL  -->
+	<sql id="sql_selectMileageDetailByBrandOrderMember">
+		SELECT IFNULL(SUM(d.mileage), 0) cnt, order_hour, order_day, date(create_time) count_time FROM x_rent_detail_order d
+			WHERE 1 = 1 <include refid="sql_where_condition" />
+	</sql>
+	<!-- 查询车辆租赁收入的公用SQL  -->
+	<sql id="sql_selectIncomeDetailByBrandOrderMember">
+		SELECT ROUND(IFNULL(SUM(d.order_money), 0) / 100) cnt, order_hour, order_day, count_time FROM x_rent_detail_order d
+			WHERE 1 = 1 <include refid="sql_where_condition" />
+	</sql>
+	
+	<!-- 根据 countType来进行不同的统计-->
+	<sql id="sql_queryDetailFromHistory">
+		<choose>
+			<!-- 次数  -->
+			<when test="countType == 0">
+				<include refid="sql_selectCntDetailByBrandOrderMember" />
+			</when>
+			<!-- 人数  -->
+			<when test="countType == 1">
+				<include refid="sql_selectMemberCntDetailByBrandOrderMember" />
+			</when>
+			<!-- 时长  -->
+			<when test="countType == 2">
+				<include refid="sql_selectTimeDetailByBrandOrderMember" />
+			</when>
+			<!-- 里程  -->
+			<when test="countType == 3">
+				<include refid="sql_selectMileageDetailByBrandOrderMember" />
+			</when>
+			<!-- 收入  -->
+			<when test="countType == 4">
+				<include refid="sql_selectIncomeDetailByBrandOrderMember" />
+			</when>
+			<when test="countType == 5">
+				<include refid="sql_selectCntOrderByBrandOrderMember" />
+			</when>
+			<otherwise>
+				<include refid="sql_selectCntDetailByBrandOrderMember" />
+			</otherwise>
+		</choose>
+		
+		<if test="status != null or excludeStatus != null or statusList != null ">
+			AND d.`status` <include refid="sql_chooseStatusCondition" />
+		</if>
+		
+	</sql>
+	
+	<!-- 选择订单状态条件 -->
+	<sql id="sql_chooseStatusCondition">
+		<choose>
+			<when test="status != null and status != '' ">
+				= #{status}
+			</when>
+			<when test="statusList != null and statusList != '' ">
+				IN ( ${statusList} )
+			</when>
+			<when test="excludeStatus != null and excludeStatus != '' ">
+				<![CDATA[ <> #{excludeStatus} ]]> 
+			</when>
+			<otherwise>
+				= 'finish'
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="sql_queryTodaySummarization">
+		<include refid="sql_queryCurrSummarization" />
+		WHERE d.count_time = <include refid="commDateSqlMapper.sql_today_date" />
+				<include refid="sql_chooseByCityLayer" />
+	</sql>
+	<select id="queryTodayDetail" resultMap="DetailResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryTodaySummarization" />
+			GROUP BY d.order_hour
+	</select>
+	
+	<!-- 查昨天的截至当前时间的小时数为止的数量  -->
+	<select id="queryYesterdayCntBeforeHourOfNow" resultType="long" parameterType="java.util.Map">
+		SELECT cnt FROM ( <include refid="sql_queryYesterdaySummarization" />
+			AND <![CDATA[ order_hour <= ]]> HOUR(NOW())  
+			) d
+	</select>
+	<sql id="sql_queryYesterdaySummarization">
+		<include refid="sql_queryDetailFromHistory" />
+			<choose>
+				<when test="countType == 2">
+					AND date(create_time) =  <include refid="commDateSqlMapper.sql_yesterday_date" />
+				</when>
+				<when test="countType == 3">
+					AND date(create_time) =  <include refid="commDateSqlMapper.sql_yesterday_date" />
+				</when>
+				<otherwise>
+					AND count_time =  <include refid="commDateSqlMapper.sql_yesterday_date" />
+				</otherwise>
+			</choose>
+			<!-- and order_hour <![CDATA[<=]]>HOUR(NOW()) -->
+	</sql>
+	<!-- 查询昨天的详细情况，则昨天每小时的租赁次数、人数、时长、里程  -->
+	<select id="queryYesterdayDetail" resultMap="DetailResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryYesterdaySummarization" />
+			GROUP BY order_hour
+	</select>
+	
+	
+	<!-- 从历史表查本月的数据  -->
+	<select id="queryThisMonthDetailFromHistory" resultMap="DetailResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryDetailFromHistory" />
+		 	<choose>
+				<when test="countType == 2">
+					AND <![CDATA[ create_time >=  ]]>  <include refid="commDateSqlMapper.sql_month_begin_date" />
+					GROUP BY day(create_time)
+				</when>
+				<when test="countType == 3">
+					AND <![CDATA[ create_time >=  ]]>  <include refid="commDateSqlMapper.sql_month_begin_date" />
+					GROUP BY  day(create_time)
+				</when>
+				<otherwise>
+					AND <![CDATA[ count_time >=  ]]>  <include refid="commDateSqlMapper.sql_month_begin_date" />
+					GROUP BY order_day
+				</otherwise>
+			</choose>
+	</select>
+	
+	<!-- 从历史表查全部的数据。累计 = 实时查今天的 + 历史表上所有的  -->
+	<select id="queryTotalDetailFromHistory" resultMap="DetailResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryDetailFromHistory" />
+			GROUP BY order_day
+	</select>
+	
+	<select id="queryLastMonthCntBeforeDayOfNow" resultType="long" parameterType="java.util.Map">
+		SELECT cnt FROM ( <include refid="sql_queryLastMonthSummarization" />
+			AND <![CDATA[ order_day <=  ]]> DAYOFMONTH(NOW())  ) d
+	</select>
+	<sql id="sql_queryLastMonthSummarization">
+		<include refid="sql_queryDetailFromHistory" />
+			<choose>
+				<when test="countType == 2">
+					AND <![CDATA[ create_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+					AND <![CDATA[ create_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+				</when>
+				<when test="countType == 3">
+					AND <![CDATA[ create_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+					AND <![CDATA[ create_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+				</when>
+				<otherwise>
+					AND <![CDATA[ count_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+					AND <![CDATA[ count_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+				</otherwise>
+			</choose>
+	</sql>
+	<!-- 查询上月的详细情况，则上月每天的租赁次数、人数、时长、里程  -->
+	<select id="queryLastMonthDetail" resultMap="DetailResultMap" parameterType="java.util.Map">
+<!-- 		<include refid="sql_queryLastMonthSummarization" />-->	
+ 	<include refid="sql_queryDetailFromHistory" />
+			<choose>
+				<when test="countType == 2">
+					AND <![CDATA[ create_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+					AND <![CDATA[ create_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+					GROUP BY day(create_time)
+				</when>
+				<when test="countType == 3">
+					AND <![CDATA[ create_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+					AND <![CDATA[ create_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+					GROUP BY day(create_time)
+				</when>
+				<otherwise>
+					AND <![CDATA[ count_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+					AND <![CDATA[ count_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+					GROUP BY order_day
+				</otherwise>
+			</choose>
+	</select>
+
+	
+	<!-- 根据 layer来进行不同的统计  -->
+	<sql id="sql_chooseByCityLayer">
+		<if test="cityCode != null and cityCode != '' ">
+			<choose>
+				<when test="layer== 2 ">   
+				AND d.city_code IN
+				(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+				WHERE cc.code = d.city_code) 	
+				</when>
+				<otherwise>
+					AND d.city_code = #{cityCode}
+				</otherwise>
+					
+			</choose>
+		</if>
+	</sql>
+	
+	
+	<!-- 实时查询明细数据的公用SQL  -->
+	<sql id="sql_queryCurrDetail">
+		SELECT d.* FROM (
+			<if test="orderType == null or orderType == 'TS' ">
+			(SELECT 
+				<if test="brandName != null and brandName != '' ">
+					c.brand_name, 
+				</if>
+				o.city_code, o.member_id, 'TS' order_type,
+				<if test="countType == 2">
+					TIMESTAMPDIFF(MINUTE, o.begin_time, o.end_time) rentTime,
+				</if>
+				<if test="countType == 3">
+					o.total_run_mileage mileage, 
+				</if>
+				<if test="countType == 4">
+					p.total_pay_money order_money,
+				</if>
+				<if test="countType == 5">
+					o.`status`,
+				</if>
+				<if test="memberType != null or memberType == 0 ">
+					IF(m.enterprise_id IS NULL, 0, 1) member_type,
+				</if>
+				
+				HOUR(o.begin_time) order_hour, DAY(o.begin_time) order_day, DATE(o.begin_time) count_time
+				 FROM x_time_share_order o 
+				<if test="countType == 4">
+					INNER JOIN x_time_share_pay p ON p.order_id = o.order_id
+				</if>
+				<if test="brandName != null and brandName != '' ">
+					INNER JOIN x_car c ON c.lpn = o.lpn 
+						AND c.brand_name = #{brandName}
+				</if>
+				<if test="memberType != null or memberType == 0 ">
+					INNER JOIN x_member m ON m.id = o.member_id
+						<choose>
+			                <when test="memberType == 0 ">
+			                     AND m.enterprise_id IS NULL
+			                </when>
+			                <when test="memberType == 1 ">
+			                     AND m.enterprise_id IS NOT NULL
+			                 </when>
+				         </choose>
+				</if>
+					WHERE 1=1 
+				<if test="status != null or excludeStatus != null or statusList != null ">
+				 and  o.`status` <include refid="sql_chooseStatusCondition" />
+				</if>
+				<if test="countType == 4">
+				 and   p.pay_status = 'finish'
+				</if>
+				)
+			</if>
+			<if test="orderType == null">
+				UNION ALL
+			</if>
+			<if test="orderType == null or orderType == 'DR' ">
+			(SELECT 
+				<if test="brandName != null and brandName != '' ">
+					c.brand_name, 
+				</if>
+				o.city_code, o.member_id, 'DR' order_type,
+				<if test="countType == 2">
+					TIMESTAMPDIFF(MINUTE, o.actual_taken_car_time, o.actual_return_car_time) rentTime,
+				</if>
+				<if test="countType == 3">
+					(
+						select 
+							MAX(r.mileage) - MIN(r.mileage) 
+						from  	
+							x_car_run_log r 
+						where 
+							   r.order_id = o.order_id  
+						 	 <![CDATA[ AND r.create_time >= o.actual_taken_car_time 
+							AND r.create_time <= o.actual_return_car_time]]> 
+					) mileage, 
+				</if>
+				<if test="countType == 4">
+					e.order_money,
+				</if>
+				<if test="countType == 5">
+					o.`order_status` status,
+				</if>
+				<if test="memberType != null or memberType == 0 ">
+					IF(m.enterprise_id IS NULL, 0, 1) member_type,
+				</if>
+				HOUR(o.actual_taken_car_time) order_hour, DAY(o.actual_taken_car_time) order_day,
+				DATE(o.actual_taken_car_time) count_time
+				 FROM x_day_rent_order o 
+				<if test="countType == 4">
+					INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+				</if>
+				<if test="brandName != null and brandName != '' ">
+					INNER JOIN x_car c ON c.lpn = o.lpn 
+						AND c.brand_name = #{brandName}
+				</if>
+				<if test="memberType != null or memberType == 0 ">
+					INNER JOIN x_member m ON m.id = o.member_id
+						<choose>
+			                <when test="memberType == 0 ">
+			                     AND m.enterprise_id IS NULL
+			                </when>
+			                <when test="memberType == 1 ">
+			                     AND m.enterprise_id IS NOT NULL
+			                 </when>
+				         </choose>
+				</if>
+				<!-- <if test="countType == 3">
+					INNER JOIN x_car_run_log r ON r.lpn = o.lpn
+						<-![CDATA[ AND r.create_time >= o.actual_taken_car_time AND r.create_time <= o.actual_return_car_time ]]>				
+				</if> -->
+				where 1=1 
+				<if test="status != null or excludeStatus != null or statusList != null ">
+					and  o.`order_status` <include refid="sql_chooseStatusCondition" />
+				</if>
+				<if test="countType == 4">
+					 and e.pay_status = 'finish'
+				</if>
+			)
+			</if>
+		) d 
+	</sql>
+	
+	<!-- 实时查询总体数据的公用SQL -->
+	<sql id="sql_queryCurrSummarization">
+		<!-- 根据 countType来进行不同的统计  -->
+		SELECT 
+			<choose>
+				<!-- 次数  -->
+				<when test="countType == 0">
+					COUNT(1) cnt
+				</when>
+				<!-- 人数  -->
+				<when test="countType == 1">
+					COUNT(DISTINCT d.member_id) cnt
+				</when>
+				<!-- 时长  -->
+				<when test="countType == 2">
+					IFNULL(SUM(d.rentTime), 0) cnt
+				</when>
+				<!-- 里程  -->
+				<when test="countType == 3">
+					IFNULL(SUM(d.mileage), 0) cnt
+				</when>
+				<!-- 收入  -->
+				<when test="countType == 4">
+					ROUND(IFNULL(SUM(d.order_money), 0) / 100) cnt
+				</when>
+				<otherwise>
+					COUNT(1) cnt
+				</otherwise>
+			</choose>
+			, d.order_hour, d.order_day, d.count_time 
+			FROM (<include refid="sql_queryCurrDetail" /> ) d
+	</sql>
+	
+	
+	<select id="queryTodayCnt" resultType="long" parameterType="java.util.Map">
+		SELECT cnt FROM ( <include refid="sql_queryTodaySummarization" /> ) d
+	</select>
+	
+	<select id="queryThisMonthCntFromHistory" resultType="long" parameterType="java.util.Map">
+		SELECT cnt FROM ( <include refid="sql_queryDetailFromHistory" />
+			AND <![CDATA[ d.count_time >= ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+		) d
+	</select>
+	
+	<select id="queryTotalCntFromHistory" resultType="long" parameterType="java.util.Map">
+		SELECT cnt FROM ( <include refid="sql_queryDetailFromHistory" /> ) d
+	</select>
+	
+	
+	<select id="queryYesterdaySummarization" resultMap="DetailResultMap" parameterType="java.util.Map">
+		<include refid="sql_queryYesterdaySummarization" />
+	</select>
+	<select id="queryYesterdayCnt" resultType="long" parameterType="java.util.Map">
+		<!-- 根据 countType来进行不同的统计-->
+		SELECT cnt FROM ( <include refid="sql_queryYesterdaySummarization" /> ) d
+	</select>
+	
+	<select id="queryLastMonthCnt" resultType="long" parameterType="java.util.Map">
+		<!-- 根据 countType来进行不同的统计-->
+		SELECT cnt FROM ( <include refid="sql_queryDetailFromHistory" />
+			AND <![CDATA[ d.count_time >=  ]]>  <include refid="commDateSqlMapper.sql_last_month_begin_date" />
+			AND <![CDATA[ d.count_time <  ]]> <include refid="commDateSqlMapper.sql_month_begin_date" />
+		) d
+	</select>
+	
+	<!-- 车辆运营跨天时租订单统计 -->
+	<select id="queryTSFromMultiDaysList"  resultMap="BaseResultMap">
+			SELECT o.`status`,o.lpn,c.brand_name,o.city_code,o.order_id,'TS' order_type,o.member_id,IF(m.enterprise_id IS NULL, 0, 1)member_type,
+	 				case WHEN
+						o.begin_time <![CDATA[<= ]]><include refid="commDateSqlMapper.sql_yesterday_date" />
+					THEN
+							case
+								when  date(o.end_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> THEN TIMESTAMPDIFF(MINUTE, <include refid="commDateSqlMapper.sql_yesterday_date" />,o.end_time)
+								when  date(o.end_time) <![CDATA[<]]> <include refid="commDateSqlMapper.sql_yesterday_date" /> then 0
+								ELSE 1440
+							END 
+					ELSE
+						  TIMESTAMPDIFF(MINUTE,o.begin_time,date(DATE_ADD(<include refid="commDateSqlMapper.sql_yesterday_date" />,INTERVAL 1 DAY)))
+					END 
+ 				rent_time,
+				(
+					select 	MAX(r.mileage)- MIN(r.mileage) 
+					from x_car_run_log r 
+					where r.order_id = o.order_id 
+					and DATE(r.create_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> 
+				) mileage,
+				case when  date(o.end_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then  p.total_pay_money else 0 end order_money,
+ 				case when  date(o.end_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then  p.pay_money else 0 end pay_money,
+				o.begin_time,o.end_time,
+				case when  date(o.end_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then  HOUR(o.end_time) else HOUR(o.begin_time)  end order_hour,
+				case when  date(o.end_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then  DAY(o.end_time) else DAY(o.begin_time) end order_day,
+				 DATE(o.begin_time)count_time,<include refid="commDateSqlMapper.sql_yesterday_date" /> create_time
+			FROM
+			(	SELECT * FROM x_time_share_order 
+				WHERE IFNULL(DATE(end_time),	 <include refid="commDateSqlMapper.sql_yesterday_date" />)= <include refid="commDateSqlMapper.sql_yesterday_date" /> AND `status` IN('useCar', 'finish')
+				AND IFNULL(DATE(end_time),CURRENT_DATE())<![CDATA[<>]]> DATE(begin_time)
+			) o
+			INNER JOIN x_time_share_pay p ON p.order_id = o.order_id
+			INNER JOIN x_car c ON c.lpn = o.lpn
+			INNER JOIN x_member m ON m.id = o.member_id			
+	</select>
+	<!-- 车辆运营跨天日租订单统计 -->
+	<select id="queryDRFromMultiDaysList"  resultMap="BaseResultMap">
+		SELECT
+			o.`order_status` status, o.lpn, c.brand_name, o.city_code, o.order_id, 'DR' order_type, o.member_id, 
+			IF(m.enterprise_id IS NULL, 0, 1) member_type, 
+			(
+				case 
+				WHEN o.actual_taken_car_time <![CDATA[<=]]> <include refid="commDateSqlMapper.sql_yesterday_date" />
+				THEN
+					case
+						when  date(o.actual_return_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> THEN TIMESTAMPDIFF(MINUTE,<include refid="commDateSqlMapper.sql_yesterday_date" />,o.actual_return_car_time)
+						when  date(o.actual_return_car_time) <![CDATA[ < ]]><include refid="commDateSqlMapper.sql_yesterday_date" />then 0
+						ELSE 1440
+					END 
+				ELSE
+					 TIMESTAMPDIFF(MINUTE,o.actual_taken_car_time,DATE_ADD(<include refid="commDateSqlMapper.sql_yesterday_date" />,INTERVAL 1 DAY))
+				END 
+			)rent_time,
+			(
+				select MAX(r.mileage) - MIN(r.mileage) from x_car_run_log r where r.order_id = o.order_id  and date(r.create_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> 
+			) 
+			mileage, 
+			case when  date(o.actual_return_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then e.order_money else 0 end order_money,
+ 			case when  date(o.actual_return_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then p.pay_money else 0 end pay_money,
+			o.actual_taken_car_time begin_time, o.actual_return_car_time end_time,
+			case when  date(o.actual_return_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then HOUR(o.actual_return_car_time) else HOUR(o.actual_taken_car_time) end order_hour,
+			case when  date(o.actual_return_car_time) = <include refid="commDateSqlMapper.sql_yesterday_date" /> then DAY(o.actual_return_car_time) else DAY(o.actual_taken_car_time) end order_day,
+			<include refid="commDateSqlMapper.sql_yesterday_date" /> count_time, <include refid="commDateSqlMapper.sql_yesterday_date" /> create_time
+		FROM (
+			select * from  x_day_rent_order where 
+			IFNULL(	DATE(actual_return_car_time),	 <include refid="commDateSqlMapper.sql_yesterday_date" />)= <include refid="commDateSqlMapper.sql_yesterday_date" /> 
+			AND order_status  IN ('useCar', 'finish')
+			AND IFNULL(DATE(actual_return_car_time),CURRENT_DATE()) <![CDATA[<>]]>  DATE(actual_taken_car_time)
+		  ) o 
+		INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id
+		INNER JOIN x_day_rent_order_pay_log p ON p.order_id = o.order_id
+		INNER JOIN x_car c ON c.lpn = o.lpn 
+		INNER JOIN x_member m ON m.id = o.member_id
+	</select>
+	
+	<select id="queryThisMonthCnt" resultType="long" parameterType="java.util.Map">
+		select cnt from (
+				<include refid="sql_queryCurrSummarization" />
+				WHERE DATE_FORMAT(d.count_time,"%Y-%m") = DATE_FORMAT(now(),"%Y-%m")
+				<include refid="sql_chooseByCityLayer" />
+		) a
+	</select>
+	<select id="queryTotalCnt" resultType="long" parameterType="java.util.Map">
+		select cnt from ( <include refid="sql_queryCurrSummarization" />  where 1=1 <include refid="sql_chooseByCityLayer" />) a
+	</select>
+</mapper>   

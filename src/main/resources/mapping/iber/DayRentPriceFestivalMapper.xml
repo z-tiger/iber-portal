@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayRentPriceFestivalMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.DayRentPriceFestival" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="festival_date" property="festivalDate" jdbcType="DATE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, festival_date, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_price_festival
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryFestivalDays" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_price_festival
+    where 1=1
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and festival_date &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and festival_date &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_day_rent_price_festival
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.DayRentPriceFestival" >
+    insert into x_day_rent_price_festival (id, festival_date, name
+      )
+    values (#{id,jdbcType=INTEGER}, #{festivalDate,jdbcType=DATE}, #{name,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.DayRentPriceFestival" >
+    insert into x_day_rent_price_festival
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="festivalDate != null" >
+        festival_date,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="festivalDate != null" >
+        #{festivalDate,jdbcType=DATE},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.DayRentPriceFestival" >
+    update x_day_rent_price_festival
+    <set >
+      <if test="festivalDate != null" >
+        festival_date = #{festivalDate,jdbcType=DATE},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.DayRentPriceFestival" >
+    update x_day_rent_price_festival
+    set festival_date = #{festivalDate,jdbcType=DATE},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

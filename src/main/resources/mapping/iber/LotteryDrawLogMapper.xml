@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.activity.LotteryDrawLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.activity.LotteryDrawLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode"/>
+    <result column="prize_name" property="prizeName"/>
+    <result column="name" property="name"/>
+    <result column="phone" property="phone"/>
+    <result column="city_name" property="cityName"/>
+    <result column="activity_type" property="activityType"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, member_id, item_id, create_time, remark, order_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_lottery_draw_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_lottery_draw_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    insert into x_lottery_draw_log (id, member_id, item_id, 
+      create_time, remark, order_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    insert into x_lottery_draw_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    update x_lottery_draw_log
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.activity.LotteryDrawLog" >
+    update x_lottery_draw_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      item_id = #{itemId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectLotteryLog" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT ldl.id,(SELECT c.`name` FROM x_city c WHERE c.`code` = ld.city_code) AS city_name ,ld.activity_type,
+  	ld.city_code, ldi.prize_name,m.`name`,m.phone,ldl.create_time,ldl.order_id
+	FROM x_lottery_draw_log ldl 
+	INNER JOIN x_lottery_draw_item ldi ON ldl.item_id = ldi.id 
+	INNER JOIN x_lottery_draw ld ON ld.id = ldi.lottery_draw_id 
+	INNER JOIN x_member m ON m.id = ldl.member_id 
+	WHERE 1 = 1 
+	<if test="activityType != null and activityType != ''">
+		and ld.activity_type like CONCAT('%',#{activityType,jdbcType=VARCHAR},'%')
+	</if>
+  	<if test="cityCode != null and cityCode !=''">
+		and ld.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+	<if test="memberName != null and memberName !=''">
+		and m.name like CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="memberPhone != null and memberPhone !=''">
+		and m.phone like CONCAT('%',#{memberPhone,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="bt != null and bt != '' ">
+  		 and ldl.create_time  <![CDATA[ >= ]]>  #{bt}
+  	</if>
+  	<if test="et != null and et != '' ">
+  		 and ldl.create_time  <![CDATA[ <= ]]>  #{et}
+  	</if>
+	<if test="prizeName != null and prizeName !=''">
+		 and ldi.prize_name like CONCAT('%',#{prizeName,jdbcType=VARCHAR},'%')
+	</if>
+	ORDER BY ldl.create_time DESC limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	SELECT count(1) FROM x_lottery_draw_log ldl 
+	INNER JOIN x_lottery_draw_item ldi ON ldl.item_id = ldi.id 
+	INNER JOIN x_lottery_draw ld ON ld.id = ldi.lottery_draw_id 
+	INNER JOIN x_member m ON m.id = ldl.member_id 
+	WHERE 1 = 1 
+	<if test="activityType != null and activityType != ''">
+		and ld.activity_type like CONCAT('%',#{activityType,jdbcType=VARCHAR},'%')
+	</if>
+  	<if test="cityCode != null and cityCode !=''">
+		and ld.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+	<if test="memberName != null and memberName !=''">
+		and m.name like CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="memberPhone != null and memberPhone !=''">
+		and m.phone like CONCAT('%',#{memberPhone,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="bt != null and bt != '' ">
+  		 and ldl.create_time  <![CDATA[ >= ]]>  #{bt}
+  	</if>
+  	<if test="et != null and et != '' ">
+  		 and ldl.create_time  <![CDATA[ <= ]]>  #{et}
+  	</if>
+	<if test="prizeName != null and prizeName !=''">
+		and ldi.prize_name like CONCAT('%',#{prizeName,jdbcType=VARCHAR},'%')
+	</if>
+  </select>
+</mapper>

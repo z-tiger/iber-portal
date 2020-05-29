@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.car.Car" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="bluetooth_no" property="bluetoothNo" jdbcType="VARCHAR" />
+    <result column="e_lpn" property="eLpn" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="seats" property="seats" jdbcType="VARCHAR" />
+    <result column="speed" property="speed" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="VARCHAR" />
+    <result column="ios_uuid" property="iosUuid" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="device_status" property="deviceStatus" jdbcType="VARCHAR" />
+    <result column="last_time_device_reporting" property="lastTimeDeviceReporting" jdbcType="TIMESTAMP" />
+    <result column="bluetooth_vestion_code" property="bluetoothVestionCode" jdbcType="VARCHAR" />
+    <result column="box_soft_type" property="boxSoftType" jdbcType="VARCHAR" />
+    <result column="box_version_code" property="boxVersionCode" jdbcType="VARCHAR" />
+    <result column="soft_type" property="softType" jdbcType="VARCHAR" />
+    <result column="version_code" property="versionCode" jdbcType="VARCHAR" />
+    <result column="version_name" property="versionName" jdbcType="VARCHAR" />
+    <result column="is_nav" property="isNav" jdbcType="VARCHAR" />
+    <result column="is_call" property="isCall" jdbcType="VARCHAR" />
+    <result column="is_trip_record" property="isTripRecord" jdbcType="VARCHAR" />
+    <result column="engineno" property="engineno" jdbcType="VARCHAR" />
+    <result column="classno" property="classno" jdbcType="VARCHAR" />
+    <result column="carImgUri" property="carImgUri" jdbcType="VARCHAR" />
+    <result column="annual_inspection_time" property="annualInspectionTime" jdbcType="TIMESTAMP" />
+    <result column="smallCarImgUri" property="smallCarImgUri"/>
+    <result column="insuranceFileUri" property="insuranceFileUri"/>
+    <result column="drivingLicenseFileUri" property="drivingLicenseFileUri"/>
+    <result column="insuranceStrongUri" property="insuranceStrongUri"/>
+    <result column="insuranceBusUri" property="insuranceBusUri"/>
+    <result column="status" property="status"/>
+    <result column="tbox_imei" property="tboxImei"/>
+    <result column="tbox_version" property="tboxVersion"/>
+    <result column="user_name" property="userName"/>
+    <result column="is_enterprise_bind" property="isEnterpriseBind"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, lpn, brand_name, city_code, bluetooth_no, e_lpn, type, color, seats, speed, mileage, 
+    ios_uuid, phone, owner, model_id,device_status,last_time_device_reporting,
+    bluetooth_vestion_code,box_soft_type,box_version_code,soft_type,version_code,version_name,
+    is_nav,is_call,is_trip_record,engineno,classno,carImgUri,annual_inspection_time,smallCarImgUri,
+    drivingLicenseFileUri,insuranceFileUri,insuranceStrongUri,insuranceBusUri,status,tbox_imei,tbox_version
+    ,is_enterprise_bind
+  </sql>
+  <select id="selectLpns" resultType="string">
+     select lpn from x_car ; 
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 车辆版本信息查询 -->
+  <resultMap id="CarVersionResultMap" type="com.iber.portal.vo.car.CarVersionVo">
+      <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+      <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+      <result column="carRearviewVersionSoftType" property="carRearviewVersionSoftType" jdbcType="VARCHAR" />
+      <result column="carRearviewVersionSoftTypeName" property="carRearviewVersionSoftTypeName" jdbcType="VARCHAR" />
+      <result column="carVersionCode" property="carVersionCode" jdbcType="VARCHAR" />
+      <result column="carRearviewVersionNo" property="carRearviewVersionNo" jdbcType="VARCHAR" />
+      <result column="carBoxVersionCode" property="carBoxVersionCode" jdbcType="VARCHAR" />
+      <result column="carBoxSoftTypeName" property="carBoxSoftTypeName" jdbcType="VARCHAR" />
+      <result column="carBoxSoftType" property="carBoxSoftType" jdbcType="VARCHAR" />
+      <result column="rearviewVersionId" property="rearviewVersionId" jdbcType="INTEGER" />
+      <result column="rearviewVersionRecord" property="rearviewVersionRecord" jdbcType="VARCHAR" />
+      <result column="rearviewVersionNo" property="rearviewVersionNo" jdbcType="VARCHAR" />
+      <result column="rearviewVersionName" property="rearviewVersionName" jdbcType="VARCHAR" />
+      <result column="rearviewBoxIsIncrement" property="rearviewBoxIsIncrement" jdbcType="VARCHAR" />
+      <result column="boxVersionId" property="boxVersionId" jdbcType="INTEGER" />
+      <result column="boxVersionRecord" property="boxVersionRecord" jdbcType="VARCHAR" />
+      <result column="boxVersionNo" property="boxVersionNo" jdbcType="VARCHAR" />
+      <result column="boxVersionName" property="boxVersionName" jdbcType="VARCHAR" />
+      <result column="boxIsIncrement" property="boxIsIncrement" jdbcType="VARCHAR" />
+      <result column="update_time" property="lastUploadTime" jdbcType="VARCHAR" />
+      <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+      <result column="status" property="status" jdbcType="VARCHAR" />
+      <result column="tboxVersion" property="tboxVersion" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 车辆管理查询 -->
+    <resultMap id="CarMrgVoResultMap" type="com.iber.portal.vo.car.CarMrgVo" extends="BaseResultMap">
+      <result column="car_run_id" property="carRunId" jdbcType="INTEGER" />
+      <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+      <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+      <result column="park_id" property="parkId" jdbcType="INTEGER" />
+      <result column="park_name" property="parkName" jdbcType="VARCHAR" />
+      <result column="gi_name" property="giName"/>
+      <result column="park_address" property="parkAddress" jdbcType="VARCHAR" />
+      <result column="pile_id" property="pileId" jdbcType="INTEGER" />
+      <result column="car_run_status" property="carRunStatus" jdbcType="VARCHAR" />
+      <result column="car_run_latitude" property="carRunLatitude" jdbcType="VARCHAR" />
+      <result column="car_run_longitude" property="carRunLongitude" jdbcType="VARCHAR" />
+      <result column="car_run_speed" property="carRunSpeed" jdbcType="VARCHAR" />
+      <result column="bat_status" property="batStatus" jdbcType="VARCHAR" />
+      <result column="door_status" property="doorStatus" jdbcType="VARCHAR" />
+      <result column="endurance_mileage" property="enduranceMileage" jdbcType="DOUBLE" />
+      <result column="rest_battery" property="restBattery" jdbcType="DOUBLE" />
+      <result column="member_id" property="memberId" jdbcType="INTEGER" />
+      <result column="is_online" property="isOnline" jdbcType="VARCHAR" />
+      <result column="car_type_type" property="carTypeType" jdbcType="VARCHAR" />
+      <result column="car_type_type_name" property="carTypeTypeName" jdbcType="VARCHAR" />
+      <result column="car_type_brance" property="carTypeBrance" jdbcType="VARCHAR" />
+      <result column="car_type_carriage" property="carTypeCarriage" jdbcType="INTEGER" />
+      <result column="car_type_seat_number" property="carTypeSeatNumber" jdbcType="INTEGER" />
+      <result column="car_type_endurance" property="carTypeEndurance" jdbcType="INTEGER" />
+      <result column="small_battery_charge_status" property="smallBatteryChargeStatus" jdbcType="VARCHAR" />
+      <result column="small_battery_voltage" property="smallBatteryVoltage" jdbcType="VARCHAR" />
+       <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+       <result column="carImgUri" property="carImgUri" jdbcType="VARCHAR" />
+       <result column="cpuTemperature" property="cpuTemperature" jdbcType="VARCHAR" />
+       <result column="brand_url" property="brandUrl"/>
+       <result column="smallCarImgUri" property="smallCarImgUri"/>
+       <result column="boxType" property="boxType"/>
+       <result column="preOffline" property="preOffline"/>
+       <result column="drivingLicenseFileUri" property="drivingLicenseFileUri"/>
+       <result column="insuranceFileUri" property="insuranceFileUri"/>
+       <result column="insuranceStrongUri" property="insuranceStrongUri"/>
+       <result column="insuranceBusUri" property="insuranceBusUri"/>
+       <result column="tf_card_exist" property="tfcard"/>
+       <result column="getui_status" property="getuiStatus"/>
+        <result column="tbox_imei" property="tboxImei"/>
+        <result column="tbox_version" property="tboxVersion"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="name" property="name"/>
+        <result column="memberPhone" property="phone"/>
+        <result column="level_code" property="levelCode"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="carAddress" property="carAddress"/>
+        <!-- 电量上线下线的电量阀值 -->
+        <result column="online_lower_limit" property="onlineLowerLimit"/>
+        <result column="offline_threshold" property="offlineThreshold"/>
+        <result column="type" property="type"/>
+        <result column="enterpriseRelationCarId" property="enterpriseRelationCarId"/>
+        <result column="enterpriseId" property="enterpriseId"/>
+        <result column="sysSmallBatteryVoltage" property="sysSmallBatteryVoltage"/>
+        <result column="areaName" property="areaName"/>
+  </resultMap>
+  <!-- 升级信息 -->
+  <resultMap id="VersionUpgradeResultMap" type="com.iber.portal.vo.car.CarUpgradeVo" >
+  	<result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="category_code" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="version_name" property="versionName" jdbcType="VARCHAR" />
+    <result column="version_url" property="versionUrl" jdbcType="VARCHAR" />
+    <result column="version_no" property="versionNo" jdbcType="VARCHAR" />
+    <result column="version_record" property="versionRecord" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_increment" property="isIncrement" jdbcType="VARCHAR" />
+    <result column="iccId" property="iccId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="selectAllCarMrgSQL_carRun">
+     run.box_type as boxType,
+     run.id car_run_id, run.order_id, run.lpn car_run_lpn, run.park_id, run.pile_id, run.status car_run_status, 
+     run.latitude car_run_latitude, run.longitude car_run_longitude, run.speed car_run_speed, run.bat_status, 
+    run.door_status, run.endurance_mileage, run.rest_battery, run.member_id, run.is_online,run.small_battery_voltage,run.small_battery_charge_status,update_time,
+    run.cpuTemperature,run.preOffline preOffline,run.tf_card_exist tf_card_exist,run.getui_status,run.address as carAddress,run.ICCID as iccId
+  </sql>
+   <sql id="selectAllCarMrgSQL_car" >
+    car.id, car.lpn, car.brand_name, car.city_code, car.bluetooth_no, car.e_lpn, car.type, car.color, car.seats, car.speed, car.mileage, 
+    car.ios_uuid, car.phone, car.owner, car.model_id,car.device_status,car.last_time_device_reporting,
+    car.bluetooth_vestion_code,car.box_soft_type,car.box_version_code,car.soft_type,car.version_code,car.version_name,
+    car.is_nav,car.is_call,car.is_trip_record,car.engineno,car.classno,car.carImgUri,car.annual_inspection_time,car.smallCarImgUri,/*car.boxType,*/
+    car.drivingLicenseFileUri,car.insuranceFileUri,car.insuranceStrongUri,car.insuranceBusUri,status,car.tbox_imei,car.tbox_version,car.remark,car.update_id
+  </sql>
+  
+  <sql id="selectAllCarMrgSQL_carType">
+    ctype.type car_type_type, ctype.type_name car_type_type_name, ctype.brance car_type_brance, 
+    ctype.carriage car_type_carriage, ctype.seat_number car_type_seat_number, ctype.endurance car_type_endurance,
+    online_lower_limit,offline_threshold
+  </sql>
+  <sql id="selectSmallBatteryVoltage">
+  (case when tab.car_type_type = 'EV160' then (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'EV160_small_battery_voltage' )
+   when tab.car_type_type = 'eQ' then (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'EQ_small_battery_voltage')
+   when tab.car_type_type = 'E200' then (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'E200_small_battery_voltage')
+   else (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'S50_small_battery_voltage') end)
+  </sql>
+  <select id="selectAllCarMrg" parameterType="java.util.Map" resultMap="CarMrgVoResultMap">
+   select tab.*,GROUP_CONCAT(gi.`name`) gi_name, park.name  park_name ,user.name user_name, park.address park_address,xa.area_name as areaName,
+   (case when tab.car_type_type = 'EV160' then (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'EV160_small_battery_voltage' )
+   when tab.car_type_type = 'eQ' then (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'EQ_small_battery_voltage')
+   when tab.car_type_type = 'E200' then (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'E200_small_battery_voltage')
+   else (SELECT xsp.`value` FROM x_sys_param xsp WHERE xsp.`key` = 'S50_small_battery_voltage') end) as sysSmallBatteryVoltage
+   from (
+    select <include refid="selectAllCarMrgSQL_carType" />, tt.* ,
+    (select name from x_city city where city.code = tt.city_code) city_name,
+    (select images from x_car_brand cb where cb.brand_name = tt.brand_name) brand_url  from (
+	     select <include refid="selectAllCarMrgSQL_car" />, t.* from x_car car ,  
+	       (
+            select  <include refid="selectAllCarMrgSQL_carRun" />,
+<!--          將就下吧 ,這條sql實在不想改-->
+       (CASE when run.order_id like '%DR%' then (SELECT order_status from x_long_rent_order where order_id = run.order_id order by create_time asc limit 1)
+             when run.order_id like '%TS%' then (SELECT `status` from x_time_share_order where order_id = run.order_id)
+             ELSE '' end) as orderStatus,
+       (CASE when run.order_id like '%DR%' then (SELECT m.`name` from x_member m INNER JOIN x_long_rent_order l on l.member_id = m.id where l.order_id = run.order_id order by l.create_time asc limit 1)
+             when run.order_id like '%TS%' then (SELECT m.`name` from x_member m INNER JOIN x_time_share_order o on m.id = o.member_id where o.order_id = run.order_id)
+             ELSE '' end) as `name`,
+       (CASE when run.order_id like '%DR%' then (SELECT m.phone memberPhone from x_member m INNER JOIN x_long_rent_order l on l.member_id = m.id where l.order_id = run.order_id order by l.create_time asc limit 1)
+             when run.order_id like '%TS%' then (SELECT m.phone memberPhone from x_member m INNER JOIN x_time_share_order o on m.id = o.member_id where o.order_id = run.order_id)
+             ELSE '' end) as memberPhone,
+       (CASE when run.order_id like '%DR%' then (SELECT m.level_code memberPhone from x_member m INNER JOIN x_long_rent_order l on l.member_id = m.id where l.order_id = run.order_id order by l.create_time asc limit 1)
+             when run.order_id like '%TS%' then (SELECT m.level_code memberPhone from x_member m INNER JOIN x_time_share_order o on m.id = o.member_id where o.order_id = run.order_id)
+             ELSE '' end) as level_code 
+            from x_car_run run 
+            ) t
+		    where car.lpn  = t.car_run_lpn
+		  		  <if test="shortcut !=null and shortcut!=''">
+		  		  	and CURRENT_DATE() &gt;= DATE_SUB( car.annual_inspection_time,INTERVAL 3 MONTH)
+		  		  </if> 
+				  <if test="lpn != null and lpn !='' ">
+				     and car.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+				  </if>
+                  <if test="brandName != null and brandName !='' ">
+                      and car.brand_name  LIKE CONCAT('%', #{brandName,jdbcType=VARCHAR},'%')
+                  </if>
+				  <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+				     and car.city_code = #{cityCode,jdbcType=VARCHAR}
+				  </if>
+				  <choose>
+				  	<when test="status != 1 and status != 0">
+				  		and car.status = 1
+				  	</when>
+				  	<when test="status != null and status != ''">
+				  		and car.status = #{status}
+				  	</when>
+				  </choose>
+				  <if test="carRunStatus!=null and carRunStatus!=''">
+	    			 <if test="carRunStatus =='run'">
+					  	 	and t.car_run_status in ('ordered','useCar','return') 
+				  	 </if>
+				  	 <if test="carRunStatus !='run'">
+				  	 	and t.car_run_status =#{carRunStatus,jdbcType=VARCHAR}
+				  	 </if>
+		    	 </if>
+		    	 <if test="preOffline != null and preOffline !='' ">
+				     and t.preOffline = #{preOffline,jdbcType=VARCHAR}
+				 </if>
+                  <if test="tfstatus != null and tfstatus !='' ">
+                      and t.tf_card_exist = #{tfstatus,jdbcType=INTEGER}
+                  </if>
+		  order by car.city_code ) tt , x_car_type ctype where ctype.id = tt.model_id
+	   ) tab left join  x_park park	 on tab.park_id = park.id
+        LEFT JOIN  x_area xa on xa.id = park.area_code
+        LEFT JOIN e_gridding_park_relation gpr ON park.id = gpr.park_id
+        LEFT JOIN e_gridding_info gi ON gi.id = gpr.gridding_id
+        left join x_sys_user user on user.id = tab.update_id where 1 = 1
+	  <if test="parkName != null and parkName != '' ">
+		  and park.name LIKE CONCAT('%', #{parkName,jdbcType=VARCHAR},'%')
+	   </if>
+      <if test="areaName != null and areaName != '' ">
+          and xa.id= #{areaName}
+      </if>
+	   <if test="isLook != null and isLook != ''">
+       	  <choose>
+       	  	<when test="isLook == 1">
+       	  		and tab.car_run_status in ('ordered','useCar','return','empty') 
+       	  		and (tab.rest_battery <![CDATA[  >= ]]> tab.offline_threshold 
+       	  		and	tab.small_battery_voltage+0 <![CDATA[  >= ]]> <include refid="selectSmallBatteryVoltage"/>)
+       	  	</when>
+       	  	<otherwise>
+       	  		AND (
+       	  		tab.car_run_status in ('repair','maintain','rescue','accident','charging') OR 
+       	  		(tab.car_run_status = 'empty' and (tab.rest_battery<![CDATA[<]]> tab.offline_threshold OR tab.small_battery_voltage+0 <![CDATA[<]]> 
+       	  		<include refid="selectSmallBatteryVoltage"/>) )
+       	  		)
+       	  	</otherwise>
+       	  </choose>
+	  	</if>
+	   GROUP BY tab.id
+	   order by 
+	   <if test="orderRule != null and orderRule=='DESC'">
+	      tab.rest_battery DESC,
+	   </if>
+	   <if test="orderRule != null and orderRule=='ASC'">
+	      tab.rest_battery ASC,
+	   </if>
+	   <if test="deviceUploadOrderRule != null and deviceUploadOrderRule !=''">
+	      tab.update_time ASC,
+	   </if>
+	   <if test="batteryVOrderRule != null and batteryVOrderRule !=''">
+	      tab.small_battery_voltage+0 ASC,
+	   </if>
+	   field(car_run_status, 'empty','ordered', 'useCar', 'return','maintain','repair')
+	   <if test="offset != null and rows != null">
+	  	limit #{offset,jdbcType=INTEGER} ,  #{rows,jdbcType=INTEGER}
+	   </if>
+  </select>
+
+  <select id="selectAllCarMrgRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+     select count(1) from (
+            select tab.*, GROUP_CONCAT(gi.`name`) gi_name,park.name  park_name , park.address park_address from (
+		    select <include refid="selectAllCarMrgSQL_carType" />, tt.* , (select name from x_city city where city.code = tt.city_code) city_name from (
+			     select <include refid="selectAllCarMrgSQL_car" />, t.* from x_car car ,  (
+				    select  <include refid="selectAllCarMrgSQL_carRun" /> from x_car_run run ) t
+				  where car.lpn  = t.car_run_lpn
+				  		  <if test="shortcut !=null and shortcut!=''">
+		  		  			and CURRENT_DATE() &gt;= DATE_SUB( car.annual_inspection_time,INTERVAL 3 MONTH)
+		  		  		  </if>
+						  <if test="lpn != null and lpn !='' ">
+						     and car.lpn LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+						  </if>
+                          <if test="brandName != null and brandName !='' ">
+                              and car.brand_name  LIKE CONCAT('%', #{brandName,jdbcType=VARCHAR},'%')
+                          </if>
+						  <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+						     and car.city_code = #{cityCode,jdbcType=VARCHAR}
+						  </if>
+						  <choose>
+						  	<when test="status != 1 and status != 0">
+						  		and car.status = 1
+						  	</when>
+						  	<when test="status != null and status != ''">
+						  		and car.status = #{status}
+						  	</when>
+						  </choose>
+<!-- 						   <if test="status != null and status != ''"> -->
+<!-- 						  	 and car.status = #{status} -->
+<!-- 						  </if> -->
+						  <if test="carRunStatus!=null and carRunStatus!=''">
+						  	 <if test="carRunStatus =='run'">
+						  	 	and t.car_run_status in ('ordered','useCar','return') 
+						  	 </if>
+						  	 <if test="carRunStatus !='run'">
+						  	 	and t.car_run_status =#{carRunStatus,jdbcType=VARCHAR}
+						  	 </if>
+		    	 		</if>
+		    	 		<if test="preOffline != null and preOffline !='' ">
+				                and t.preOffline = #{preOffline,jdbcType=VARCHAR}
+				        </if>
+                        <if test="tfstatus != null and tfstatus !='' ">
+                          and t.tf_card_exist = #{tfstatus,jdbcType=INTEGER}
+                        </if>
+				  order by car.city_code ) tt , x_car_type ctype where ctype.id = tt.model_id 
+			   ) tab left join  x_park park	on tab.park_id = park.id
+                LEFT JOIN  x_area xa on xa.id = park.area_code
+			   	LEFT JOIN e_gridding_park_relation gpr ON park.id = gpr.park_id 
+	 			LEFT JOIN e_gridding_info gi ON gi.id = gpr.gridding_id
+			    left join x_sys_user user on user.id = tab.update_id where 1 = 1
+			  <if test="parkName != null and parkName != '' ">
+					and park.name LIKE CONCAT('%', #{parkName,jdbcType=VARCHAR},'%') 
+			   </if>
+              <if test="areaName != null and areaName != '' ">
+                  and xa.id= #{areaName}
+              </if>
+			  <if test="isLook != null and isLook != ''">
+		       	  <choose>
+		       	  	<when test="isLook == 1">
+		       	  		and tab.car_run_status in ('ordered','useCar','return','empty') 
+		       	  		and (tab.rest_battery <![CDATA[  >= ]]> tab.offline_threshold and tab.small_battery_voltage+0 <![CDATA[  >= ]]> <include refid="selectSmallBatteryVoltage"/>)
+		       	  	</when>
+		       	  	<otherwise>
+		       	  		AND (
+		       	  		tab.car_run_status in ('repair','maintain','rescue','accident','charging') OR 
+		       	  		(tab.car_run_status = 'empty' and (tab.rest_battery<![CDATA[<]]> tab.offline_threshold OR tab.small_battery_voltage+0 <![CDATA[<]]> <include refid="selectSmallBatteryVoltage"/>) ))
+		       	  	</otherwise>
+		       	  </choose>
+			  	</if>
+			   GROUP BY tab.id
+     ) page
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.car.Car" >
+    insert into x_car (id, lpn, brand_name, 
+      city_code, bluetooth_no, e_lpn, 
+      type, color, seats, 
+      speed, mileage, ios_uuid, 
+      phone, owner, model_id,
+      device_status,last_time_device_reporting,
+      bluetooth_vestion_code,box_soft_type,box_version_code,
+      soft_type,version_code,version_name,
+      is_nav,is_call,is_trip_record,
+      engineno,classno
+      )
+    values (#{id,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, 
+      #{cityCode,jdbcType=VARCHAR}, #{bluetoothNo,jdbcType=VARCHAR}, #{eLpn,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{seats,jdbcType=VARCHAR}, 
+      #{speed,jdbcType=VARCHAR}, #{mileage,jdbcType=VARCHAR}, #{iosUuid,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{modelId,jdbcType=INTEGER},
+      #{deviceStatus,jdbcType=VARCHAR}, #{lastTimeDeviceReporting,jdbcType=TIMESTAMP},
+      #{bluetoothVestionCode,jdbcType=VARCHAR}, #{boxSoftType,jdbcType=VARCHAR}, #{boxVersionCode,jdbcType=VARCHAR},
+      #{softType,jdbcType=VARCHAR}, #{versionCode,jdbcType=VARCHAR},#{versionName,jdbcType=VARCHAR},
+      #{isNav,jdbcType=VARCHAR}, #{isCall,jdbcType=VARCHAR},#{isTripRecord,jdbcType=VARCHAR},
+      #{engineno,jdbcType=VARCHAR},#{classno,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.car.Car" >
+    insert into x_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="brandName != null" >
+        brand_name,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="bluetoothNo != null" >
+        bluetooth_no,
+      </if>
+      <if test="eLpn != null" >
+        e_lpn,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="seats != null" >
+        seats,
+      </if>
+      <if test="speed != null" >
+        speed,
+      </if>
+      <if test="mileage != null" >
+        mileage,
+      </if>
+      <if test="iosUuid != null" >
+        ios_uuid,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="owner != null" >
+        owner,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+     <if test="deviceStatus != null" >
+       device_status,
+      </if>
+      <if test="lastTimeDeviceReporting != null" >
+        last_time_device_reporting,
+      </if>
+      <if test="bluetoothVestionCode != null" >
+        bluetooth_vestion_code,
+      </if> 
+      <if test="boxSoftType != null" >
+        box_soft_type,
+      </if>
+      <if test="boxVersionCode != null" >
+        box_version_code,
+      </if>
+      <if test="softType != null" >
+        soft_type,
+      </if>
+      <if test="versionCode != null" >
+        version_code,
+      </if>
+      <if test="versionName != null" >
+        version_name,
+      </if>
+      <if test="isNav != null" >
+        is_nav,
+      </if>
+      <if test="isCall != null" >
+        is_call,
+      </if>
+      <if test="isTripRecord != null" >
+        is_trip_record,
+      </if> 
+      <if test="engineno != null" >
+        engineno,
+      </if>
+      <if test="classno != null" >
+        classno,
+      </if>
+      <if test="carImgUri != null" >
+        carImgUri,
+      </if>
+      <if test="annualInspectionTime != null" >
+        annual_inspection_time,
+      </if>
+      <if test="smallCarImgUri != null">
+      	smallCarImgUri,
+      </if>
+
+      <if test="drivingLicenseFileUri != null" >
+        drivingLicenseFileUri,
+      </if>
+      <if test="insuranceFileUri != null">
+      	insuranceFileUri,
+      </if>
+      <if test="insuranceStrongUri != null">
+      	insuranceStrongUri,
+      </if>
+      <if test="insuranceBusUri != null">
+      	insuranceBusUri,
+      </if>
+      <if test="status != null">
+      	status,
+      </if>
+      <if test="tboxImei != null">
+          tbox_imei,
+      </if>
+      <if test="tboxVersion != null">
+          tbox_version,
+      </if>
+        <if test="isEnterpriseBind != null">
+            is_enterprise_bind,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null" >
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothNo != null" >
+        #{bluetoothNo,jdbcType=VARCHAR},
+      </if>
+      <if test="eLpn != null" >
+        #{eLpn,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="seats != null" >
+        #{seats,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="mileage != null" >
+        #{mileage,jdbcType=VARCHAR},
+      </if>
+      <if test="iosUuid != null" >
+        #{iosUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if> 
+       <if test="deviceStatus != null" >
+       #{deviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTimeDeviceReporting != null" >
+       #{lastTimeDeviceReporting,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bluetoothVestionCode != null" >
+       #{bluetoothVestionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="boxSoftType != null" >
+       #{boxSoftType,jdbcType=VARCHAR},
+      </if>
+      <if test="boxVersionCode != null" >
+       #{boxVersionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="softType != null" >
+       #{softType,jdbcType=VARCHAR},
+      </if>
+      <if test="versionCode != null" >
+       #{versionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null" >
+       #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="isNav != null" >
+       #{isNav,jdbcType=VARCHAR},
+      </if>
+      <if test="isCall != null" >
+       #{isCall,jdbcType=VARCHAR},
+      </if>
+      <if test="isTripRecord != null" >
+       #{isTripRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="engineno != null" >
+       #{engineno,jdbcType=VARCHAR},
+      </if>
+      <if test="classno != null" >
+       #{classno,jdbcType=VARCHAR},
+      </if>
+      <if test="carImgUri != null" >
+       #{carImgUri,jdbcType=VARCHAR},
+      </if>
+      <if test="annualInspectionTime != null" >
+       #{annualInspectionTime,jdbcType=VARCHAR},
+      </if>
+      <if test="smallCarImgUri != null">
+      	#{smallCarImgUri},
+      </if>
+      <if test="drivingLicenseFileUri != null" >
+       #{drivingLicenseFileUri,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceFileUri != null">
+      	#{insuranceFileUri,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceStrongUri != null">
+      	#{insuranceStrongUri,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceBusUri != null">
+      	#{insuranceBusUri,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+      	#{status},
+      </if>
+      <if test="tboxImei != null">
+        #{tboxImei},
+      </if>
+      <if test="tboxVersion != null">
+        #{tboxVersion},
+      </if>
+        <if test="isEnterpriseBind != null">
+            #{isEnterpriseBind},
+        </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.Car" >
+    update x_car
+    <set >
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothNo != null" >
+        bluetooth_no = #{bluetoothNo,jdbcType=VARCHAR},
+      </if>
+      <if test="eLpn != null" >
+        e_lpn = #{eLpn,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="seats != null" >
+        seats = #{seats,jdbcType=VARCHAR},
+      </if>
+      <if test="speed != null" >
+        speed = #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="mileage != null" >
+        mileage = #{mileage,jdbcType=VARCHAR},
+      </if>
+      <if test="iosUuid != null" >
+        ios_uuid = #{iosUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        owner = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},brand_name = (select brance from x_car_type where id = #{modelId,jdbcType=INTEGER}),
+      </if>
+       <if test="deviceStatus != null" >
+       device_status = #{deviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTimeDeviceReporting != null" >
+       last_time_device_reporting = #{lastTimeDeviceReporting,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bluetoothVestionCode != null" >
+      bluetooth_vestion_code =  #{bluetoothVestionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="boxSoftType != null" >
+       box_soft_type = #{boxSoftType,jdbcType=VARCHAR},
+      </if>
+      <if test="boxVersionCode != null" >
+       box_version_code = #{boxVersionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="softType != null" >
+       soft_type = #{softType,jdbcType=VARCHAR},
+      </if>
+      <if test="versionCode != null" >
+       version_code = #{versionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null" >
+       version_name = #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="isNav != null" >
+       is_nav = #{isNav,jdbcType=VARCHAR},
+      </if>
+      <if test="isCall != null" >
+       is_call = #{isCall,jdbcType=VARCHAR},
+      </if>
+      <if test="isTripRecord != null" >
+       is_trip_record = #{isTripRecord,jdbcType=VARCHAR},
+      </if>
+      <if test="engineno != null" >
+       engineno = #{engineno,jdbcType=VARCHAR},
+      </if>
+      <if test="classno != null" >
+       classno = #{classno,jdbcType=VARCHAR},
+      </if>
+       <if test="carImgUri != null" >
+       carImgUri = #{carImgUri,jdbcType=VARCHAR},
+      </if>
+      <if test="smallCarImgUri != null" >
+       smallCarImgUri = #{smallCarImgUri,jdbcType=VARCHAR},
+      </if>
+      <if test="annualInspectionTime != null" >
+        annual_inspection_time =#{annualInspectionTime},
+      </if>
+      <if test="drivingLicenseFileUri != null" >
+        drivingLicenseFileUri = #{drivingLicenseFileUri,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceFileUri != null">
+      	insuranceFileUri = #{insuranceFileUri,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceStrongUri != null">
+      	insuranceStrongUri = #{insuranceStrongUri,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceBusUri != null">
+      	insuranceBusUri = #{insuranceBusUri,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+      	status = #{status},
+      </if>
+      <if test="tboxImei != null" >
+          tbox_imei = #{tboxImei,jdbcType=VARCHAR},
+      </if>
+      <if test="tboxVersion != null">
+          tbox_version = #{tboxVersion,jdbcType=VARCHAR},
+      </if>
+        <if test="isEnterpriseBind != null">
+            is_enterprise_bind = #{isEnterpriseBind},
+        </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.car.Car" >
+    update x_car
+    set lpn = #{lpn,jdbcType=VARCHAR},
+      brand_name = #{brandName,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      bluetooth_no = #{bluetoothNo,jdbcType=VARCHAR},
+      e_lpn = #{eLpn,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      seats = #{seats,jdbcType=VARCHAR},
+      speed = #{speed,jdbcType=VARCHAR},
+      mileage = #{mileage,jdbcType=VARCHAR},
+      ios_uuid = #{iosUuid,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=INTEGER},
+      device_status = #{deviceStatus,jdbcType=VARCHAR},
+      last_time_device_reporting = #{lastTimeDeviceReporting,jdbcType=TIMESTAMP},
+      bluetooth_vestion_code =  #{bluetoothVestionCode,jdbcType=VARCHAR},
+      box_soft_type = #{boxSoftType,jdbcType=VARCHAR},
+      box_version_code = #{boxVersionCode,jdbcType=VARCHAR},
+      soft_type = #{softType,jdbcType=VARCHAR},
+      version_code = #{versionCode,jdbcType=VARCHAR},
+      version_name = #{versionName,jdbcType=VARCHAR},
+      is_nav = #{isNav,jdbcType=VARCHAR},
+      is_call = #{isCall,jdbcType=VARCHAR},
+      is_trip_record = #{isTripRecord,jdbcType=VARCHAR},
+      engineno = #{engineno,jdbcType=VARCHAR},
+      classno = #{classno,jdbcType=VARCHAR},
+      carImgUri = #{carImgUri,jdbcType=VARCHAR}
+      is_enterprise_bind = #{isEnterpriseBind}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!--添加了一个限定条件car.status =1 如果车辆是可用状态就显示-->
+    <select id="queryCarVersion" resultMap="CarVersionResultMap" parameterType="java.util.Map" >
+    	SELECT
+			car.lpn,
+			( SELECT NAME FROM x_city WHERE CODE = car.city_code ) cityName,
+			(select `name` from x_versions_category where `code` = car.soft_type ) carRearviewVersionSoftTypeName ,
+			car.soft_type carRearviewVersionSoftType,
+			car.version_code carVersionCode,
+			car.tbox_version tboxVersion,
+			car.version_name carRearviewVersionNo ,
+			car.box_version_code carBoxVersionCode,
+			(select `name` from x_versions_category where `code` = car.box_soft_type ) carBoxSoftTypeName ,
+			car.box_soft_type carBoxSoftType,
+			rearview.id rearviewVersionId,
+			rearview.version_record rearviewVersionRecord,
+			rearview.version_no rearviewVersionNo,
+			rearview.version_name rearviewVersionName,
+			rearview.is_increment rearviewBoxIsIncrement,
+			box.id boxVersionId,
+			box.version_record boxVersionRecord,
+			box.version_no boxVersionNo,
+			box.version_name boxVersionName,
+			box.is_increment boxIsIncrement,
+            xcr.update_time update_time,
+            car.brand_name brand_name,
+            xcr.status status
+		FROM
+			x_car car
+        left JOIN  x_car_run xcr on (xcr.lpn = car.lpn)
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				x_versions_rearview t
+			WHERE
+				t.version_record = (
+					SELECT
+						max(version_record)
+					FROM
+						x_versions_rearview x
+					WHERE
+						x.category_code = t.category_code
+				)
+		) rearview ON rearview.category_code = car.soft_type
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				x_versions_box t
+			WHERE
+				t.version_no = (
+					SELECT
+						max(version_record)
+					FROM
+						x_versions_box x
+					WHERE
+						x.category_code = t.category_code
+				)
+		) box ON box.category_code = car.box_soft_type
+		<trim prefixOverrides="and">
+	     <where>
+               car.status = 1
+			  <if test="lpn != null and lpn !='' ">
+				 	AND car.lpn LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+			  </if>
+			  <if test="cityCode != null and cityCode !='' ">
+					AND car.city_code = #{cityCode,jdbcType=VARCHAR}
+			  </if>
+			  <if test="tboxVersion != null and tboxVersion != ''">
+                 	AND car.tbox_version = #{tboxVersion}
+             </if>
+             <if test="brandName != null and brandName !='' ">
+                 AND car.brand_name LIKE CONCAT('%', #{brandName,jdbcType=VARCHAR},'%')
+             </if>
+             <if test="status!=null and status!=''">
+                 <if test="status =='run'">
+                     and xcr.status in ('ordered','useCar','return')
+                 </if>
+                 <if test="status !='run'">
+                     and xcr.status =#{status,jdbcType=VARCHAR}
+                 </if>
+             </if>
+	     </where>
+	   </trim>
+        order by xcr.update_time desc
+	    limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="queryCarCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+  	select count(1) from x_car car
+    left JOIN  x_car_run xcr on (xcr.lpn = car.lpn)
+	<trim prefixOverrides="and">
+	     <where>
+             car.status = 1
+			  <if test="lpn != null and lpn !='' ">
+				 	AND car.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+			  </if>
+			  <if test="cityCode != null and cityCode !='' ">
+					AND car.city_code = #{cityCode,jdbcType=VARCHAR}
+			  </if>
+             <if test="tboxVersion != null and tboxVersion != ''">
+                 	AND car.tbox_version = #{tboxVersion}
+             </if>
+             <if test="brandName != null and brandName !='' ">
+                 AND car.brand_name LIKE CONCAT('%', #{brandName,jdbcType=VARCHAR},'%')
+             </if>
+             <if test="status!=null and status!=''">
+                 <if test="status =='run'">
+                     and xcr.status in ('ordered','useCar','return')
+                 </if>
+                 <if test="status !='run'">
+                     and xcr.status =#{status,jdbcType=VARCHAR}
+                 </if>
+             </if>
+	     </where>
+	   </trim>
+  </select>
+  
+ <select id="queryCarBoxUpgradeVo" resultMap="VersionUpgradeResultMap" parameterType="java.util.Map" >
+ 	SELECT
+		car.lpn,
+		box.*
+	FROM
+		x_car car
+	LEFT JOIN (
+		SELECT
+			*
+		FROM
+			x_versions_box t
+		WHERE
+			t.version_no = (
+				SELECT
+					max(version_no)
+				FROM
+					x_versions_box x
+				WHERE
+					x.category_code = t.category_code
+			)
+	) box ON box.category_code = car.box_soft_type
+	WHERE
+	car.box_version_code &lt; box.version_no	
+	<if test="cityCode != null and cityCode !='' ">
+			AND car.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+ </select> 
+ 
+ <select id="queryCarRearviewUpgradeVo" resultMap="VersionUpgradeResultMap" parameterType="java.util.Map" >
+ 	SELECT
+		car.lpn,
+		rearview.*
+	FROM
+		x_car car
+	LEFT JOIN (
+		SELECT
+			*
+		FROM
+			x_versions_rearview t
+		WHERE
+			t.version_record = (
+				SELECT
+					max(version_record)
+				FROM
+					x_versions_rearview x
+				WHERE
+					x.category_code = t.category_code
+			)
+	) rearview ON rearview.category_code = car.soft_type
+	WHERE
+		car.version_code &lt; rearview.version_record
+	<if test="cityCode != null and cityCode !='' ">
+		AND car.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+ </select> 
+ 
+   <select id="selectByLpn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car
+    where lpn = #{lpn,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllPushCar" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car
+    where 1=1
+    <if test="cityCode != null and cityCode !='' ">
+		AND city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+  </select>
+  
+  <!-- 获取所有的车辆信息 用于定时任务查询车辆年检时间 -->
+  <select id="getAllCarMrg" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x_car where CURRENT_DATE() &gt;= DATE_SUB( annual_inspection_time,INTERVAL 3 MONTH);
+  </select>
+    <update id="updateCarPreOfflineStatus">
+    update x_car_run
+    set preOffline = #{preOffline,jdbcType=VARCHAR}
+    where lpn = #{lpn,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectAllCarLpns" resultType="java.lang.String">
+     select lpn from x_car
+  </select>
+  <update id="updateStatus">
+  	update x_car c set c.status = #{status},c.remark = #{remark},c.update_id = #{updateId},c.car_stop_time = #{carStopTime} where c.lpn = #{lpn}
+  </update>
+<!--根据企业id查询企业所属车辆信息-->
+    <select id="getCayListByEnterpriseID" resultMap="CarMrgVoResultMap" parameterType="map">
+        SELECT car.id,car.lpn,car.brand_name,rc.id as enterpriseRelationCarId,
+        e.id as enterpriseId,
+        (SELECT city.name FROM x_car c JOIN x_city city ON c.city_code= city.code
+        WHERE c.id =car.id )
+         as cityName
+        FROM x_car car
+        JOIN x_enterprise_relation_car rc ON car.id = rc.car_id
+        JOIN x_enterprise e ON rc.enterprise_id=e.id
+        WHERE e.id = #{enterpriseID}
+        limit #{pageNum},#{pageSize}
+    </select>
+<!--根据企业id查询企业所属车辆总数-->
+    <select id="getCarListByEnterpriseIDNumber" resultType="int" parameterType="map">
+        SELECT COUNT(1) AS totalNum
+        FROM x_car car
+        JOIN x_enterprise_relation_car rc ON car.id = rc.car_id
+        JOIN x_enterprise e ON rc.enterprise_id=e.id
+        WHERE e.id = #{enterpriseID}
+    </select>
+    <!--查询可用关联企业的车辆-->
+    <select id="getUnusedEnterpriseCarsList" parameterType="map" resultMap="BaseResultMap"  >
+        SELECT id,lpn ,brand_name FROM x_car
+        WHERE status = 1
+        <if test="lpn !=null and lpn!=''">
+            and lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+        </if>
+       /* WHERE id NOT IN (SELECT car.id FROM x_car car JOIN x_enterprise_relation_car rc ON car.id = rc.car_id
+        JOIN x_enterprise e ON rc.enterprise_id=e.id)*/
+        limit #{pageNum},#{pageSize}
+    </select>
+    <select id="getUnsedEnterpriseCarsTotal" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM x_car
+        WHERE status = 1
+        <if test="lpn !=null and lpn!=''">
+            and lpn LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+        </if>
+      /*  WHERE id NOT IN (SELECT car.id FROM x_car car JOIN x_enterprise_relation_car rc ON car.id = rc.car_id
+        JOIN x_enterprise e ON rc.enterprise_id=e.id)*/
+    </select>
+    <select id="selectEnterpriseCarRelations" parameterType="int" resultType="java.util.Map">
+        SELECT id,car_id ,enterprise_id FROM x_enterprise_relation_car WHERE enterprise_id=#{enterpriseID}
+    </select>
+    <select id="getEnterpriseCarRelationMap" parameterType="int" resultType="java.util.Map">
+        SELECT id,car_id,enterprise_id FROM x_enterprise_relation_car
+        WHERE enterprise_id= #{enterpriseId}
+        and car_id = #{carId}
+        limit 1;
+    </select>
+    <select id="selectEnterpriseCarRelationsByCarID" resultType="java.util.Map">
+         SELECT id,car_id ,enterprise_id FROM x_enterprise_relation_car WHERE car_id=#{carid}
+    </select>
+    <!--添加企业所属的车辆-->
+    <insert id="addEnterpriseCar" parameterType="map">
+        INSERT INTO x_enterprise_relation_car (car_id, enterprise_id)
+        VALUES (#{carID},#{enterpriseID})
+    </insert>
+
+    <!--删除企业所属的车辆-->
+    <delete id="removeEnterpriseCar" parameterType="int">
+        DELETE FROM x_enterprise_relation_car
+        WHERE id = #{id}
+    </delete>
+    <!--批量删除企业所属的车辆-->
+
+    <delete id="batchRemoveEnterpriseCar" parameterType="java.util.List">
+        DELETE FROM x_enterprise_relation_car
+        WHERE id IN
+        <foreach item="id" collection="array" separator="," open="(" close=")" index="">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

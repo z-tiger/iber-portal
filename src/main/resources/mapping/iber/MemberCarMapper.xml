@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.base.MemberCarMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.base.MemberCar" >
+	<result column="id" property="id"/>
+	<result column="memberId" property="memberId"/>
+	<result column="lpn" property="lpn"/>
+	<result column="url" property="url"/>
+	<result column="checkStatus" property="checkStatus"/>
+	<result column="checkReason" property="checkReason"/>
+	<result column="createTime" property="createTime"/>
+	<result column="updateTime" property="updateTime"/>
+	<result column="member_name" property="memberName"/>
+</resultMap>
+       
+<!-- x_member_car table all fields -->
+<sql id="Base_Column_List" >
+	 id,memberId,lpn,url,checkStatus,checkReason,createTime,updateTime
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.base.MemberCar" >
+  insert into x_member_car(id,memberId,lpn,url,checkStatus,checkReason,createTime,updateTime)
+ values(#{id},#{memberId},#{lpn},#{url},#{checkStatus},#{checkReason},#{createTime},#{updateTime})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_member_car where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_member_car set lpn=#{lpn},checkStatus=#{checkStatus},checkReason=#{checkReason},updateTime=now() where id=#{id}
+</update>
+
+<!-- 根据id查询 会员充电车牌管理 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_member_car where id = #{id}
+</select>
+
+<!-- 会员充电车牌管理 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_member_car c where 1=1 
+	<if test="lpn != null and lpn != '' ">
+		AND c.lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%')
+	</if>
+	<if test="checkStatus != null and checkStatus != '' ">
+		AND c.checkStatus=#{checkStatus,jdbcType=VARCHAR} 
+	</if>
+	<if test="memberName != null and memberName != '' ">
+		AND c.memberId in(select m.id from x_member m where m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%'))
+	</if>
+</select>
+  	
+<!-- 查询会员充电车牌管理列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="Base_Column_List"/>,
+	(select m.name from x_member m where m.id=c.memberId)member_name 
+	from x_member_car c where 1 =1
+	<if test="lpn != null and lpn != '' ">
+		AND c.lpn LIKE CONCAT(CONCAT('%', #{lpn,jdbcType=VARCHAR}),'%')
+	</if>
+	<if test="checkStatus != null and checkStatus != '' ">
+		AND c.checkStatus=#{checkStatus,jdbcType=VARCHAR} 
+	</if>
+	<if test="memberName != null and memberName != '' ">
+		AND c.memberId in(select m.id from x_member m where m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%'))
+	</if>
+	order by updateTime desc
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER} 
+</select>
+  	
+</mapper>   

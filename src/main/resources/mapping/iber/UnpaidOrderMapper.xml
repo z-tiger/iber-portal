@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.order.UnpaidOrderMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.vo.order.UnpaidMemberVo">
+		<result column="member_id" property="memberId" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="INTEGER" ></result>
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查时租、日租、充电 结束后7天还未支付的会员  -->
+	<select id="queryMemberWithUnpaidOrder" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT  member_id , money, order_id FROM
+			(
+			SELECT  member_id, end_time, money, order_id FROM (
+					(
+						SELECT member_id, end_time, pay_money money, order_id FROM
+						x_time_share_pay
+						WHERE pay_status = 'noPay'
+					)
+					UNION ALL
+					(
+						SELECT o.member_id, o.actual_return_car_time end_time,
+						 e.order_money money, o.order_id FROM
+						  x_day_rent_order o 
+						INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id 
+						AND e.pay_status = 'noPay' AND e.type = 'timeoutRent'
+					)
+					UNION ALL
+					(
+						SELECT member_id, end_time, order_money money, chargeSeq order_id FROM
+						 c_charging_order WHERE charging_status = 'noPay' AND userType = 'member'
+					)
+				) o WHERE NOW() <![CDATA[ >  ]]>  DATE_ADD(o.end_time, INTERVAL #{days} DAY)
+			) m
+	</select>
+	
+	<!-- 查时租、日租、充电 结束后7天还未支付的会员  -->
+	<select id="queryNoPayMemberByBetwentDay" resultMap="BaseResultMap" >
+		SELECT  member_id , end_time, money, order_id, phone FROM
+			(
+			SELECT  member_id, end_time, money, order_id , m.phone FROM (
+					(
+						SELECT member_id, end_time, pay_money money, order_id FROM
+						x_time_share_pay
+						WHERE pay_status = 'noPay'
+					)
+					UNION ALL
+					(
+						SELECT o.member_id, o.actual_return_car_time end_time,
+						 e.order_money money, o.order_id FROM
+						  x_day_rent_order o 
+						INNER JOIN x_day_rent_order_extend e ON e.order_id = o.order_id 
+						AND e.pay_status = 'noPay' AND e.type = 'timeoutRent'
+					)
+					UNION ALL
+					(
+						SELECT member_id, end_time, order_money money, chargeSeq order_id FROM
+						 c_charging_order WHERE charging_status = 'noPay' AND userType = 'member'
+					)
+				) o left join x_member m on o.member_id = m.id  
+					WHERE NOW() <![CDATA[ >=  ]]>  DATE_ADD(o.end_time, INTERVAL #{startDay} DAY) 
+					and  NOW() <![CDATA[ <  ]]>  DATE_ADD(o.end_time, INTERVAL #{endDay} DAY)
+			) m
+	</select>
+
+	
+
+</mapper>

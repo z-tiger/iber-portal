@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sys.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sys.SysUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="enterprise_name" property="enterpriseName" jdbcType="INTEGER" />
+    <result column="session_change" property="sessionChange" jdbcType="VARCHAR" />
+    <result column="password_update_time" property="passwordUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, name, account, password, phone, status, email, city_code,  create_user, create_time, 
+    update_user, update_time, enterprise_id, session_change,password_update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = a.city_code) city_name
+    from x_sys_user a
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String">
+     select 
+     <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = a.city_code) city_name
+    from x_sys_user a
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updatePwd">
+    update x_sys_user set password = #{np,jdbcType=VARCHAR} 
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAllByName" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/> from x_sys_user where  name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+  </select>
+    <select id="selectAllOnTheJob" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from x_sys_user u where u.status='1'
+    </select>
+   <select id="getAll" resultMap="BaseResultMap" parameterType="map" >
+    select 
+        id, name, account, phone, status, email, city_code,  create_user, create_time, 
+    update_user, update_time, enterprise_id,
+    (select name from x_city c where c.code = a.city_code) city_name
+    from x_sys_user a
+   <trim prefixOverrides="and">
+       <where>
+          a.enterprise_id is null
+           <if test="status!= null and status!= '' ">
+               and a.status = #{status}
+           </if>
+           <if test="name!= null and name!= '' ">
+               and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+           </if>
+           <if test="account!=null and account!= '' ">
+               and a.account LIKE CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}),'%')
+           </if>
+       </where>
+   </trim>
+    order by id limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="map">
+    select count(id) as counts from x_sys_user
+      <where>
+          1 = 1
+          AND  enterprise_id is null
+          <if test="status= null and status!= '' ">
+              and status = #{status};
+          </if>
+          <if test="name!= null and name!= '' ">
+              and name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+          </if>
+          <if test="account!=null and account!= '' ">
+              and account LIKE CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}),'%')
+          </if>
+      </where>
+  </select>
+    <select id="getEntepriseSysUserList" resultMap="BaseResultMap" parameterType="map" >
+        select
+        a.id, a.name, a.account, a.phone, a.status, a.email, a.city_code,  a.create_user, a.create_time,
+        a.update_user, a.update_time, a.enterprise_id,
+        (select name from x_city c where c.code = a.city_code) city_name,
+        e.enterprise_name
+        from x_sys_user a
+        LEFT JOIN x_enterprise e ON a.enterprise_id =e.id
+        <where>
+            e.p_id = 0
+            AND  a.enterprise_id is NOT null
+            <if test="enterpriseName!= null and enterpriseName!= '' ">
+                and e.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="name!= null and name!= '' ">
+                and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="account!=null and account!= '' ">
+                and a.account LIKE CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+        order by id limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+
+    </select>
+    <select id="getTotalEnterpriseSysUser" resultType="java.lang.Integer">
+        SELECT count(1) FROM x_sys_user a
+        LEFT JOIN x_enterprise e ON a.enterprise_id =e.id
+        <where>
+            e.p_id = 0
+            AND  a.enterprise_id is NOT null
+            <if test="enterpriseName!= null and enterpriseName!= '' ">
+                and e.enterprise_name LIKE CONCAT(CONCAT('%', #{enterpriseName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="name!= null and name!= '' ">
+                and a.name LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="account!=null and account!= '' ">
+                and a.account LIKE CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectSysUserByphone" resultType="com.iber.portal.model.sys.SysUser">
+        SELECT id,phone FROM x_sys_user WHERE phone = #{phone}
+        limit 1;
+    </select>
+    <select id="getSysUserByIdAndPassword" resultMap="BaseResultMap">
+        SELECT id,password FROM x_sys_user
+        WHERE id=#{0} and password=#{1};
+
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from x_sys_user
+        where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sys.SysUser" >
+    insert into x_sys_user (id, name, account, 
+      password, phone, status, 
+      email, city_code, create_user, 
+      create_time, update_user, update_time, 
+      enterprise_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{enterpriseId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sys.SysUser" >
+    insert into x_sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enterpriseId != null" >
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sys.SysUser" >
+    update x_sys_user
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="sessionChange != null" >
+        session_change = #{sessionChange,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordUpdateTime != null" >
+          password_update_time = #{passwordUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sys.SysUser" >
+    update x_sys_user
+    set name = #{name,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      enterprise_id = #{enterpriseId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

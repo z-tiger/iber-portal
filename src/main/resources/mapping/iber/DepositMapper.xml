@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.deposit.DepositMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.deposit.Deposit" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+    <result column="deposit_value" property="depositValue" jdbcType="INTEGER" />
+    <result column="driver_age" property="driverAge" jdbcType="VARCHAR" />
+     <result column="sesame_credit" property="sesameCredit" jdbcType="VARCHAR" />
+     <result column="detail" property="detail" jdbcType="VARCHAR" />
+     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+     <result column="create_id" property="createId" jdbcType="INTEGER" />
+     <result column="update_id" property="updateId" jdbcType="INTEGER" />
+     <result column="create_name" property="createName" jdbcType="VARCHAR" />
+     <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+     <result column="sesame_grade" property="sesameGrade" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+   id,member_level, deposit_value,sesame_credit,driver_age,detail,create_time,update_time,sesame_grade
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+   select
+  <include refid="Base_Column_List"></include>,
+  (SELECT u.name FROM x_sys_user u WHERE d.create_id = u.id) create_name,
+  (SELECT u.name FROM x_sys_user u WHERE d.update_id =u.id) update_name 
+  from x_member_deposit d
+  <trim prefixOverrides="and">
+			<where>
+				<if test="driverAge != null and driverAge !=''">
+					and d.driver_age = #{driverAge,jdbcType=VARCHAR}
+				</if>
+				<if test="sesameCredit != null and sesameCredit != '' ">
+					and d.sesame_credit = #{sesameCredit,jdbcType=VARCHAR}
+				</if>
+				<if test="memberLevel != null and memberLevel !='' ">
+					and d.member_level = #{memberLevel,jdbcType=VARCHAR}
+				</if>
+			</where>
+		</trim>
+  limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+   select count(1) from x_member_deposit d
+   <trim prefixOverrides="and">
+			<where>
+				<if test="driverAge != null and driverAge !=''">
+					and d.driver_age = #{driverAge,jdbcType=VARCHAR}
+				</if>
+				<if test="sesameCredit != null and sesameCredit != '' ">
+					and d.sesame_credit = #{sesameCredit,jdbcType=VARCHAR}
+				</if>
+				<if test="memberLevel != null and memberLevel !='' ">
+					and d.member_level = #{memberLevel,jdbcType=VARCHAR}
+				</if>
+			</where>
+		</trim>
+   limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  <insert id="addDeposit"  parameterType="com.iber.portal.model.deposit.Deposit">
+  insert into x_member_deposit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberLevel != null" >
+        member_level,
+      </if>
+      <if test="depositValue != null" >
+        deposit_value,
+      </if>
+      <if test="driverAge != null" >
+        driver_age,
+      </if>
+      <if test="sesameCredit != null" >
+        sesame_credit,
+      </if>
+      <if test="detail != null" >
+        detail,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberLevel != null" >
+        #{memberLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="depositValue != null" >
+        #{depositValue,jdbcType=INTEGER},
+      </if>
+      <if test="driverAge != null" >
+        #{driverAge,jdbcType=VARCHAR},
+      </if>
+      <if test="sesameCredit != null" >
+        #{sesameCredit,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null" >
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateDeposit" parameterType="com.iber.portal.model.deposit.Deposit">
+  update x_member_deposit
+    <set >
+      <if test="memberLevel != null" >
+         member_level= #{memberLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="depositValue != null" >
+        deposit_value = #{depositValue,jdbcType=INTEGER},
+      </if>
+      <if test="driverAge != null" >
+        driver_age = #{driverAge,jdbcType=VARCHAR},
+      </if>
+      <if test="sesameCredit != null" >
+        sesame_credit = #{sesameCredit,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null" >
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+        <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  delete from x_member_deposit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="getAllInfo"  resultMap="BaseResultMap">
+   select member_level,ROUND(deposit_value/100)deposit_value,driver_age,sesame_credit,sesame_grade  from x_member_deposit
+  </select>
+  
+  <select id="selectByMemberLevelAndDriverAge" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from x_member_deposit
+  	where member_level = #{memberLevel} and driver_age = #{driverAge}
+  </select>
+  
+  <select id="selectByMemberLevelAndzmxyIntegral" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from x_member_deposit
+  	where member_level = #{memberLevel} and sesame_credit = #{sesameCredit}
+  </select>
+  
+  <select id="selectDepositByMemberLevel" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from x_member_deposit
+  	where member_level = #{levelCode}
+  </select>
+</mapper>

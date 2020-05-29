@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.car.CarOfflineApplyMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarOfflineApply">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="car_id" property="carId" jdbcType="INTEGER"/>
+		<result column="lpn" property="lpn" jdbcType="VARCHAR"/>
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+		<result column="park_id" property="parkId" jdbcType="INTEGER"/>
+		<result column="reason" property="reason" jdbcType="VARCHAR" />
+		<result column="applicant" property="applicant" jdbcType="VARCHAR" />
+		<result column="applicant_phone" property="applicantPhone" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="offLineType" property="offLineType" jdbcType="VARCHAR"/>
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR"/>
+		<result column="auditHuman" property="auditHuman" jdbcType="VARCHAR"/>
+		<result column="auditResult" property="auditResult" jdbcType="VARCHAR"/>
+		<result column="feedback" property="feedback" jdbcType="VARCHAR"/>
+		<result column="pname" property="pname" jdbcType="VARCHAR" />
+		<result column="cname" property="cname" jdbcType="VARCHAR"/>
+		<result column="employee_id" property="employeeId" jdbcType="INTEGER" />
+		<result column="uname" property="uname" jdbcType="VARCHAR"/>
+		<result column="status" property="cstatus" jdbcType="VARCHAR"/>
+		<result column="rest_battery" property="restBattery" jdbcType="DOUBLE"/><!-- 电量 -->
+		<result column="small_battery_voltage" property="smallBatteryVoltage" jdbcType="VARCHAR" /><!-- 小电瓶电压 -->
+		<result column="update_time" property="cupdateTime" jdbcType="TIMESTAMP"/><!-- 设备上报时间 -->
+		<result column="preoffline" property="preoffline"/>
+	</resultMap>
+	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarOfflineApply" >
+ 		update x_car_offline_apply 
+ 		<set>
+ 			<if test="carId != null">
+ 				car_id = #{carId,jdbcType=INTEGER},
+ 			</if>
+ 			<if test="lpn != null">
+  				lpn = #{lpn,jdbcType=VARCHAR},
+  			</if>
+  			<if test="endTime != null">
+  				end_time = #{endTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="parkId != null">
+  				park_id = #{parkId,jdbcType=INTEGER},
+  			</if>
+  			<if test="reason != null">
+  				reason = #{reason,jdbcType=VARCHAR},
+  			</if>
+  			<if test="applicant != null">
+  				applicant = #{applicant,jdbcType=VARCHAR},
+  			</if>
+  			<if test="applicantPhone != null">
+  				applicant_phone = #{applicantPhone,jdbcType=VARCHAR},
+  			</if>
+  			<if test="createTime != null">
+  				create_time = #{createTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="createUser != null">
+  				create_user = #{createUser,jdbcType=VARCHAR},
+  			</if>
+  			<if test="offLineType != null">
+  				offLineType = #{offLineType,jdbcType=VARCHAR},
+  			</if>
+  			<if test="updateUser != null">
+  				update_user = #{updateUser,jdbcType=VARCHAR},
+  			</if>
+  			<if test="updateTime != null">
+  				update_time = #{updateTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="cityCode != null">
+  				city_code = #{cityCode,jdbcType=VARCHAR},
+  			</if>
+  			<if test="auditHuman != null">
+  				auditHuman = #{auditHuman,jdbcType=VARCHAR},
+  			</if>
+  			<if test="auditResult != null">
+  				auditResult = #{auditResult,jdbcType=VARCHAR},
+  			</if>
+  			<if test="feedback != null">
+  				feedback = #{feedback,jdbcType=VARCHAR},
+  			</if>
+ 		</set>
+ 		  where id = #{id,jdbcType=INTEGER}
+  	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select 
+			coa.id,city.name cname,coa.lpn,p.name pname,c.`status` cstatus,c.rest_battery restBattery
+			,c.small_battery_voltage smallBatteryVoltage,c.update_time cupdateTime,
+			coa.offLineType,coa.applicant,coa.applicant_phone,coa.create_time,coa.reason,coa.auditResult,coa.auditHuman
+			from x_car_offline_apply coa 
+			INNER JOIN  x_city city on city.`code` = coa.city_code INNER JOIN 
+			x_park p on coa.park_id = p.id INNER JOIN x_car_run c on c.lpn = coa.lpn and coa.id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByAll" resultMap="BaseResultMap" parameterType="string">
+		select * from x_car_offline_apply coa where coa.lpn = #{lpn,jdbcType=VARCHAR}
+	</select>
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from x_car_offline_apply coa where coa.id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="allCarOfflineApply" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select 
+			coa.id,city.name cname,coa.lpn,p.name pname,c.`status` cstatus,c.rest_battery restBattery,c.preoffline
+			,c.small_battery_voltage smallBatteryVoltage,c.update_time cupdateTime,
+			coa.offLineType,coa.applicant,coa.applicant_phone,coa.create_time,coa.reason,coa.auditResult,coa.auditHuman
+			from x_car_offline_apply coa left JOIN  x_city city on city.`code` = coa.city_code left JOIN 
+			x_park p on coa.park_id = p.id left JOIN x_car_run c on c.lpn = coa.lpn where 1=1
+		 <if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+	        and coa.city_code = #{cityCode,jdbcType=VARCHAR}
+	     </if>
+	     <if test="lpn != null and lpn != ''">
+	     	and coa.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="reason != null and reason != ''">
+	     	and coa.reason like CONCAT('%',#{reason,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="auditResult != null and auditResult != ''">
+	     	and coa.auditResult = #{auditResult,jdbcType=VARCHAR}
+	     </if>
+	     <if test="applicant != null and applicant != ''">
+	     	and coa.applicant like CONCAT('%',#{applicant,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="offLineType != null and offLineType != ''">
+	     	and coa.offLineType = #{offLineType}
+	     </if>
+	     order by coa.create_time desc 
+	     <if test="from != null and to != null">
+	     	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	     </if>
+	</select>
+	<select id="allCarOfflineApplyRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+	 	select count(*)
+			from x_car_offline_apply coa 
+			left JOIN  x_city city on city.`code` = coa.city_code left JOIN 
+			x_park p on coa.park_id = p.id left JOIN x_car_run c on c.lpn = coa.lpn where 1=1
+	 		<if test="cityCode != null and cityCode !='' and cityCode !='00'">
+	        and coa.city_code = #{cityCode,jdbcType=VARCHAR}
+	     </if>
+	     <if test="lpn != null and lpn != ''">
+	     	and coa.lpn like CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="reason != null and reason != ''">
+	     	and coa.reason like CONCAT('%',#{reason,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="auditResult != null and auditResult != ''">
+	     	and coa.auditResult = #{auditResult,jdbcType=VARCHAR}
+	     </if>
+	     <if test="applicant != null and applicant != ''">
+	     	and coa.applicant like CONCAT('%',#{applicant,jdbcType=VARCHAR},'%')
+	     </if>
+	     <if test="offLineType != null and offLineType != ''">
+	     	and coa.offLineType = #{offLineType}
+	     </if>
+	     order by coa.create_time desc
+	</select>
+	<select id="carOfflineApplyTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from x_car_offline_apply coa where auditResult = #{auditResult,jdbcType=VARCHAR}
+		<if test="cityCode!=null and cityCode!=''">
+		    and coa.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+       
+	</select>
+	<select id="selectSingleRecord" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select * from x_car_offline_apply coa where 1=1
+		<if test="lpn!=null and lpn!=''">
+		    and coa.lpn = #{lpn,jdbcType=VARCHAR}
+		</if>
+
+		<if test="auditResult!=null and auditResult!=''">
+		    and coa.auditResult = #{auditResult,jdbcType=VARCHAR}
+		</if>
+		limit 1
+	</select>
+	
+	<insert id="insertOfflineRecord" parameterType="com.iber.portal.model.car.CarOfflineApply" useGeneratedKeys="true" keyProperty="id">
+        insert into x_car_offline_apply
+		    <trim prefix="(" suffix=")" suffixOverrides="," >
+		      <if test="id != null" >
+		        id,
+		      </if>
+		      <if test="carId !=null">
+		        car_id,
+		      </if>
+		      <if test="lpn !=null">
+		        lpn,
+		      </if>
+		      <if test="createTime !=null">
+		        create_time,
+		      </if>
+		      <if test="offLineType !=null">
+		        offLineType,
+		      </if>
+		      <if test="cityCode !=null">
+		        city_code,
+		      </if>
+		      <if test="auditResult !=null">
+		        auditResult,
+		      </if>
+		      <if test="applicant !=null">
+		        applicant,
+		      </if>
+		      <if test="applicantPhone !=null">
+		        applicant_phone,
+		      </if>
+		      <if test="reason !=null">
+		        reason,
+		      </if>
+		      <if test="createUser !=null">
+		        create_user,
+		      </if>
+		    </trim>
+		    
+		    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		      <if test="id != null" >
+		        #{id,jdbcType=INTEGER},
+		      </if>
+		      <if test="carId !=null">
+		        #{carId,jdbcType=INTEGER},
+		      </if>
+		      <if test="lpn !=null">
+		        #{lpn,jdbcType=VARCHAR},
+		      </if>
+		      <if test="createTime !=null">
+		        #{createTime,jdbcType=VARCHAR},
+		      </if>
+		      <if test="offLineType !=null">
+		        #{offLineType,jdbcType=VARCHAR},
+		      </if>
+		      <if test="cityCode !=null">
+		        #{cityCode,jdbcType=VARCHAR},
+		      </if>
+		      <if test="auditResult !=null">
+		        #{auditResult,jdbcType=VARCHAR},
+		      </if>
+		      <if test="applicant !=null">
+		         #{applicant,jdbcType=VARCHAR},
+		      </if>
+		      <if test="applicantPhone !=null">
+		        #{applicantPhone,jdbcType=VARCHAR},
+		      </if>
+		      <if test="reason !=null">
+		        #{reason,jdbcType=VARCHAR},
+		      </if>
+		      <if test="offlineCategory !=null">
+		         #{offlineCategory,jdbcType=VARCHAR},
+		      </if>
+		      <if test="createUser !=null">
+		        #{createUser,jdbcType=VARCHAR},
+		      </if>
+		    </trim>
+  </insert>
+	
+	
+	
+</mapper>   

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dayRent.DayRentOrderExtendMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dayRent.DayRentOrderExtend" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="x_d_id" property="xDId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="order_money" property="orderMoney" jdbcType="INTEGER" />
+    <result column="coupon" property="coupon" jdbcType="VARCHAR" />
+    <result column="coupon_balance" property="couponBalance" jdbcType="INTEGER" />
+    <result column="free_money" property="freeMoney" jdbcType="INTEGER" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="rent_car_money" property="rentCarMoney" jdbcType="INTEGER" />
+    <result column="insurance_money" property="insuranceMoney" jdbcType="INTEGER" />
+    <result column="procedure_money" property="procedureMoney" jdbcType="INTEGER" />
+    <result column="free_compensate_money" property="freeCompensateMoney" jdbcType="INTEGER" />
+    <result column="remote_money" property="remoteMoney" jdbcType="INTEGER" />
+    <result column="rent_timeout" property="rentTimeout" jdbcType="INTEGER" />
+    <result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+    <result column="refund_money" property="refundMoney" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="OrderAndExtendResultMap" type="com.iber.portal.vo.dayRent.DayRentOrderAndExtendVo" extends="BaseResultMap">
+    <result column="actual_taken_car_time" property="actualTakenCarTime" jdbcType="TIMESTAMP" />
+    <result column="actual_return_car_time" property="actualReturnCarTime" jdbcType="TIMESTAMP" />
+    <result column="mileage" property="mileage" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, x_d_id, order_id, type, order_money, coupon, coupon_balance, free_money, pay_money, 
+    pay_type, rent_car_money, insurance_money, procedure_money, free_compensate_money, 
+    remote_money, rent_timeout, pay_status, refund_money, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order_extend
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_day_rent_order_extend
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dayRent.DayRentOrderExtend" >
+    insert into x_day_rent_order_extend (id, x_d_id, order_id, 
+      type, order_money, coupon, 
+      coupon_balance, free_money, pay_money, 
+      pay_type, rent_car_money, insurance_money, 
+      procedure_money, free_compensate_money, remote_money, 
+      rent_timeout, pay_status, refund_money, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{xDId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{orderMoney,jdbcType=INTEGER}, #{coupon,jdbcType=VARCHAR}, 
+      #{couponBalance,jdbcType=INTEGER}, #{freeMoney,jdbcType=INTEGER}, #{payMoney,jdbcType=INTEGER}, 
+      #{payType,jdbcType=VARCHAR}, #{rentCarMoney,jdbcType=INTEGER}, #{insuranceMoney,jdbcType=INTEGER}, 
+      #{procedureMoney,jdbcType=INTEGER}, #{freeCompensateMoney,jdbcType=INTEGER}, #{remoteMoney,jdbcType=INTEGER}, 
+      #{rentTimeout,jdbcType=INTEGER}, #{payStatus,jdbcType=VARCHAR}, #{refundMoney,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dayRent.DayRentOrderExtend" >
+    insert into x_day_rent_order_extend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="xDId != null" >
+        x_d_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="orderMoney != null" >
+        order_money,
+      </if>
+      <if test="coupon != null" >
+        coupon,
+      </if>
+      <if test="couponBalance != null" >
+        coupon_balance,
+      </if>
+      <if test="freeMoney != null" >
+        free_money,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="rentCarMoney != null" >
+        rent_car_money,
+      </if>
+      <if test="insuranceMoney != null" >
+        insurance_money,
+      </if>
+      <if test="procedureMoney != null" >
+        procedure_money,
+      </if>
+      <if test="freeCompensateMoney != null" >
+        free_compensate_money,
+      </if>
+      <if test="remoteMoney != null" >
+        remote_money,
+      </if>
+      <if test="rentTimeout != null" >
+        rent_timeout,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="refundMoney != null" >
+        refund_money,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="xDId != null" >
+        #{xDId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="orderMoney != null" >
+        #{orderMoney,jdbcType=INTEGER},
+      </if>
+      <if test="coupon != null" >
+        #{coupon,jdbcType=VARCHAR},
+      </if>
+      <if test="couponBalance != null" >
+        #{couponBalance,jdbcType=INTEGER},
+      </if>
+      <if test="freeMoney != null" >
+        #{freeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="rentCarMoney != null" >
+        #{rentCarMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceMoney != null" >
+        #{insuranceMoney,jdbcType=INTEGER},
+      </if>
+      <if test="procedureMoney != null" >
+        #{procedureMoney,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensateMoney != null" >
+        #{freeCompensateMoney,jdbcType=INTEGER},
+      </if>
+      <if test="remoteMoney != null" >
+        #{remoteMoney,jdbcType=INTEGER},
+      </if>
+      <if test="rentTimeout != null" >
+        #{rentTimeout,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="refundMoney != null" >
+        #{refundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dayRent.DayRentOrderExtend" >
+    update x_day_rent_order_extend
+    <set >
+      <if test="xDId != null" >
+        x_d_id = #{xDId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="orderMoney != null" >
+        order_money = #{orderMoney,jdbcType=INTEGER},
+      </if>
+      <if test="coupon != null" >
+        coupon = #{coupon,jdbcType=VARCHAR},
+      </if>
+      <if test="couponBalance != null" >
+        coupon_balance = #{couponBalance,jdbcType=INTEGER},
+      </if>
+      <if test="freeMoney != null" >
+        free_money = #{freeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="rentCarMoney != null" >
+        rent_car_money = #{rentCarMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceMoney != null" >
+        insurance_money = #{insuranceMoney,jdbcType=INTEGER},
+      </if>
+      <if test="procedureMoney != null" >
+        procedure_money = #{procedureMoney,jdbcType=INTEGER},
+      </if>
+      <if test="freeCompensateMoney != null" >
+        free_compensate_money = #{freeCompensateMoney,jdbcType=INTEGER},
+      </if>
+      <if test="remoteMoney != null" >
+        remote_money = #{remoteMoney,jdbcType=INTEGER},
+      </if>
+      <if test="rentTimeout != null" >
+        rent_timeout = #{rentTimeout,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="refundMoney != null" >
+        refund_money = #{refundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dayRent.DayRentOrderExtend" >
+    update x_day_rent_order_extend
+    set x_d_id = #{xDId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      order_money = #{orderMoney,jdbcType=INTEGER},
+      coupon = #{coupon,jdbcType=VARCHAR},
+      coupon_balance = #{couponBalance,jdbcType=INTEGER},
+      free_money = #{freeMoney,jdbcType=INTEGER},
+      pay_money = #{payMoney,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      rent_car_money = #{rentCarMoney,jdbcType=INTEGER},
+      insurance_money = #{insuranceMoney,jdbcType=INTEGER},
+      procedure_money = #{procedureMoney,jdbcType=INTEGER},
+      free_compensate_money = #{freeCompensateMoney,jdbcType=INTEGER},
+      remote_money = #{remoteMoney,jdbcType=INTEGER},
+      rent_timeout = #{rentTimeout,jdbcType=INTEGER},
+      pay_status = #{payStatus,jdbcType=VARCHAR},
+      refund_money = #{refundMoney,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="queryDayRentOrderExtendByOrderIdType" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_day_rent_order_extend
+    where order_id = #{orderId,jdbcType=VARCHAR}
+    and type = #{extendType,jdbcType=VARCHAR}
+  </select>
+  
+    <select id="queryFinishByOrderId" resultMap="OrderAndExtendResultMap" parameterType="java.util.Map" >
+    SELECT oe.*, o.actual_taken_car_time, o.actual_return_car_time, r.total_kg mileage
+    	FROM x_day_rent_order_extend oe INNER JOIN x_day_rent_order o ON 
+	    	o.order_id = oe.order_id 
+			AND o.order_status = 'finish'
+			AND o.order_id = #{orderId,jdbcType=VARCHAR}
+			<if test="lastCountTime != null and lastCountTime != '' ">
+				<![CDATA[ AND o.actual_return_car_time > #{lastCountTime} ]]>
+			</if>
+			INNER JOIN x_car_run_log r ON r.order_id = oe.order_id
+  </select>
+  
+  <select id="selectByOrderId" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from x_day_rent_order_extend
+    where order_id = #{objId};
+  </select>
+</mapper>

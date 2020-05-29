@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.WZAssociatedCitysMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.WZAssociatedCitys" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="associated_city" property="associatedCity" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_name, city_code,associated_city
+  </sql>
+  
+ <select id="selectCityByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select 
+      <include refid="Base_Column_List" />
+      from x_wz_citys_associated where city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  <select id="queryIfRecord" parameterType="java.lang.String" resultType="java.lang.Integer">
+     select 
+      count(1)
+      from x_wz_citys_associated where city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+     select 
+      <include refid="Base_Column_List" />
+      from x_wz_citys_associated where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from x_wz_citys_associated where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.iber.portal.model.base.WZAssociatedCitys" >
+       insert into x_wz_citys_associated
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="associatedCity != null" >
+        associated_city,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="associatedCity != null" >
+        #{associatedCity,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.WZAssociatedCitys" >
+    update x_wz_citys_associated
+    <set >
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="associatedCity != null" >
+        associated_city = #{associatedCity,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAllRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) count
+		from x_wz_citys_Associated
+		<trim prefixOverrides="and">
+		<where>
+			<if test="cityCode!=null and cityCode!='' ">
+				and city_code = #{cityCode}
+			</if>
+			<if test="cityName!=null and cityName!='' ">
+				and city_name = #{cityName}
+			</if>
+		</where>
+        </trim>
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select
+		<include refid="Base_Column_List" />
+		from x_wz_citys_Associated
+		 <trim prefixOverrides="and">
+		<where>
+			<if test="cityCode!=null and cityCode!='' ">
+				and city_code = #{cityCode}
+			</if>
+			<if test="cityName!=null and cityName!='' ">
+				and city_name = #{cityName}
+			</if>
+		</where>
+		</trim>
+		limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+	</select>
+	<select id="selectAllAssociatedCitys" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	select 
+	<include refid="Base_Column_List" />
+	from x_wz_citys_Associated
+	</select>
+</mapper>

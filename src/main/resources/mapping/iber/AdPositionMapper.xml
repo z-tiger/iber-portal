@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.ad.AdPositionMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.ad.AdPosition" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="page" property="page" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="position_no" property="positionNo" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    `id`, `name`, `describe`, `is_show`, `city_code`, `create_time`, `page`, `position_no`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_ad_position
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_ad_position
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.ad.AdPosition" >
+    insert into x_ad_position (id, `name`, `describe`, 
+      is_show, city_code, create_time, 
+      page,position_no)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
+      #{isShow,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{page,jdbcType=VARCHAR},#{positionNo,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.ad.AdPosition" >
+    insert into x_ad_position
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        `name`, 
+      </if>
+      <if test="describe != null" >
+        `describe`,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="page != null" >
+        page,
+      </if>
+       <if test="positionNo != null" >
+        position_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="page != null" >
+        #{page,jdbcType=VARCHAR},
+      </if>
+      <if test="positionNo != null" >
+        #{positionNo,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.ad.AdPosition" >
+    update x_ad_position
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        `describe` = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="page != null" >
+        page = #{page,jdbcType=VARCHAR},
+      </if>
+      <if test="positionNo != null" >
+        position_no = #{positionNo,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.ad.AdPosition" >
+    update x_ad_position
+    set `name` = #{name,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+       position_no = #{positionNo,jdbcType=INTEGER},
+      page = #{page,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_ad_position where 1=1 
+    <if test="name != null and name != '' " >
+        and `name` LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="page != null and page != '' " >
+        and page = #{page,jdbcType=VARCHAR}
+    </if>
+    <if test="isShow != null  and isShow != '' " >
+        and is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+     <if test="cityCode != null and cityCode != '' " >
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+    (select name from x_city c where c.code = a.city_code) city_name
+    from x_ad_position a where 1=1 
+     <if test="name != null and name != '' " >
+        and a.`name` LIKE CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="page != null and page != '' " >
+        and a.page = #{page,jdbcType=VARCHAR}
+    </if>
+    <if test="isShow != null  and isShow != '' " >
+        and a.is_show = #{isShow,jdbcType=VARCHAR}
+    </if>
+     <if test="cityCode != null and cityCode != '' " >
+        and a.city_code = #{cityCode,jdbcType=VARCHAR}
+     </if>
+     order by a.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+</mapper>

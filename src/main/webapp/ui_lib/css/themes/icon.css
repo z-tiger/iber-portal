@@ -1,0 +1,650 @@
+.icon-blank{
+	background:url('icons/blank.gif') no-repeat center center;
+}
+.icon-add{
+	background:url('icons/edit_add.png') no-repeat center center;
+}
+.icon-edit{
+	background:url('icons/pencil.png') no-repeat center center;
+}
+.icon-clear{
+	background:url('icons/clear.png') no-repeat center center;
+}
+.icon-remove{
+	background:url('icons/edit_remove.png') no-repeat center center;
+}
+.icon-save{
+	background:url('icons/filesave.png') no-repeat center center;
+}
+.icon-cut{
+	background:url('icons/cut.png') no-repeat center center;
+}
+.icon-ok{
+	background:url('icons/ok.png') no-repeat center center;
+}
+.icon-no{
+	background:url('icons/no.png') no-repeat center center;
+}
+.icon-cancel{
+	background:url('icons/cancel.png') no-repeat center center;
+}
+.icon-reload{
+	background:url('icons/reload.png') no-repeat center center;
+}
+.icon-search{
+	background:url('icons/search.png') no-repeat center center;
+}
+.icon-print{
+	background:url('icons/print.png') no-repeat center center;
+}
+.icon-help{
+	background:url('icons/help.png') no-repeat center center;
+}
+.icon-undo{
+	background:url('icons/undo.png') no-repeat center center;
+}
+.icon-redo{
+	background:url('icons/redo.png') no-repeat center center;
+}
+.icon-back{
+	background:url('icons/back.png') no-repeat center center;
+}
+.icon-sum{
+	background:url('icons/sum.png') no-repeat center center;
+}
+.icon-tip{
+	background:url('icons/tip.png') no-repeat center center;
+}
+.icon-filter{
+	background:url('icons/filter.png') no-repeat center center;
+}
+.icon-man{
+	background:url('icons/man.png') no-repeat center center;
+}
+.icon-lock{
+	background:url('icons/lock.png') no-repeat center center;
+}
+.icon-more{
+	background:url('icons/more.png') no-repeat center center;
+}
+
+
+.icon-mini-add{
+	background:url('icons/mini_add.png') no-repeat center center;
+}
+.icon-mini-edit{
+	background:url('icons/mini_edit.png') no-repeat center center;
+}
+.icon-mini-refresh{
+	background:url('icons/mini_refresh.png') no-repeat center center;
+}
+
+.icon-large-picture{
+	background:url('icons/large_picture.png') no-repeat center center;
+}
+.icon-large-clipart{
+	background:url('icons/large_clipart.png') no-repeat center center;
+}
+.icon-large-shapes{
+	background:url('icons/large_shapes.png') no-repeat center center;
+}
+.icon-large-smartart{
+	background:url('icons/large_smartart.png') no-repeat center center;
+}
+.icon-large-chart{
+	background:url('icons/large_chart.png') no-repeat center center;
+}
+
+.icon-car-repair{
+	background:url('icons/Car_Repair_Blue_16px.png') no-repeat center center;
+}
+.icon-car-resume{
+	background:url('icons/trip_car_33.315487571702px.png') no-repeat center center;
+}
+.icon-car-finger{
+	background:url('icons/finger.png') no-repeat center center;
+}
+.icon-car-password{
+	background:url('icons/password.png') no-repeat center center;
+}
+.icon-car-person-outline{
+	background:url('icons/person_outline.png') no-repeat center center;
+}
+.icon-car-user-id{
+	background:url('icons/user_id.png') no-repeat center center;
+}
+.icon-car-license{
+	background:url('icons/license.png') no-repeat center center;
+}
+
+.icon-hammer{
+	background:url('icons/hammer.png') no-repeat center center;
+}	
+.icon-wrench-orange{
+	background:url('icons/wrench_orange.png') no-repeat center center;
+}	
+.icon-wrench{
+	background:url('icons/wrench.png') no-repeat center center;
+}
+
+.icon-hammer-screwdriver{
+	background:url('icons/hammer_screwdriver.png') no-repeat center center;
+}
+
+.icon-zjdj{
+	background:url('icons/zjdj.png') no-repeat center center;
+}
+
+.icon-zjjd{
+	background:url('icons/zjjd.png') no-repeat center center;
+}
+
+.icon-luck-cloud-park {background:url('icons/park.png') no-repeat center center;}
+
+.icon-luck-cloud-add {background:url('icons/splashyIcons/add.png') no-repeat center center;}
+.icon-luck-cloud-add_outline {background:url('icons/splashyIcons/add_outline.png') no-repeat center center;}
+.icon-luck-cloud-add_small {background:url('icons/splashyIcons/add_small.png') no-repeat center center;}
+.icon-luck-cloud-applications_osx_shrink {background:url('icons/splashyIcons/applications_osx_shrink.png') no-repeat center center;}
+.icon-luck-cloud-applications_windows {background:url('icons/splashyIcons/applications_windows.png') no-repeat center center;}
+.icon-luck-cloud-application_osx {background:url('icons/splashyIcons/application_osx.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_add {background:url('icons/splashyIcons/application_osx_add.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_down {background:url('icons/splashyIcons/application_osx_down.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_edit {background:url('icons/splashyIcons/application_osx_edit.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_grow {background:url('icons/splashyIcons/application_osx_grow.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_left {background:url('icons/splashyIcons/application_osx_left.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_locked {background:url('icons/splashyIcons/application_osx_locked.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_new {background:url('icons/splashyIcons/application_osx_new.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_okay {background:url('icons/splashyIcons/application_osx_okay.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_remove {background:url('icons/splashyIcons/application_osx_remove.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_right {background:url('icons/splashyIcons/application_osx_right.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_share {background:url('icons/splashyIcons/application_osx_share.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_up {background:url('icons/splashyIcons/application_osx_up.png') no-repeat center center;}
+.icon-luck-cloud-application_osx_warning {background:url('icons/splashyIcons/application_osx_warning.png') no-repeat center center;}
+.icon-luck-cloud-application_windows {background:url('icons/splashyIcons/application_windows.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_add {background:url('icons/splashyIcons/application_windows_add.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_down {background:url('icons/splashyIcons/application_windows_down.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_edit {background:url('icons/splashyIcons/application_windows_edit.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_grow {background:url('icons/splashyIcons/application_windows_grow.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_left {background:url('icons/splashyIcons/application_windows_left.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_locked {background:url('icons/splashyIcons/application_windows_locked.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_new {background:url('icons/splashyIcons/application_windows_new.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_okay {background:url('icons/splashyIcons/application_windows_okay.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_remove {background:url('icons/splashyIcons/application_windows_remove.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_right {background:url('icons/splashyIcons/application_windows_right.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_share {background:url('icons/splashyIcons/application_windows_share.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_shrink {background:url('icons/splashyIcons/application_windows_shrink.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_up {background:url('icons/splashyIcons/application_windows_up.png') no-repeat center center;}
+.icon-luck-cloud-application_windows_warning {background:url('icons/splashyIcons/application_windows_warning.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_down {background:url('icons/splashyIcons/arrow_large_down.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_down_outline {background:url('icons/splashyIcons/arrow_large_down_outline.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_left {background:url('icons/splashyIcons/arrow_large_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_left_outline {background:url('icons/splashyIcons/arrow_large_left_outline.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_right {background:url('icons/splashyIcons/arrow_large_right.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_right_outline {background:url('icons/splashyIcons/arrow_large_right_outline.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_up {background:url('icons/splashyIcons/arrow_large_up.png') no-repeat center center;}
+.icon-luck-cloud-arrow_large_up_outline {background:url('icons/splashyIcons/arrow_large_up_outline.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_down {background:url('icons/splashyIcons/arrow_medium_down.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_left {background:url('icons/splashyIcons/arrow_medium_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_lower_left {background:url('icons/splashyIcons/arrow_medium_lower_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_lower_right {background:url('icons/splashyIcons/arrow_medium_lower_right.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_right {background:url('icons/splashyIcons/arrow_medium_right.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_up {background:url('icons/splashyIcons/arrow_medium_up.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_upper_left {background:url('icons/splashyIcons/arrow_medium_upper_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_medium_upper_right {background:url('icons/splashyIcons/arrow_medium_upper_right.png') no-repeat center center;}
+.icon-luck-cloud-arrow_small_down {background:url('icons/splashyIcons/arrow_small_down.png') no-repeat center center;}
+.icon-luck-cloud-arrow_small_left {background:url('icons/splashyIcons/arrow_small_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_small_right {background:url('icons/splashyIcons/arrow_small_right.png') no-repeat center center;}
+.icon-luck-cloud-arrow_small_up {background:url('icons/splashyIcons/arrow_small_up.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_blue_collapsed {background:url('icons/splashyIcons/arrow_state_blue_collapsed.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_blue_expanded {background:url('icons/splashyIcons/arrow_state_blue_expanded.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_blue_left {background:url('icons/splashyIcons/arrow_state_blue_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_blue_right {background:url('icons/splashyIcons/arrow_state_blue_right.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_grey_collapsed {background:url('icons/splashyIcons/arrow_state_grey_collapsed.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_grey_expanded {background:url('icons/splashyIcons/arrow_state_grey_expanded.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_grey_left {background:url('icons/splashyIcons/arrow_state_grey_left.png') no-repeat center center;}
+.icon-luck-cloud-arrow_state_grey_right {background:url('icons/splashyIcons/arrow_state_grey_right.png') no-repeat center center;}
+.icon-luck-cloud-badge_cancel {background:url('icons/splashyIcons/badge_cancel.png') no-repeat center center;}
+.icon-luck-cloud-badge_cancel_online {background:url('icons/splashyIcons/badge_cancel_online.png') no-repeat center center;}
+.icon-luck-cloud-badge_save {background:url('icons/splashyIcons/badge_save.png') no-repeat center center;}
+.icon-luck-cloud-badge_save_outline {background:url('icons/splashyIcons/badge_save_outline.png') no-repeat center center;}
+.icon-luck-cloud-badge_send {background:url('icons/splashyIcons/badge_send.png') no-repeat center center;}
+.icon-luck-cloud-badge_share_1 {background:url('icons/splashyIcons/badge_share_1.png') no-repeat center center;}
+.icon-luck-cloud-badge_share_2 {background:url('icons/splashyIcons/badge_share_2.png') no-repeat center center;}
+.icon-luck-cloud-badge_updated_1 {background:url('icons/splashyIcons/badge_updated_1.png') no-repeat center center;}
+.icon-luck-cloud-badge_updated_2 {background:url('icons/splashyIcons/badge_updated_2.png') no-repeat center center;}
+.icon-luck-cloud-box {background:url('icons/splashyIcons/box.png') no-repeat center center;}
+.icon-luck-cloud-box_add {background:url('icons/splashyIcons/box_add.png') no-repeat center center;}
+.icon-luck-cloud-box_edit {background:url('icons/splashyIcons/box_edit.png') no-repeat center center;}
+.icon-luck-cloud-box_locked {background:url('icons/splashyIcons/box_locked.png') no-repeat center center;}
+.icon-luck-cloud-box_new {background:url('icons/splashyIcons/box_new.png') no-repeat center center;}
+.icon-luck-cloud-box_okay {background:url('icons/splashyIcons/box_okay.png') no-repeat center center;}
+.icon-luck-cloud-box_remove {background:url('icons/splashyIcons/box_remove.png') no-repeat center center;}
+.icon-luck-cloud-box_share {background:url('icons/splashyIcons/box_share.png') no-repeat center center;}
+.icon-luck-cloud-box_warning {background:url('icons/splashyIcons/box_warning.png') no-repeat center center;}
+.icon-luck-cloud-breadcrumb_separator_arrow_1_dot {background:url('icons/splashyIcons/breadcrumb_separator_arrow_1_dot.png') no-repeat center center;}
+.icon-luck-cloud-breadcrumb_separator_arrow_2_dots {background:url('icons/splashyIcons/breadcrumb_separator_arrow_2_dots.png') no-repeat center center;}
+.icon-luck-cloud-breadcrumb_separator_arrow_full {background:url('icons/splashyIcons/breadcrumb_separator_arrow_full.png') no-repeat center center;}
+.icon-luck-cloud-breadcrumb_separator_dark {background:url('icons/splashyIcons/breadcrumb_separator_dark.png') no-repeat center center;}
+.icon-luck-cloud-breadcrumb_separator_light {background:url('icons/splashyIcons/breadcrumb_separator_light.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue {background:url('icons/splashyIcons/bullet_blue.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue_arrow {background:url('icons/splashyIcons/bullet_blue_arrow.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue_collapse {background:url('icons/splashyIcons/bullet_blue_collapse.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue_collapse_small {background:url('icons/splashyIcons/bullet_blue_collapse_small.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue_expand {background:url('icons/splashyIcons/bullet_blue_expand.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue_expand_small {background:url('icons/splashyIcons/bullet_blue_expand_small.png') no-repeat center center;}
+.icon-luck-cloud-bullet_blue_small {background:url('icons/splashyIcons/bullet_blue_small.png') no-repeat center center;}
+.icon-luck-cloud-button_cancel {background:url('icons/splashyIcons/button_cancel.png') no-repeat center center;}
+.icon-luck-cloud-button_edit {background:url('icons/splashyIcons/button_edit.png') no-repeat center center;}
+.icon-luck-cloud-button_save {background:url('icons/splashyIcons/button_save.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day {background:url('icons/splashyIcons/calendar_day.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_add {background:url('icons/splashyIcons/calendar_day_add.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_down {background:url('icons/splashyIcons/calendar_day_down.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_edit {background:url('icons/splashyIcons/calendar_day_edit.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_event {background:url('icons/splashyIcons/calendar_day_event.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_left {background:url('icons/splashyIcons/calendar_day_left.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_new {background:url('icons/splashyIcons/calendar_day_new.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_remove {background:url('icons/splashyIcons/calendar_day_remove.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_right {background:url('icons/splashyIcons/calendar_day_right.png') no-repeat center center;}
+.icon-luck-cloud-calendar_day_up {background:url('icons/splashyIcons/calendar_day_up.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month {background:url('icons/splashyIcons/calendar_month.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_add {background:url('icons/splashyIcons/calendar_month_add.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_down {background:url('icons/splashyIcons/calendar_month_down.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_edit {background:url('icons/splashyIcons/calendar_month_edit.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_left {background:url('icons/splashyIcons/calendar_month_left.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_new {background:url('icons/splashyIcons/calendar_month_new.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_remove {background:url('icons/splashyIcons/calendar_month_remove.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_right {background:url('icons/splashyIcons/calendar_month_right.png') no-repeat center center;}
+.icon-luck-cloud-calendar_month_up {background:url('icons/splashyIcons/calendar_month_up.png') no-repeat center center;}
+.icon-luck-cloud-calendar_week {background:url('icons/splashyIcons/calendar_week.png') no-repeat center center;}
+.icon-luck-cloud-calendar_week_add {background:url('icons/splashyIcons/calendar_week_add.png') no-repeat center center;}
+.icon-luck-cloud-calendar_week_edit {background:url('icons/splashyIcons/calendar_week_edit.png') no-repeat center center;}
+.icon-luck-cloud-calendar_week_remove {background:url('icons/splashyIcons/calendar_week_remove.png') no-repeat center center;}
+.icon-luck-cloud-cellphone {background:url('icons/splashyIcons/cellphone.png') no-repeat center center;}
+.icon-luck-cloud-close {background:url('icons/splashyIcons/close.png') no-repeat center center;}
+.icon-luck-cloud-comment {background:url('icons/splashyIcons/comment.png') no-repeat center center;}
+.icon-luck-cloud-comments {background:url('icons/splashyIcons/comments.png') no-repeat center center;}
+.icon-luck-cloud-comments_reply {background:url('icons/splashyIcons/comments_reply.png') no-repeat center center;}
+.icon-luck-cloud-comments_small {background:url('icons/splashyIcons/comments_small.png') no-repeat center center;}
+.icon-luck-cloud-comment_alert {background:url('icons/splashyIcons/comment_alert.png') no-repeat center center;}
+.icon-luck-cloud-comment_new_1 {background:url('icons/splashyIcons/comment_new_1.png') no-repeat center center;}
+.icon-luck-cloud-comment_new_2 {background:url('icons/splashyIcons/comment_new_2.png') no-repeat center center;}
+.icon-luck-cloud-comment_question {background:url('icons/splashyIcons/comment_question.png') no-repeat center center;}
+.icon-luck-cloud-comment_reply {background:url('icons/splashyIcons/comment_reply.png') no-repeat center center;}
+.icon-luck-cloud-contact_blue {background:url('icons/splashyIcons/contact_blue.png') no-repeat center center;}
+.icon-luck-cloud-contact_blue_add {background:url('icons/splashyIcons/contact_blue_add.png') no-repeat center center;}
+.icon-luck-cloud-contact_blue_edit {background:url('icons/splashyIcons/contact_blue_edit.png') no-repeat center center;}
+.icon-luck-cloud-contact_blue_new {background:url('icons/splashyIcons/contact_blue_new.png') no-repeat center center;}
+.icon-luck-cloud-contact_blue_remove {background:url('icons/splashyIcons/contact_blue_remove.png') no-repeat center center;}
+.icon-luck-cloud-contact_grey {background:url('icons/splashyIcons/contact_grey.png') no-repeat center center;}
+.icon-luck-cloud-contact_grey_add {background:url('icons/splashyIcons/contact_grey_add.png') no-repeat center center;}
+.icon-luck-cloud-contact_grey_edit {background:url('icons/splashyIcons/contact_grey_edit.png') no-repeat center center;}
+.icon-luck-cloud-contact_grey_new {background:url('icons/splashyIcons/contact_grey_new.png') no-repeat center center;}
+.icon-luck-cloud-contact_grey_remove {background:url('icons/splashyIcons/contact_grey_remove.png') no-repeat center center;}
+.icon-luck-cloud-diamonds_1 {background:url('icons/splashyIcons/diamonds_1.png') no-repeat center center;}
+.icon-luck-cloud-diamonds_2 {background:url('icons/splashyIcons/diamonds_2.png') no-repeat center center;}
+.icon-luck-cloud-diamonds_3 {background:url('icons/splashyIcons/diamonds_3.png') no-repeat center center;}
+.icon-luck-cloud-diamonds_4 {background:url('icons/splashyIcons/diamonds_4.png') no-repeat center center;}
+.icon-luck-cloud-documents {background:url('icons/splashyIcons/documents.png') no-repeat center center;}
+.icon-luck-cloud-documents_add {background:url('icons/splashyIcons/documents_add.png') no-repeat center center;}
+.icon-luck-cloud-documents_edit {background:url('icons/splashyIcons/documents_edit.png') no-repeat center center;}
+.icon-luck-cloud-documents_locked {background:url('icons/splashyIcons/documents_locked.png') no-repeat center center;}
+.icon-luck-cloud-documents_new {background:url('icons/splashyIcons/documents_new.png') no-repeat center center;}
+.icon-luck-cloud-documents_okay {background:url('icons/splashyIcons/documents_okay.png') no-repeat center center;}
+.icon-luck-cloud-documents_remove {background:url('icons/splashyIcons/documents_remove.png') no-repeat center center;}
+.icon-luck-cloud-documents_share {background:url('icons/splashyIcons/documents_share.png') no-repeat center center;}
+.icon-luck-cloud-documents_warning {background:url('icons/splashyIcons/documents_warning.png') no-repeat center center;}
+.icon-luck-cloud-document_a4 {background:url('icons/splashyIcons/document_a4.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_add {background:url('icons/splashyIcons/document_a4_add.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_back {background:url('icons/splashyIcons/document_a4_back.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_blank {background:url('icons/splashyIcons/document_a4_blank.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_download {background:url('icons/splashyIcons/document_a4_download.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_edit {background:url('icons/splashyIcons/document_a4_edit.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_forward {background:url('icons/splashyIcons/document_a4_forward.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_locked {background:url('icons/splashyIcons/document_a4_locked.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_marked {background:url('icons/splashyIcons/document_a4_marked.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_new {background:url('icons/splashyIcons/document_a4_new.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_okay {background:url('icons/splashyIcons/document_a4_okay.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_remove {background:url('icons/splashyIcons/document_a4_remove.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_share {background:url('icons/splashyIcons/document_a4_share.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_upload {background:url('icons/splashyIcons/document_a4_upload.png') no-repeat center center;}
+.icon-luck-cloud-document_a4_warning {background:url('icons/splashyIcons/document_a4_warning.png') no-repeat center center;}
+.icon-luck-cloud-document_copy {background:url('icons/splashyIcons/document_copy.png') no-repeat center center;}
+.icon-luck-cloud-document_letter {background:url('icons/splashyIcons/document_letter.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_add {background:url('icons/splashyIcons/document_letter_add.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_back {background:url('icons/splashyIcons/document_letter_back.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_blank {background:url('icons/splashyIcons/document_letter_blank.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_download {background:url('icons/splashyIcons/document_letter_download.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_edit {background:url('icons/splashyIcons/document_letter_edit.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_forward {background:url('icons/splashyIcons/document_letter_forward.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_locked {background:url('icons/splashyIcons/document_letter_locked.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_marked {background:url('icons/splashyIcons/document_letter_marked.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_new {background:url('icons/splashyIcons/document_letter_new.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_okay {background:url('icons/splashyIcons/document_letter_okay.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_remove {background:url('icons/splashyIcons/document_letter_remove.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_share {background:url('icons/splashyIcons/document_letter_share.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_upload {background:url('icons/splashyIcons/document_letter_upload.png') no-repeat center center;}
+.icon-luck-cloud-document_letter_warning {background:url('icons/splashyIcons/document_letter_warning.png') no-repeat center center;}
+.icon-luck-cloud-document_small {background:url('icons/splashyIcons/document_small.png') no-repeat center center;}
+.icon-luck-cloud-document_small_download {background:url('icons/splashyIcons/document_small_download.png') no-repeat center center;}
+.icon-luck-cloud-document_small_upload {background:url('icons/splashyIcons/document_small_upload.png') no-repeat center center;}
+.icon-luck-cloud-download {background:url('icons/splashyIcons/download.png') no-repeat center center;}
+.icon-luck-cloud-error {background:url('icons/splashyIcons/error.png') no-repeat center center;}
+.icon-luck-cloud-error_do_not {background:url('icons/splashyIcons/error_do_not.png') no-repeat center center;}
+.icon-luck-cloud-error_do_not_small {background:url('icons/splashyIcons/error_do_not_small.png') no-repeat center center;}
+.icon-luck-cloud-error_fuck {background:url('icons/splashyIcons/error_fuck.png') no-repeat center center;}
+.icon-luck-cloud-error_small {background:url('icons/splashyIcons/error_small.png') no-repeat center center;}
+.icon-luck-cloud-fish {background:url('icons/splashyIcons/fish.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic {background:url('icons/splashyIcons/folder_classic.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_add {background:url('icons/splashyIcons/folder_classic_add.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_down {background:url('icons/splashyIcons/folder_classic_down.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_edit {background:url('icons/splashyIcons/folder_classic_edit.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_locked {background:url('icons/splashyIcons/folder_classic_locked.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_opened {background:url('icons/splashyIcons/folder_classic_opened.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_opened_stuffed {background:url('icons/splashyIcons/folder_classic_opened_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_remove {background:url('icons/splashyIcons/folder_classic_remove.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_stuffed {background:url('icons/splashyIcons/folder_classic_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_stuffed_add {background:url('icons/splashyIcons/folder_classic_stuffed_add.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_stuffed_edit {background:url('icons/splashyIcons/folder_classic_stuffed_edit.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_stuffed_locked {background:url('icons/splashyIcons/folder_classic_stuffed_locked.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_stuffed_remove {background:url('icons/splashyIcons/folder_classic_stuffed_remove.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_type_document {background:url('icons/splashyIcons/folder_classic_type_document.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_type_image {background:url('icons/splashyIcons/folder_classic_type_image.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_type_movie {background:url('icons/splashyIcons/folder_classic_type_movie.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_type_music {background:url('icons/splashyIcons/folder_classic_type_music.png') no-repeat center center;}
+.icon-luck-cloud-folder_classic_up {background:url('icons/splashyIcons/folder_classic_up.png') no-repeat center center;}
+.icon-luck-cloud-folder_locked {background:url('icons/splashyIcons/folder_locked.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist {background:url('icons/splashyIcons/folder_modernist.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_add {background:url('icons/splashyIcons/folder_modernist_add.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_down {background:url('icons/splashyIcons/folder_modernist_down.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_edit {background:url('icons/splashyIcons/folder_modernist_edit.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_locked {background:url('icons/splashyIcons/folder_modernist_locked.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_opened {background:url('icons/splashyIcons/folder_modernist_opened.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_opened_stuffed {background:url('icons/splashyIcons/folder_modernist_opened_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_remove {background:url('icons/splashyIcons/folder_modernist_remove.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_stuffed {background:url('icons/splashyIcons/folder_modernist_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_stuffed_add {background:url('icons/splashyIcons/folder_modernist_stuffed_add.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_stuffed_edit {background:url('icons/splashyIcons/folder_modernist_stuffed_edit.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_stuffed_locked {background:url('icons/splashyIcons/folder_modernist_stuffed_locked.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_stuffed_remove {background:url('icons/splashyIcons/folder_modernist_stuffed_remove.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_type_document {background:url('icons/splashyIcons/folder_modernist_type_document.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_type_image {background:url('icons/splashyIcons/folder_modernist_type_image.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_type_movie {background:url('icons/splashyIcons/folder_modernist_type_movie.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_type_music {background:url('icons/splashyIcons/folder_modernist_type_music.png') no-repeat center center;}
+.icon-luck-cloud-folder_modernist_up {background:url('icons/splashyIcons/folder_modernist_up.png') no-repeat center center;}
+.icon-luck-cloud-folder_remove {background:url('icons/splashyIcons/folder_remove.png') no-repeat center center;}
+.icon-luck-cloud-folder_stuffed {background:url('icons/splashyIcons/folder_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-folder_stuffed_add {background:url('icons/splashyIcons/folder_stuffed_add.png') no-repeat center center;}
+.icon-luck-cloud-folder_stuffed_locked {background:url('icons/splashyIcons/folder_stuffed_locked.png') no-repeat center center;}
+.icon-luck-cloud-folder_stuffed_remove {background:url('icons/splashyIcons/folder_stuffed_remove.png') no-repeat center center;}
+.icon-luck-cloud-gem_cancel_1 {background:url('icons/splashyIcons/gem_cancel_1.png') no-repeat center center;}
+.icon-luck-cloud-gem_cancel_2 {background:url('icons/splashyIcons/gem_cancel_2.png') no-repeat center center;}
+.icon-luck-cloud-gem_cancel_3 {background:url('icons/splashyIcons/gem_cancel_3.png') no-repeat center center;}
+.icon-luck-cloud-gem_cancel_4 {background:url('icons/splashyIcons/gem_cancel_4.png') no-repeat center center;}
+.icon-luck-cloud-gem_cancel_5 {background:url('icons/splashyIcons/gem_cancel_5.png') no-repeat center center;}
+.icon-luck-cloud-gem_okay {background:url('icons/splashyIcons/gem_okay.png') no-repeat center center;}
+.icon-luck-cloud-gem_options {background:url('icons/splashyIcons/gem_options.png') no-repeat center center;}
+.icon-luck-cloud-gem_remove {background:url('icons/splashyIcons/gem_remove.png') no-repeat center center;}
+.icon-luck-cloud-gem_save {background:url('icons/splashyIcons/gem_save.png') no-repeat center center;}
+.icon-luck-cloud-group_blue {background:url('icons/splashyIcons/group_blue.png') no-repeat center center;}
+.icon-luck-cloud-group_blue_add {background:url('icons/splashyIcons/group_blue_add.png') no-repeat center center;}
+.icon-luck-cloud-group_blue_edit {background:url('icons/splashyIcons/group_blue_edit.png') no-repeat center center;}
+.icon-luck-cloud-group_blue_new {background:url('icons/splashyIcons/group_blue_new.png') no-repeat center center;}
+.icon-luck-cloud-group_blue_remove {background:url('icons/splashyIcons/group_blue_remove.png') no-repeat center center;}
+.icon-luck-cloud-group_green {background:url('icons/splashyIcons/group_green.png') no-repeat center center;}
+.icon-luck-cloud-group_green_add {background:url('icons/splashyIcons/group_green_add.png') no-repeat center center;}
+.icon-luck-cloud-group_green_edit {background:url('icons/splashyIcons/group_green_edit.png') no-repeat center center;}
+.icon-luck-cloud-group_green_new {background:url('icons/splashyIcons/group_green_new.png') no-repeat center center;}
+.icon-luck-cloud-group_green_remove {background:url('icons/splashyIcons/group_green_remove.png') no-repeat center center;}
+.icon-luck-cloud-group_grey {background:url('icons/splashyIcons/group_grey.png') no-repeat center center;}
+.icon-luck-cloud-group_grey_add {background:url('icons/splashyIcons/group_grey_add.png') no-repeat center center;}
+.icon-luck-cloud-group_grey_edit {background:url('icons/splashyIcons/group_grey_edit.png') no-repeat center center;}
+.icon-luck-cloud-group_grey_new {background:url('icons/splashyIcons/group_grey_new.png') no-repeat center center;}
+.icon-luck-cloud-group_grey_remove {background:url('icons/splashyIcons/group_grey_remove.png') no-repeat center center;}
+.icon-luck-cloud-hcard {background:url('icons/splashyIcons/hcard.png') no-repeat center center;}
+.icon-luck-cloud-hcards {background:url('icons/splashyIcons/hcards.png') no-repeat center center;}
+.icon-luck-cloud-hcards_add {background:url('icons/splashyIcons/hcards_add.png') no-repeat center center;}
+.icon-luck-cloud-hcards_down {background:url('icons/splashyIcons/hcards_down.png') no-repeat center center;}
+.icon-luck-cloud-hcards_edit {background:url('icons/splashyIcons/hcards_edit.png') no-repeat center center;}
+.icon-luck-cloud-hcards_left {background:url('icons/splashyIcons/hcards_left.png') no-repeat center center;}
+.icon-luck-cloud-hcards_remove {background:url('icons/splashyIcons/hcards_remove.png') no-repeat center center;}
+.icon-luck-cloud-hcards_right {background:url('icons/splashyIcons/hcards_right.png') no-repeat center center;}
+.icon-luck-cloud-hcards_up {background:url('icons/splashyIcons/hcards_up.png') no-repeat center center;}
+.icon-luck-cloud-hcard_add {background:url('icons/splashyIcons/hcard_add.png') no-repeat center center;}
+.icon-luck-cloud-hcard_download {background:url('icons/splashyIcons/hcard_download.png') no-repeat center center;}
+.icon-luck-cloud-hcard_edit {background:url('icons/splashyIcons/hcard_edit.png') no-repeat center center;}
+.icon-luck-cloud-hcard_left {background:url('icons/splashyIcons/hcard_left.png') no-repeat center center;}
+.icon-luck-cloud-hcard_new {background:url('icons/splashyIcons/hcard_new.png') no-repeat center center;}
+.icon-luck-cloud-hcard_remove {background:url('icons/splashyIcons/hcard_remove.png') no-repeat center center;}
+.icon-luck-cloud-hcard_right {background:url('icons/splashyIcons/hcard_right.png') no-repeat center center;}
+.icon-luck-cloud-hcard_up {background:url('icons/splashyIcons/hcard_up.png') no-repeat center center;}
+.icon-luck-cloud-heart {background:url('icons/splashyIcons/heart.png') no-repeat center center;}
+.icon-luck-cloud-heart_add {background:url('icons/splashyIcons/heart_add.png') no-repeat center center;}
+.icon-luck-cloud-heart_down {background:url('icons/splashyIcons/heart_down.png') no-repeat center center;}
+.icon-luck-cloud-heart_edit {background:url('icons/splashyIcons/heart_edit.png') no-repeat center center;}
+.icon-luck-cloud-heart_left {background:url('icons/splashyIcons/heart_left.png') no-repeat center center;}
+.icon-luck-cloud-heart_outline {background:url('icons/splashyIcons/heart_outline.png') no-repeat center center;}
+.icon-luck-cloud-heart_remove {background:url('icons/splashyIcons/heart_remove.png') no-repeat center center;}
+.icon-luck-cloud-heart_right {background:url('icons/splashyIcons/heart_right.png') no-repeat center center;}
+.icon-luck-cloud-heart_up {background:url('icons/splashyIcons/heart_up.png') no-repeat center center;}
+.icon-luck-cloud-help {background:url('icons/splashyIcons/help.png') no-repeat center center;}
+.icon-luck-cloud-home_green {background:url('icons/splashyIcons/home_green.png') no-repeat center center;}
+.icon-luck-cloud-home_grey {background:url('icons/splashyIcons/home_grey.png') no-repeat center center;}
+.icon-luck-cloud-iconDump {background:url('icons/splashyIcons/iconDump.png') no-repeat center center;}
+.icon-luck-cloud-image_cultured {background:url('icons/splashyIcons/image_cultured.png') no-repeat center center;}
+.icon-luck-cloud-image_modernist {background:url('icons/splashyIcons/image_modernist.png') no-repeat center center;}
+.icon-luck-cloud-information {background:url('icons/splashyIcons/information.png') no-repeat center center;}
+.icon-luck-cloud-lock_large_locked {background:url('icons/splashyIcons/lock_large_locked.png') no-repeat center center;}
+.icon-luck-cloud-lock_large_unlocked {background:url('icons/splashyIcons/lock_large_unlocked.png') no-repeat center center;}
+.icon-luck-cloud-lock_small_locked {background:url('icons/splashyIcons/lock_small_locked.png') no-repeat center center;}
+.icon-luck-cloud-lock_small_unlocked {background:url('icons/splashyIcons/lock_small_unlocked.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark {background:url('icons/splashyIcons/mail_dark.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_down {background:url('icons/splashyIcons/mail_dark_down.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_left {background:url('icons/splashyIcons/mail_dark_left.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_new_1 {background:url('icons/splashyIcons/mail_dark_new_1.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_new_2 {background:url('icons/splashyIcons/mail_dark_new_2.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_right {background:url('icons/splashyIcons/mail_dark_right.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_stuffed {background:url('icons/splashyIcons/mail_dark_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-mail_dark_up {background:url('icons/splashyIcons/mail_dark_up.png') no-repeat center center;}
+.icon-luck-cloud-mail_light {background:url('icons/splashyIcons/mail_light.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_down {background:url('icons/splashyIcons/mail_light_down.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_left {background:url('icons/splashyIcons/mail_light_left.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_new_1 {background:url('icons/splashyIcons/mail_light_new_1.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_new_2 {background:url('icons/splashyIcons/mail_light_new_2.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_right {background:url('icons/splashyIcons/mail_light_right.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_stuffed {background:url('icons/splashyIcons/mail_light_stuffed.png') no-repeat center center;}
+.icon-luck-cloud-mail_light_up {background:url('icons/splashyIcons/mail_light_up.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_add {background:url('icons/splashyIcons/marker_rounded_add.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_blue {background:url('icons/splashyIcons/marker_rounded_blue.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_edit {background:url('icons/splashyIcons/marker_rounded_edit.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_green {background:url('icons/splashyIcons/marker_rounded_green.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_grey_1 {background:url('icons/splashyIcons/marker_rounded_grey_1.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_grey_2 {background:url('icons/splashyIcons/marker_rounded_grey_2.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_grey_3 {background:url('icons/splashyIcons/marker_rounded_grey_3.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_grey_4 {background:url('icons/splashyIcons/marker_rounded_grey_4.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_grey_5 {background:url('icons/splashyIcons/marker_rounded_grey_5.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_light_blue {background:url('icons/splashyIcons/marker_rounded_light_blue.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_new {background:url('icons/splashyIcons/marker_rounded_new.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_orange {background:url('icons/splashyIcons/marker_rounded_orange.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_pink {background:url('icons/splashyIcons/marker_rounded_pink.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_red {background:url('icons/splashyIcons/marker_rounded_red.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_remove {background:url('icons/splashyIcons/marker_rounded_remove.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_violet {background:url('icons/splashyIcons/marker_rounded_violet.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_yellow {background:url('icons/splashyIcons/marker_rounded_yellow.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_yellow_green {background:url('icons/splashyIcons/marker_rounded_yellow_green.png') no-repeat center center;}
+.icon-luck-cloud-marker_rounded_yellow_orange {background:url('icons/splashyIcons/marker_rounded_yellow_orange.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_add {background:url('icons/splashyIcons/marker_squared_add.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_blue {background:url('icons/splashyIcons/marker_squared_blue.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_edit {background:url('icons/splashyIcons/marker_squared_edit.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_green {background:url('icons/splashyIcons/marker_squared_green.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_grey_1 {background:url('icons/splashyIcons/marker_squared_grey_1.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_grey_2 {background:url('icons/splashyIcons/marker_squared_grey_2.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_grey_3 {background:url('icons/splashyIcons/marker_squared_grey_3.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_grey_4 {background:url('icons/splashyIcons/marker_squared_grey_4.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_grey_5 {background:url('icons/splashyIcons/marker_squared_grey_5.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_light_blue {background:url('icons/splashyIcons/marker_squared_light_blue.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_new {background:url('icons/splashyIcons/marker_squared_new.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_orange {background:url('icons/splashyIcons/marker_squared_orange.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_pink {background:url('icons/splashyIcons/marker_squared_pink.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_red {background:url('icons/splashyIcons/marker_squared_red.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_removed {background:url('icons/splashyIcons/marker_squared_removed.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_violet {background:url('icons/splashyIcons/marker_squared_violet.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_yellow {background:url('icons/splashyIcons/marker_squared_yellow.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_yellow_green {background:url('icons/splashyIcons/marker_squared_yellow_green.png') no-repeat center center;}
+.icon-luck-cloud-marker_squared_yellow_orange {background:url('icons/splashyIcons/marker_squared_yellow_orange.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_first {background:url('icons/splashyIcons/media_controls_dark_first.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_forward {background:url('icons/splashyIcons/media_controls_dark_forward.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_last {background:url('icons/splashyIcons/media_controls_dark_last.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_pause {background:url('icons/splashyIcons/media_controls_dark_pause.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_play {background:url('icons/splashyIcons/media_controls_dark_play.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_rewind {background:url('icons/splashyIcons/media_controls_dark_rewind.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_dark_stop {background:url('icons/splashyIcons/media_controls_dark_stop.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_first_small {background:url('icons/splashyIcons/media_controls_first_small.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_forward_small {background:url('icons/splashyIcons/media_controls_forward_small.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_last_small {background:url('icons/splashyIcons/media_controls_last_small.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_first {background:url('icons/splashyIcons/media_controls_light_first.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_forward {background:url('icons/splashyIcons/media_controls_light_forward.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_last {background:url('icons/splashyIcons/media_controls_light_last.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_pause {background:url('icons/splashyIcons/media_controls_light_pause.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_play {background:url('icons/splashyIcons/media_controls_light_play.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_rewind {background:url('icons/splashyIcons/media_controls_light_rewind.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_light_stop {background:url('icons/splashyIcons/media_controls_light_stop.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_pause_small {background:url('icons/splashyIcons/media_controls_pause_small.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_play_small {background:url('icons/splashyIcons/media_controls_play_small.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_rewind_small {background:url('icons/splashyIcons/media_controls_rewind_small.png') no-repeat center center;}
+.icon-luck-cloud-media_controls_stop_small {background:url('icons/splashyIcons/media_controls_stop_small.png') no-repeat center center;}
+.icon-luck-cloud-menu {background:url('icons/splashyIcons/menu.png') no-repeat center center;}
+.icon-luck-cloud-menu_dropdown {background:url('icons/splashyIcons/menu_dropdown.png') no-repeat center center;}
+.icon-luck-cloud-movie_blue {background:url('icons/splashyIcons/movie_blue.png') no-repeat center center;}
+.icon-luck-cloud-movie_blue_film_strip {background:url('icons/splashyIcons/movie_blue_film_strip.png') no-repeat center center;}
+.icon-luck-cloud-movie_grey {background:url('icons/splashyIcons/movie_grey.png') no-repeat center center;}
+.icon-luck-cloud-movie_grey_camera {background:url('icons/splashyIcons/movie_grey_camera.png') no-repeat center center;}
+.icon-luck-cloud-movie_grey_dark {background:url('icons/splashyIcons/movie_grey_dark.png') no-repeat center center;}
+.icon-luck-cloud-movie_grey_light {background:url('icons/splashyIcons/movie_grey_light.png') no-repeat center center;}
+.icon-luck-cloud-movie_play {background:url('icons/splashyIcons/movie_play.png') no-repeat center center;}
+.icon-luck-cloud-music_cd_blue_note {background:url('icons/splashyIcons/music_cd_blue_note.png') no-repeat center center;}
+.icon-luck-cloud-music_cd_blue_notes {background:url('icons/splashyIcons/music_cd_blue_notes.png') no-repeat center center;}
+.icon-luck-cloud-music_green {background:url('icons/splashyIcons/music_green.png') no-repeat center center;}
+.icon-luck-cloud-music_green_note {background:url('icons/splashyIcons/music_green_note.png') no-repeat center center;}
+.icon-luck-cloud-music_grey {background:url('icons/splashyIcons/music_grey.png') no-repeat center center;}
+.icon-luck-cloud-new_1 {background:url('icons/splashyIcons/new_1.png') no-repeat center center;}
+.icon-luck-cloud-new_2 {background:url('icons/splashyIcons/new_2.png') no-repeat center center;}
+.icon-luck-cloud-new_3 {background:url('icons/splashyIcons/new_3.png') no-repeat center center;}
+.icon-luck-cloud-new_4 {background:url('icons/splashyIcons/new_4.png') no-repeat center center;}
+.icon-luck-cloud-new_5 {background:url('icons/splashyIcons/new_5.png') no-repeat center center;}
+.icon-luck-cloud-new_6 {background:url('icons/splashyIcons/new_6.png') no-repeat center center;}
+.icon-luck-cloud-new_small {background:url('icons/splashyIcons/new_small.png') no-repeat center center;}
+.icon-luck-cloud-okay {background:url('icons/splashyIcons/okay.png') no-repeat center center;}
+.icon-luck-cloud-okay_small {background:url('icons/splashyIcons/okay_small.png') no-repeat center center;}
+.icon-luck-cloud-pagination_1_first {background:url('icons/splashyIcons/pagination_1_first.png') no-repeat center center;}
+.icon-luck-cloud-pagination_1_last {background:url('icons/splashyIcons/pagination_1_last.png') no-repeat center center;}
+.icon-luck-cloud-pagination_1_next {background:url('icons/splashyIcons/pagination_1_next.png') no-repeat center center;}
+.icon-luck-cloud-pagination_1_previous {background:url('icons/splashyIcons/pagination_1_previous.png') no-repeat center center;}
+.icon-luck-cloud-pencil {background:url('icons/splashyIcons/pencil.png') no-repeat center center;}
+.icon-luck-cloud-pencil_small {background:url('icons/splashyIcons/pencil_small.png') no-repeat center center;}
+.icon-luck-cloud-printer {background:url('icons/splashyIcons/printer.png') no-repeat center center;}
+.icon-luck-cloud-quanitity_capsule_1 {background:url('icons/splashyIcons/quanitity_capsule_1.png') no-repeat center center;}
+.icon-luck-cloud-quantity_capsule_2 {background:url('icons/splashyIcons/quantity_capsule_2.png') no-repeat center center;}
+.icon-luck-cloud-quantity_capsule_3 {background:url('icons/splashyIcons/quantity_capsule_3.png') no-repeat center center;}
+.icon-luck-cloud-quantity_capsule_4 {background:url('icons/splashyIcons/quantity_capsule_4.png') no-repeat center center;}
+.icon-luck-cloud-quantity_capsule_5 {background:url('icons/splashyIcons/quantity_capsule_5.png') no-repeat center center;}
+.icon-luck-cloud-refresh {background:url('icons/splashyIcons/refresh.png') no-repeat center center;}
+.icon-luck-cloud-refresh_backwards {background:url('icons/splashyIcons/refresh_backwards.png') no-repeat center center;}
+.icon-luck-cloud-refresh_forward {background:url('icons/splashyIcons/refresh_forward.png') no-repeat center center;}
+.icon-luck-cloud-remove {background:url('icons/splashyIcons/remove.png') no-repeat center center;}
+.icon-luck-cloud-remove_minus_sign {background:url('icons/splashyIcons/remove_minus_sign.png') no-repeat center center;}
+.icon-luck-cloud-remove_minus_sign_outline {background:url('icons/splashyIcons/remove_minus_sign_outline.png') no-repeat center center;}
+.icon-luck-cloud-remove_minus_sign_small {background:url('icons/splashyIcons/remove_minus_sign_small.png') no-repeat center center;}
+.icon-luck-cloud-remove_outline {background:url('icons/splashyIcons/remove_outline.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_align_center {background:url('icons/splashyIcons/rich_text_align_center.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_align_left {background:url('icons/splashyIcons/rich_text_align_left.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_align_right {background:url('icons/splashyIcons/rich_text_align_right.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_bold {background:url('icons/splashyIcons/rich_text_bold.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_color {background:url('icons/splashyIcons/rich_text_color.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_italics {background:url('icons/splashyIcons/rich_text_italics.png') no-repeat center center;}
+.icon-luck-cloud-rich_text_underline {background:url('icons/splashyIcons/rich_text_underline.png') no-repeat center center;}
+.icon-luck-cloud-search {background:url('icons/splashyIcons/search.png') no-repeat center center;}
+.icon-luck-cloud-share_small {background:url('icons/splashyIcons/share_small.png') no-repeat center center;}
+.icon-luck-cloud-shield {background:url('icons/splashyIcons/shield.png') no-repeat center center;}
+.icon-luck-cloud-shield_chevrons {background:url('icons/splashyIcons/shield_chevrons.png') no-repeat center center;}
+.icon-luck-cloud-shield_star {background:url('icons/splashyIcons/shield_star.png') no-repeat center center;}
+.icon-luck-cloud-slider {background:url('icons/splashyIcons/slider.png') no-repeat center center;}
+.icon-luck-cloud-slider_no_pointy_thing {background:url('icons/splashyIcons/slider_no_pointy_thing.png') no-repeat center center;}
+.icon-luck-cloud-smiley_amused {background:url('icons/splashyIcons/smiley_amused.png') no-repeat center center;}
+.icon-luck-cloud-smiley_happy {background:url('icons/splashyIcons/smiley_happy.png') no-repeat center center;}
+.icon-luck-cloud-smiley_surprised {background:url('icons/splashyIcons/smiley_surprised.png') no-repeat center center;}
+.icon-luck-cloud-sprocket_dark {background:url('icons/splashyIcons/sprocket_dark.png') no-repeat center center;}
+.icon-luck-cloud-sprocket_dark_dropdown {background:url('icons/splashyIcons/sprocket_dark_dropdown.png') no-repeat center center;}
+.icon-luck-cloud-sprocket_light {background:url('icons/splashyIcons/sprocket_light.png') no-repeat center center;}
+.icon-luck-cloud-sprocket_light_dropdown {background:url('icons/splashyIcons/sprocket_light_dropdown.png') no-repeat center center;}
+.icon-luck-cloud-star_boxed_empty {background:url('icons/splashyIcons/star_boxed_empty.png') no-repeat center center;}
+.icon-luck-cloud-star_boxed_full {background:url('icons/splashyIcons/star_boxed_full.png') no-repeat center center;}
+.icon-luck-cloud-star_boxed_half {background:url('icons/splashyIcons/star_boxed_half.png') no-repeat center center;}
+.icon-luck-cloud-star_empty {background:url('icons/splashyIcons/star_empty.png') no-repeat center center;}
+.icon-luck-cloud-star_full {background:url('icons/splashyIcons/star_full.png') no-repeat center center;}
+.icon-luck-cloud-star_half {background:url('icons/splashyIcons/star_half.png') no-repeat center center;}
+.icon-luck-cloud-tag {background:url('icons/splashyIcons/tag.png') no-repeat center center;}
+.icon-luck-cloud-tag_add {background:url('icons/splashyIcons/tag_add.png') no-repeat center center;}
+.icon-luck-cloud-tag_edit {background:url('icons/splashyIcons/tag_edit.png') no-repeat center center;}
+.icon-luck-cloud-tag_remove {background:url('icons/splashyIcons/tag_remove.png') no-repeat center center;}
+.icon-luck-cloud-ticket {background:url('icons/splashyIcons/ticket.png') no-repeat center center;}
+.icon-luck-cloud-ticket_add {background:url('icons/splashyIcons/ticket_add.png') no-repeat center center;}
+.icon-luck-cloud-ticket_remove {background:url('icons/splashyIcons/ticket_remove.png') no-repeat center center;}
+.icon-luck-cloud-upload {background:url('icons/splashyIcons/upload.png') no-repeat center center;}
+.icon-luck-cloud-view_less_text {background:url('icons/splashyIcons/view_less_text.png') no-repeat center center;}
+.icon-luck-cloud-view_list {background:url('icons/splashyIcons/view_list.png') no-repeat center center;}
+.icon-luck-cloud-view_list_with_thumbnail {background:url('icons/splashyIcons/view_list_with_thumbnail.png') no-repeat center center;}
+.icon-luck-cloud-view_more_text {background:url('icons/splashyIcons/view_more_text.png') no-repeat center center;}
+.icon-luck-cloud-view_outline {background:url('icons/splashyIcons/view_outline.png') no-repeat center center;}
+.icon-luck-cloud-view_outline_detail {background:url('icons/splashyIcons/view_outline_detail.png') no-repeat center center;}
+.icon-luck-cloud-view_table {background:url('icons/splashyIcons/view_table.png') no-repeat center center;}
+.icon-luck-cloud-view_thumbnail {background:url('icons/splashyIcons/view_thumbnail.png') no-repeat center center;}
+.icon-luck-cloud-view_tree_classic {background:url('icons/splashyIcons/view_tree_classic.png') no-repeat center center;}
+.icon-luck-cloud-view_tree_modernist {background:url('icons/splashyIcons/view_tree_modernist.png') no-repeat center center;}
+.icon-luck-cloud-volume {background:url('icons/splashyIcons/volume.png') no-repeat center center;}
+.icon-luck-cloud-volume_loud {background:url('icons/splashyIcons/volume_loud.png') no-repeat center center;}
+.icon-luck-cloud-volume_mute {background:url('icons/splashyIcons/volume_mute.png') no-repeat center center;}
+.icon-luck-cloud-volume_off {background:url('icons/splashyIcons/volume_off.png') no-repeat center center;}
+.icon-luck-cloud-volume_quiet {background:url('icons/splashyIcons/volume_quiet.png') no-repeat center center;}
+.icon-luck-cloud-warning {background:url('icons/splashyIcons/warning.png') no-repeat center center;}
+.icon-luck-cloud-warning_triangle {background:url('icons/splashyIcons/warning_triangle.png') no-repeat center center;}
+.icon-luck-cloud-warning_triangle_small {background:url('icons/splashyIcons/warning_triangle_small.png') no-repeat center center;}
+.icon-luck-cloud-zoom {background:url('icons/splashyIcons/zoom.png') no-repeat center center;}
+.icon-luck-cloud-zoom_in {background:url('icons/splashyIcons/zoom_in.png') no-repeat center center;}
+.icon-luck-cloud-zoom_out {background:url('icons/splashyIcons/zoom_out.png') no-repeat center center;}
+
+.datagrid-row {height: 40px;}
+
+.luckcloud-moduIcon-monitorCenterIcon{background:url('icons/moduIcon/monitorCenterIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-dispatchMrgIcon{background:url('icons/moduIcon/dispatchMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-enterpriseMrgIcon{background:url('icons/moduIcon/enterpriseMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-networkMrgIcon{background:url('icons/moduIcon/networkMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-carMrgIcon{background:url('icons/moduIcon/carMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-orderMrgIcon{background:url('icons/moduIcon/orderMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-memberMrgIcon{background:url('icons/moduIcon/memberMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-reportIcon{background:url('icons/moduIcon/reportIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-adIcon{background:url('icons/moduIcon/adIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-evaluateIcon{background:url('icons/moduIcon/evaluateIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-systemSettingIcon{background:url('icons/moduIcon/systemSettingIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-systemMrgIcon{background:url('icons/moduIcon/systemMrgIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-versionIcon{background:url('icons/moduIcon/versionIcon.png') no-repeat center center;}
+.luckcloud-moduIcon-msgMrgIcon{background:url('icons/moduIcon/msgMrgIcon.png') no-repeat center center;}  
+.luckcloud-moduIcon-pileIcon{background:url('icons/moduIcon/pile.png') no-repeat center center;}
+.luckcloud-moduIcon-businessAnalysis{background:url('icons/moduIcon/businessAnalysis.png') no-repeat center center;}
+.luckcloud-moduIcon-financialStatement{background:url('icons/moduIcon/financialStatement.png') no-repeat center center;}
+
+
+.icon-luck-cloud-16-car {background:url('icons/16/car.png') no-repeat center center;}
+.icon-luck-cloud-16-cart {background:url('icons/16/cart.png') no-repeat center center;}
+.icon-luck-cloud-16-cart_add {background:url('icons/16/cart_add.png') no-repeat center center;}
+.icon-luck-cloud-16-cart_delete {background:url('icons/16/cart_delete.png') no-repeat center center;}
+.icon-luck-cloud-16-cart_edit {background:url('icons/16/cart_edit.png') no-repeat center center;}
+.icon-luck-cloud-16-cart_error {background:url('icons/16/cart_error.png') no-repeat center center;}
+.icon-luck-cloud-16-cart_full {background:url('icons/16/cart_full.png') no-repeat center center;}
+.icon-luck-cloud-16-car_add {background:url('icons/16/car_add.png') no-repeat center center;}
+.icon-luck-cloud-16-car_delete {background:url('icons/16/car_delete.png') no-repeat center center;}
+.icon-luck-cloud-16-car_error {background:url('icons/16/car_error.png') no-repeat center center;}
+.icon-luck-cloud-16-car_red {background:url('icons/16/car_red.png') no-repeat center center;}
+.icon-luck-cloud-16-car_start {background:url('icons/16/car_start.png') no-repeat center center;}
+.icon-luck-cloud-16-car_stop {background:url('icons/16/car_stop.png') no-repeat center center;}
+    
+    

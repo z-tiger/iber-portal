@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.longRent.LongRentOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.longRent.LongRentOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="appointmen_take_car_time" property="appointmenTakeCarTime" jdbcType="TIMESTAMP" />
+    <result column="appointmen_take_park_id" property="appointmenTakeParkId" jdbcType="INTEGER" />
+    <result column="appointmen_return_car_time" property="appointmenReturnCarTime" jdbcType="TIMESTAMP" />
+    <result column="appointmen_return_car_park_id" property="appointmenReturnCarParkId" jdbcType="INTEGER" />
+    <result column="appointmen_return_date" property="appointmenReturnDate" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="member_phone" property="memberPhone" jdbcType="VARCHAR" />
+    <result column="appointmen_car_num" property="appointmenCarNum" jdbcType="INTEGER" />
+    <result column="total_mny" property="totalMny" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_by" property="lastModifyBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, member_id, city_code, appointmen_take_car_time, appointmen_take_park_id, 
+    appointmen_return_car_time, appointmen_return_car_park_id, appointmen_return_date, 
+    order_status, member_name, member_phone, appointmen_car_num, total_mny, create_time, 
+    create_by, last_modify_time, last_modify_by
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_long_rent_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_long_rent_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.longRent.LongRentOrder" >
+    insert into x_long_rent_order (id, order_id, member_id, 
+      city_code, appointmen_take_car_time, appointmen_take_park_id, 
+      appointmen_return_car_time, appointmen_return_car_park_id, 
+      appointmen_return_date, order_status, member_name, 
+      member_phone, appointmen_car_num, total_mny, 
+      create_time, create_by, last_modify_time, 
+      last_modify_by)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, 
+      #{cityCode,jdbcType=VARCHAR}, #{appointmenTakeCarTime,jdbcType=TIMESTAMP}, #{appointmenTakeParkId,jdbcType=INTEGER}, 
+      #{appointmenReturnCarTime,jdbcType=TIMESTAMP}, #{appointmenReturnCarParkId,jdbcType=INTEGER}, 
+      #{appointmenReturnDate,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR}, 
+      #{memberPhone,jdbcType=VARCHAR}, #{appointmenCarNum,jdbcType=INTEGER}, #{totalMny,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
+      #{lastModifyBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.longRent.LongRentOrder" >
+    insert into x_long_rent_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="appointmenTakeCarTime != null" >
+        appointmen_take_car_time,
+      </if>
+      <if test="appointmenTakeParkId != null" >
+        appointmen_take_park_id,
+      </if>
+      <if test="appointmenReturnCarTime != null" >
+        appointmen_return_car_time,
+      </if>
+      <if test="appointmenReturnCarParkId != null" >
+        appointmen_return_car_park_id,
+      </if>
+      <if test="appointmenReturnDate != null" >
+        appointmen_return_date,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="memberName != null" >
+        member_name,
+      </if>
+      <if test="memberPhone != null" >
+        member_phone,
+      </if>
+      <if test="appointmenCarNum != null" >
+        appointmen_car_num,
+      </if>
+      <if test="totalMny != null" >
+        total_mny,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time,
+      </if>
+      <if test="lastModifyBy != null" >
+        last_modify_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmenTakeCarTime != null" >
+        #{appointmenTakeCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenTakeParkId != null" >
+        #{appointmenTakeParkId,jdbcType=INTEGER},
+      </if>
+      <if test="appointmenReturnCarTime != null" >
+        #{appointmenReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenReturnCarParkId != null" >
+        #{appointmenReturnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="appointmenReturnDate != null" >
+        #{appointmenReturnDate,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null" >
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPhone != null" >
+        #{memberPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmenCarNum != null" >
+        #{appointmenCarNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalMny != null" >
+        #{totalMny,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null" >
+        #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyBy != null" >
+        #{lastModifyBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.longRent.LongRentOrder" >
+    update x_long_rent_order
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmenTakeCarTime != null" >
+        appointmen_take_car_time = #{appointmenTakeCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenTakeParkId != null" >
+        appointmen_take_park_id = #{appointmenTakeParkId,jdbcType=INTEGER},
+      </if>
+      <if test="appointmenReturnCarTime != null" >
+        appointmen_return_car_time = #{appointmenReturnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointmenReturnCarParkId != null" >
+        appointmen_return_car_park_id = #{appointmenReturnCarParkId,jdbcType=INTEGER},
+      </if>
+      <if test="appointmenReturnDate != null" >
+        appointmen_return_date = #{appointmenReturnDate,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null" >
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPhone != null" >
+        member_phone = #{memberPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmenCarNum != null" >
+        appointmen_car_num = #{appointmenCarNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalMny != null" >
+        total_mny = #{totalMny,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyBy != null" >
+        last_modify_by = #{lastModifyBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.longRent.LongRentOrder" >
+    update x_long_rent_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      appointmen_take_car_time = #{appointmenTakeCarTime,jdbcType=TIMESTAMP},
+      appointmen_take_park_id = #{appointmenTakeParkId,jdbcType=INTEGER},
+      appointmen_return_car_time = #{appointmenReturnCarTime,jdbcType=TIMESTAMP},
+      appointmen_return_car_park_id = #{appointmenReturnCarParkId,jdbcType=INTEGER},
+      appointmen_return_date = #{appointmenReturnDate,jdbcType=VARCHAR},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      member_name = #{memberName,jdbcType=VARCHAR},
+      member_phone = #{memberPhone,jdbcType=VARCHAR},
+      appointmen_car_num = #{appointmenCarNum,jdbcType=INTEGER},
+      total_mny = #{totalMny,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      last_modify_by = #{lastModifyBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="bitchUpdateInvoiceStatus">
+ 	 update x_long_rent_order set    invoice_status= #{invocieStatus}   where id
+		<foreach collection="list" item="item" index="index" open="in(" close=")" separator=",">
+			#{item}
+		</foreach>
+  </update>
+</mapper>

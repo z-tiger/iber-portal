@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.coupon.CouponItemMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.coupon.CouponItem" >
+	<result column="id" property="id"/>
+	<result column="itemName" property="itemname"/>
+	<result column="itemCode" property="itemcode"/>
+	<result column="number" property="number"/>
+	<result column="balance" property="balance"/>
+	<result column="status" property="status"/>
+	<result column="createId" property="createid"/>
+	<result column="createTime" property="createtime"/>
+	<result column="updateId" property="updateid"/>
+	<result column="create_name" property="createName"/>
+	<result column="update_name" property="updateName"/>
+	<result column="updateTime" property="updatetime"/>
+	<result column="deadline" property="deadline"/>
+    <result column="use_type" property="useType"/>
+	<result column="min_use_value" property="minUseValue"/>
+	<result column="start_time" property="startTime"/>
+	<result column="end_time" property="endTime"/>
+	<result column="city_name" property="cityName"/>
+	<result column="city_code" property="cityCode"/>
+	<result column="max_deduction_value" property="maxDeductionValue"/>
+</resultMap>
+       
+<!-- x_coupon_item table all fields -->
+<sql id="Base_Column_List" >
+	 id,itemName,itemCode,number,balance,status,createId,createTime,
+	 updateId,updateTime,deadline,use_type,min_use_value,start_time,end_time,max_deduction_value
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.coupon.CouponItem" >
+  insert into x_coupon_item(id,itemname,itemcode,number,balance,status,createid,createtime,updateid,updatetime,deadline,max_deduction_value)
+ values(#{id},#{itemname},#{itemcode},#{number},#{balance},#{status},#{createid},#{createtime},#{updateid},#{updatetime},#{deadline},#{maxDeductionValue})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_coupon_item where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey"  parameterType="java.lang.Integer">
+
+	update x_coupon_item 
+	 <set>
+		 <if test="itemname != null" >
+		      itemName=#{itemname},
+		 </if>
+		 <if test="itemcode != null" >
+		 </if>
+			 itemCode=#{itemcode},
+		 <if test="number != null" >
+			 number=#{number},
+		 </if>	 
+		 <if test="balance != null" >
+			 balance=#{balance},
+		 </if>	 
+		 <if test="status != null or status == 0" >
+		 	status=#{status},
+		 </if>
+		 <if test="createid!= null" >
+		 	createId=#{createid},
+		 </if>
+		 <if test="updateid != null" >
+			 updateId=#{updateid},
+		 </if>
+			 updateTime=now(),
+		 <if test="deadline != null" >
+			 deadline=#{deadline},
+		 </if>
+		 <if test="startTime != null">
+		 	 start_time = #{startTime},
+		 </if>
+		 <if test="endTime != null">
+		 	 end_time = #{endTime},
+		 </if>	  
+		 <if test="maxDeductionValue != null">
+		 	 max_deduction_value = #{maxDeductionValue},
+		 </if>	  
+	</set>
+		where id=#{id}
+</update>
+
+<!-- 根据id查询 优惠券配置项 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_coupon_item where id = #{id}
+</select>
+
+<!-- 优惠券配置项 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_coupon_item c where 1=1 
+ 	<if test="itemName != null and itemName != '' " >
+        and c.itemName=#{itemName,jdbcType=VARCHAR}
+    </if>
+	<if test="status != null and status != '' " >
+       and c.status= #{status,jdbcType=INTEGER}
+    </if>
+	<if test="cityCode != null and  cityCode != '' and cityCode != '00' " >
+		and c.city_code= #{cityCode,jdbcType=INTEGER}
+	</if>
+</select>
+  	
+<!-- 查询优惠券配置项列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select
+	c.id,c.itemName,c.itemCode,c.number,c.balance,c.status,c.createId,c.createTime,c.max_deduction_value,
+	c.updateId,c.updateTime,c.deadline,c.use_type,c.min_use_value,c.start_time,c.end_time,xc.NAME as city_name,
+	(select name from x_sys_user u where u.id = c.createId ) create_name,
+	(select name from x_sys_user u where u.id = c.updateId ) update_name
+	from x_coupon_item c
+	LEFT JOIN x_city xc on xc.code = c.city_code
+	 where 1 =1 
+	<if test="itemName != null and itemName != '' " >
+        and c.itemName LIKE CONCAT('%',#{itemName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="status != null and status != '' " >
+       and c.status= #{status,jdbcType=INTEGER}
+    </if>
+	<if test="cityCode != null and  cityCode != '' and cityCode != '00' " >
+		and c.city_code= #{cityCode,jdbcType=INTEGER}
+	</if>
+	order by c.city_code ,c.itemCode desc
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+
+<!-- 根据code查询 -->
+<select id="queryByItemCode" parameterType="string" resultType="java.lang.Integer">
+  select count(1) from  x_coupon_item  where itemCode=#{itemCode,jdbcType=VARCHAR} 
+</select>
+<!-- 根据code查询 -->
+<select id="selectByItemCode" parameterType="string" resultMap="BaseResultMap">
+  select * from  x_coupon_item  where itemCode=#{itemCode,jdbcType=VARCHAR}
+	<if test="cityCode != null and  cityCode!= ''" >
+		and (city_code=#{cityCode} or city_code=00)
+	</if>
+	ORDER by status desc,city_code DESC
+	LIMIT 1
+</select>
+
+<select id="selectByItmeCodeAndCreateTime" resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List"/>
+	from x_coupon_item
+	where itemCode = #{activityName} and createTime = #{createTime}
+</select>
+  	<update id="updateByCouponId" parameterType="java.util.Map">
+
+	update x_coupon_item 
+	 <set>
+		 <if test="itemname != null" >
+		      itemName=#{itemname},
+		 </if>
+		 <if test="itemcode != null" >
+		 </if>
+			 itemCode=#{itemcode},
+		 <if test="number != null" >
+			 number=#{number},
+		 </if>	 
+		 <if test="balance != null" >
+			 balance=#{balance},
+		 </if>	 
+		 <if test="status != null" >
+		 	status=#{status},
+		 </if>
+		 <if test="createid!= null" >
+		 	createId=#{createid},
+		 </if>
+		 <if test="updateid != null" >
+			 updateId=#{updateid},
+		 </if>
+			 updateTime=now(),
+		 <if test="deadline != null" >
+			 deadline=#{deadline},
+		 </if>	 
+		 <if test="useType != null" >
+			 use_type=#{useType},
+		 </if>
+		 <if test="minUseValue != null" >
+			 min_use_value=#{minUseValue},
+		 </if>
+		 <if test="startTime != null">
+		 	start_time = #{startTime},
+		 </if>
+		 <if test="endTime != null">
+		 	end_time = #{endTime},
+		 </if>
+		 <if test="city_code != null and city_code != ''">
+			 city_code = #{city_code}
+		 </if>
+		 <if test="maxDeductionValue != null ">
+			 max_deduction_value = #{maxDeductionValue}
+		 </if>
+	</set>
+	where id=#{id}
+</update>
+<insert id="insertItem" parameterType="java.util.Map">
+	insert into
+	x_coupon_item(id,itemname,itemcode,number,balance,status,createid,createtime,updateid,updatetime,deadline,start_time,end_time,city_code,use_type,min_use_value,max_deduction_value)
+	values(#{id},#{itemname},#{itemcode},#{number},#{balance},#{status},#{createid},#{createtime},#{updateid},#{updatetime},#{deadline},#{startTime},#{endTime},#{city_code},#{useType},#{minUseValue},#{maxDeductionValue})
+</insert>
+<select id="queryItemByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select 
+	<include refid="Base_Column_List"/>,city_code
+	from x_coupon_item where 1 =1 and 
+	itemCode = #{itemCode,jdbcType=VARCHAR}
+	<if test="cityCode != null and cityCode !=''" >
+		and (city_code = #{cityCode,jdbcType=VARCHAR} or city_code = '00')
+	</if>
+	ORDER BY status desc,city_code DESC
+	limit 1
+</select>
+<select id="queryValidItemByCode" resultMap="BaseResultMap" >
+	select 
+	<include refid="Base_Column_List"/>,city_code
+	from x_coupon_item where `status`=1 and 
+	itemCode = #{itemCode,jdbcType=VARCHAR}
+	<if test="cityCode != null and cityCode !=''" >
+		and (city_code = #{cityCode,jdbcType=VARCHAR} or city_code = '00')
+	</if>
+	ORDER BY status desc,city_code DESC
+	limit 1
+</select>
+
+<select id="selectAll" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from x_coupon_item
+</select>
+</mapper>   

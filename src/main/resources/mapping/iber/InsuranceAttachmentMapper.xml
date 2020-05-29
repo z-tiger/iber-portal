@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.insurance.InsuranceAttachmentMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.insurance.InsuranceAttachment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="attach_name" property="attachName" jdbcType="VARCHAR" />
+    <result column="attach_url" property="attachUrl" jdbcType="VARCHAR" />
+    <result column="attach_size" property="attachSize" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="attach_type" property="attachType" jdbcType="VARCHAR" />
+    <result column="insurance_id" property="insuranceId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, attach_name, attach_url, attach_size, create_time, attach_type, insurance_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_insurance_attachment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_insurance_attachment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.insurance.InsuranceAttachment" >
+    insert into x_insurance_attachment (id, attach_name, attach_url, 
+      attach_size, create_time, attach_type, 
+      insurance_id)
+    values (#{id,jdbcType=INTEGER}, #{attachName,jdbcType=VARCHAR}, #{attachUrl,jdbcType=VARCHAR}, 
+      #{attachSize,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{attachType,jdbcType=VARCHAR}, 
+      #{insuranceId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.insurance.InsuranceAttachment" >
+    insert into x_insurance_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="attachName != null" >
+        attach_name,
+      </if>
+      <if test="attachUrl != null" >
+        attach_url,
+      </if>
+      <if test="attachSize != null" >
+        attach_size,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="attachType != null" >
+        attach_type,
+      </if>
+      <if test="insuranceId != null" >
+        insurance_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="attachName != null" >
+        #{attachName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachUrl != null" >
+        #{attachUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachSize != null" >
+        #{attachSize,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attachType != null" >
+        #{attachType,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceId != null" >
+        #{insuranceId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.insurance.InsuranceAttachment" >
+    update x_insurance_attachment
+    <set >
+      <if test="attachName != null" >
+        attach_name = #{attachName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachUrl != null" >
+        attach_url = #{attachUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachSize != null" >
+        attach_size = #{attachSize,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attachType != null" >
+        attach_type = #{attachType,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceId != null" >
+        insurance_id = #{insuranceId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.insurance.InsuranceAttachment" >
+    update x_insurance_attachment
+    set attach_name = #{attachName,jdbcType=VARCHAR},
+      attach_url = #{attachUrl,jdbcType=VARCHAR},
+      attach_size = #{attachSize,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      attach_type = #{attachType,jdbcType=VARCHAR},
+      insurance_id = #{insuranceId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllAttachment" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> 
+    from x_insurance_attachment where 1=1 
+    <if test="insuranceId != null and insuranceId != '' " >
+        and insurance_id = #{insuranceId,jdbcType=INTEGER} 
+    </if>
+    <if test="attachType != null and attachType != '' " >
+        and attach_type = #{attachType,jdbcType=VARCHAR} 
+    </if>
+     order by create_time desc
+  </select>
+</mapper>

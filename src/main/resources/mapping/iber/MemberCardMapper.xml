@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MemberCardMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.MemberCard" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="INTEGER" />
+    <result column="last_date_time" property="lastDateTime" jdbcType="TIMESTAMP" />
+    <result column="last_money" property="lastMoney" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_charge_time" property="lastChargeTime" jdbcType="TIMESTAMP" />
+    <result column="total_charge_money" property="totalChargeMoney" jdbcType="INTEGER" />
+    <result column="total_consume_money" property="totalConsumeMoney" jdbcType="INTEGER" />
+    <result column="last_comsume_time" property="lastComsumeTime" jdbcType="TIMESTAMP" />
+    <result column="total_refund_money" property="totalRefundMoney" jdbcType="INTEGER" />
+    <result column="last_refund_time" property="lastRefundTime" jdbcType="TIMESTAMP" />
+    <result column="deposit" property="deposit" jdbcType="INTEGER" />
+    <result column="deposit_date_time" property="depositDateTime" jdbcType="TIMESTAMP" />
+    <result column="quota" property="quota" jdbcType="INTEGER" />
+    <result column="quota_month" property="quotaMonth" jdbcType="INTEGER" />
+    <result column="quota_date_time" property="quotaDateTime" jdbcType="TIMESTAMP" />
+    <result column="quota_use_money" property="quotaUseMoney" jdbcType="INTEGER" />
+    <result column="integral" property="integral" jdbcType="INTEGER" />
+    <result column="blocking_reason" property="blockingReason"/>
+    <result column="contributedVal" property="contributedVal" />
+    <result column="remark" property="remark"/>
+  </resultMap>
+  
+  <resultMap id="member_card_result_map" type="com.iber.portal.vo.base.MemberCardVo" extends="BaseResultMap">
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="driver_idcard" property="driverIdcard" jdbcType="VARCHAR" />
+    <result column="accout_status" property="accoutStatus" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="total_not_use_coupon" property="totalNotUsecoupon" jdbcType="INTEGER" />
+    <result column="zhima_score" property="zhimaScore" jdbcType="VARCHAR" />
+    <result column="acp_pre_auth" property="acpPreAuth" jdbcType="INTEGER" />
+    <result column="acp_pre_auth_date" property="acpPreAuthDate" jdbcType="VARCHAR" />
+    
+    <result column="timeShareOrderId" property="timeShareOrderId" jdbcType="VARCHAR" />
+    <result column="dayRentOrderId" property="dayRentOrderId" jdbcType="VARCHAR" />
+	<result column="level_code" property="levelCode"/>
+	<result column="driver_idCard_time" property="driverIdCardTime"/>    
+	<result column="zmxyScore" property="zmxyScore"/>
+	<result column="require_deposit" property="requiredDeposit"/>
+	<result column="refund_money" property="refundMoney"/> 
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, member_id, money, last_date_time, last_money, create_time, last_charge_time, 
+    total_charge_money, total_consume_money, last_comsume_time, total_refund_money, last_refund_time, 
+    deposit, deposit_date_time, quota, quota_month, quota_date_time, quota_use_money, 
+    integral, blocking_reason, contributedVal,remark
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_card
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByMemberId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_card
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="selectAll" resultMap="member_card_result_map" parameterType="java.util.Map">
+    select a.name, a.sex, a.phone, a.idcard, a.driver_idcard, a.accout_status, a.city_code,b.blocking_reason,a.level_code,a.driver_idCard_time,b.deposit,b.remark,
+    ifnull((select deposit_value FROM x_member_deposit WHERE member_level = a.level_code),100000) require_deposit,
+    (select name from x_city c where c.code = a.city_code) city_name , 
+    (SELECT pre.money FROM x_acp_pre_auth_log pre WHERE pre.member_id = a.id AND pre.status = '1' ) acp_prerti_auth, 
+    (SELECT CONCAT(DATE_FORMAT(pre.auth_date_time, '%Y-%m-%d') ,'至' ,DATE_FORMAT(pre.auth_end_date_time, '%Y-%m-%d') ) s FROM  x_acp_pre_auth_log pre WHERE  pre.member_id = a.id AND pre.status = '1') acp_pre_auth_date, 
+    ifnull((SELECT  score FROM x_zmxy_auth zm WHERE zm.member_id = a.id), "0") zhima_score,
+    (SELECT IFNULL(SUM(balance),0) FROM x_coupon cou WHERE  cou.end_time >=NOW()  AND  cou.member_id = a.id AND cou.use_status='0') total_not_use_coupon, b.* ,
+    (select order_id from  
+       (select member_id,order_id from x_time_share_order t where t.`status` ='ordered' 
+         UNION all 
+        select member_id,order_id from x_time_share_order t where t.`status` ='useCar'
+       ) tso where member_id = a.id limit 1
+    ) timeShareOrderId ,
+<!--     (select order_id from x_time_share_order where status not in ('finish','cancel') and member_id = a.id limit 1) timeShareOrderId , -->
+	(select order_id from x_day_rent_order where pay_status = 'noPay' and order_status = 'finish'  and member_id = a.id limit 1) dayRentOrderId,
+<!-- 	ifnull((select money from x_member_refund_log where member_id = a.id and status in('1','5') order by create_time desc limit 1),0) refund_money -->
+	ifnull((select money from 
+       (select member_id,money,create_time from x_member_refund_log  where `status` ='1' 
+         UNION all
+        select member_id,money,create_time from x_member_refund_log  where `status` ='5'
+       ) mrl
+      where mrl.member_id = a.id order by mrl.create_time desc limit 1),0) refund_money
+    from x_member a join x_member_card  b on a.id = b.member_id
+            <if test="cityCode != null and cityCode !='' and cityCode !='00'">
+               and a.city_code = #{cityCode,jdbcType=VARCHAR}
+             </if>
+             <if test="name != null and name != '' ">
+               and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+             </if>
+             <if test="phone != null and phone !='' ">
+              and a.phone = #{phone,jdbcType=VARCHAR} 
+             </if>
+             <if test="debit != null and debit !='' ">
+              and (
+                (select order_id from x_time_share_order where status not in ('finish','cancel') and member_id = a.id limit 1 ) is not null 
+			  or 	
+			    (select order_id from x_day_rent_order where pay_status = 'noPay' and order_status = 'finish'  and member_id = a.id limit 1) is not  null 
+			  or b.money &lt; 0
+			  )
+             </if>
+             
+             <!-- and a.register_category NOT IN ('weixin','weibo','qq') -->
+             <!-- and a.enterprise_id is null -->
+             and a.member_level &lt;&gt; 'account'
+             <if test="offset != null and rows != null">
+		     limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+             </if>
+  </select>
+  
+  <select id="selectAllRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+       select count(1) from (
+           select a.name, a.sex, a.phone, a.idcard, a.driver_idcard, a.accout_status, a.city_code, 
+		    (select name from x_city c where c.code = a.city_code) city_name , b.* 
+		    from x_member a , x_member_card  b where a.id = b.member_id 
+		            <if test="cityCode != null and cityCode !='' and cityCode !='00'">
+		               and a.city_code = #{cityCode,jdbcType=VARCHAR}
+		             </if>
+		             <if test="name != null and name != '' ">
+		               and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		             </if>
+		             <if test="phone != null and phone !='' ">
+		              and a.phone = #{phone,jdbcType=VARCHAR} 
+		             </if>
+		              <!-- and a.register_category NOT IN ('weixin','weibo','qq') -->
+		             <!-- and a.enterprise_id is null -->
+		             and a.member_level &lt;&gt; 'account'
+       ) tab
+  </select>
+  
+  
+  <update id="memberCardFrozenThaw">
+     update x_member set accout_status = #{accoutStatus,jdbcType=VARCHAR} where id = #{memberId,jdbcType=INTEGER}
+  </update>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_card
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.MemberCard" >
+    insert into x_member_card (id, member_id, money, 
+      last_date_time, last_money, create_time, 
+      last_charge_time, total_charge_money, total_consume_money, 
+      last_comsume_time, total_refund_money, last_refund_time, 
+      deposit, deposit_date_time, quota, 
+      quota_month, quota_date_time, quota_use_money, 
+      integral,contributedVal,remark)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{money,jdbcType=INTEGER}, 
+      #{lastDateTime,jdbcType=TIMESTAMP}, #{lastMoney,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastChargeTime,jdbcType=TIMESTAMP}, #{totalChargeMoney,jdbcType=INTEGER}, #{totalConsumeMoney,jdbcType=INTEGER}, 
+      #{lastComsumeTime,jdbcType=TIMESTAMP}, #{totalRefundMoney,jdbcType=INTEGER}, #{lastRefundTime,jdbcType=TIMESTAMP}, 
+      #{deposit,jdbcType=INTEGER}, #{depositDateTime,jdbcType=TIMESTAMP}, #{quota,jdbcType=INTEGER}, 
+      #{quotaMonth,jdbcType=INTEGER}, #{quotaDateTime,jdbcType=TIMESTAMP}, #{quotaUseMoney,jdbcType=INTEGER}, 
+      #{integral,jdbcType=INTEGER},#{contributedVal,jdbcType=INTEGER},#{remark})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.MemberCard" >
+    insert into x_member_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="lastDateTime != null" >
+        last_date_time,
+      </if>
+      <if test="lastMoney != null" >
+        last_money,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastChargeTime != null" >
+        last_charge_time,
+      </if>
+      <if test="totalChargeMoney != null" >
+        total_charge_money,
+      </if>
+      <if test="totalConsumeMoney != null" >
+        total_consume_money,
+      </if>
+      <if test="lastComsumeTime != null" >
+        last_comsume_time,
+      </if>
+      <if test="totalRefundMoney != null" >
+        total_refund_money,
+      </if>
+      <if test="lastRefundTime != null" >
+        last_refund_time,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="depositDateTime != null" >
+        deposit_date_time,
+      </if>
+      <if test="quota != null" >
+        quota,
+      </if>
+      <if test="quotaMonth != null" >
+        quota_month,
+      </if>
+      <if test="quotaDateTime != null" >
+        quota_date_time,
+      </if>
+      <if test="quotaUseMoney != null" >
+        quota_use_money,
+      </if>
+      <if test="integral != null" >
+        integral,
+      </if>
+      <if test="contributedVal != null" >
+        contributedVal,
+      </if>
+      <if test="remark != null ">
+      	remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="lastDateTime != null" >
+        #{lastDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastMoney != null" >
+        #{lastMoney,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastChargeTime != null" >
+        #{lastChargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalChargeMoney != null" >
+        #{totalChargeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="totalConsumeMoney != null" >
+        #{totalConsumeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="lastComsumeTime != null" >
+        #{lastComsumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalRefundMoney != null" >
+        #{totalRefundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="lastRefundTime != null" >
+        #{lastRefundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deposit != null" >
+        #{deposit,jdbcType=INTEGER},
+      </if>
+      <if test="depositDateTime != null" >
+        #{depositDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quota != null" >
+        #{quota,jdbcType=INTEGER},
+      </if>
+      <if test="quotaMonth != null" >
+        #{quotaMonth,jdbcType=INTEGER},
+      </if>
+      <if test="quotaDateTime != null" >
+        #{quotaDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quotaUseMoney != null" >
+        #{quotaUseMoney,jdbcType=INTEGER},
+      </if>
+      <if test="integral != null" >
+        #{integral,jdbcType=INTEGER},
+      </if>
+      <if test="contributedVal != null" >
+        #{contributedVal,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+      	#{remark},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.MemberCard" >
+    update x_member_card
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="lastDateTime != null" >
+        last_date_time = #{lastDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastMoney != null" >
+        last_money = #{lastMoney,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastChargeTime != null" >
+        last_charge_time = #{lastChargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalChargeMoney != null" >
+        total_charge_money = #{totalChargeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="totalConsumeMoney != null" >
+        total_consume_money = #{totalConsumeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="lastComsumeTime != null" >
+        last_comsume_time = #{lastComsumeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalRefundMoney != null" >
+        total_refund_money = #{totalRefundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="lastRefundTime != null" >
+        last_refund_time = #{lastRefundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deposit != null" >
+        deposit = #{deposit,jdbcType=INTEGER},
+      </if>
+      <if test="depositDateTime != null" >
+        deposit_date_time = #{depositDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quota != null" >
+        quota = #{quota,jdbcType=INTEGER},
+      </if>
+      <if test="quotaMonth != null" >
+        quota_month = #{quotaMonth,jdbcType=INTEGER},
+      </if>
+      <if test="quotaDateTime != null" >
+        quota_date_time = #{quotaDateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quotaUseMoney != null" >
+        quota_use_money = #{quotaUseMoney,jdbcType=INTEGER},
+      </if>
+      <if test="integral != null" >
+        integral = #{integral,jdbcType=INTEGER},
+      </if>
+      <if test="contributedVal != null" >
+        contributedVal = #{contributedVal,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+      	remark = #{remark},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.MemberCard" >
+    update x_member_card
+    set member_id = #{memberId,jdbcType=INTEGER},
+      money = #{money,jdbcType=INTEGER},
+      last_date_time = #{lastDateTime,jdbcType=TIMESTAMP},
+      last_money = #{lastMoney,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_charge_time = #{lastChargeTime,jdbcType=TIMESTAMP},
+      total_charge_money = #{totalChargeMoney,jdbcType=INTEGER},
+      total_consume_money = #{totalConsumeMoney,jdbcType=INTEGER},
+      last_comsume_time = #{lastComsumeTime,jdbcType=TIMESTAMP},
+      total_refund_money = #{totalRefundMoney,jdbcType=INTEGER},
+      last_refund_time = #{lastRefundTime,jdbcType=TIMESTAMP},
+      deposit = #{deposit,jdbcType=INTEGER},
+      deposit_date_time = #{depositDateTime,jdbcType=TIMESTAMP},
+      quota = #{quota,jdbcType=INTEGER},
+      quota_month = #{quotaMonth,jdbcType=INTEGER},
+      quota_date_time = #{quotaDateTime,jdbcType=TIMESTAMP},
+      quota_use_money = #{quotaUseMoney,jdbcType=INTEGER},
+      integral = #{integral,jdbcType=INTEGER},
+      contributedVal = #{contributedVal}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据会员id跟新会员卡 -->
+  <update id="updateMemberByDeposit">
+  	update x_member_card
+  	set deposit = #{deposit,jdbcType=INTEGER}
+  	where member_id = #{menberId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updatMemberCardMoney">
+	    update x_member_card  set  
+	         <if test="clear ==1 ">
+	            deposit = 0,
+	         </if>
+<!-- 	         money = ( money + deposit - #{money,jdbcType=INTEGER} ), -->
+             money = 0,
+	         last_money = #{money,jdbcType=INTEGER},
+	         last_date_time = CURRENT_TIMESTAMP, 
+	         last_refund_time = CURRENT_TIMESTAMP ,
+ 	        <!-- total_refund_money = (total_refund_money + #{money,jdbcType=INTEGER})  -->
+             total_refund_money =  #{money,jdbcType=INTEGER}
+	     where member_id = #{menberId,jdbcType=INTEGER}
+  </update>
+  
+  
+   <update id="updatMemberCardDeposit">
+	    update x_member_card  set  
+	       <if test="clear ==1 ">
+	            money = 0,
+	         </if>
+<!-- 	       deposit = ( deposit + money - #{money,jdbcType=INTEGER} ), -->
+             deposit = 0,
+	        last_money = #{money,jdbcType=INTEGER},
+	         last_date_time = CURRENT_TIMESTAMP, 
+	         last_refund_time = CURRENT_TIMESTAMP ,
+<!-- 	         total_refund_money = (total_refund_money + #{money,jdbcType=INTEGER}) -->
+             total_refund_money =  #{totalRefundMoney,jdbcType=INTEGER}
+	     where member_id = #{menberId,jdbcType=INTEGER}
+  </update>
+ 
+  
+  <update id="updateIntegral">
+  	update x_member_card set
+  	integral =#{integral,jdbcType=INTEGER}
+  	where member_id=#{memberId}
+  
+  </update>
+  <update id="updateBlockingReason">
+  	update x_member_card set 
+  	blocking_reason=#{blockingReason,jdbcType=VARCHAR}
+  	where member_id=#{memberId}
+  </update>
+  
+  <update id="deleteBlockingReason" parameterType="java.lang.Integer">
+  	update x_member_card set 
+  	blocking_reason =null
+  	where member_id=#{memberId}
+  </update>
+  
+  <!-- 更新会员贡献值  -->
+  <update id="updateContributedVal" parameterType="java.util.Map">
+  	update x_member_card set 
+  	contributedVal = #{contributedVal}
+  	where member_id = #{memberId}
+  </update>
+  
+  <!-- 增加会员贡献值  -->
+  <update id="increContributedVal" parameterType="java.util.Map">
+  	update x_member_card set 
+  	contributedVal = IFNULL(contributedVal, 0) + #{contributedValDelta}
+  	where member_id = #{memberId}
+  </update>
+  
+  <!-- 减小会员贡献值  -->
+  <update id="decreContributedVal" parameterType="java.util.Map">
+  	update x_member_card set 
+  	contributedVal = IFNULL(contributedVal, 0) - #{contributedValDelta}
+  	where member_id = #{memberId}
+  </update>
+
+</mapper>

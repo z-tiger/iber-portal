@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MemberLevelMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.MemberLevel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="charge_money_limit" property="chargeMoneyLimit" jdbcType="INTEGER" />
+    <result column="consume_money_limit" property="consumeMoneyLimit" jdbcType="INTEGER" />
+    <result column="refund_money_limit" property="refundMoneyLimit" jdbcType="INTEGER" />
+    <result column="integral_num_limit" property="integralNumLimit" jdbcType="INTEGER" />
+    <result column="discount_limit" property="discountLimit" jdbcType="INTEGER" />
+    <result column="other_cost" property="otherCost" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="is_auto" property="isAuto" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="VARCHAR" />
+    <result column="is_enterprise_user_car" property="isEnterpriseUserCar" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="deposit_limit" property="depositLimit" jdbcType="INTEGER" />
+    <result column="overdraft" property="overdraft" jdbcType="INTEGER" />
+    <result column="level_type" property="levelType" jdbcType="VARCHAR" />
+    <result column="is_default" property="isDefault" jdbcType="VARCHAR" />
+    <result column="level_code" property="levelCode" jdbcType="INTEGER" />
+    <result column="integral_down_limit" property="integralDownlimit" jdbcType="INTEGER" />
+    <result column="integral_up_limit" property="integralUpLimit" jdbcType="INTEGER" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+    <result column="rights_name" property="rightsName" jdbcType="VARCHAR" />
+      
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, charge_money_limit, consume_money_limit, refund_money_limit, integral_num_limit, 
+    discount_limit, other_cost, create_time, create_by, update_time, update_by, is_auto, 
+    is_show, is_enterprise_user_car, order_type, deposit_limit, overdraft, level_type, 
+    is_default, level_code,integral_down_limit,integral_up_limit
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_level
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_level
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.MemberLevel" >
+    insert into x_member_level (id, name, charge_money_limit, 
+      consume_money_limit, refund_money_limit, integral_num_limit, 
+      discount_limit, other_cost, create_time, 
+      create_by, update_time, update_by, 
+      is_auto, is_show, is_enterprise_user_car, 
+      order_type, deposit_limit, overdraft, 
+      level_type, is_default, level_code,integral_down_limit,integral_up_limit
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{chargeMoneyLimit,jdbcType=INTEGER}, 
+      #{consumeMoneyLimit,jdbcType=INTEGER}, #{refundMoneyLimit,jdbcType=INTEGER}, #{integralNumLimit,jdbcType=INTEGER}, 
+      #{discountLimit,jdbcType=INTEGER}, #{otherCost,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{isAuto,jdbcType=VARCHAR}, #{isShow,jdbcType=VARCHAR}, #{isEnterpriseUserCar,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{depositLimit,jdbcType=INTEGER}, #{overdraft,jdbcType=INTEGER}, 
+      #{levelType,jdbcType=VARCHAR}, #{isDefault,jdbcType=VARCHAR}, #{levelCode,jdbcType=VARCHAR},#{integralDownlimit,jdbcType=INTEGER},#{integralUpLimit,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.MemberLevel" >
+    insert into x_member_level
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="chargeMoneyLimit != null" >
+        charge_money_limit,
+      </if>
+      <if test="consumeMoneyLimit != null" >
+        consume_money_limit,
+      </if>
+      <if test="refundMoneyLimit != null" >
+        refund_money_limit,
+      </if>
+      <if test="integralNumLimit != null" >
+        integral_num_limit,
+      </if>
+      <if test="discountLimit != null" >
+        discount_limit,
+      </if>
+      <if test="otherCost != null" >
+        other_cost,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="isAuto != null" >
+        is_auto,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+      <if test="isEnterpriseUserCar != null" >
+        is_enterprise_user_car,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="depositLimit != null" >
+        deposit_limit,
+      </if>
+      <if test="overdraft != null" >
+        overdraft,
+      </if>
+      <if test="levelType != null" >
+        level_type,
+      </if>
+      <if test="isDefault != null" >
+        is_default,
+      </if>
+      <if test="levelCode != null" >
+        level_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeMoneyLimit != null" >
+        #{chargeMoneyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="consumeMoneyLimit != null" >
+        #{consumeMoneyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="refundMoneyLimit != null" >
+        #{refundMoneyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumLimit != null" >
+        #{integralNumLimit,jdbcType=INTEGER},
+      </if>
+      <if test="discountLimit != null" >
+        #{discountLimit,jdbcType=INTEGER},
+      </if>
+      <if test="otherCost != null" >
+        #{otherCost,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isAuto != null" >
+        #{isAuto,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnterpriseUserCar != null" >
+        #{isEnterpriseUserCar,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="depositLimit != null" >
+        #{depositLimit,jdbcType=INTEGER},
+      </if>
+      <if test="overdraft != null" >
+        #{overdraft,jdbcType=INTEGER},
+      </if>
+      <if test="levelType != null" >
+        #{levelType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault,jdbcType=VARCHAR},
+      </if>
+      <if test="levelCode != null" >
+        #{levelCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.MemberLevel" >
+    update x_member_level
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeMoneyLimit != null" >
+        charge_money_limit = #{chargeMoneyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="consumeMoneyLimit != null" >
+        consume_money_limit = #{consumeMoneyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="refundMoneyLimit != null" >
+        refund_money_limit = #{refundMoneyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="integralNumLimit != null" >
+        integral_num_limit = #{integralNumLimit,jdbcType=INTEGER},
+      </if>
+      <if test="discountLimit != null" >
+        discount_limit = #{discountLimit,jdbcType=INTEGER},
+      </if>
+      <if test="otherCost != null" >
+        other_cost = #{otherCost,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isAuto != null" >
+        is_auto = #{isAuto,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnterpriseUserCar != null" >
+        is_enterprise_user_car = #{isEnterpriseUserCar,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="depositLimit != null" >
+        deposit_limit = #{depositLimit,jdbcType=INTEGER},
+      </if>
+      <if test="overdraft != null" >
+        overdraft = #{overdraft,jdbcType=INTEGER},
+      </if>
+      <if test="levelType != null" >
+        level_type = #{levelType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        is_default = #{isDefault,jdbcType=VARCHAR},
+      </if>
+      <if test="levelCode != null" >
+        level_code = #{levelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="integralDownlimit != null" >
+        integral_down_limit = #{integralDownlimit,jdbcType=VARCHAR},
+      </if>
+        integral_up_limit = #{integralUpLimit,jdbcType=VARCHAR},
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.MemberLevel" >
+    update x_member_level
+    set name = #{name,jdbcType=VARCHAR},
+      charge_money_limit = #{chargeMoneyLimit,jdbcType=INTEGER},
+      consume_money_limit = #{consumeMoneyLimit,jdbcType=INTEGER},
+      refund_money_limit = #{refundMoneyLimit,jdbcType=INTEGER},
+      integral_num_limit = #{integralNumLimit,jdbcType=INTEGER},
+      discount_limit = #{discountLimit,jdbcType=INTEGER},
+      other_cost = #{otherCost,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      is_auto = #{isAuto,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=VARCHAR},
+      is_enterprise_user_car = #{isEnterpriseUserCar,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      deposit_limit = #{depositLimit,jdbcType=INTEGER},
+      overdraft = #{overdraft,jdbcType=INTEGER},
+      level_type = #{levelType,jdbcType=VARCHAR},
+      is_default = #{isDefault,jdbcType=VARCHAR},
+      level_code = #{levelCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ <!-- 会员等级 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_member_level where 1=1 
+ 
+ 
+</select>
+<!-- 查询会员等级列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="Base_Column_List"/>,
+	(select name from x_sys_user where id=create_by)create_name,
+	(select name from x_sys_user where id=update_by)update_name,
+	c.rights_name
+	from x_member_level  a LEFT JOIN (SELECT GROUP_CONCAT(b.rights_name) rights_name,a.level_id  FROM x_member_level_rights_relation a ,x_member_rights b WHERE  a.rights_id=b.id GROUP BY a.level_id
+       ) c ON   a.id=c.level_id where 1=1
+	<if test="name != null and name !=''" >
+      and  a.name = #{name,jdbcType=VARCHAR} 
+    </if>
+	order by level_code
+	
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	
+</select>
+
+<!-- 查询所有的会员等级信息 -->
+<select id="selectAllMemberLevel" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List"/>
+	from x_member_level
+</select>
+
+<select id="selectByMemberLevel" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/>
+	from x_member_level where level_code = #{levelCode}
+</select>
+
+<select id="selectMemberLevelByContributeValue" resultType="java.lang.Integer">
+	SELECT ( CASE WHEN c.contributedVal <![CDATA[ > ]]> 0 THEN 
+				(SELECT IFNULL(lev.level_code, 0) FROM x_member_level lev WHERE 
+					CASE WHEN lev.integral_up_limit IS NOT NULL THEN 
+						lev.integral_down_limit <![CDATA[ <= ]]>  c.contributedVal 
+						AND c.contributedVal  <![CDATA[ <= ]]> lev.integral_up_limit
+					ELSE c.contributedVal  <![CDATA[ >=  ]]>
+							(SELECT MAX(lev.integral_down_limit) FROM x_member_level)
+					END
+				) 
+			ELSE 0
+			END ) code FROM x_member m INNER JOIN x_member_card c ON c.member_id = m.id WHERE m.id = #{memberId}
+</select>
+
+<select id="selectMemberLevelByMemberIdAndValueBeforeEndTime" resultType="java.lang.Integer">
+	SELECT ( CASE WHEN #{contributeVal} <![CDATA[ > ]]> 0 THEN 
+				(SELECT IFNULL(lev.level_code, 0) FROM x_member_level lev WHERE 
+					CASE WHEN lev.integral_up_limit IS NOT NULL THEN 
+						lev.integral_down_limit <![CDATA[ <= ]]>  #{contributeVal} 
+						AND #{contributeVal} <![CDATA[ <= ]]> lev.integral_up_limit
+					ELSE #{contributeVal} <![CDATA[ >= ]]>
+							(SELECT MAX(lev.integral_down_limit) FROM x_member_level)
+					END
+				) 
+			ELSE 0
+			END ) code FROM x_member m INNER JOIN x_member_card c ON c.member_id = m.id WHERE m.id = 110
+</select>
+</mapper>

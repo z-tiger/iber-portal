@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.exception.ExceptionLogMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.exception.ExceptionLog" >
+	<result column="id" property="id"/>
+	<result column="param" property="param"/>
+	<result column="memberid" property="memberid"/>
+	<result column="method" property="method"/>
+	<result column="exceptioncontent" property="exceptioncontent"/>
+	<result column="createtime" property="createtime"/>
+	<result column="memberName" property="memberName"/>
+</resultMap>
+       
+<!-- x_exception_log table all fields -->
+<sql id="Base_Column_List" >
+	 id,param,memberid,method,exceptioncontent,createtime
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.exception.ExceptionLog" >
+  insert into x_exception_log(id,param,memberid,method,exceptioncontent,createtime)
+ values(#{id},#{param},#{memberid},#{method},#{exceptioncontent},#{createtime})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_exception_log where id = #{id}
+</delete>
+
+<!-- 删除记录 -->
+<delete id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_exception_log set param=#{param},memberid=#{memberid},method=#{method},exceptioncontent=#{exceptioncontent}, where id=#{id}
+</delete>
+
+<!-- 根据id查询 异常管理 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_exception_log where id = #{id}
+</select>
+
+<!-- 异常管理 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_exception_log where 1=1 
+ 	<if test="queryDateFrom != null and queryDateFrom !='' ">
+    	and createTime &gt; #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo !='' ">
+    	and createTime &lt; #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+ 
+</select>
+  	
+<!-- 查询异常管理列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	l.*,(select name from x_member where id = l.memberId) memberName
+	from x_exception_log l where 1 =1 
+	<if test="queryDateFrom != null and queryDateFrom !='' ">
+    	and l.createTime &gt; #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo !='' ">
+    	and l.createTime &lt; #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+    order by l.createTime desc 
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+  	
+</mapper>   

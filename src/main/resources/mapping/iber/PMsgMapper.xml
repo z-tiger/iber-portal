@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.PMsgMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.PMsg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="msg_title" property="msgTitle" jdbcType="VARCHAR" />
+    <result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="msg_first_p" property="msgFirstP" jdbcType="VARCHAR" />
+    <result column="msg_url" property="msgUrl" jdbcType="VARCHAR" />
+    <result column="click_records" property="clickRecords" jdbcType="INTEGER" />
+    <result column="msg_status" property="msgStatus" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    
+    <result column="create_time_str" property="createTimeStr" jdbcType="VARCHAR" />
+    <result column="update_time_str" property="updateTimeStr" jdbcType="VARCHAR" />
+    <result column="audit_time_str" property="auditTimeStr" jdbcType="VARCHAR" />
+    
+    <result column="msg_first_p_s" property="msgFirstPS" jdbcType="VARCHAR" />
+    <result column="msg_url_s" property="msgUrlS" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, msg_title, msg_content, create_time, create_user, update_time, update_user, msg_first_p, 
+    msg_url, click_records, msg_status, audit_time, audit_user
+  </sql>
+  
+  <update id="updateEx">
+    update x_p_msg set msg_status = #{msgStatus,jdbcType=VARCHAR},audit_time = now(),audit_user=#{sysUserName,jdbcType=VARCHAR} where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateRecords" parameterType="java.lang.Integer">
+    update   x_p_msg set  click_records = (IFNULL(click_records, 0)+1) where   id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectAllPmsg" resultMap="BaseResultMap" parameterType="java.util.Map">
+     select *, 
+	     DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time_str,
+	     DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') update_time_str,
+	     DATE_FORMAT(audit_time,'%Y-%m-%d %H:%i:%s') audit_time_str,
+	     CONCAT( (SELECT a.value FROM x_sys_param a WHERE a.key = 'psmg_http_url'), msg_first_p) msg_first_p_s,
+ CONCAT( (SELECT a.value FROM x_sys_param a WHERE a.key = 'psmg_http_url'), msg_url) msg_url_s
+     from x_p_msg 
+     <trim prefixOverrides="and">
+           <where>
+               <if test="title != null and title != ''">
+                 and msg_title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+               </if>
+               <if test="status != null and status != '' ">
+                 and msg_status = #{status,jdbcType=VARCHAR}
+               </if>
+               <if test="kssj != null and kssj !='' and jssj !=null and jssj !='' ">
+                  and (  create_time &gt;=  #{kssj,jdbcType=VARCHAR} and create_time &lt;=  #{jssj,jdbcType=VARCHAR} )
+               </if>
+           </where>         
+     </trim>
+     order by create_time desc
+     limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllPmsgRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+     select count(1) from x_p_msg
+     <trim prefixOverrides="and">
+           <where>
+               <if test="title != null and title != ''">
+                 and msg_title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+               </if>
+               <if test="status != null and status != '' ">
+                 and msg_status = #{status,jdbcType=VARCHAR}
+               </if>
+               <if test="kssj != null and kssj !='' and jssj !=null and jssj !='' ">
+                  and (  create_time &gt;=  #{kssj,jdbcType=VARCHAR} and create_time &lt;=  #{jssj,jdbcType=VARCHAR} )
+               </if>
+           </where>         
+     </trim>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_p_msg
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_p_msg
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.PMsg" >
+    insert into x_p_msg (msg_title, msg_content, 
+      create_time, create_user, update_time, 
+      update_user, msg_first_p, msg_url, 
+      click_records, msg_status, audit_time, 
+      audit_user)
+    values (#{msgTitle,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{msgFirstP,jdbcType=VARCHAR}, #{msgUrl,jdbcType=VARCHAR}, 
+      #{clickRecords,jdbcType=INTEGER}, #{msgStatus,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{auditUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.PMsg" >
+    insert into x_p_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgTitle != null" >
+        msg_title,
+      </if>
+      <if test="msgContent != null" >
+        msg_content,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="msgFirstP != null" >
+        msg_first_p,
+      </if>
+      <if test="msgUrl != null" >
+        msg_url,
+      </if>
+      <if test="clickRecords != null" >
+        click_records,
+      </if>
+      <if test="msgStatus != null" >
+        msg_status,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+      <if test="auditUser != null" >
+        audit_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgTitle != null" >
+        #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="msgFirstP != null" >
+        #{msgFirstP,jdbcType=VARCHAR},
+      </if>
+      <if test="msgUrl != null" >
+        #{msgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="clickRecords != null" >
+        #{clickRecords,jdbcType=INTEGER},
+      </if>
+      <if test="msgStatus != null" >
+        #{msgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditUser != null" >
+        #{auditUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.PMsg" >
+    update x_p_msg
+    <set >
+      <if test="msgTitle != null" >
+        msg_title = #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        msg_content = #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="msgFirstP != null" >
+        msg_first_p = #{msgFirstP,jdbcType=VARCHAR},
+      </if>
+      <if test="msgUrl != null" >
+        msg_url = #{msgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="clickRecords != null" >
+        click_records = #{clickRecords,jdbcType=INTEGER},
+      </if>
+      <if test="msgStatus != null" >
+        msg_status = #{msgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditUser != null" >
+        audit_user = #{auditUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.PMsg" >
+    update x_p_msg
+    set msg_title = #{msgTitle,jdbcType=VARCHAR},
+      msg_content = #{msgContent,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      msg_first_p = #{msgFirstP,jdbcType=VARCHAR},
+      msg_url = #{msgUrl,jdbcType=VARCHAR},
+      click_records = #{clickRecords,jdbcType=INTEGER},
+      msg_status = #{msgStatus,jdbcType=VARCHAR},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      audit_user = #{auditUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectArticlePmsg" resultMap="BaseResultMap" parameterType="java.util.Map">
+     select *, 
+	     DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') create_time_str,
+	     DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') update_time_str,
+	     DATE_FORMAT(audit_time,'%Y-%m-%d %H:%i:%s') audit_time_str
+         from x_p_msg  WHERE  msg_first_p like('http%') AND msg_url like('http%') 
+     	 <if test="title != null and title != ''">
+      	  	and msg_title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+      	  </if>
+     order by create_time desc
+     limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectArticlePmsgRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+     select count(1) from x_p_msg  WHERE  msg_first_p like('http%') AND msg_url like('http%')
+     	<if test="title != null and title != ''">
+       		and msg_title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+     	</if>
+  </select>
+</mapper>

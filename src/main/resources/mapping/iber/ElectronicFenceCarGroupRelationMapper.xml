@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.ElectronicFenceCarGroupRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.ElectronicFenceCarGroupRelation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="fence_id" property="fenceId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="PageResultMap" type="com.iber.portal.vo.fence.ElectronicFenceCarGroupRelationVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="fence_id" property="fenceId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="fenceName" property="fenceName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, group_id, fence_id, create_time, create_name,category
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_electronic_fence_car_group_relation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_electronic_fence_car_group_relation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.ElectronicFenceCarGroupRelation" >
+    insert into x_electronic_fence_car_group_relation (id, group_id, fence_id, 
+      create_time, create_name,category)
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{fenceId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createName,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.ElectronicFenceCarGroupRelation" >
+    insert into x_electronic_fence_car_group_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="fenceId != null" >
+        fence_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createName != null" >
+        create_name,
+      </if>
+      <if test="createName != null" >
+        category,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="fenceId != null" >
+        #{fenceId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.ElectronicFenceCarGroupRelation" >
+    update x_electronic_fence_car_group_relation
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="fenceId != null" >
+        fence_id = #{fenceId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.ElectronicFenceCarGroupRelation" >
+    update x_electronic_fence_car_group_relation
+    set group_id = #{groupId,jdbcType=INTEGER},
+      fence_id = #{fenceId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_name = #{createName,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectAllByGroupIdAndFenceId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+     select * from x_electronic_fence_car_group_relation  where group_id = #{groupId,jdbcType=INTEGER} and fence_id = #{fenceId,jdbcType=INTEGER} and category = #{category,jdbcType=VARCHAR}    
+  </select>
+  
+   <select id="selectAll" resultMap="PageResultMap" parameterType="java.util.Map" >
+     select 
+     	 r.* , f.fence_name fenceName
+    from 
+    	x_electronic_fence_car_group_relation r , x_electronic_fence f
+     where 
+     	r.fence_id = f.id
+     	and group_id = #{groupId,jdbcType=INTEGER}
+     	and category = #{category,jdbcType=VARCHAR}   
+    limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+     select count(1)
+     from x_electronic_fence_car_group_relation
+      where group_id = #{groupId,jdbcType=INTEGER} and category = #{category,jdbcType=VARCHAR}   
+  </select>
+  
+  <delete id="deleteByGroupId" parameterType="java.util.Map">
+    delete from x_electronic_fence_car_group_relation
+     where group_id = #{groupId,jdbcType=INTEGER} and category = #{category,jdbcType=VARCHAR}   
+  </delete>
+  
+   <select id="selectAllByGroupId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+     select * from x_electronic_fence_car_group_relation  where group_id = #{groupId,jdbcType=INTEGER} and category = #{category,jdbcType=VARCHAR}    
+  </select>
+  
+</mapper>

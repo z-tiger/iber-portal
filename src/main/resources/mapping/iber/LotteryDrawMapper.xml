@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.activity.LotteryDrawMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.activity.LotteryDraw" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="activity_type" property="activityType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="share_text" property="shareText" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="share_url" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="shareTextUrl" property="shareTextUrl"/>
+    <result column="city_name" property="cityName"/>
+    <result column="user_name" property="userName"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_code, activity_type, status, start_time, end_time, create_id, create_time, 
+    share_text, remark, share_url
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_lottery_draw
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_lottery_draw
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.activity.LotteryDraw" >
+    insert into x_lottery_draw (id, city_code, activity_type, 
+      status, start_time, end_time, 
+      create_id, create_time, share_text, 
+      remark, share_url)
+    values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{activityType,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{createId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{shareText,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{shareUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.activity.LotteryDraw" >
+    insert into x_lottery_draw
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="activityType != null" >
+        activity_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="shareText != null" >
+        share_text,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="shareUrl != null" >
+        share_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="activityType != null" >
+        #{activityType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shareText != null" >
+        #{shareText,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        #{shareUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.activity.LotteryDraw" >
+    update x_lottery_draw
+    <set >
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="activityType != null" >
+        activity_type = #{activityType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shareText != null" >
+        share_text = #{shareText,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        share_url = #{shareUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.activity.LotteryDraw" >
+    update x_lottery_draw
+    set city_code = #{cityCode,jdbcType=VARCHAR},
+      activity_type = #{activityType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      create_id = #{createId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      share_text = #{shareText,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      share_url = #{shareUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <sql id="Base_Column_List_lottery">
+  	 ld.id ,(SELECT c.`name` FROM x_city c where c.`code` = ld.city_code) as city_name,ld.city_code,ld.share_text,ld.share_url,
+ 	 ld.activity_type,ld.`status`,ld.start_time,ld.end_time,(SELECT u.name FROM x_sys_user u WHERE u.id = ld.create_id) as user_name,
+ 	 ld.create_id,ld.create_time, CONCAT_WS(":",ld.share_text,ld.share_url) as shareTextUrl
+  </sql>
+  <select id="selectAllLotteryDraw" resultMap="BaseResultMap" parameterType="java.util.Map">
+ 	 SELECT <include refid="Base_Column_List_lottery"/> FROM x_lottery_draw ld 
+ 	 where 1 = 1 
+ 	 	<if test="cityCode != null and cityCode !=''">
+		and ld.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null and title != ''">
+			and ld.share_text like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="activityType != null and activityType != ''">
+			and ld.activity_type like CONCAT('%',#{activityType,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="status != null and status != ''">
+			and ld.`status` = #{status}
+	 	</if>
+	 GROUP BY ld.id
+	 ORDER BY ld.create_time DESC limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	 SELECT COUNT(1) FROM x_lottery_draw ld where 1 = 1 
+  	 	<if test="cityCode != null and cityCode !=''">
+			and ld.city_code = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null and title != ''">
+			and ld.share_text like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="activityType != null and activityType != ''">
+			and ld.activity_type like CONCAT('%',#{activityType,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="status != null and status != ''">
+			and ld.`status` = #{status}
+	 	</if>
+  </select>
+  <select id="queryLotteryDraw" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/> from x_lottery_draw
+  </select>
+  <update id="updateLotteryDrawStatus">
+  	update x_lottery_draw set status = #{status} 
+  </update>
+</mapper>

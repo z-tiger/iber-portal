@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 日期时间公用SQL片段  -->
+<mapper namespace="commDateSqlMapper">
+
+	<!-- 日期时间，如今天0点、昨天0点，本月第一天/最后一天、上月第一天/最后一天  等等 -->
+	<!-- 今天0点、昨天0点 -->
+	<sql id="sql_today_begin_datetime">
+		CAST(CURRENT_DATE() AS DATETIME)
+	</sql>
+	<sql id="sql_today_date">
+		CURRENT_DATE()
+	</sql>
+	<sql id="sql_yesterday_begin_datetime">
+		CAST((CURRENT_DATE() - INTERVAL 1 DAY) AS DATETIME)
+	</sql>
+	<sql id="sql_yesterday_date">
+		(CURRENT_DATE() - INTERVAL 1 DAY)
+	</sql>
+	
+	<!-- 本月第一天 -->
+	<sql id="sql_month_begin_datetime">
+		CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day) AS DATETIME)
+	</sql>
+	<sql id="sql_month_begin_date">
+		DATE_ADD(CURRENT_DATE(), INTERVAL 1 - DAY(CURRENT_DATE()) day)
+	</sql>
+	<!-- 上月第一天 -->
+	<sql id="sql_last_month_begin_datetime">
+		CAST(DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH ) AS DATETIME)
+	</sql>
+	<sql id="sql_last_month_begin_date">
+		DATE_SUB( DATE_SUB(CURRENT_DATE() , INTERVAL DAYOFMONTH( CURRENT_DATE() ) -1 DAY ) , INTERVAL 1 MONTH )
+	</sql>
+    <!-- 上月最后一天 -->
+    <sql id="sql_last_month_end_date">
+        CAST(DATE_ADD(CURRENT_DATE(), INTERVAL 0 - DAY(CURRENT_DATE()) day) AS DATE)
+    </sql> 
+</mapper>

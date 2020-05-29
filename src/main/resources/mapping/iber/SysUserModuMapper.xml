@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sys.SysUserModuMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sys.SysUserModu" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="modu_id" property="moduId" jdbcType="INTEGER" />
+    <result column="is_auth" property="isAuth" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="function" property="function" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <association property="sysUserRole" javaType="com.iber.portal.model.sys.SysUserRole">
+    	<result column="role_id" property="roleId"/>
+    </association>
+  </resultMap>
+  <resultMap type="java.lang.String" id="StringResult">
+  	<result column="function" property="function" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, modu_id, is_auth, create_user, create_time, update_user, update_time,`function`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_user_modu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByEnabledUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_user_modu
+    where is_auth = 1 and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  
+   <delete id="deleteByUserId" parameterType="java.lang.Integer" >
+    delete from x_sys_user_modu
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_sys_user_modu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sys.SysUserModu" >
+    insert into x_sys_user_modu (id, user_id, modu_id, 
+      is_auth, create_user, create_time, 
+      update_user, update_time,`function`)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{moduId,jdbcType=INTEGER}, 
+      #{isAuth,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{function,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sys.SysUserModu" >
+    insert into x_sys_user_modu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="moduId != null" >
+        modu_id,
+      </if>
+      <if test="isAuth != null" >
+        is_auth,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="function != null" >
+        `function`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="moduId != null" >
+        #{moduId,jdbcType=INTEGER},
+      </if>
+      <if test="isAuth != null" >
+        #{isAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="function != null" >
+        #{function,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sys.SysUserModu" >
+    update x_sys_user_modu
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="moduId != null" >
+        modu_id = #{moduId,jdbcType=INTEGER},
+      </if>
+      <if test="isAuth != null" >
+        is_auth = #{isAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="function != null" >
+        `function` = #{function,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sys.SysUserModu" >
+    update x_sys_user_modu
+    set user_id = #{userId,jdbcType=INTEGER},
+      modu_id = #{moduId,jdbcType=INTEGER},
+      is_auth = #{isAuth,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      `function` = #{function,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectFunctionByUserId" resultMap="StringResult">
+  	select `function`
+  	from x_sys_user_modu
+ 	where user_id = #{userId} and `function` is not null
+  </select>
+
+  <select id="selectFunctionByUserId_roleIds"  resultMap="StringResult">
+    SELECT DISTINCT
+	  `FUNCTION`
+    FROM
+        (
+            SELECT
+                `FUNCTION`
+            FROM
+                x_sys_user_modu
+            WHERE
+                user_id = #{0}
+            AND `FUNCTION` IS NOT NULL
+            UNION ALL
+                SELECT
+                    `FUNCTION`
+                FROM
+                    x_sys_role_modu
+                WHERE
+                    role_id in
+            <foreach collection="roleids"  item="item" open="(" close=")" separator=",">
+              #{item,jdbcType=INTEGER}
+            </foreach>
+        AND `FUNCTION` IS NOT NULL
+        ) AS result
+  </select>
+
+
+  <select id="selectRoleIdsByUserId" resultMap="BaseResultMap">
+  	SELECT DISTINCT u.role_id
+	from x_sys_user_role u  WHERE u.user_id = #{userId}
+  </select>
+</mapper>

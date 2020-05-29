@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.WZCitysMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.WZCitys" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="abbr" property="abbr" jdbcType="VARCHAR" />
+    <result column="engine" property="engine" jdbcType="VARCHAR" />
+    <result column="engineno" property="engineno" jdbcType="VARCHAR" />
+    <result column="classa" property="classa" jdbcType="VARCHAR" />
+    <result column="class" property="classz" jdbcType="VARCHAR" />
+    <result column="classno" property="classno" jdbcType="VARCHAR" />
+    <result column="regist" property="regist" jdbcType="VARCHAR" />
+    <result column="registno" property="registno" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_name, city_code, abbr, engine, engineno, classa, class, classno, regist, 
+    registno, create_time, province, province_code
+  </sql>
+  
+  <select id="selectByCityCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select 
+      <include refid="Base_Column_List" />
+      from x_wz_citys where city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from x_wz_citys order by province_code
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_wz_citys
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_wz_citys
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteAll">
+    delete from x_wz_citys
+  </delete>
+  
+  <insert id="insert" parameterType="com.iber.portal.model.base.WZCitys" >
+    insert into x_wz_citys (id, city_name, city_code, 
+      abbr, engine, engineno, 
+      classa, class, classno, 
+      regist, registno, create_time, province, province_code
+      )
+    values (#{id,jdbcType=INTEGER}, #{cityName,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{abbr,jdbcType=VARCHAR}, #{engine,jdbcType=VARCHAR}, #{engineno,jdbcType=VARCHAR}, 
+      #{classa,jdbcType=VARCHAR}, #{classz,jdbcType=VARCHAR}, #{classno,jdbcType=VARCHAR}, 
+      #{regist,jdbcType=VARCHAR}, #{registno,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{province,jdbcType=VARCHAR}, #{provinceCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.WZCitys" >
+    insert into x_wz_citys
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="abbr != null" >
+        abbr,
+      </if>
+      <if test="engine != null" >
+        engine,
+      </if>
+      <if test="engineno != null" >
+        engineno,
+      </if>
+      <if test="classa != null" >
+        classa,
+      </if>
+      <if test="classz != null" >
+        class,
+      </if>
+      <if test="classno != null" >
+        classno,
+      </if>
+      <if test="regist != null" >
+        regist,
+      </if>
+      <if test="registno != null" >
+        registno,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="abbr != null" >
+        #{abbr,jdbcType=VARCHAR},
+      </if>
+      <if test="engine != null" >
+        #{engine,jdbcType=VARCHAR},
+      </if>
+      <if test="engineno != null" >
+        #{engineno,jdbcType=VARCHAR},
+      </if>
+      <if test="classa != null" >
+        #{classa,jdbcType=VARCHAR},
+      </if>
+      <if test="classz != null" >
+        #{classz,jdbcType=VARCHAR},
+      </if>
+      <if test="classno != null" >
+        #{classno,jdbcType=VARCHAR},
+      </if>
+      <if test="regist != null" >
+        #{regist,jdbcType=VARCHAR},
+      </if>
+      <if test="registno != null" >
+        #{registno,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if> 
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.WZCitys" >
+    update x_wz_citys
+    <set >
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="abbr != null" >
+        abbr = #{abbr,jdbcType=VARCHAR},
+      </if>
+      <if test="engine != null" >
+        engine = #{engine,jdbcType=VARCHAR},
+      </if>
+      <if test="engineno != null" >
+        engineno = #{engineno,jdbcType=VARCHAR},
+      </if>
+      <if test="classa != null" >
+        classa = #{classa,jdbcType=VARCHAR},
+      </if>
+      <if test="classz != null" >
+        class = #{classz,jdbcType=VARCHAR},
+      </if>
+      <if test="classno != null" >
+        classno = #{classno,jdbcType=VARCHAR},
+      </if>
+      <if test="regist != null" >
+        regist = #{regist,jdbcType=VARCHAR},
+      </if>
+      <if test="registno != null" >
+        registno = #{registno,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+        <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.WZCitys" >
+    update x_wz_citys
+    set city_name = #{cityName,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      abbr = #{abbr,jdbcType=VARCHAR},
+      engine = #{engine,jdbcType=VARCHAR},
+      engineno = #{engineno,jdbcType=VARCHAR},
+      classa = #{classa,jdbcType=VARCHAR},
+      class = #{classz,jdbcType=VARCHAR},
+      classno = #{classno,jdbcType=VARCHAR},
+      regist = #{regist,jdbcType=VARCHAR},
+      registno = #{registno,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      province_code = #{provinceCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

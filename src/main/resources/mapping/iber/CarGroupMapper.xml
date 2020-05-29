@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.CarGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.CarGroup" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+  </resultMap>
+    <resultMap id="PageResultMap" type="com.iber.portal.vo.car.CarGroupVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+    <result column="carNumber" property="carNumber" jdbcType="VARCHAR" />
+    <result column="fenceNumber" property="fenceNumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, city_code, `describe`, create_time, create_name, update_time, update_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_group
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_group
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.CarGroup" >
+    insert into x_car_group (id, name, city_code, 
+      `describe`, create_time, create_name, 
+      update_time, update_name)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{describe,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.CarGroup" >
+    insert into x_car_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="describe != null" >
+        `describe`,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createName != null" >
+        create_name,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateName != null" >
+        update_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateName != null" >
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.CarGroup" >
+    update x_car_group
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        `describe` = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateName != null" >
+        update_name = #{updateName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.CarGroup" >
+    update x_car_group
+    set name = #{name,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_name = #{createName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_name = #{updateName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="PageResultMap" parameterType="java.util.Map" >
+     select 
+     g.*,c.`name` cityName ,
+     (select count(1) from x_car_group_relation where group_id = g.id ) carNumber ,
+     (select count(1) from x_electronic_fence_car_group_relation where group_id = g.id and category = 'group' ) fenceNumber
+    from x_car_group g, x_city c where g.city_code = c.`code`
+    <if test="cityCode != null and cityCode != '' ">
+       and g.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null and name != '' ">
+       and g.name like concat('%',#{name,jdbcType=VARCHAR},'%') 
+    </if>
+    limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+     select count(1)
+     from x_car_group
+     <trim prefixOverrides="and">
+        <where>
+            <if test="cityCode != null and cityCode != '' ">
+               and city_code = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null and name != '' ">
+               and name like concat('%',#{name,jdbcType=VARCHAR},'%') 
+            </if>
+        </where>
+    </trim>
+  </select>
+  
+    <select id="selectAllNotPage" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from x_car_group
+  </select>
+  
+  <select id="selectGroupByCityCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select <include refid="Base_Column_List" />
+    from x_car_group where city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据cityCode和车组名，查询车组 -->
+  <select id="selectGroupByCityCodeAndGroupName" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select <include refid="Base_Column_List" />
+    from x_car_group where city_code = #{cityCode,jdbcType=VARCHAR} 
+    <if test="groupName != null">
+    	AND name LIKE '%${groupName}%'
+    </if>
+  </select>
+</mapper>

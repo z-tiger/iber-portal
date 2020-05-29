@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.charging.CarBrandMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.charging.CarBrand" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="INTEGER" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, city_code, brand_name, images, create_time, create_id, update_time, update_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_car_brand
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_car_brand
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.charging.CarBrand" >
+    insert into x_car_brand (id, city_code, brand_name, 
+      images, create_time, create_id, 
+      update_time, update_id)
+    values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.charging.CarBrand" >
+    insert into x_car_brand
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="brandName != null" >
+        brand_name,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null" >
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.CarBrand" >
+    update x_car_brand
+    <set >
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null" >
+        brand_name = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        update_id = #{updateId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.charging.CarBrand" >
+    update x_car_brand
+    set city_code = #{cityCode,jdbcType=VARCHAR},
+      brand_name = #{brandName,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_id = #{createId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_car_brand t where 1=1 
+    <if test="brandName != null and brandName != '' " >
+        and t.brand_name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}),'%') 
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_sys_user where id=t.create_id)create_name,
+    (select name from x_sys_user where id=t.update_id)update_name
+    from x_car_brand t where 1=1 
+    <if test="brandName != null and brandName != '' " >
+        and t.brand_name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}),'%') 
+    </if>
+     order by t.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getAllBrandNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_car_brand t 
+  </select>
+  <select id="getAllBrand" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT a.*,b.type_id from x_car_brand a  LEFT JOIN x_charging_pile_car b on a.id = b.car_brand_id and b.type_id=#{typeId,jdbcType=INTEGER}
+     order by a.brand_name asc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 通过设备id查询暂不支持的品牌信息 -->
+	<select id="selectNotSupportBrand"  resultMap="BaseResultMap">
+		 select  id,brand_name,images from x_car_brand  
+		 where id not in(select brand_id from c_equipment_brand_relation where equipment_id=#{equipmentId})
+		 <if test="brandName != null and brandName != '' " >
+		  and brand_name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}),'%') 
+		 </if>
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+	<!-- 查询总数 -->
+	<select id="selectAllBrand" resultType="java.lang.Integer">
+		select count(1)
+		from x_car_brand   
+		where id not in(select brand_id from c_equipment_brand_relation where equipment_id=#{equipmentId})
+		<if test="brandName != null and brandName != '' " >
+		  and brand_name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}),'%') 
+		</if>
+	</select>
+  <!-- 所有的车辆品牌列表 -->
+  <select id="getAllRecords"  resultMap="BaseResultMap" parameterType="java.util.Map">
+		 select  
+		 <include refid="Base_Column_List" />
+		 from x_car_brand
+		 where 1=1
+		 <if test="brandName != null and brandName != '' " >
+		  and brand_name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}),'%') 
+		 </if>
+		limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getAllRecordsSum" resultType="java.lang.Integer">
+		 select  count(1)
+		 from x_car_brand
+		 where 1=1
+		 <if test="brandName != null and brandName != '' " >
+		  and brand_name LIKE CONCAT(CONCAT('%', #{brandName,jdbcType=VARCHAR}),'%') 
+		 </if>
+	</select>
+   
+   <!-- 查询车辆品牌列表 -->
+   <select id="getBrandNameList" resultMap="BaseResultMap" >
+    	select id, brand_name from x_car_brand 
+  </select>
+   
+</mapper>

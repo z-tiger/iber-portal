@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.ad.AdPointMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.ad.AdPoint" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ad_point_name" property="adPointName" jdbcType="VARCHAR" />
+    <result column="ad_point_address" property="adPointAddress" jdbcType="VARCHAR" />
+    <result column="gps" property="gps" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="limits" property="limits" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ad_point_name, ad_point_address, gps, create_time, city_code, limits
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_ad_point
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_ad_point
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.ad.AdPoint" >
+    insert into x_ad_point (id, ad_point_name, ad_point_address, 
+      gps, create_time, city_code, 
+      limits)
+    values (#{id,jdbcType=INTEGER}, #{adPointName,jdbcType=VARCHAR}, #{adPointAddress,jdbcType=VARCHAR}, 
+      #{gps,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{cityCode,jdbcType=VARCHAR}, 
+      #{limits,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.ad.AdPoint" >
+    insert into x_ad_point
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="adPointName != null" >
+        ad_point_name,
+      </if>
+      <if test="adPointAddress != null" >
+        ad_point_address,
+      </if>
+      <if test="gps != null" >
+        gps,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="limits != null" >
+        limits,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="adPointName != null" >
+        #{adPointName,jdbcType=VARCHAR},
+      </if>
+      <if test="adPointAddress != null" >
+        #{adPointAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="gps != null" >
+        #{gps,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="limits != null" >
+        #{limits,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.ad.AdPoint" >
+    update x_ad_point
+    <set >
+      <if test="adPointName != null" >
+        ad_point_name = #{adPointName,jdbcType=VARCHAR},
+      </if>
+      <if test="adPointAddress != null" >
+        ad_point_address = #{adPointAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="gps != null" >
+        gps = #{gps,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="limits != null" >
+        limits = #{limits,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.ad.AdPoint" >
+    update x_ad_point
+    set ad_point_name = #{adPointName,jdbcType=VARCHAR},
+      ad_point_address = #{adPointAddress,jdbcType=VARCHAR},
+      gps = #{gps,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      limits = #{limits,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+     select count(1) from x_ad_point where 1=1 
+    <if test="adPointName != null and adPointName != '' " >
+        and ad_point_name LIKE CONCAT(CONCAT('%', #{adPointName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="adPointAddress != null and adPointAddress != '' " >
+        and ad_point_address LIKE CONCAT(CONCAT('%', #{adPointAddress,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select 
+    <include refid="Base_Column_List" /> ,
+    (select name from x_city c where c.code = a.city_code) city_name
+    from x_ad_point a where 1=1 
+    <if test="adPointName != null and adPointName != '' " >
+        and a.ad_point_name LIKE CONCAT(CONCAT('%', #{adPointName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="adPointAddress != null and adPointAddress != '' " >
+        and a.ad_point_address LIKE CONCAT(CONCAT('%', #{adPointAddress,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and a.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+       and a.create_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+       and a.create_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+     order by a.create_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+</mapper>

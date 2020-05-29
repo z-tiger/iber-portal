@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.invoice.MemberInvoiceMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.invoice.MemberInvoice" >
+    <id column="id" property="id"  />
+    <result column="member_id" property="memberId"  />
+    <result column="order_ids" property="orderIds"   />
+    <result column="person_type" property="personType"   />
+    <result column="invoice_type" property="invoiceType"   />
+    <result column="invocie_head" property="invocieHead"   />
+    <result column="server_type" property="serverType"   />
+    <result column="money" property="money"  />
+    <result column="status" property="status"   />
+    <result column="invoice_no" property="invoiceNo"   />
+    <result column="operator" property="operator"   />
+    <result column="taxpayer_code" property="taxpayerCode"   />
+    <result column="invoice_address" property="invoiceAddress"   />
+    <result column="invoice_phone" property="invoicePhone"   />
+    <result column="bank_detail" property="bankDetail"   />
+    <result column="postage" property="postage"  />
+    <result column="mail_info_id" property="mailInfoId"  />
+    <result column="pay_status" property="payStatus"   />
+    <result column="pay_type" property="payType"   />
+    <result column="fast_mail_company" property="fastMailCompany"   />
+    <result column="fast_mail_no" property="fastMailNo"   />
+    <result column="elec_invoice_url" property="elecInvoiceUrl"   />
+    <result column="elec_invoice_size" property="elecInvoiceSize"   />
+    <result column="remark" property="remark"   />
+    <result column="create_time" property="createTime"   />
+    <result column="update_time" property="updateTime"   />
+  </resultMap>
+  <resultMap type="com.iber.portal.vo.invoice.MemberInvoiceVO" id="BaseResultVOMap" extends="BaseResultMap">
+  	<result column="memberName" property="memberName"  />
+  	<result column="memberPhone" property="memberPhone"  />
+  	<result column="cityName" property="cityName"  />
+    <result column="area" property="area"   />
+    <result column="receiver_address" property="receiverAddress"   />
+    <result column="receiver" property="receiver"   />
+    <result column="receiver_phone" property="receiverPhone"   />
+    <result column="email" property="email"   />
+    <result column="province" property="province"   />
+    <result column="city" property="city"   />
+    <result column="postageSum" property="postageSum"   />
+  </resultMap>
+  <resultMap type="com.iber.portal.vo.invoice.InvoiceOrderInfoVo" id="OrderInfoVoMap">
+  	<result column="orderId" property="orderId"/>
+  	<result column="orderTime" property="orderTime"/>
+  	<result column="lpn" property="lpn"/>
+  	<result column="payMoney" property="payMoney"/>
+  	<result column="orderType" property="orderType"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, order_ids, person_type,invoice_type, invocie_head, server_type, money, status, 
+    invoice_no, operator, taxpayer_code, invoice_address, invoice_phone, bank_detail, 
+    postage, mail_info_id, pay_status,pay_type, fast_mail_company, fast_mail_no, elec_invoice_url, elec_invoice_size,
+    remark, create_time, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_invoice
+    where id = #{id }
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_invoice
+    where id = #{id }
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.invoice.MemberInvoice" >
+    insert into x_member_invoice (id, member_id, order_ids, person_type,
+      invoice_type, invocie_head, server_type, 
+      money, status, invoice_no, 
+      operator, taxpayer_code, invoice_address, 
+      invoice_phone, bank_detail, postage, 
+      mail_info_id, pay_status,pay_type, fast_mail_company, 
+      fast_mail_no, elec_invoice_url,elec_invoice_size, remark, 
+      create_time, update_time)
+    values (#{id }, #{memberId }, #{orderIds }, #{personType},
+      #{invoiceType }, #{invocieHead }, #{serverType }, 
+      #{money }, #{status }, #{invoiceNo }, 
+      #{operator }, #{taxpayerCode }, #{invoiceAddress }, 
+      #{invoicePhone }, #{bankDetail }, #{postage }, 
+      #{mailInfoId }, #{payStatus },#{payType}, #{fastMailCompany }, 
+      #{fastMailNo }, #{elecInvoiceUrl },#{elecInvoiceSize}, #{remark }, 
+      #{createTime }, #{updateTime })
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.invoice.MemberInvoice" >
+    insert into x_member_invoice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="orderIds != null" >
+        order_ids,
+      </if>
+      <if test="personType != null" >
+        person_type,
+      </if>
+      <if test="invoiceType != null" >
+        invoice_type,
+      </if>
+      <if test="invocieHead != null" >
+        invocie_head,
+      </if>
+      <if test="serverType != null" >
+        server_type,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="invoiceNo != null" >
+        invoice_no,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="taxpayerCode != null" >
+        taxpayer_code,
+      </if>
+      <if test="invoiceAddress != null" >
+        invoice_address,
+      </if>
+      <if test="invoicePhone != null" >
+        invoice_phone,
+      </if>
+      <if test="bankDetail != null" >
+        bank_detail,
+      </if>
+      <if test="postage != null" >
+        postage,
+      </if>
+      <if test="mailInfoId != null" >
+        mail_info_id,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="fastMailCompany != null" >
+        fast_mail_company,
+      </if>
+      <if test="fastMailNo != null" >
+        fast_mail_no,
+      </if>
+      <if test="elecInvoiceUrl != null" >
+        elec_invoice_url,
+      </if>
+      <if test="elecInvoiceSize != null" >
+        elec_invoice_size,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id },
+      </if>
+      <if test="memberId != null" >
+        #{memberId },
+      </if>
+      <if test="orderIds != null" >
+        #{orderIds },
+      </if>
+      <if test="personType != null" >
+        #{personType },
+      </if>
+      <if test="invoiceType != null" >
+        #{invoiceType },
+      </if>
+      <if test="invocieHead != null" >
+        #{invocieHead },
+      </if>
+      <if test="serverType != null" >
+        #{serverType },
+      </if>
+      <if test="money != null" >
+        #{money },
+      </if>
+      <if test="status != null" >
+        #{status },
+      </if>
+      <if test="invoiceNo != null" >
+        #{invoiceNo },
+      </if>
+      <if test="operator != null" >
+        #{operator },
+      </if>
+      <if test="taxpayerCode != null" >
+        #{taxpayerCode },
+      </if>
+      <if test="invoiceAddress != null" >
+        #{invoiceAddress },
+      </if>
+      <if test="invoicePhone != null" >
+        #{invoicePhone },
+      </if>
+      <if test="bankDetail != null" >
+        #{bankDetail },
+      </if>
+      <if test="postage != null" >
+        #{postage },
+      </if>
+      <if test="mailInfoId != null" >
+        #{mailInfoId },
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus },
+      </if>
+      <if test="payType != null" >
+        #{payType },
+      </if>
+      <if test="fastMailCompany != null" >
+        #{fastMailCompany },
+      </if>
+      <if test="fastMailNo != null" >
+        #{fastMailNo },
+      </if>
+      <if test="elecInvoiceUrl != null" >
+        #{elecInvoiceUrl },
+      </if>
+      <if test="elecInvoiceSize != null" >
+        #{elecInvoiceSize },
+      </if>
+      <if test="remark != null" >
+        #{remark },
+      </if>
+      <if test="createTime != null" >
+        #{createTime },
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime },
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.invoice.MemberInvoice" >
+    update x_member_invoice
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId },
+      </if>
+      <if test="orderIds != null" >
+        order_ids = #{orderIds },
+      </if>
+      <if test="personType != null" >
+        person_type = #{personType },
+      </if>
+      <if test="invoiceType != null" >
+        invoice_type = #{invoiceType },
+      </if>
+      <if test="invocieHead != null" >
+        invocie_head = #{invocieHead },
+      </if>
+      <if test="serverType != null" >
+        server_type = #{serverType },
+      </if>
+      <if test="money != null" >
+        money = #{money },
+      </if>
+      <if test="status != null" >
+        status = #{status },
+      </if>
+      <if test="invoiceNo != null" >
+        invoice_no = #{invoiceNo },
+      </if>
+      <if test="operator != null" >
+        operator = #{operator },
+      </if>
+      <if test="taxpayerCode != null" >
+        taxpayer_code = #{taxpayerCode },
+      </if>
+      <if test="invoiceAddress != null" >
+        invoice_address = #{invoiceAddress },
+      </if>
+      <if test="invoicePhone != null" >
+        invoice_phone = #{invoicePhone },
+      </if>
+      <if test="bankDetail != null" >
+        bank_detail = #{bankDetail },
+      </if>
+      <if test="postage != null" >
+        postage = #{postage },
+      </if>
+      <if test="mailInfoId != null" >
+        mail_info_id = #{mailInfoId },
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus },
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType },
+      </if>
+      <if test="fastMailCompany != null" >
+        fast_mail_company = #{fastMailCompany },
+      </if>
+      <if test="fastMailNo != null" >
+        fast_mail_no = #{fastMailNo },
+      </if>
+      <if test="elecInvoiceUrl != null" >
+        elec_invoice_url = #{elecInvoiceUrl },
+      </if>
+      <if test="elecInvoiceSize != null" >
+        elec_invoice_size = #{elecInvoiceSize },
+      </if>
+      <if test="remark != null" >
+        remark = #{remark },
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime },
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime },
+      </if>
+    </set>
+    where id = #{id }
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.invoice.MemberInvoice" >
+    update x_member_invoice
+    set member_id = #{memberId },
+      order_ids = #{orderIds },
+      person_type = #{personType },
+      invoice_type = #{invoiceType },
+      invocie_head = #{invocieHead },
+      server_type = #{serverType },
+      money = #{money },
+      status = #{status },
+      invoice_no = #{invoiceNo },
+      operator = #{operator },
+      taxpayer_code = #{taxpayerCode },
+      invoice_address = #{invoiceAddress },
+      invoice_phone = #{invoicePhone },
+      bank_detail = #{bankDetail },
+      postage = #{postage },
+      mail_info_id = #{mailInfoId },
+      pay_status = #{payStatus },
+      pay_type = #{payType },
+      fast_mail_company = #{fastMailCompany },
+      fast_mail_no = #{fastMailNo },
+      elec_invoice_url = #{elecInvoiceUrl },
+      elec_invoice_size = #{elecInvoiceSize },
+      remark = #{remark },
+      create_time = #{createTime },
+      update_time = #{updateTime }
+    where id = #{id }
+  </update>
+  <select id="queryPageList" parameterType="java.util.Map" resultMap="BaseResultVOMap">
+	select
+	i.id, i.member_id, i.order_ids, i.person_type,i.invoice_type,
+	i.invocie_head, i.server_type, i.money, i.status,
+	i.invoice_no,
+	i.operator, i.taxpayer_code, i.invoice_address, i.invoice_phone,
+	i.bank_detail,
+	i.postage, i.mail_info_id, i.pay_status,i.pay_type,
+	i.fast_mail_company,
+	i.fast_mail_no, i.elec_invoice_url,
+	i.remark,
+	i.create_time, i.update_time ,mm.name memberName,mm.phone
+	memberPhone,m.area ,
+	(select name from x_city where code = mm.city_code)cityName ,
+	m.address receiver_address ,m.receiver,m.phone receiver_phone
+	,m.province,m.city,
+	(select sum(postage) from x_member_invoice where pay_status = 1) postageSum
+	from
+	(
+		(select * from x_member_invoice where `status` = 1  order by create_time  ASC)
+		UNION ALL
+		(select * from x_member_invoice where `status` = 2  order by create_time  ASC)
+		UNION ALL
+		(select * from x_member_invoice where `status` in(3,5)   order by create_time  ASC)
+	) i left join x_member_mail_info m on i.mail_info_id = m.id left join
+	x_member mm on mm.id = i.member_id
+	where  pay_status = 1 
+  	<if test="cityCode != null and cityCode != '' ">
+  		 and mm.city_code = #{cityCode}
+  	</if>
+  	<if test="name != null and name != '' ">
+  	 	and mm.name like concat("%",#{name},"%")
+  	</if>
+  	<if test="invocieHead != null and invocieHead != '' ">
+  	 	and i.invocie_head like concat("%",#{invocieHead},"%")
+  	</if>
+  	<if test="invoiceType != null and invoiceType != '' ">
+  		and i.invoice_type = #{invoiceType}
+  	</if>
+  	<if test="invoiceStatus != null and invoiceStatus != '' ">
+  		and i.status = #{invoiceStatus}
+  	</if>
+  	<if test="beginTime != null and beginTime != '' ">
+  		 and i.create_time  <![CDATA[ >= ]]>  #{beginTime}
+  	</if>
+  	<if test="endTime != null and endTime != '' ">
+  		 and i.create_time  <![CDATA[ <= ]]>  #{endTime}
+  	</if>
+  	<if test="offset != null and rows != null ">
+   			 limit #{offset } , #{rows }  
+  	</if>
+  </select>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	select 
+  		count(1)
+  	from 
+  	 (
+		select * from x_member_invoice where `status` = 1
+		UNION ALL
+		select * from x_member_invoice where `status` = 2 
+		UNION ALL
+		select * from x_member_invoice where `status` in(3,5) 
+	 ) i  left join x_member mm on mm.id = i.member_id
+  	where  pay_status = 1 
+  	<if test="cityCode != null and cityCode != '' ">
+  		 and mm.city_code = #{cityCode}
+  	</if>
+  	<if test="name != null and name != '' ">
+  	 	and mm.name like concat("%",#{name},"%")
+  	</if>
+  	<if test="invocieHead != null and invocieHead != '' ">
+  	 	and i.invocie_head like concat("%",#{invocieHead},"%")
+  	</if>
+  	<if test="invoiceType != null and invoiceType != '' ">
+  		and i.invoice_type = #{invoiceType} 
+  	</if>
+  	<if test="invoiceStatus != null and invoiceStatus != '' ">
+  		and i.status = #{invoiceStatus} 
+  	</if>
+  	<if test="beginTime != null and beginTime != '' ">
+  		 and i.create_time  <![CDATA[ >= ]]>  #{beginTime} 
+  	</if>
+  	<if test="endTime != null and endTime != '' ">
+  		 and i.create_time  <![CDATA[ <= ]]>  #{endTime} 
+  	</if>
+  </select>
+  <update id="updateStatusById">
+  		update x_member_invoice set status = #{status } where id =#{id }
+  </update>
+  <select id="selectVOById" resultMap="BaseResultVOMap">
+	select
+	i.id, i.member_id, i.order_ids, i.person_type,i.invoice_type,
+	i.invocie_head, i.server_type, i.money, i.status,
+	i.invoice_no, i.operator, i.taxpayer_code, i.invoice_address, i.invoice_phone,
+	i.bank_detail,
+	i.postage, i.mail_info_id, i.pay_status,i.pay_type, i.fast_mail_company,
+	i.fast_mail_no, i.elec_invoice_url,
+	i.remark, i.create_time, i.update_time ,mm.name memberName,mm.phone
+	memberPhone,m.area,m.province,m.city,
+	(select name from x_city where code = mm.city_code)cityName , m.address
+	receiver_address ,m.receiver,m.phone receiver_phone
+	from x_member_invoice i left join x_member_mail_info m on i.mail_info_id =
+	m.id left join x_member mm on mm.id = i.member_id
+	where i.id = #{id}
+</select>
+
+ <select id="getOrderMoney" parameterType="java.util.List" resultType="java.lang.Double">
+	select
+		 truncate(SUM(_pay.pay_money)/100.0,2) 
+	from 
+		x_time_share_pay _pay 
+	where
+		 _pay.id 
+		<foreach collection="list" item="item" index="index" open="in(" close=")" separator=",">
+			#{item} 
+		</foreach>
+ </select>
+ <select id="getCharingMoney" parameterType="java.util.List" resultType="java.lang.Double">
+	select truncate(sum(pay_money)/100.0,2) from c_charging_order where id  
+	<foreach collection="list" item="item" index="index" open="in(" close=")" separator=",">
+		#{item} 
+	</foreach>
+ </select>
+ <select id="getLrMoney" parameterType="java.util.List" resultType="java.lang.Double">
+	select truncate(sum(pay_money)/100.0,2) from x_long_rent_order where id  
+	<foreach collection="list" item="item" index="index" open="in(" close=")" separator=",">
+		#{item} 
+	</foreach>
+ </select>
+ <sql id="orderInfoSql">
+	 	<if test="tsList != null and tsList.size > 0 ">
+		 		(select order_id orderId,begin_time orderTime ,lpn,  truncate(pay_money/100.0,2)  payMoney ,'TS' orderType from x_time_share_pay 	
+			 		 	where id 
+			 			<foreach collection="tsList" item="item" index="index" open="in(" close=")" separator=",">
+			 				#{item} 
+			 			</foreach>
+		 		)
+	 	</if>
+	 	<if test="tsList != null and tsList.size > 0 and chargingList != null and chargingList.size > 0 ">
+	 		union ALL
+	 	</if>
+ 		<if test="chargingList != null and chargingList.size > 0 ">
+			(select chargeSeq orderId,start_time orderTime, lpn, truncate(pay_money/100.0,2)  payMoney, 'charging' orderType from c_charging_order 
+				
+		 		 	where id 
+		 			<foreach collection="chargingList" item="item" index="index" open="in(" close=")" separator=",">
+		 				#{item} 
+		 			</foreach>
+			)
+	 	</if>
+	 	<if test="(tsList != null and tsList.size > 0  or  chargingList != null and chargingList.size > 0 ) and  lrList != null and lrList.size > 0 ">
+	 		union ALL
+	 	</if>
+	 	<if test="lrList != null and lrList.size > 0 ">
+	 		(	select 
+	 				order_id orderId,begin_time orderTime, lpn, truncate(pay_money/100.0,2)  payMoney, 'lr' orderType 
+	 			from x_long_rent_order 
+		 		 	where id 
+		 			<foreach collection="lrList" item="item" index="index" open="in(" close=")" separator=",">
+		 				#{item} 
+		 			</foreach>
+			)
+	 	</if>
+ </sql>
+ <select id="getOrderInfoList" parameterType="java.util.Map" resultMap="OrderInfoVoMap">
+ 	select  tem.*  
+ 	from (
+ 		<include refid="orderInfoSql"/>
+ 	)tem  
+ 	where 1=1 
+ 	<if test="orderId != null and orderId != '' ">
+ 		and tem.orderId  = #{orderId} 
+ 	</if>
+ 	<if test="orderType != null and orderType != '' ">
+ 		and tem.orderType = #{orderType} 
+ 	</if>
+ 	order by tem.orderTime desc 
+    limit #{offset } , #{rows }
+ </select>
+ 
+ <select id="getAllOrderInfoNum" parameterType="java.util.Map" resultType="java.lang.Integer" >
+ 	select  count(1)  
+ 	from (
+ 		<include refid="orderInfoSql"/>
+ 	)tem  
+ 	where 1=1 
+ 	<if test="orderId != null and orderId != '' ">
+ 		and tem.orderId  = #{orderId} 
+ 	</if>
+ 	<if test="orderType != null and orderType != '' ">
+ 		and tem.orderType = #{orderType} 
+ 	</if>
+ </select>
+</mapper>

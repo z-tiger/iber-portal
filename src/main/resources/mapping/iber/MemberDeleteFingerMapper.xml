@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.member.MemberDeleteFingerMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberDeleteFinger">
+		<result column="id" property="id" />
+		<result column="city_code" property="cityCode" />
+		<result column="member_id" property="memberId" />
+		<result column="reason" property="reason" />
+		<result column="create_id" property="createId" />
+		<result column="create_time" property="createTime" />
+		<result column="name" property="name"/>
+		<result column="phone" property="phone"/>
+		<result column="create_name" property="createName"/>
+		<result column="city_name" property="cityName"/>
+        <result column="delete_type" property="deleteType"/>
+	</resultMap>
+	<sql id="BaseQuerySql">
+	 id,city_code,member_id,reason,create_id,create_time
+	</sql>
+	
+	<insert id="insertSelective" parameterType="com.iber.portal.model.base.Member">
+		insert into x_member_delete_finger_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+            <if test="deleteType != null">
+                delete_type,
+            </if>
+			<if test="cityCode != null">
+				city_code,
+			</if>
+			<if test="memberId != null">
+				member_id,
+			</if>
+			<if test="reason != null">
+				reason,
+			</if>
+			<if test="createId != null">
+				create_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+            <if test="deleteType != null">
+                #{deleteType},
+            </if>
+			<if test="cityCode != null">
+				#{cityCode},
+			</if>
+			<if test="memberId != null">
+				#{memberId},
+			</if>
+			<if test="reason != null">
+				#{reason},
+			</if>
+			<if test="createId != null">
+				#{createId},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="selectAll" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT a.reason,a.create_time,b.name,b.phone,c.name create_name,d.name city_name ,a.delete_type FROM
+        x_member_delete_finger_log a
+        LEFT JOIN x_member b ON a.member_id = b.id LEFT JOIN x_sys_user c ON a.create_id = c.id
+        LEFT JOIN x_city d ON a.city_code = d.code where 1 = 1
+        <if test="cityCode != null and cityCode !=''">
+            and a.city_code =#{cityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="deleteType != null and deleteType !=''">
+            and a.delete_type =#{deleteType,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name != '' ">
+            and b.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="phone != null and phone !='' ">
+            and b.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        order by a.create_time DESC
+        <if test="offset != null and rows !=null ">
+            limit #{offset},#{rows}
+        </if>
+
+
+	</select>
+	<select id="selectAllRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM x_member_delete_finger_log a 
+		LEFT JOIN x_member b ON a.member_id = b.id LEFT JOIN x_sys_user c ON a.create_id = c.id
+	    LEFT JOIN x_city d ON a.city_code = d.code where 1 = 1
+	    <if test="cityCode != null and cityCode !=''">
+	    	and  a.city_code =#{cityCode,jdbcType=VARCHAR}
+	    </if>
+        <if test="deleteType != null and deleteType !=''">
+            and  a.delete_type =#{deleteType,jdbcType=VARCHAR}
+        </if>
+	    <if test="name != null and name != '' ">
+			and b.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="phone != null and phone !='' ">
+			and b.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+	</select>
+</mapper>   

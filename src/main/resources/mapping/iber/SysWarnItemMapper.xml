@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sys.SysWarnItemMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sys.SysWarnItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="warn_tpl" property="warnTpl" jdbcType="VARCHAR" />
+    <result column="to_dispatch" property="toDispatch" jdbcType="INTEGER" />
+    <result column="threshold_value" property="thresholdValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, item_code, item_name, warn_tpl, to_dispatch,threshold_value
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_warn_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_sys_warn_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.sys.SysWarnItem" >
+    insert into x_sys_warn_item (id, item_code, item_name, 
+      warn_tpl, to_dispatch,threshold_value)
+    values (#{id,jdbcType=INTEGER}, #{itemCode,jdbcType=VARCHAR}, #{itemName,jdbcType=VARCHAR}, 
+      #{warnTpl,jdbcType=VARCHAR}, #{toDispatch,jdbcType=INTEGER}, #{thresholdValue,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sys.SysWarnItem" >
+    insert into x_sys_warn_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemCode != null" >
+        item_code,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="warnTpl != null" >
+        warn_tpl,
+      </if>
+      <if test="toDispatch != null" >
+        to_dispatch,
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemCode != null" >
+        #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="warnTpl != null" >
+        #{warnTpl,jdbcType=VARCHAR},
+      </if>
+      <if test="toDispatch != null" >
+        #{toDispatch,jdbcType=INTEGER},
+      </if>
+      <if test="thresholdValue != null" >
+        #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sys.SysWarnItem" >
+    update x_sys_warn_item
+    <set >
+      <if test="itemCode != null" >
+        item_code = #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="warnTpl != null" >
+        warn_tpl = #{warnTpl,jdbcType=VARCHAR},
+      </if>
+      <if test="toDispatch != null" >
+        to_dispatch = #{toDispatch,jdbcType=INTEGER},
+      </if>
+       <if test="thresholdValue != null" >
+        threshold_value = #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sys.SysWarnItem" >
+    update x_sys_warn_item
+    set item_code = #{itemCode,jdbcType=VARCHAR},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      warn_tpl = #{warnTpl,jdbcType=VARCHAR},
+      to_dispatch = #{toDispatch,jdbcType=INTEGER},
+      threshold_value = #{thresholdValue,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_warn_item
+    where item_code = #{itemCode,jdbcType=INTEGER}
+  </select>
+</mapper>

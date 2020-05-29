@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.coupon.CouponLogMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.coupon.CouponLog" >
+	<result column="id" property="id" jdbcType="INTEGER"/>
+	<result column="couponno" property="couponno" jdbcType="VARCHAR"/>
+	<result column="memberid" property="memberid" jdbcType="INTEGER"/>
+	<result column="status" property="status" jdbcType="INTEGER"/>
+	<result column="batchno" property="batchno" jdbcType="VARCHAR"/>
+	<result column="createid" property="createid" jdbcType="INTEGER"/>
+	<result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+	<result column="member_name" property="memberName" jdbcType="VARCHAR" />
+	<result column="member_phone" property="memberPhone" jdbcType="VARCHAR" />
+	<result column="create_name" property="createName" jdbcType="VARCHAR" />
+	<result column="coupon_num" property="couponNum" jdbcType="INTEGER" />
+</resultMap>
+       
+<!-- x_coupon_log table all fields -->
+<sql id="Base_Column_List" >
+	 id,couponno,memberid,status,batchno,createid,createtime,coupon_num
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.coupon.CouponLog" >
+  insert into x_coupon_log(id,couponno,memberid,status,batchno,createid,createtime,coupon_num)
+ values(#{id},#{couponno},#{memberid},#{status},#{batchno},#{createid},#{createtime},#{couponNum})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_coupon_log where id = #{id}
+</delete>
+
+<!-- 更新记录 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_coupon_log set coupon_num=#{couponNum},couponno=#{couponno},memberid=#{memberid},status=#{status},batchno=#{batchno},createid=#{createid} where id=#{id}
+</update>
+<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.coupon.CouponLog"  >
+	update x_coupon_log 
+	<set>
+		<if test="createid != null">
+				createid = #{createid},
+		</if>
+		<if test="batchno != null">
+				batchno = #{batchno},
+		</if>
+		<if test="status != null">
+				status = #{status},
+		</if>
+		<if test="memberid != null">
+				memberid = #{memberid},
+		</if>
+		<if test="couponno != null">
+				couponno = #{couponno},
+		</if>
+		<if test="couponNum != null">
+				coupon_num = #{couponNum},
+		</if>
+	</set>
+	where id = #{id,jdbcType=INTEGER}
+</update>
+<!-- 根据id查询 优惠券发放记录 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select<include refid="Base_Column_List" />
+	 from x_coupon_log  where id = #{id}
+</select>
+
+<!-- 优惠券发放记录 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_coupon_log c
+		inner join x_member m on c.memberId = m.id 
+		left join x_sys_user su on su.id=c.createId where 1 =1
+ 	<if test="couponNo != null and couponNo != '' " >
+       and c.couponNo = #{couponNo,jdbcType=VARCHAR}
+    </if>
+    <if test="memberId != null and memberId != '' " >
+       and c.memberId = #{memberId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null and status != '' " >
+       and c.status= #{status,jdbcType=INTEGER}
+    </if>
+    <if test="batchNo != null and batchNo != '' " >
+      and c.batchNo =#{batchNo,jdbcType=VARCHAR}
+    </if>
+    <if test="memberName != null and memberName != '' ">
+    	 and m.name = #{memberName}
+    </if>
+    <if test="memberPhone != null and memberPhone != '' ">
+    	 and m.phone = #{memberPhone}
+    </if>
+</select>
+  	
+<!-- 查询优惠券发放记录列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+		c.id,c.couponno,c.memberid,c.status,c.batchno,c.createid,c.createtime,c.coupon_num,
+		m.name as member_name, m.phone as member_phone, su.name as  create_name
+	from x_coupon_log c 
+		inner join x_member m on c.memberId = m.id 
+		left join x_sys_user su on su.id=c.createId where 1 =1 
+	<if test="couponNo != null and couponNo != '' " >
+       and c.couponNo = #{couponNo,jdbcType=VARCHAR}
+    </if>
+    <if test="memberId != null and memberId != '' " >
+       and c.memberId = #{memberId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null and status != '' " >
+       and c.status= #{status,jdbcType=INTEGER}
+    </if>
+    <if test="batchNo != null and batchNo != '' " >
+      and c.batchNo =#{batchNo,jdbcType=VARCHAR}
+    </if>
+    <if test="memberName != null and memberName != '' ">
+    	 and m.name = #{memberName}
+    </if>
+    <if test="memberPhone != null and memberPhone != '' ">
+    	 and m.phone = #{memberPhone}
+    </if>
+    order by c.createtime desc
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+</select>
+<!-- 根据批次号查询优惠券 -->
+<select id="queryByBatchNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+  select count(1) from  x_coupon_log  where batchNo=#{batchNo,jdbcType=VARCHAR} 
+</select>
+</mapper>   

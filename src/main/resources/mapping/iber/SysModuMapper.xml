@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.sys.SysModuMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.sys.SysModu" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="link" property="link" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="icon_img" property="iconImg" jdbcType="VARCHAR" />
+    <result column="icon_class" property="iconClass" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_enterprise" property="isEnterprise"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, pid, link, sort, grade, icon_img, icon_class, is_show, create_user, create_time, 
+    update_user, update_time, description, remark,is_enterprise
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_modu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from x_sys_modu
+    where pid = #{pid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="showModuList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_modu
+    WHERE pid IS NOT NULL AND (is_show = '1' OR is_show = '2') AND is_enterprise = 0  ORDER BY sort
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_modu   order by sort
+  </select>
+  
+   <select id="getAllNot" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_modu where pid  &lt;&gt; '0' and is_show = '1' and  is_enterprise != 1 order by sort
+  </select>
+  
+  <!-- query user modu -->
+  <select id="selectUserModuByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    	modu.id, icon_img, icon_class, modu.name , modu.link , modu.grade , modu.pid
+    from (
+			select
+				distinct modu_id
+			from (
+        		select
+        			distinct a.modu_id
+        		from
+        			x_sys_role_modu a
+        		where
+        			a.role_id in (select b.role_id from x_sys_user_role b where b.user_id = #{0}) and a.is_auth= '1'
+		        union all
+		        select
+		        	 distinct a.modu_id
+		        from
+		        	x_sys_user_modu a
+		        where
+		        	a.user_id = #{0} and a.is_auth= '1'
+				) t
+		) tab , x_sys_modu  modu
+	where
+		tab.modu_id = modu.id  and (modu.is_show ='1' or modu.is_show = '2')
+		and modu.pid  &lt;&gt; '0' and (modu.is_show = '1' or modu.is_show = '2')
+		and modu.is_enterprise != 1
+		order by modu.sort
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_sys_modu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByPid" parameterType="java.lang.Integer" >
+     delete from x_sys_modu
+     where pid = #{pid,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.iber.portal.model.sys.SysModu" >
+    insert into x_sys_modu (id, name, pid, 
+      link, sort, grade, 
+      icon_img, icon_class, is_show, 
+      create_user, create_time, update_user, 
+      update_time, description, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, 
+      #{link,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{grade,jdbcType=INTEGER}, 
+      #{iconImg,jdbcType=VARCHAR}, #{iconClass,jdbcType=VARCHAR}, #{isShow,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.sys.SysModu" >
+    insert into x_sys_modu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="link != null" >
+        link,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+      <if test="iconImg != null" >
+        icon_img,
+      </if>
+      <if test="iconClass != null" >
+        icon_class,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isEnterprise != null" >
+        is_enterprise,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="iconImg != null" >
+        #{iconImg,jdbcType=VARCHAR},
+      </if>
+      <if test="iconClass != null" >
+        #{iconClass,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.sys.SysModu" >
+    update x_sys_modu
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="link != null" >
+        link = #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="iconImg != null" >
+        icon_img = #{iconImg,jdbcType=VARCHAR},
+      </if>
+      <if test="iconClass != null" >
+        icon_class = #{iconClass,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.sys.SysModu" >
+    update x_sys_modu
+    set name = #{name,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      link = #{link,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      grade = #{grade,jdbcType=INTEGER},
+      icon_img = #{iconImg,jdbcType=VARCHAR},
+      icon_class = #{iconClass,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},is_enterprise = #{isEnterprise}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByNameAndPid" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from x_sys_modu
+  	where pid = #{pid} and name = #{name}
+  </select>
+  
+  <select id="selectModuByLinks" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from x_sys_modu 
+  	where link in
+  	<foreach collection="list" open="(" separator="," close=")" item="value">
+  		#{value}
+  	</foreach>
+  </select>
+    <select id="showEnterpriseModuList"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from x_sys_modu
+        WHERE pid IS NOT NULL AND (is_show = '1' OR is_show = '2') AND is_enterprise = 1 ORDER BY sort
+    </select>
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MemberRefundWorderDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.MemberRefundWorderDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="auditor" property="auditor" jdbcType="VARCHAR" />
+    <result column="auditor_role_id" property="auditorRoleId" jdbcType="VARCHAR" />
+    <result column="auditor_datetime" property="auditorDatetime" jdbcType="TIMESTAMP" />
+    <result column="auditor_datetime_str" property="auditorDatetimeStr" jdbcType="TIMESTAMP" />
+    <result column="auditor_result" property="auditorResult" jdbcType="VARCHAR" />
+    <result column="auditor_remark" property="auditorRemark" jdbcType="VARCHAR" />
+    <result column="auditor_accessory_file" property="auditorAccessoryFile" jdbcType="VARCHAR" />
+    <result column="auditor_accessory_filename" property="auditorAccessoryFilename" jdbcType="VARCHAR" />
+    <result column="applyTime" property="applyTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rid, auditor, auditor_role_id, auditor_datetime, auditor_result, auditor_remark, 
+    auditor_accessory_file, auditor_accessory_filename
+  </sql>
+  
+  <select id="selectMemberRefundWorderDetailByRid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select rl.create_time applyTime,d.* from x_member_refund_worder_detail d INNER JOIN x_member_refund_log rl on rl.id = d.rid where rid = #{rid,jdbcType=INTEGER}  
+    order by auditor_datetime desc 
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_refund_worder_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_refund_worder_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.MemberRefundWorderDetail" >
+    insert into x_member_refund_worder_detail (rid, auditor, 
+      auditor_role_id, auditor_datetime, auditor_result, 
+      auditor_remark, auditor_accessory_file, auditor_accessory_filename
+      )
+    values (#{rid,jdbcType=INTEGER}, #{auditor,jdbcType=VARCHAR}, 
+      #{auditorRoleId,jdbcType=VARCHAR}, #{auditorDatetime,jdbcType=TIMESTAMP}, #{auditorResult,jdbcType=VARCHAR}, 
+      #{auditorRemark,jdbcType=VARCHAR}, #{auditorAccessoryFile,jdbcType=VARCHAR}, #{auditorAccessoryFilename,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.MemberRefundWorderDetail" >
+    insert into x_member_refund_worder_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="auditor != null" >
+        auditor,
+      </if>
+      <if test="auditorRoleId != null" >
+        auditor_role_id,
+      </if>
+      <if test="auditorDatetime != null" >
+        auditor_datetime,
+      </if>
+      <if test="auditorResult != null" >
+        auditor_result,
+      </if>
+      <if test="auditorRemark != null" >
+        auditor_remark,
+      </if>
+      <if test="auditorAccessoryFile != null" >
+        auditor_accessory_file,
+      </if>
+      <if test="auditorAccessoryFilename != null" >
+        auditor_accessory_filename,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="auditor != null" >
+        #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorRoleId != null" >
+        #{auditorRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorDatetime != null" >
+        #{auditorDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditorResult != null" >
+        #{auditorResult,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorRemark != null" >
+        #{auditorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorAccessoryFile != null" >
+        #{auditorAccessoryFile,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorAccessoryFilename != null" >
+        #{auditorAccessoryFilename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.MemberRefundWorderDetail" >
+    update x_member_refund_worder_detail
+    <set >
+      <if test="rid != null" >
+        rid = #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="auditor != null" >
+        auditor = #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorRoleId != null" >
+        auditor_role_id = #{auditorRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorDatetime != null" >
+        auditor_datetime = #{auditorDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditorResult != null" >
+        auditor_result = #{auditorResult,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorRemark != null" >
+        auditor_remark = #{auditorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorAccessoryFile != null" >
+        auditor_accessory_file = #{auditorAccessoryFile,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorAccessoryFilename != null" >
+        auditor_accessory_filename = #{auditorAccessoryFilename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.MemberRefundWorderDetail" >
+    update x_member_refund_worder_detail
+    set rid = #{rid,jdbcType=INTEGER},
+      auditor = #{auditor,jdbcType=VARCHAR},
+      auditor_role_id = #{auditorRoleId,jdbcType=VARCHAR},
+      auditor_datetime = #{auditorDatetime,jdbcType=TIMESTAMP},
+      auditor_result = #{auditorResult,jdbcType=VARCHAR},
+      auditor_remark = #{auditorRemark,jdbcType=VARCHAR},
+      auditor_accessory_file = #{auditorAccessoryFile,jdbcType=VARCHAR},
+      auditor_accessory_filename = #{auditorAccessoryFilename,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

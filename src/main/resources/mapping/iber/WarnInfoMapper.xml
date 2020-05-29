@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.warns.WarnInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.warns.WarnInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="warn_item_code" property="warnItemCode" jdbcType="VARCHAR" />
+    <result column="warn_content" property="warnContent" jdbcType="VARCHAR" />
+    <result column="to_dispatch" property="toDispatch" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="threshold_value" property="thresholdValue" jdbcType="VARCHAR" />
+    <result column="actual_value" property="actualValue" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="INTEGER" /> 
+    <result column="warn_info_id" property="status" jdbcType="INTEGER" /> 
+    <result column="create_time_str" property="createTimeStr" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    a.id, a.warn_item_code, a.warn_content, a.to_dispatch, a.member_id, a.lpn, a.park_id, a.order_id, 
+    a.threshold_value, a.actual_value, a.create_time, b.item_name,c.warn_info_id,DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') create_time_str
+  </sql>
+ 
+  <sql id="Base_Column_List_Record" >
+    count(1) counts
+   </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_warn_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_sys_warn_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.warns.WarnInfo" >
+    insert into x_sys_warn_info (id, warn_item_code, warn_content, 
+      to_dispatch, member_id, lpn, 
+      park_id, order_id, threshold_value, 
+      actual_value, create_time)
+    values (#{id,jdbcType=INTEGER}, #{warnItemCode,jdbcType=VARCHAR}, #{warnContent,jdbcType=VARCHAR}, 
+      #{toDispatch,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{lpn,jdbcType=VARCHAR}, 
+      #{parkId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{thresholdValue,jdbcType=VARCHAR}, 
+      #{actualValue,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.warns.WarnInfo" >
+    insert into x_sys_warn_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="warnItemCode != null" >
+        warn_item_code,
+      </if>
+      <if test="warnContent != null" >
+        warn_content,
+      </if>
+      <if test="toDispatch != null" >
+        to_dispatch,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value,
+      </if>
+      <if test="actualValue != null" >
+        actual_value,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="warnItemCode != null" >
+        #{warnItemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContent != null" >
+        #{warnContent,jdbcType=VARCHAR},
+      </if>
+      <if test="toDispatch != null" >
+        #{toDispatch,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="thresholdValue != null" >
+        #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+      <if test="actualValue != null" >
+        #{actualValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.warns.WarnInfo" >
+    update x_sys_warn_info
+    <set >
+      <if test="warnItemCode != null" >
+        warn_item_code = #{warnItemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContent != null" >
+        warn_content = #{warnContent,jdbcType=VARCHAR},
+      </if>
+      <if test="toDispatch != null" >
+        to_dispatch = #{toDispatch,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value = #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+      <if test="actualValue != null" >
+        actual_value = #{actualValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.warns.WarnInfo" >
+    update x_sys_warn_info
+    set warn_item_code = #{warnItemCode,jdbcType=VARCHAR},
+      warn_content = #{warnContent,jdbcType=VARCHAR},
+      to_dispatch = #{toDispatch,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      park_id = #{parkId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      threshold_value = #{thresholdValue,jdbcType=VARCHAR},
+      actual_value = #{actualValue,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByWarnInfoList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_warn_info a 
+     LEFT JOIN x_sys_warn_item b ON a.warn_item_code=b.item_code
+     LEFT JOIN x_sys_warn_info_status c ON a.id=c.warn_info_id
+     <trim prefixOverrides="and" >
+       <where> 
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if> 
+		     <if test="item != null and item != ''" >
+		       <![CDATA[and  a.warn_item_code = #{item,jdbcType=VARCHAR}    ]]> 
+		    </if> 
+		        
+	   </where> 
+    </trim>
+      ORDER BY a.create_time DESC
+      limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+   </select>
+  
+   <select id="selectByWarnInfoListRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+    from x_sys_warn_info a 
+     LEFT JOIN x_sys_warn_item b ON a.warn_item_code=b.item_code
+     LEFT JOIN x_sys_warn_info_status c ON a.id=c.warn_info_id 
+     <trim prefixOverrides="and" >
+       <where>
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if> 
+		    <if test="item != null and item != ''" >
+		       <![CDATA[and  a.warn_item_code = #{item,jdbcType=VARCHAR}    ]]> 
+		    </if>        
+	   </where> 
+    </trim>
+  </select>
+
+  <select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+     select 
+    <include refid="Base_Column_List" />
+     from x_sys_warn_info a 
+     LEFT JOIN x_sys_warn_item b ON a.warn_item_code=b.item_code
+     LEFT JOIN x_sys_warn_info_status c ON a.id=c.warn_info_id
+     <trim prefixOverrides="and" >
+       <where> 
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="item != null and item != ''" >
+		       <![CDATA[and a.warn_item_code =  #{item,jdbcType=VARCHAR}  ]]> 
+		    </if>          
+	   </where> 
+    </trim>
+      ORDER BY a.create_time DESC
+   </select>
+
+   <select id="selectByWarnRemindTotal" resultType="java.lang.Integer" parameterType="java.util.Map" >
+   	 select  
+   		<include refid="Base_Column_List_Record" />
+     from x_sys_warn_info i , x_sys_warn_item b 
+	where i.warn_item_code=b.item_code  
+	and not exists (select 1 from x_sys_warn_info_status b where i.id=b.warn_info_id)
+	<if test="beginTime != null and beginTime !='' ">
+    	and i.create_time &gt; #{beginTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime !='' ">
+    	and i.create_time &lt; #{endTime,jdbcType=VARCHAR}
+    </if> 
+
+    <!-- select 
+    <include refid="Base_Column_List_Record" />
+    from x_sys_warn_info a 
+     LEFT JOIN x_sys_warn_item b ON a.warn_item_code=b.item_code
+     LEFT JOIN x_sys_warn_info_status c ON a.id=c.warn_info_id 
+     <trim prefixOverrides="and" >
+       <where>
+		   not exists (select 1 from x_sys_warn_info_status b where a.id=b.warn_info_id)
+		   <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		   <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]>         
+	   </where> 
+    </trim> -->
+  </select>
+
+  <select id="selectByWarnAllList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_sys_warn_info a 
+     LEFT JOIN x_sys_warn_item b ON a.warn_item_code=b.item_code
+     LEFT JOIN x_sys_warn_info_status c ON a.id=c.warn_info_id
+     <trim prefixOverrides="and" >
+       <where> 
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>        
+	   </where> 
+    </trim>
+      ORDER BY a.create_time DESC
+   </select>
+
+</mapper>

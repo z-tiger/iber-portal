@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MoneyLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.MoneyLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="obj_id" property="objId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, category, member_id, money, create_time, describe, obj_id, type, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_money_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_money_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.MoneyLog" >
+    insert into x_money_log (category, member_id, 
+      money, create_time, describe, 
+      obj_id, type, status
+      )
+    values (#{category,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, 
+      #{money,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{describe,jdbcType=VARCHAR}, 
+      #{objId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.MoneyLog" >
+    insert into x_money_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="describe != null" >
+        describe,
+      </if>
+      <if test="objId != null" >
+        obj_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="category != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="objId != null" >
+        #{objId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.MoneyLog" >
+    update x_money_log
+    <set >
+      <if test="category != null" >
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="describe != null" >
+        describe = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="objId != null" >
+        obj_id = #{objId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.MoneyLog" >
+    update x_money_log
+    set category = #{category,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      money = #{money,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      describe = #{describe,jdbcType=VARCHAR},
+      obj_id = #{objId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <insert id="insertMoneyLogBatch" parameterType="java.util.List">
+		INSERT into x_money_log (category,member_id,money,create_time,obj_id,type,`describe`)
+		<trim prefix="values" suffixOverrides=",">
+			<foreach collection="logList" item="item" separator="," index="index">
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+					<choose>
+						<when test="item.category != null">
+							#{item.category},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.memberId != null">
+							#{item.memberId},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.money != null">
+							#{item.money},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.createTime != null">
+							#{item.createTime},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.objId != null">
+							#{item.objId},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.type != null">
+							#{item.type},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+					<choose>
+						<when test="item.describe != null">
+							#{item.describe},
+						</when>
+						<otherwise>NULL,</otherwise>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</insert>
+  
+  
+</mapper>

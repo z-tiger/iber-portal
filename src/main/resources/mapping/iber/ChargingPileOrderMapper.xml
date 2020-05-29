@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.charging.ChargingPileOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.charging.ChargingPileOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="pile_id" property="pileId" jdbcType="INTEGER" />
+    <result column="park_id" property="parkId" jdbcType="INTEGER" />
+    <result column="charging_type" property="chargingType" jdbcType="VARCHAR" />
+    <result column="charging_mode" property="chargingMode" jdbcType="VARCHAR" />
+    <result column="electric_amount" property="electricAmount" jdbcType="DOUBLE" />
+    <result column="charging_time" property="chargingTime" jdbcType="INTEGER" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="order_money" property="orderMoney" jdbcType="INTEGER" />
+    <result column="coupon_no" property="couponNo" jdbcType="VARCHAR" />
+    <result column="coupon_balance" property="couponBalance" jdbcType="INTEGER" />
+    <result column="privilege_money" property="privilegeMoney" jdbcType="INTEGER" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="dimension_info" property="dimensionInfo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="before_electric" property="beforeElectric" jdbcType="DOUBLE" />
+    <result column="end_electric" property="endElectric" jdbcType="DOUBLE" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="threshold_value" property="thresholdValue" jdbcType="VARCHAR" />
+    <result column="member_name" property="memberName" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="park_name" property="parkName" jdbcType="VARCHAR" />
+    <result column="pile_type" property="pileType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, city_code, member_id, pile_id, park_id, charging_type, charging_mode, 
+    electric_amount, charging_time, begin_time, end_time, order_money, coupon_no, coupon_balance, 
+    privilege_money, pay_money, pay_type, dimension_info, status, before_electric, end_electric, 
+    create_time,threshold_value
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_charging_pile_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_charging_pile_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.charging.ChargingPileOrder" >
+    insert into x_charging_pile_order (id, order_id, city_code, 
+      member_id, pile_id, park_id, 
+      charging_type, charging_mode, electric_amount, 
+      charging_time, begin_time, end_time, 
+      order_money, coupon_no, coupon_balance, 
+      privilege_money, pay_money, pay_type, 
+      dimension_info, status, before_electric, 
+      end_electric, create_time,threshold_value)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{memberId,jdbcType=INTEGER}, #{pileId,jdbcType=INTEGER}, #{parkId,jdbcType=INTEGER}, 
+      #{chargingType,jdbcType=VARCHAR}, #{chargingMode,jdbcType=VARCHAR}, #{electricAmount,jdbcType=DOUBLE}, 
+      #{chargingTime,jdbcType=INTEGER}, #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{orderMoney,jdbcType=INTEGER}, #{couponNo,jdbcType=VARCHAR}, #{couponBalance,jdbcType=INTEGER}, 
+      #{privilegeMoney,jdbcType=INTEGER}, #{payMoney,jdbcType=INTEGER}, #{payType,jdbcType=VARCHAR}, 
+      #{dimensionInfo,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{beforeElectric,jdbcType=DOUBLE}, 
+      #{endElectric,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{thresholdValue,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.charging.ChargingPileOrder" >
+    insert into x_charging_pile_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="pileId != null" >
+        pile_id,
+      </if>
+      <if test="parkId != null" >
+        park_id,
+      </if>
+      <if test="chargingType != null" >
+        charging_type,
+      </if>
+      <if test="chargingMode != null" >
+        charging_mode,
+      </if>
+      <if test="electricAmount != null" >
+        electric_amount,
+      </if>
+      <if test="chargingTime != null" >
+        charging_time,
+      </if>
+      <if test="beginTime != null" >
+        begin_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="orderMoney != null" >
+        order_money,
+      </if>
+      <if test="couponNo != null" >
+        coupon_no,
+      </if>
+      <if test="couponBalance != null" >
+        coupon_balance,
+      </if>
+      <if test="privilegeMoney != null" >
+        privilege_money,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="dimensionInfo != null" >
+        dimension_info,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="beforeElectric != null" >
+        before_electric,
+      </if>
+      <if test="endElectric != null" >
+        end_electric,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="pileId != null" >
+        #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="parkId != null" >
+        #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="chargingType != null" >
+        #{chargingType,jdbcType=VARCHAR},
+      </if>
+      <if test="chargingMode != null" >
+        #{chargingMode,jdbcType=VARCHAR},
+      </if>
+      <if test="electricAmount != null" >
+        #{electricAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="chargingTime != null" >
+        #{chargingTime,jdbcType=INTEGER},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderMoney != null" >
+        #{orderMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponNo != null" >
+        #{couponNo,jdbcType=VARCHAR},
+      </if>
+      <if test="couponBalance != null" >
+        #{couponBalance,jdbcType=INTEGER},
+      </if>
+      <if test="privilegeMoney != null" >
+        #{privilegeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionInfo != null" >
+        #{dimensionInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeElectric != null" >
+        #{beforeElectric,jdbcType=DOUBLE},
+      </if>
+      <if test="endElectric != null" >
+        #{endElectric,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="thresholdValue != null" >
+        #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.charging.ChargingPileOrder" >
+    update x_charging_pile_order
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="pileId != null" >
+        pile_id = #{pileId,jdbcType=INTEGER},
+      </if>
+      <if test="parkId != null" >
+        park_id = #{parkId,jdbcType=INTEGER},
+      </if>
+      <if test="chargingType != null" >
+        charging_type = #{chargingType,jdbcType=VARCHAR},
+      </if>
+      <if test="chargingMode != null" >
+        charging_mode = #{chargingMode,jdbcType=VARCHAR},
+      </if>
+      <if test="electricAmount != null" >
+        electric_amount = #{electricAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="chargingTime != null" >
+        charging_time = #{chargingTime,jdbcType=INTEGER},
+      </if>
+      <if test="beginTime != null" >
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderMoney != null" >
+        order_money = #{orderMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponNo != null" >
+        coupon_no = #{couponNo,jdbcType=VARCHAR},
+      </if>
+      <if test="couponBalance != null" >
+        coupon_balance = #{couponBalance,jdbcType=INTEGER},
+      </if>
+      <if test="privilegeMoney != null" >
+        privilege_money = #{privilegeMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionInfo != null" >
+        dimension_info = #{dimensionInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeElectric != null" >
+        before_electric = #{beforeElectric,jdbcType=DOUBLE},
+      </if>
+      <if test="endElectric != null" >
+        end_electric = #{endElectric,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="thresholdValue != null" >
+        threshold_value = #{thresholdValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.charging.ChargingPileOrder" >
+    update x_charging_pile_order
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      pile_id = #{pileId,jdbcType=INTEGER},
+      park_id = #{parkId,jdbcType=INTEGER},
+      charging_type = #{chargingType,jdbcType=VARCHAR},
+      charging_mode = #{chargingMode,jdbcType=VARCHAR},
+      electric_amount = #{electricAmount,jdbcType=DOUBLE},
+      charging_time = #{chargingTime,jdbcType=INTEGER},
+      begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      order_money = #{orderMoney,jdbcType=INTEGER},
+      coupon_no = #{couponNo,jdbcType=VARCHAR},
+      coupon_balance = #{couponBalance,jdbcType=INTEGER},
+      privilege_money = #{privilegeMoney,jdbcType=INTEGER},
+      pay_money = #{payMoney,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      dimension_info = #{dimensionInfo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      before_electric = #{beforeElectric,jdbcType=DOUBLE},
+      end_electric = #{endElectric,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      threshold_value = #{thresholdValue,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select count(1) from (
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select pile_type from x_charging_pile_type a where a.id = t.pile_id) pile_type,
+    (select name from x_member d where d.id = t.member_id) member_name,
+    (select name from x_park b where b.id = t.park_id) name
+    from x_charging_pile_order t ) x
+    where 1=1 
+    <if test="pileType != null and pileType != '' " >
+        and x.pile_type LIKE CONCAT(CONCAT('%', #{pileType,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="parkName != null and parkName != '' " >
+        and x.park_name LIKE CONCAT(CONCAT('%', #{parkName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="memberName != null and memberName != '' " >
+        and x.member_name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and x.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="payType != null and payType != '' " >
+        and x.pay_type = #{payType,jdbcType=VARCHAR}
+    </if>
+    <if test="chargingType != null and chargingType != '' " >
+        and x.charging_type = #{chargingType,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+        and x.begin_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+        and x.begin_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select * from (
+    select 
+    <include refid="Base_Column_List" />,
+    (select name from x_city c where c.code = t.city_code) city_name,
+    (select pile_type from x_charging_pile_type a where a.id = t.pile_id) pile_type,
+    (select name from x_member d where d.id = t.member_id) member_name,
+    (select name from x_park b where b.id = t.park_id) park_name
+    from x_charging_pile_order t ) x
+    where 1=1 
+    <if test="pileType != null and pileType != '' " >
+        and x.pile_type LIKE CONCAT(CONCAT('%', #{pileType,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="parkName != null and parkName != '' " >
+        and x.park_name LIKE CONCAT(CONCAT('%', #{parkName,jdbcType=VARCHAR}),'%')
+    </if>
+    <if test="memberName != null and memberName != '' " >
+        and x.member_name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+    </if>
+    <if test="cityCode != null and cityCode != '' " >
+        and x.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="payType != null and payType != '' " >
+        and x.pay_type = #{payType,jdbcType=VARCHAR}
+    </if>
+    <if test="chargingType != null and chargingType != '' " >
+        and x.charging_type = #{chargingType,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateFrom != null and queryDateFrom != '' " >
+        and x.begin_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+    </if>
+    <if test="queryDateTo != null and queryDateTo != '' " >
+        and x.begin_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+    </if>
+     order by x.begin_time desc limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  </select>
+</mapper>

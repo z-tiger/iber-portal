@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.employee.EmployeeOrderMapper">
+	<!-- Result Map -->
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.employee.EmployeeOrder">
+		<result column="id" property="id" />
+		<result column="park_id"  property="parkId"/>
+		<result column="return_park_id"  property="returnParkId"/>
+		<result column="order_time"  property="orderTime"/>
+		<result column="begin_time"  property="beginTime"/>
+		<result column="end_time"  property="endTime"/>
+		<result column="city_code"  property="cityCode"/>
+		<result column="is_return_car"  property="isReturnCar"/>
+		<result column="lpn"  property="lpn"/>
+		<result column="employee_id"  property="employeeId"/>
+		<result column="order_no"  property="orderNo"/>
+		<result column="task_id"  property="taskId"/>
+		<result column="status"  property="status"/>
+		<result column="endLocation"  property="endLocation"/>
+		<result column="city_name"  property="cityName"/>
+		<result column="member_name"  property="memberName"/>
+		<result column="member_phone"  property="memberPhone"/>
+		<result column="park_name" property="parkName"/>
+		<result column="useTime" property="useTime"/>
+		<result column="actual_mileage" property="actualMileage"/>
+		<result column="plan_mileage" property="planMileage"/>
+		<result column="return_park_name" property="returnParkName"/>
+
+
+	</resultMap>
+	<sql id="Base_Column_List" >
+	 a.id,a.park_id,a.return_park_id,a.order_time,a.begin_time,a.end_time,a.city_code
+	 ,a.is_return_car,a.lpn,a.employee_id,a.order_no,a.task_id,a.status,a.endLocation
+	 ,actual_mileage,plan_mileage
+	</sql>
+	<select id="getAllInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select  <include refid="Base_Column_List"/>,b.name member_name,b.phone member_phone,c.name city_name,
+		(select  d.name from x_park d where d.id = a.park_id)park_name,
+		(select  d.name from x_park d  where d.id = a.return_park_id)return_park_name
+        ,if(a.begin_time is null ,0,UNIX_TIMESTAMP(a.end_time)-UNIX_TIMESTAMP(a.begin_time) ) as useTime
+		 from e_employee_order a
+        left join e_employee_info b on a.employee_id  = b.id
+        left join x_city c on a.city_code = c.code  where  1 =1
+		 <if test="cityCode != null" >
+			and c.code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="memberName != null" >
+			and b.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+			and a.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+    	</if>
+	    <if test="queryDateFrom != null and queryDateFrom !='' ">
+	    	and a.order_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo !='' ">
+	    	and a.order_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+	    </if> 
+	    <if test="status != null and status !='' ">
+	    	<choose>
+	    		<when test="status =='useCar'">
+	    			and a.status in ('ordered','useCar')
+	    		</when>
+	    		<otherwise>
+	    			and a.status = #{status,jdbcType=VARCHAR}
+	    		</otherwise>
+	    	</choose>
+	    </if>
+	    <if test="orderId != null and orderId !='' ">
+		     	and a.order_no = #{orderId}
+		</if>  
+		 ORDER BY a.order_time DESC
+		 <if test="offset != null and rows !=null">
+		  limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+		 </if>
+	</select>
+	 
+	 <select id="getAllInfoNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+	 	select count(1) 
+	 	 from e_employee_order a left join e_employee_info b on a.employee_id  = b.id left join x_city c on a.city_code = c.code where  1 =1 
+		 <if test="cityCode != null" >
+			and c.code = #{cityCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="memberName != null" >
+			and b.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+		</if> 
+		<if test="lpn != null and lpn !='' ">
+			and a.lpn  LIKE CONCAT('%', #{lpn,jdbcType=VARCHAR},'%')
+    	</if>
+	    <if test="queryDateFrom != null and queryDateFrom !='' ">
+	    	and a.order_time &gt; #{queryDateFrom,jdbcType=VARCHAR}
+	    </if>
+	    <if test="queryDateTo != null and queryDateTo !='' ">
+	    	and a.order_time &lt; #{queryDateTo,jdbcType=VARCHAR}
+	    </if> 
+	    <if test="status != null and status !='' ">
+	    	<choose>
+	    		<when test="status =='useCar'">
+	    			and a.status in ('ordered','useCar')
+	    		</when>
+	    		<otherwise>
+	    			and a.status = #{status,jdbcType=VARCHAR}
+	    		</otherwise>
+	    	</choose>
+	    </if>
+	    <if test="orderId != null and orderId !='' ">
+		     	and a.order_no = #{orderId}
+		</if>  
+	 </select>
+
+	<select id="queryOrderIdsByLpn" resultType="java.util.Map">
+		SELECT phone,order_no as order_id FROM e_employee_order o JOIN e_employee_info e on o.employee_id = e.id WHERE o.status = 'finish' and o.lpn = #{lpn}
+	</select>
+</mapper>   

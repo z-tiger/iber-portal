@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.ElectronicFenceMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.base.ElectronicFence" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fence_name" property="fenceName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="PageResultMap" type="com.iber.portal.vo.fence.ElectronicFenceVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fence_name" property="fenceName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+  </resultMap>  
+  <sql id="Base_Column_List" >
+    id, fence_name, type, city_code, create_time, create_name,`describe`, update_time, update_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_electronic_fence
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_electronic_fence
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.base.ElectronicFence" >
+    insert into x_electronic_fence (id, fence_name, type, 
+      city_code, create_time, create_name, 
+      update_time, update_name,`describe`)
+    values (#{id,jdbcType=INTEGER}, #{fenceName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{cityCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateName,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.base.ElectronicFence"  useGeneratedKeys="true" keyProperty="id">
+    insert into x_electronic_fence
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fenceName != null" >
+        fence_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createName != null" >
+        create_name,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateName != null" >
+        update_name,
+      </if>
+      <if test="describe != null" >
+        `describe`,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fenceName != null" >
+        #{fenceName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateName != null" >
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.ElectronicFence" >
+    update x_electronic_fence
+    <set >
+      <if test="fenceName != null" >
+        fence_name = #{fenceName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateName != null" >
+        update_name = #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        `describe` = #{describe,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.ElectronicFence" >
+    update x_electronic_fence
+    set fence_name = #{fenceName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_name = #{createName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_name = #{updateName,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectAll" resultMap="PageResultMap" parameterType="java.util.Map" >
+     select 
+     f.*,c.`name` cityName
+    from x_electronic_fence f, x_city c where f.city_code = c.`code`
+    <if test="cityCode != null and cityCode != '' ">
+       and f.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="fenceName != null and fenceName != '' ">
+       and f.fence_name like concat('%',#{fenceName,jdbcType=VARCHAR},'%') 
+    </if>
+    limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+     select count(1)
+     from x_electronic_fence
+     <trim prefixOverrides="and">
+        <where>
+            <if test="cityCode != null and cityCode != '' ">
+               and city_code = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null and name != '' ">
+               and fence_name like concat('%',#{fenceName,jdbcType=VARCHAR},'%') 
+            </if>
+        </where>
+    </trim>
+  </select>
+  
+  <select id="selectFenceByCityCode" resultMap="BaseResultMap" parameterType="java.util.Map" >
+     SELECT
+		*
+	FROM
+		x_electronic_fence 
+		<trim prefixOverrides="and">
+        <where>
+            <if test="cityCode != null and cityCode != '' ">
+               and city_code = #{cityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="fenceName != null and fenceName != '' ">
+               and fence_name LIKE '%${fenceName}%'
+            </if>
+            
+        </where>
+    </trim>
+  </select> 
+  
+</mapper>

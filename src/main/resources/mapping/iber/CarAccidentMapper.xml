@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.car.CarAccidentMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.car.CarAccident" >
+	<result column="id" property="id"/>
+	<result column="car_id" property="carId"/>
+	<result column="lpn" property="lpn"/>
+	<result column="start_time" property="startTime"/>
+	<result column="end_time" property="endTime"/>
+	<result column="reason" property="reason"/>
+	<result column="responsible_person" property="responsiblePerson"/>
+	<result column="responsible_person_phone" property="responsiblePersonPhone"/>
+	<result column="create_user" property="createUser"/>
+	<result column="create_time" property="createTime"/>
+	<result column="update_user" property="updateUser"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="status" property="status"/>
+	<result column="is_insurance" property="isInsurance"/>
+	<result column="insurance_code" property="insuranceCode"/>
+	<result column="result" property="result"/>
+	<result column="order_id" property="orderId"/>
+	<result column="money" property="money"/>
+	<result column="handle_by_customer" property="handleByCustomer"/>
+	<result column="memberPhone" property="memberPhone"/>
+    <result column="memberName" property="memberName"/>
+    <result column="predict_time" property="predictTime"/>
+    <result column="assessment_time" property="assessmentTime"/>
+    <result column="responsibility" property="responsibility"/>
+    <result column="assessment_money" property="assessmentMoney"/>
+</resultMap>
+       
+<!-- x_car_accident table all fields -->
+<sql id="Base_Column_List" >
+	 id,lpn,start_time,end_time,reason,responsible_person,responsible_person_phone,create_user,create_time,update_user,update_time,status,is_insurance,insurance_code,result,order_id,money,handle_by_customer
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.car.CarAccident" >
+  insert into x_car_accident(id,car_id,lpn,start_time,end_time,reason,responsible_person,responsible_person_phone,create_user,create_time,update_user,update_time,status,is_insurance,insurance_code,result,order_id,money,handle_by_customer,predict_time,assessment_time,responsibility)
+ values(#{id},#{carId},#{lpn},#{startTime},#{endTime},#{reason},#{responsiblePerson},#{responsiblePersonPhone},#{createUser},#{createTime},#{updateUser},#{updateTime},#{status},#{isInsurance},#{insuranceCode},#{result},#{orderId},#{money},#{handleByCustomer},#{predictTime},#{assessmentTime},#{responsibility})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_car_accident where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_car_accident set lpn=#{lpn},reason=#{reason},responsible_person=#{responsiblePerson},responsible_person_phone=#{responsiblePersonPhone},update_user=#{updateUser},update_time=#{updateTime},
+	order_id = #{orderId},money = #{money},handle_by_customer = #{handleByCustomer} where id=#{id}
+</update>
+
+<!-- 根据id查询 车辆事故管理 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_car_accident where id = #{id}
+</select>
+
+<!-- 车辆事故管理 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_car_accident where 1=1 
+ 	<if test="lpn != null and lpn !='' ">
+        and lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')  
+     </if>
+     <if test="status !=null and status!=''">
+         and status = #{status,jdbcType=VARCHAR}
+     </if>
+     <if test="cityCode !=null and cityCode !=''">
+       and  EXISTS
+ 	(select 1 from x_car_run  where  x_car_run.city_code = #{cityCode,jdbcType=VARCHAR} and  x_car_run.id = x_car_accident.car_id ) 
+     </if>
+</select>
+  	
+<!-- 查询车辆事故管理列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	SELECT
+		a.id,
+		a.lpn,
+		a.start_time,
+		a.end_time,
+		a.reason,
+		a.responsible_person,
+		a.responsible_person_phone,
+		a.create_user,
+		a.create_time,
+		a.update_user,
+		a.update_time,
+		a. STATUS,
+		a.is_insurance,
+		a.insurance_code,
+		a.result,
+		a.order_id,
+		a.money,
+		a.handle_by_customer,
+		m.phone memberPhone,
+        m.`name` memberName,
+        DATE_FORMAT(a.predict_time,'%Y-%m-%d') predict_time,
+        DATE_FORMAT(a.assessment_time,'%Y-%m-%d %H:%i:%s ') assessment_time,
+        a.responsibility,
+        FORMAT(a.assessment_money/100,2) as assessment_money
+	FROM
+		x_car_accident a
+	LEFT JOIN x_time_share_order o ON a.order_id = o.order_id
+	LEFT JOIN x_member m ON m.id = o.member_id 
+	left join x_car_run run on run.id = a.car_id
+	WHERE 1 = 1
+	<if test="lpn != null and lpn !='' ">
+        and a.lpn LIKE CONCAT('%',#{lpn,jdbcType=VARCHAR},'%')  
+     </if>
+     <if test="status !=null and status!=''">
+         and a.status = #{status,jdbcType=VARCHAR}
+     </if>
+     <if test="cityCode !=null and cityCode !=''">
+       and run.city_code = #{cityCode,jdbcType=VARCHAR} 
+     </if>
+    <if test="memberName !=null and memberName !=''">
+        and m.name LIKE CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="menberPhome !=null and menberPhome !=''">
+        and m.phone LIKE CONCAT('%',#{menberPhome,jdbcType=VARCHAR},'%')
+    </if>
+     order by start_time desc
+     <if test="from != null and to != null">
+     
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+     </if>
+	 
+</select>
+  <!-- 更新事故处理信息 -->
+   <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.car.CarAccident" >
+    update x_car_accident
+    <set >
+      <if test="carId != null" >
+        car_id = #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person = #{responsiblePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        responsible_person_phone = #{responsiblePersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="isInsurance != null" >
+        is_insurance = #{isInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceCode != null" >
+        insurance_code = #{insuranceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId},
+      </if>
+      <if test="handleByCustomer != null">
+      	handle_by_customer = #{handleByCustomer},
+      </if>
+      <if test="money != null">
+      	money = #{money},
+      </if>
+      <if test="predictTime != null and predictTime != ''">
+        predict_time = #{predictTime},
+      </if>
+      <if test="responsibility != null">
+        responsibility = #{responsibility},
+      </if>
+      <if test="assessmentTime != null and assessmentTime != ''">
+        assessment_time = #{assessmentTime},
+      </if>
+      <if test="assessmentMoney != null">
+        assessment_money = #{assessmentMoney}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  	
+  <!-- 用于向车辆事故管理表添加数据，可重用 -->
+   <!-- 有条件的插入车辆救援记录 -->
+ <insert id="insertSelective" parameterType="com.iber.portal.model.car.CarRescue" >
+    insert into x_car_accident
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="carId != null" >
+        car_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person,
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        responsible_person_phone,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+       <if test="isInsurance != null" >
+        is_insurance,
+      </if>
+       <if test="insuranceCode != null" >
+        insurance_code,
+      </if>
+      <if test="orderId != null">
+      	order_id,
+      </if>
+      <if test="handleByCustomer != null">
+      	handle_by_customer,
+      </if>
+      <if test="money != null">
+      	money,
+      </if>
+      <if test="predictTime != null">
+        predict_time,
+      </if>
+      <if test="responsibility != null">
+        responsibility,
+      </if>
+      <if test="assessmentTime != null">
+        assessment_time
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="carId != null" >
+        #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePerson != null" >
+        #{responsiblePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="responsiblePersonPhone != null" >
+        #{responsiblePersonPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+       #{result,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isInsurance != null">
+       #{isInsurance,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insuranceCode != null">
+       #{insuranceCode,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null">
+      	#{orderId},
+      </if>
+      <if test="handleByCustomer != null">
+      	#{handleByCustomer},
+      </if>
+      <if test="money != null">
+      	#{money},
+      </if>
+      <if test="predictTime != null">
+        #{predictTime},
+      </if>
+      <if test="responsibility != null">
+        #{responsibility},
+      </if>
+      <if test="assessmentTime != null">
+        #{assessmentTime}
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+  		select <include refid="Base_Column_List"/> from x_car_accident  where  lpn =#{lpn} and
+  		create_time between #{to} and #{for}  limit 0,1
+  </select>
+  	
+</mapper>   

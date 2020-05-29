@@ -1,0 +1,1371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.member.MemberCountDetailMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.member.MemberCountDetail" >
+	<result column="id" property="id"/>
+	<result column="member_id" property="memberId"/>
+	<result column="city_code" property="cityCode"/>
+	<result column="order_number" property="orderNumber"/>
+	<result column="member_level" property="memberLevel"/>
+	<result column="member_type" property="memberType"/>
+	<result column="money" property="money"/>
+	<result column="count_time" property="countTime"/>
+	<result column="hour" property="hour"/>
+	<result column="count_type" property="countType"/>
+	<result column="create_time" property="createTime"/>
+	<result column="todayCnt" property="todayCnt"/>
+	<result column="yesterdayCnt" property="yesterdayCnt"/>
+	<result column="thisMonthCnt" property="thisMonthCnt"/>
+	<result column="lastMonthCnt" property="lastMonthCnt"/>
+	<result column="totalCnt" property="totalCnt"/>
+	<result column="currTime" property="currTime"/>
+	<result column="currDate" property="currDate"/>
+</resultMap>
+
+<!-- x_member_count_detail table all fields -->
+<sql id="Base_Column_List" >
+	 id,member_id,city_code,order_number,member_level,member_type,money,count_time,hour,count_type,create_time
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.member.MemberCountDetail" >
+  insert into x_member_count_detail(id,member_id,city_code,order_number,member_level,member_type,money,count_time,hour,count_type,create_time)
+ values(#{id},#{memberId},#{cityCode},#{orderNumber},#{memberLevel},#{memberType},#{money},#{countTime},#{hour},#{countType},#{createTime})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from x_member_count_detail where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update x_member_count_detail set member_id=#{memberId},city_code=#{cityCode},order_number=#{orderNumber},member_level=#{memberLevel},member_type=#{memberType},money=#{money},count_time=#{countTime},hour=#{hour},count_type=#{countType},create_time=#{createTime} where id=#{id}
+</update>
+
+<!-- 根据id查询 会员统计明细 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from x_member_count_detail where id = #{id}
+</select>
+
+<!-- 会员统计明细 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from x_member_count_detail where 1=1 
+ 
+ 
+</select>
+  	
+<!-- 查询会员统计明细列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="Base_Column_List"/>
+	from x_member_count_detail where 1 =1 
+	
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+<!--查询注册数 -->
+<select id="queryRegisterNumber" resultMap="BaseResultMap">
+	SELECT id member_id,city_code,level_code member_level,IF(enterprise_id,1,0)member_type,id AS order_number, date(create_time)count_time,HOUR(create_time)hour,1 count_type
+	 FROM x_member WHERE member_level <![CDATA[ != ]]>'account'  AND create_time<![CDATA[ >= ]]>(SELECT DATE(MAX(create_time)) FROM x_member_count_detail)
+	 AND create_time<![CDATA[ < ]]>CURDATE() ;  
+</select> 
+
+<!--查询正式会员数 -->
+<select id="queryOfficialMemberNumber" resultMap="BaseResultMap">
+	<!-- SELECT id member_id ,city_code,level_code member_level,IF(enterprise_id,1,0)member_type,id AS order_number ,date(create_time)count_time,HOUR(create_time)hour,2 count_type 
+	FROM x_member WHERE status='ready' AND member_level <-![CDATA[ != ]]>'account' AND create_time<-![CDATA[ >= ]]>(SELECT DATE(MAX(create_time)) FROM x_member_count_detail)
+	 AND create_time<-![CDATA[ < ]]>CURDATE() ;  -->
+	 SELECT 
+		id member_id ,city_code,level_code member_level,IF(enterprise_id,1,0)member_type,id AS order_number ,
+		date(examine_time)count_time,HOUR(examine_time)hour,
+		2 count_type ,NOW() create_time
+	FROM 
+		x_member where idcard is not NULL  
+		and driver_idcard is not NULL 
+		and status in ('ready' ,'ordered','useCar','planReturn','waitQueue','wait','return')
+		AND member_level <![CDATA[ <> ]]>  'account' 
+		and id  not in (
+			select d.member_id from x_member_count_detail d where  d.count_type = 2 
+		) 
+</select> 
+
+<!--查询充值余额 -->
+<select id="queryRechargeBalance" resultMap="BaseResultMap">
+	SELECT m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id  AS order_number,date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,4 count_type
+	FROM x_member m JOIN x_member_charge_log a ON m.id=a.member_id WHERE m.member_level <![CDATA[ != ]]>'account'
+	AND a.trade_status='0' AND charge_category ='B' AND a.trade_time<![CDATA[ >= ]]>(SELECT DATE(MAX(create_time)) FROM x_member_count_detail)
+	AND a.trade_time<![CDATA[ < ]]>CURDATE() ; 
+</select> 
+
+<!--查询押金-->
+<select id="queryDeposit" resultMap="BaseResultMap">
+	SELECT m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id AS order_number, date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money,3 count_type
+	 FROM x_member m JOIN x_member_charge_log a ON m.id=a.member_id WHERE m.member_level <![CDATA[ != ]]>'account' 
+	 AND a.trade_status='0' AND charge_category ='D' AND a.trade_time<![CDATA[ >= ]]>(SELECT DATE(MAX(create_time)) FROM x_member_count_detail)
+	 AND a.trade_time<![CDATA[ < ]]>CURDATE() ; 
+</select>
+  <!-- 定时收集会员统计明细数据，并插入数据表 -->
+	<insert id="insertSelective" parameterType="com.iber.portal.model.member.MemberCountDetail">
+		insert into x_member_count_detail
+		(
+		 		<if test="memberId != null and memberId != '' ">
+	        		member_id
+	        	</if>
+	        	<if test="cityCode != null and cityCode != '' ">
+	        		, city_code
+	        	</if>
+	        	<if test="orderNumber != null and orderNumber != '' ">
+	        		, order_number
+	        	</if>
+	        	<if test="memberLevel != null and memberLevel != '' ">
+	        		, member_level
+	        	</if>
+	        	<if test="memberType != null and memberType != '' ">
+	        		, member_type
+	        	</if>
+	        	<if test="money != null and money != '' ">
+	        		, money
+	        	</if>
+	        	<if test="countTime != null and countTime != '' ">
+	        		, count_time
+	        	</if>
+	        	<if test="hour != null and hour != '' ">
+	        		, hour
+	        	</if>
+	        	<if test="countType != null and countType != '' ">
+	        		, count_type
+	        	</if>
+	        		, create_time
+		 	)
+		 values  
+		        (
+		        <if test="memberId != null and memberId != '' ">
+	        		#{memberId}
+	        	</if>
+	        	<if test="cityCode != null and cityCode != '' ">
+	        		, #{cityCode}
+	        	</if>
+	        	<if test="orderNumber != null and orderNumber != '' ">
+	        		, #{orderNumber}
+	        	</if>
+	        	<if test="memberLevel != null and memberLevel != '' ">
+	        		, #{memberLevel}
+	        	</if>
+	        	<if test="memberType != null and memberType != '' ">
+	        		, #{memberType}
+	        	</if>
+	        	<if test="money != null and money != '' ">
+	        		, #{money}
+	        	</if>
+	        	<if test="countTime != null and countTime != '' ">
+	        		, #{countTime}
+	        	</if>
+	        	<if test="hour != null and hour != '' ">
+	        		, #{hour}
+	        	</if>
+	        	<if test="countType != null and countType != '' ">
+	        		,#{countType}
+	        	</if>
+	        		,#{createTime}
+		        )  
+	</insert>
+	<!-- 批量插入数据 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		<if test="list != null and list.size() > 0" >
+			  INSERT INTO x_member_count_detail (member_id,city_code,order_number,member_level,member_type,money,count_time,hour,count_type,create_time)
+			   <trim prefix=" values " suffixOverrides=",">
+					<foreach collection="list" item="item" index="index" separator=",">
+						<trim prefix="(" suffix=")" suffixOverrides=",">
+							<choose>
+								<when test="item.memberId != null and item.memberId != '' ">
+		        					#{item.memberId},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.cityCode != null and item.cityCode != '' ">
+		        					#{item.cityCode},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.orderNumber != null and item.orderNumber != '' ">
+		        					#{item.orderNumber},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.memberLevel != null and item.memberLevel != '' ">
+		        					#{item.memberLevel},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.memberType != null and item.memberType != '' ">
+		        					#{item.memberType},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.money != null and item.money != '' ">
+		        					#{item.money},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.countTime != null and item.countTime != '' ">
+		        					#{item.countTime},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.hour != null and item.hour != '' ">
+		        					#{item.hour},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			
+							<choose>
+								<when test="item.countType != null and item.countType != '' ">
+		        					#{item.countType},
+		        				</when>
+		        				<otherwise>NULL,</otherwise>
+		        			</choose>
+		        			#{item.createTime}
+						</trim>
+					</foreach>
+			  </trim>
+		</if>
+	</insert>
+	
+    <!-- 查询注册数公用sql --> 
+     <sql id="sql_getRegisterCountDetail" >
+		SELECT id member_id,city_code,level_code,IF(enterprise_id,1,0)enterprise_id,id AS order_number,
+	    date(create_time)count_time,HOUR(create_time)hour,1 count_type 
+	    FROM x_member WHERE member_level <![CDATA[ != ]]> 'account' 
+	 </sql>	
+     <!-- 查询正式会员数公用sql --> 
+     <sql id="sql_getMemberCountDetail" >
+		SELECT id member_id,city_code,level_code,IF(enterprise_id,1,0)enterprise_id,id AS order_number ,
+		date(create_time)count_time,HOUR(create_time)hour,2 count_type 
+		FROM x_member WHERE status='ready' AND member_level <![CDATA[ != ]]> 'account'
+	 </sql>	
+	 <!-- 查询充值余额公用sql --> 
+     <sql id="sql_getBalanceCountDetail" >
+		 SELECT m.id member_id,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id  AS order_number,
+		 date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money,4 count_type 
+		 FROM x_member m JOIN x_member_charge_log a ON m.id=a.member_id
+		 WHERE m.member_level <![CDATA[ != ]]> 'account'
+		 AND a.trade_status='0' AND a.charge_category ='B'
+	 </sql>	
+	 <!-- 查询充值押金公用sql --> 
+     <sql id="sql_getDepositCountDetail" >
+		 SELECT m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id AS order_number,
+		 date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,3 count_type 
+		 FROM x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+		 WHERE m.member_level <![CDATA[ != ]]>'account' AND a.trade_status='0' AND a.charge_category ='D'
+	 </sql>
+	 <!-- 帅选条件公用sql member表格 -->	
+	 <sql id="sql_where_mQuery">
+	 	<if test="cityCode != null and cityCode !=''">
+	 		<choose>
+				<when test="level== 2 ">   
+					AND m.city_code IN
+					(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+					WHERE cc.code = m.city_code) 	
+				</when>
+				<otherwise>
+					AND m.city_code = #{cityCode}
+				</otherwise>
+			</choose>
+	 	</if>
+	 	<if test="memberType ==1 and memberType !=''">
+	 		AND m.enterprise_id is not null
+	 	</if>
+	 	<if test="memberType == 0 and memberType !=''">
+	 		AND m.enterprise_id is  null
+	 	</if>
+	 	<if test="memberLevel !=null and memberLevel !=''">
+	 		AND m.level_code =#{memberLevel}
+	 	</if>
+	 </sql>
+	 <!-- 帅选条件公用sql memberCount表格 -->	
+	 <sql id="sql_where_cQuery">
+	 	<if test="cityCode != null and cityCode !=''">
+	 		<choose>
+				<when test="level== 2 ">   
+					AND a.city_code IN
+					(SELECT cc.code FROM x_city cc INNER JOIN x_city cp ON cp.id = cc.p_id AND cp.code =#{cityCode} 
+					WHERE cc.code = a.city_code) 	
+				</when>
+				<otherwise>
+					AND a.city_code = #{cityCode}
+				</otherwise>
+			</choose>
+	 	</if>
+	 	<if test="memberType ==1 and memberType !=''">
+	 		AND a.member_type =#{memberType}
+	 	</if>
+	 	<if test="memberType == 0 and memberType !=''" >
+	 		AND a.member_type = 0
+	 	</if>
+	 	<if test="memberLevel !=null and memberLevel !=''">
+	 		AND a.member_level =#{memberLevel}
+	 	</if>
+	 </sql>
+     <!-- 统计今日/昨日，本月/上月,累计的注册数 --> 
+     <select id="getAllRegisterData"  resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			(
+				SELECT 
+					COUNT(1)  
+				FROM 
+					x_member m 
+				WHERE 
+					DATE_FORMAT(m.create_time,"%Y-%m-%d") = DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+					AND m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" />
+			)todayCnt,
+			(
+				SELECT  
+					COUNT(1)  
+				FROM 
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")
+					AND hour <![CDATA[<=]]> hour(now()) 
+					 AND a.count_type=1 <include refid="sql_where_cQuery" />
+			 )yesterdayCnt,
+			(
+				SELECT 
+					COUNT(1)  
+				FROM 
+					x_member m  
+				WHERE  
+					 DATE_FORMAT(m.create_time,"%Y-%m") = DATE_FORMAT(sysdate() ,"%Y-%m")
+					AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />
+			)thisMonthCnt,
+			(
+				SELECT
+					 COUNT(1)  
+				FROM  
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT(a.count_time ,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m")
+					and DAY(a.count_time)<![CDATA[<=]]> DAY(now())
+					AND a.count_type=1 <include refid="sql_where_cQuery" /> 
+			)lastMonthCnt,
+			(
+				SELECT 
+					COUNT(1) totalCnt 
+				FROM 
+					x_member m  
+				WHERE 
+					m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" />
+			)totalCnt 
+			FROM DUAL
+	 </select>
+     <!-- 统计今日/昨日，本月/上月,累计的正式会员数 --> 
+     <select id="getAllMemberData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		SELECT 
+			(
+				SELECT 
+					COUNT(1)  
+				FROM 
+					x_member m 
+				WHERE 
+					idcard is not NULL  and driver_idcard is not NULL and 
+					status in ('ready' ,'ordered','useCar','planReturn','waitQueue','wait','return')
+					AND member_level != 'account' and id  not in (
+						select d.member_id from x_member_count_detail d where  d.count_type = 2 
+					) 
+					 <include refid="sql_where_mQuery" />
+			) todayCnt,
+			(
+				SELECT  
+					COUNT(1)  
+				FROM 
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")
+					AND hour <![CDATA[<=]]> hour(now()) 
+					AND a.count_type=2 <include refid="sql_where_cQuery" /> 
+			 )yesterdayCnt,
+			(
+				SELECT 
+					COUNT(1)  
+				FROM 
+					(
+						SELECT a.member_id,a.city_code,a.member_level,a.member_type ,a.order_number,a.count_time,`hour` ,a.count_type,a.create_time 	
+						FROM	x_member_count_detail a 	WHERE	DATE_FORMAT(a.count_time,"%Y-%m")=DATE_FORMAT(CURDATE() ,"%Y-%m")	AND a.count_type = 2
+						<include refid="sql_where_cQuery" /> 
+						UNION ALL
+							SELECT
+								id member_id,city_code,	level_code member_level,	IF(enterprise_id, 1, 0)member_type,	id AS order_number,date(now()) count_time,HOUR(now()) `hour`,2 count_type,	NOW() create_time
+						FROM
+							x_member m
+						WHERE
+							idcard IS NOT NULL
+						AND driver_idcard IS NOT NULL
+						AND `STATUS` IN('ready','ordered','useCar','planReturn','waitQueue','wait','return')
+						AND member_level != 'account'
+						AND id NOT IN(	SELECT d.member_id 	FROM x_member_count_detail d WHERE	d.count_type = 2) <include refid="sql_where_mQuery" />
+					) t
+				
+					
+			)thisMonthCnt ,
+			(
+				SELECT 
+					COUNT(1)  
+				FROM  
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT(a.count_time,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m")
+					and DAY(a.count_time)<![CDATA[<=]]> DAY(now())
+					AND a.count_type=2 <include refid="sql_where_cQuery" /> 
+			)lastMonthCnt,
+			(
+				SELECT 
+					COUNT(1)  
+				FROM 
+					x_member m 
+				WHERE 
+					m.member_level <![CDATA[ != ]]>'account' AND  `STATUS` IN('ready','ordered','useCar','planReturn','waitQueue','wait','return') <include refid="sql_where_mQuery" />
+			)totalCnt 
+			FROM DUAL 
+		
+	 </select>
+     <!-- 统计今日/昨日，本月/上月,累计的充值押金额 --> 
+     <select id="getAllDepositData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		SELECT 
+		(
+			SELECT 
+				IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				(
+					SELECT 
+						m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id AS order_number, date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,3 count_type 
+					FROM 
+						x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+					WHERE 
+						m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  AND a.trade_status='0' AND a.charge_category ='D' 
+						AND DATE_FORMAT(a.trade_time,"%Y-%m-%d")= DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+				)t
+		)todayCnt,
+		(
+			SELECT  
+				IFNULL(TRUNCATE(SUM( a.money)/100,2),0) 
+			FROM 
+				x_member_count_detail a 
+			WHERE 
+				DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")
+				AND hour <![CDATA[<=]]> hour(now()) 
+				AND a.count_type=3 <include refid="sql_where_cQuery" /> 
+		)yesterdayCnt,
+		(
+			SELECT 
+				IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				(
+					SELECT 
+						m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id AS order_number, date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,3 count_type 
+					FROM 
+						x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+					WHERE 
+						m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" /> 
+						AND a.trade_status='0' AND a.charge_category ='D' 
+						AND DATE_FORMAT(a.trade_time ,"%Y-%m")=DATE_FORMAT(sysdate(),"%Y-%m")
+				)t
+		)thisMonthCnt, 
+		(
+			SELECT  
+				IFNULL(TRUNCATE(SUM( a.money)/100,2),0) 
+			FROM 
+				x_member_count_detail a 
+			WHERE 
+				DATE_FORMAT(a.count_time ,"%Y-%m")<![CDATA[ <= ]]>DATE_FORMAT(date_sub(curdate(),interval 1 MONTH)  ,"%Y-%m")
+				and DAY(a.count_time)<![CDATA[<=]]> DAY(now())
+				AND a.count_type=3 <include refid="sql_where_cQuery" /> 
+		)lastMonthCnt,
+		(
+			SELECT 
+				IFNULL(SUM(totalCnt),0)  
+			FROM
+				 (
+				 	SELECT 
+				 		TRUNCATE(SUM( a.money)/100,2)totalCnt 
+				 	FROM 
+				 		x_member_count_detail a  
+				 	WHERE 
+				 		a.count_type=3 <include refid="sql_where_cQuery" /> 
+					UNION ALL 
+					SELECT 
+						IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+					FROM(
+						SELECT 
+							m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id AS order_number, date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,3 count_type
+						FROM 
+							x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+						WHERE 
+							m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  AND a.trade_status='0' AND a.charge_category ='D' 
+							AND DATE_FORMAT(a.trade_time,"%Y-%m-%d")= DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+						)t
+				 )z
+			) totalCnt
+		FROM DUAL
+	 </select>
+     <!-- 统计今日/昨日，本月/上月,累计的充值余额 --> 
+     <select id="getAllBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		SELECT 
+			(
+				SELECT 
+					IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+				FROM
+					(
+						SELECT
+							 m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id AS order_number, date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,3 count_type 
+						FROM 
+							x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+						WHERE 
+							m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  AND a.trade_status='0' AND a.charge_category ='B' 
+							AND DATE_FORMAT(a.trade_time,"%Y-%m-%d") = DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+					)t
+			)todayCnt,
+			(
+				SELECT  
+					IFNULL(TRUNCATE(SUM( a.money)/100,2),0) 
+				FROM 
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ),"%Y-%m-%d") 
+					AND a.hour <![CDATA[<=]]> hour(now()) 
+					AND a.count_type=4 <include refid="sql_where_cQuery" /> 
+			)yesterdayCnt,
+			(
+				SELECT 
+					IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+				FROM
+					(
+						SELECT 
+							m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.id AS order_number, date(a.trade_time)count_time,HOUR(a.trade_time)hour,a.money ,3 count_type 
+						FROM 
+							x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+						WHERE 
+							m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  
+							AND a.trade_status='0' AND a.charge_category ='B' 
+							AND DATE_FORMAT(a.trade_time,"%Y-%m") = DATE_FORMAT(sysdate(),"%Y-%m")
+					)t
+			)thisMonthCnt, 
+			(
+				SELECT  
+					IFNULL(TRUNCATE(SUM( a.money)/100,2),0) 
+				FROM 
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT( a.count_time ,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m")
+					and DAY(a.count_time)<![CDATA[<=]]> DAY(now())
+					AND a.count_type=4 <include refid="sql_where_cQuery" /> 
+			)lastMonthCnt,
+			(
+				SELECT 
+					 IFNULL(SUM(totalCnt),0) 
+				FROM 
+					(
+						SELECT 
+							TRUNCATE(SUM( a.money)/100,2)totalCnt 
+						FROM 	
+							x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+						where 
+							m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  AND a.trade_status='0' AND a.charge_category ='B' 
+					)z
+			)totalCnt  FROM DUAL 
+	 </select>
+     <!-- 统计今日/昨日，本月/上月,累计的充值人数--> 
+     <select id="getAllChargeNumberData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		SELECT 
+		(
+			SELECT 
+				COUNT( DISTINCT a.member_id) 
+			FROM  
+				x_member_charge_log a ,x_member m  
+			WHERE 
+				a.member_id =m.id AND a.trade_status=0 
+				AND DATE_FORMAT(a.trade_time,"%Y-%m-%d")=DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+				AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />
+		)todayCnt,
+		(
+			SELECT 
+				COUNT( DISTINCT a.member_id) 
+			FROM  
+				x_member_count_detail a ,x_member m  
+			WHERE 
+				a.member_id =m.id 
+				AND DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")
+				AND a.hour <![CDATA[<=]]> hour(now()) 
+				AND m.member_level <![CDATA[ != ]]>'account' AND a.count_type in (3,4) <include refid="sql_where_cQuery" /> 
+		)yesterdayCnt,
+		(
+			SELECT 
+				SUM(thisMonthCnt)  
+			FROM(
+					SELECT 
+						COUNT( DISTINCT a.member_id)thisMonthCnt,DATE(a.trade_time) 
+					FROM  
+						x_member_charge_log a ,x_member m  
+					WHERE 
+						a.member_id =m.id AND a.trade_status=0 
+						AND DATE_FORMAT(a.trade_time ,"%Y-%m")=DATE_FORMAT(sysdate() ,"%Y-%m")
+						AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  
+				)t
+		)thisMonthCnt,
+		(
+			SELECT 
+				SUM(lastMonthCnt)  
+			FROM
+				(
+					SELECT 
+						COUNT( DISTINCT a.member_id)lastMonthCnt,DATE(a.count_time) 
+					FROM  
+						x_member_count_detail a ,x_member m  
+					WHERE 
+						a.member_id =m.id  AND (a.count_type = 3 OR a.count_type = 4) 
+						AND DATE_FORMAT(a.count_time ,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m")
+						and DAY(a.count_time)<![CDATA[<=]]> DAY(now())
+						 <include refid="sql_where_cQuery" />  
+				)t
+		)lastMonthCnt,
+		(
+			SELECT
+				 SUM(totalCnt) 
+			 FROM
+			 	(
+			 		SELECT 
+			 			COUNT(DISTINCT a.member_id)totalCnt,DATE(a.trade_time) 
+			 		FROM 
+			 			x_member_charge_log a ,x_member m 
+			 		WHERE 
+			 			a.member_id =m.id AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> AND a.trade_status= 0  
+			 	)t
+		)totalCnt
+		 FROM DUAL
+	 </select>
+	  <!-- 统计今日/昨日，本月/上月,累计会员已退款额--> 
+	<select id="getAllRefundData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		SELECT 
+		(
+			SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id AS order_number,
+							date(a.last_handle_time)count_time,HOUR(a.last_handle_time)hour,a.money,
+							 8  count_type ,NOW() create_time
+				from
+					 x_member m
+					 right JOIN 
+						x_member_refund_log a ON m.id = a.member_id
+					where 
+					m.member_level <![CDATA[ != ]]>'account'   and a.`status` = 3  <include refid="sql_where_mQuery" />
+					and  DATE_FORMAT(a.last_handle_time,"%Y-%m-%d")=DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+				) t  
+	 	 )todayCnt,
+	 	 
+	 	 (
+	 	 SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id AS order_number,
+							date(a.last_handle_time)count_time,HOUR(a.last_handle_time)hour,a.money,
+							 8  count_type ,NOW() create_time
+					from
+					 x_member m
+					 right JOIN 
+						x_member_refund_log a ON m.id = a.member_id
+					where 
+					m.member_level <![CDATA[ != ]]>'account'  and a.`status` = 3  <include refid="sql_where_mQuery" />
+					and  DATE_FORMAT(a.last_handle_time ,"%Y-%m-%d")= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 DAY )  ,"%Y-%m-%d") 			
+					AND hour <![CDATA[<=]]> hour(now()) 
+				) t   
+	 	 )yesterdayCnt,
+	 	 (
+	 		SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id AS order_number,
+							date(a.last_handle_time)count_time,HOUR(a.last_handle_time)hour,a.money,
+							 8  count_type ,NOW() create_time
+				from
+					 x_member m
+					 right JOIN 
+						x_member_refund_log a ON m.id = a.member_id
+					where 
+					m.member_level <![CDATA[ != ]]>'account' and a.`status` = 3   <include refid="sql_where_mQuery" />
+					AND DATE_FORMAT(a.last_handle_time,"%Y-%m")  <![CDATA[ = ]]>DATE_FORMAT(sysdate(),"%Y-%m") 
+				) t  
+	 	 )thisMonthCnt, 
+	 	 
+	 	 (
+	 	SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id AS order_number,
+							date(a.last_handle_time)count_time,HOUR(a.last_handle_time)hour,a.money,
+							 8  count_type ,NOW() create_time
+					from
+					 x_member m
+					 right JOIN 
+						x_member_refund_log a ON m.id = a.member_id
+					where 
+					m.member_level <![CDATA[ != ]]>'account'  and a.`status` = 3  <include refid="sql_where_mQuery" />
+					DAY(a.count_time)<![CDATA[<=]]> DAY(now())
+					AND  DATE_FORMAT(a.last_handle_time ,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m") 
+				
+				) t   
+	 	)lastMonthCnt,
+	 	 
+	 	 (
+	 	SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.id AS order_number,
+							date(a.last_handle_time)count_time,HOUR(a.last_handle_time)hour,a.money,
+							 8  count_type ,NOW() create_time
+						from
+					 x_member m
+					 right JOIN 
+						x_member_refund_log a ON m.id = a.member_id
+					where 
+				  	 a.`status` = 3  	<include refid="sql_where_mQuery" /> and m.member_level <![CDATA[ != ]]> 'account' 
+				) t   
+	 	 
+	 	 )totalCnt  FROM DUAL 
+	 </select> 
+	 <!-- 统计今日/昨日，本月/上月,累计会员未支付额--> 
+	 <select id="getAllNoPayData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		SELECT 
+		(
+			SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+							date(a.end_time)count_time,HOUR(a.end_time)hour,a.money,
+							 7  count_type ,NOW() create_time
+				 from x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, id order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+				  where		m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> 
+				 and DATE_FORMAT(a.end_time,"%Y-%m-%d") =  DATE_FORMAT(CURDATE() ,"%Y-%m-%d")  	
+				  
+				)t  
+		)todayCnt,
+		(
+			SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+							date(a.end_time)count_time,HOUR(a.end_time)hour,a.money,
+							 7  count_type ,NOW() create_time
+				 from x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, id order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+					where		
+					 m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> 
+					and DATE_FORMAT(a.end_time,"%Y-%m-%d")=  DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")  	
+					and hour(a.end_time)<![CDATA[  <= ]]>hour(now()) 	
+				)t  
+		  )yesterdayCnt,
+		(
+			SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+							date(a.end_time)count_time,HOUR(a.end_time)hour,a.money,
+							 7  count_type ,NOW() create_time
+				 from x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, id order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+					where		m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />
+					AND DATE_FORMAT(a.end_time ,"%Y-%m")=DATE_FORMAT(sysdate(),"%Y-%m")
+					
+				)t  
+		)thisMonthCnt, 
+		
+		(
+			SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+							date(a.end_time)count_time,HOUR(a.end_time)hour,a.money,
+							 7  count_type ,NOW() create_time
+				 from x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, id order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+					where		m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />
+					AND  DATE_FORMAT(a.end_time ,"%Y-%m")=  DATE_FORMAT(date_sub(curdate(),interval 1 MONTH)  ,"%Y-%m")
+					and day(a.end_time) <![CDATA[<=]]> day(now())
+				)t  
+		)lastMonthCnt,
+		(
+			SELECT IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+			FROM
+				( SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+							date(a.end_time)count_time,HOUR(a.end_time)hour,a.money,
+							 7  count_type ,NOW() create_time
+				 from x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, id order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	<include refid="sql_where_mQuery" />
+					where	m.member_level <![CDATA[ != ]]>'account'  
+				)t  
+		)totalCnt  FROM DUAL 
+			
+			
+	 </select>
+	 <!-- 统计今日/昨日，本月/上月,累计会员消费额--> 
+	 <select id="getAllCostData" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	 	select
+	 		  (
+	 		  	select IFNULL(TRUNCATE(SUM( t.money)/100,2),0)  from (
+	 		  			SELECT
+							m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+							date(a.pay_time)count_time,HOUR(a.pay_time)hour,a.money,
+							 6  count_type ,NOW() create_time
+						FROM 
+							x_member m  right JOIN
+							( 
+								select member_id, pay_time, order_id , (select _pay.pay_money from x_time_share_pay _pay where _pay.order_id = x_time_share_pay_log.order_id) money,pay_status from x_time_share_pay_log  where  pay_status = 1
+								union all 
+								select member_id, pay_time, order_id , pay_money money,pay_status from  x_day_rent_order_pay_log where  pay_status = 1
+								union all 
+								select member_id, pay_time, order_id , pay_money money,pay_status from c_charging_order_pay_log where  pay_status = 1
+							)  a 	
+							ON  a.member_id = m.id 
+						where 
+							m.member_level <![CDATA[ != ]]> 'account' 
+							and DATE_FORMAT(a.pay_time,"%Y-%m-%d") = DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+							  <include refid="sql_where_mQuery" />
+	 		  	) t
+	 		  )todayCnt,
+	 		  (
+	 		  	SELECT  
+					IFNULL(TRUNCATE(SUM( a.money)/100,2),0) 
+				FROM
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")
+					and a.hour <![CDATA[<= ]]>hour(now())
+					AND a.count_type=6 <include refid="sql_where_cQuery" /> 
+	 		  )yesterdayCnt,
+	 		  (
+	 		  	SELECT 
+					IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+				FROM
+					(
+						SELECT 
+							m.id member_id ,m.city_code,m.level_code,IF(m.enterprise_id,1,0)enterprise_id,a.order_id AS order_number,
+							date(a.pay_time)count_time,HOUR(a.pay_time)hour,a.money ,6 count_type 
+						FROM 
+						x_member m  right JOIN
+							( 
+								select member_id, pay_time , order_id ,  (select _pay.pay_money from x_time_share_pay _pay where _pay.order_id = x_time_share_pay_log.order_id) money,pay_status from x_time_share_pay_log  where  pay_status = 1
+								union all 
+								select member_id, pay_time , order_id , pay_money money,pay_status from  x_day_rent_order_pay_log where  pay_status = 1
+								union all 
+								select member_id, pay_time, order_id , pay_money money,pay_status from c_charging_order_pay_log where  pay_status = 1
+							)  a 	
+							ON  a.member_id = m.id 
+							where
+							m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> 
+							AND DATE_FORMAT(a.pay_time ,"%Y-%m")=DATE_FORMAT(sysdate(),"%Y-%m")
+					) t
+	 		  )thisMonthCnt,
+	 		  (
+	 		  	SELECT  
+					IFNULL(TRUNCATE(SUM( a.money)/100,2),0) 
+				FROM 
+					x_member_count_detail a 
+				WHERE 
+					DATE_FORMAT( a.count_time ,"%Y-%m")=DATE_FORMAT(date_sub(curdate(),interval 1 MONTH),"%Y-%m")  
+					and day(a.count_time) <![CDATA[<=]]> day(now())
+					AND a.count_type=6 <include refid="sql_where_cQuery" /> 
+	 		  )lastMonthCnt,
+	 		  (
+	 		  		SELECT 
+								IFNULL(TRUNCATE(SUM( t.money)/100,2),0) 
+							FROM
+								(
+									SELECT
+										m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+										date(a.pay_time)count_time,HOUR(a.pay_time)hour,a.money,
+										 6  count_type ,NOW() create_time
+									FROM 
+										x_member m  right JOIN
+										( 
+											select member_id, pay_time, order_id ,  (select _pay.pay_money from x_time_share_pay _pay where _pay.order_id = x_time_share_pay_log.order_id)  money,pay_status from x_time_share_pay_log  where  pay_status = 1
+											union all 
+											select member_id, pay_time, order_id , pay_money money,pay_status from  x_day_rent_order_pay_log where  pay_status = 1
+											union all 
+											select member_id, pay_time, order_id , pay_money money,pay_status from c_charging_order_pay_log where  pay_status = 1
+										)  a 	
+										ON  a.member_id = m.id 
+									where
+										m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> 
+								)t
+	 		  )totalCnt 
+	 	 FROM DUAL
+	 </select>
+	 
+  <!-- 获取最后统计的日期时间 -->
+	<select id="getLastCountTime" resultType="java.util.Date">
+		SELECT DATE(MAX(create_time)) FROM x_member_count_detail
+	</select>
+	
+	<!-- 会员统计折线图详情 -->
+	<select id="getAllTodayRegisterData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT COUNT(1) todayCnt,HOUR(m.create_time)currTime  FROM x_member m WHERE DATE_FORMAT(m.create_time ,"%Y-%m-%d")= DATE_FORMAT(CURDATE() ,"%Y-%m-%d") AND m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" /> GROUP BY HOUR(m.create_time)
+	</select>
+	
+	<select id="getAllYesterdayRegisterData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  COUNT(1)yesterdayCnt,a.hour currTime  FROM x_member_count_detail a WHERE DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d")  AND a.count_type=1 <include refid="sql_where_cQuery" />  GROUP BY a.hour
+	</select>
+	
+	<select id="getAllThisMonthRegisterData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT COUNT(1) thisMonthCnt, DAY(m.create_time) currDate FROM x_member m  WHERE  DATE_FORMAT(m.create_time,"%Y-%m") =  DATE_FORMAT(sysdate(),"%Y-%m") AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> GROUP BY DAY(m.create_time)
+	</select>
+	
+	<select id="getAllLastMonthRegisterData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT COUNT(1) lastMonthCnt,DAY(a.count_time) currDate FROM  x_member_count_detail a WHERE  DATE_FORMAT(a.count_time,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH),"%Y-%m") AND a.count_type=1 <include refid="sql_where_cQuery" /> GROUP BY DAY(a.count_time)
+	</select>
+	
+	
+	
+	<select id="getAllTodayMemberData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT(1)todayCnt,HOUR(m.create_time)currTime  
+		FROM 
+			x_member m 
+		WHERE 
+			 idcard is not NULL  and driver_idcard is not NULL 
+			AND status in ('ready' ,'ordered','useCar','planReturn','waitQueue','wait','return')
+			AND member_level <![CDATA[!=]]> 'account' and id  not in (
+				select d.member_id from x_member_count_detail d where  d.count_type = 2 
+			) 
+			 <include refid="sql_where_mQuery" /> 
+		GROUP BY HOUR(m.create_time)
+	</select>
+	
+	<select id="getAllYesterdayMemberData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			COUNT(1)yesterdayCnt,a.hour currTime 
+		FROM 
+			x_member_count_detail a 
+		WHERE 
+			a.count_time=DATE_ADD(CURDATE(),INTERVAL -1 DAY ) 
+			AND a.count_type=2 <include refid="sql_where_cQuery" /> 
+		 GROUP BY a.hour
+	</select>
+	
+	<select id="getAllThisMonthMemberData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT(1)thisMonthCnt , 
+			DAY(t.create_time) currDate 
+		FROM 
+		(
+		
+			SELECT a.member_id,a.city_code,a.member_level,a.member_type ,a.order_number,a.count_time,`hour` ,a.count_type,a.create_time 	FROM	x_member_count_detail a 
+			WHERE 
+				DATE_FORMAT(a.count_time,"%Y-%m")=DATE_FORMAT(CURDATE() ,"%Y-%m")
+				AND a.count_type=2 <include refid="sql_where_cQuery" /> 
+			union all
+			select id member_id ,city_code,level_code member_level,IF(enterprise_id,1,0)member_type,id AS order_number ,
+				date(now())count_time,HOUR(now())hour,
+				2 count_type ,NOW() create_time
+			from 	x_member m 
+			WHERE
+				 idcard is not NULL  and driver_idcard is not NULL 
+				AND status in ('ready' ,'ordered','useCar','planReturn','waitQueue','wait','return')
+				AND member_level <![CDATA[!=]]> 'account' and id  not in (
+					select d.member_id from x_member_count_detail d where  d.count_type = 2 
+				) 
+				 <include refid="sql_where_mQuery" /> 
+		) t
+		GROUP BY DAY(t.create_time)
+	</select>
+	
+	<select id="getAllLastMonthMemberData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT(1)lastMonthCnt ,DAY(a.count_time) currDate 
+		FROM  
+			x_member_count_detail a 
+		WHERE 
+			DATE_FORMAT(a.count_time,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH),"%Y-%m") 
+			AND a.count_type=2 <include refid="sql_where_cQuery" /> 
+		GROUP BY DAY(a.count_time)
+	</select>
+	
+	
+	
+	<select id="getAllTodayDepositData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT   
+			IFNULL(TRUNCATE(SUM(a.money)/100,2),0)todayCnt,HOUR(a.trade_time)currTime  
+		FROM 
+			x_member m JOIN x_member_charge_log a ON m.id=a.member_id WHERE m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  
+			AND a.trade_status='0' AND a.charge_category ='D' 
+			AND DATE_FORMAT(a.trade_time,"%Y-%m-%d")= DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+		GROUP BY HOUR(a.trade_time)
+	</select>
+	
+	<select id="getAllYesterdayDepositData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			IFNULL(TRUNCATE(SUM( a.money)/100,2),0)yesterdayCnt,a.hour currTime 
+		FROM
+			 x_member_count_detail a  
+		WHERE
+			DATE_FORMAT( a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ),"%Y-%m-%d")
+			AND a.count_type=3  <include refid="sql_where_cQuery" />  GROUP BY a.hour
+	</select>
+	
+	<select id="getAllThisMonthDepositData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			IFNULL(TRUNCATE(SUM(a.money)/100,2),0)thisMonthCnt,Day(a.trade_time)currDate  
+		FROM 
+			x_member m JOIN x_member_charge_log a ON m.id=a.member_id WHERE m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" /> AND a.trade_status='0' 
+			AND a.charge_category ='D' 
+			AND DATE_FORMAT(a.trade_time,"%Y-%m") = DATE_FORMAT(sysdate(),"%Y-%m") 
+		GROUP BY Day(a.trade_time)
+	</select>
+	
+	<select id="getAllLastMonthDepositData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			IFNULL(TRUNCATE(SUM( a.money)/100,2),0)lastMonthCnt,Day(a.count_time)currDate
+		 FROM 
+		 	x_member_count_detail a 
+		 WHERE 
+		 	 DATE_FORMAT(a.count_time,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m")
+		 	AND a.count_type=3 <include refid="sql_where_cQuery" />  
+		 GROUP BY Day(a.count_time)
+	</select>
+	
+	
+	
+	<select id="getAllTodayBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    SELECT  
+	    	 IFNULL(TRUNCATE(SUM(a.money)/100,2),0)todayCnt,HOUR(a.trade_time)currTime  
+	   	FROM 
+	   		x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+	   	WHERE 
+	   		m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  AND a.trade_status='0' AND a.charge_category ='B'
+	   		AND DATE_FORMAT(a.trade_time,"%Y-%m-%d")=DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+	   	GROUP BY HOUR(a.trade_time)
+	</select>
+	
+	<select id="getAllYesterdayBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			IFNULL(TRUNCATE(SUM( a.money)/100,2),0)yesterdayCnt,a.hour currTime 
+		FROM 
+			x_member_count_detail a 
+		 WHERE
+		 	DATE_FORMAT(a.count_time,"%Y-%m-%d")= DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ),"%Y-%m-%d") 
+		 	AND a.count_type=4 <include refid="sql_where_cQuery" /> 
+		 GROUP BY a.hour
+	</select>
+	
+	<select id="getAllThisMonthBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT
+			 IFNULL(TRUNCATE(SUM(a.money)/100,2),0)thisMonthCnt,Day(a.trade_time)currDate  
+		FROM 
+			x_member m JOIN x_member_charge_log a ON m.id=a.member_id 
+		WHERE 
+			m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" /> AND a.trade_status='0' AND a.charge_category ='B' 
+			AND DATE_FORMAT(a.trade_time,"%Y-%m")  = DATE_FORMAT(sysdate(),"%Y-%m") 
+		GROUP BY Day(a.trade_time)
+	</select>
+	
+	<select id="getAllLastMonthBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			IFNULL(TRUNCATE(SUM( a.money)/100,2),0)lastMonthCnt,Day(a.count_time)currDate 
+		FROM 
+			x_member_count_detail a 
+		WHERE 
+			DATE_FORMAT(a.count_time,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) ,"%Y-%m")
+			AND a.count_type=4 <include refid="sql_where_cQuery" />  
+		GROUP BY Day(a.count_time)
+	</select>
+	
+	<!-- 会员消费金额 -->
+	<select id="getAllTodayCostData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		 SELECT   IFNULL(TRUNCATE(SUM(a.money)/100,2),0)todayCnt,HOUR(a.pay_time)currTime 
+		 FROM  x_member m  right JOIN ( 
+		 			select member_id, pay_time, order_id ,  (select _pay.pay_money from x_time_share_pay _pay where _pay.order_id = x_time_share_pay_log.order_id)  money,pay_status from x_time_share_pay_log where  pay_status = 1
+		 			union all 
+					select member_id, pay_time, order_id , pay_money money,pay_status from  x_day_rent_order_pay_log where  pay_status = 1
+					union all 
+					select member_id, pay_time, order_id , pay_money money,pay_status from c_charging_order_pay_log where  pay_status = 1
+				)  a 	
+				ON  a.member_id = m.id 
+		 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   
+		 	and DATE_FORMAT(a.pay_time,"%Y-%m-%d") = DATE_FORMAT(current_date(),"%Y-%m-%d")
+		 	GROUP BY HOUR(a.pay_time)
+	</select>
+	<select id="getAllYesterdayCostData"  resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			IFNULL(TRUNCATE(SUM( a.money)/100,2),0)yesterdayCnt,a.hour currTime 
+		FROM 
+			x_member_count_detail a  
+		WHERE 
+			DATE_FORMAT(a.count_time,"%Y-%m-%d")=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ) ,"%Y-%m-%d") AND a.count_type=6 <include refid="sql_where_cQuery" /> 
+		 GROUP BY a.hour
+	</select>
+	<select id="getAllThisMonthCostData"  resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			IFNULL(TRUNCATE(SUM(a.money)/100,2),0)thisMonthCnt,Day(a.pay_time)currDate  
+		FROM 
+			x_member m  right JOIN ( 
+		 			select member_id, pay_time, order_id ,  (select _pay.pay_money from x_time_share_pay _pay where _pay.order_id = x_time_share_pay_log.order_id)  money,pay_status from x_time_share_pay_log where  pay_status = 1
+		 			union all 
+					select member_id, pay_time, order_id , pay_money money,pay_status from  x_day_rent_order_pay_log where  pay_status = 1
+					union all 
+					select member_id, pay_time, order_id , pay_money money,pay_status from c_charging_order_pay_log where  pay_status = 1
+				)  a 	
+				ON  a.member_id = m.id 
+		WHERE 
+			m.member_level <![CDATA[ != ]]>'account'  <include refid="sql_where_mQuery" /> 
+			AND DATE_FORMAT(a.pay_time,"%Y-%m") = DATE_FORMAT(current_date(),"%Y-%m")
+		 GROUP BY Day(a.pay_time)
+	</select>
+	<select id="getAllLastMonthCostData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT  
+			IFNULL(TRUNCATE(SUM( a.money)/100,2),0)lastMonthCnt,Day(a.count_time)currDate 
+		FROM 
+			x_member_count_detail a 
+		WHERE 
+			DATE_FORMAT(a.count_time,"%Y-%m") = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH)  ,"%Y-%m")
+			AND a.count_type=6 <include refid="sql_where_cQuery" />  
+		GROUP BY Day(a.count_time)
+	</select>
+	
+	<!-- 用户未支付金额 -->
+	<select id="getAllTodayNoPayData" resultMap="BaseResultMap" parameterType="java.util.Map">
+				SELECT   IFNULL(TRUNCATE(SUM(a.money)/100,2),0)todayCnt,HOUR(a.end_time)currTime 
+				FROM 
+				x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, chargeSeq order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   
+			 AND DATE_FORMAT(a.end_time,"%Y-%m-%d") = DATE_FORMAT(CURDATE() ,"%Y-%m-%d")
+			 GROUP BY HOUR(a.end_time)
+	</select>
+	<select id="getAllYesterdayNoPayData" resultMap="BaseResultMap" parameterType="java.util.Map">
+			SELECT  
+				IFNULL(TRUNCATE(SUM( a.money)/100,2),0)yesterdayCnt,HOUR(a.end_time) currTime 
+			FROM
+				x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, chargeSeq order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   
+			  	AND DATE_FORMAT(a.end_time,"%Y-%m-%d") = DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 DAY ),"%Y-%m-%d")  
+			 GROUP BY HOUR(a.end_time)
+	</select>
+	<select id="getAllThisMonthNoPayData" resultMap="BaseResultMap" parameterType="java.util.Map">
+			SELECT 
+				IFNULL(TRUNCATE(SUM(a.money)/100,2),0)thisMonthCnt,Day(a.end_time)currDate  
+			FROM 
+					x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, chargeSeq order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   
+			 AND DATE_FORMAT(a.end_time,'%Y-%m') = DATE_FORMAT(current_date(),'%Y-%m')
+			 GROUP BY Day(a.end_time)
+	</select>
+	<select id="getAllLastMonthNoPayData"  resultMap="BaseResultMap" parameterType="java.util.Map">
+		   SELECT 
+				IFNULL(TRUNCATE(SUM(a.money)/100,2),0)lastMonthCnt,Day(a.end_time)currDate  
+			FROM 
+					x_member m 
+					right join (
+						select member_id, end_time, order_id , pay_money money from x_time_share_pay where pay_status = 'noPay'  
+						union all 
+						select (select o.member_id from x_day_rent_order o where o.order_id = x_day_rent_order_extend.order_id  ) member_id, create_time end_time, order_id , pay_money money  from x_day_rent_order_extend where pay_status = 'noPay'
+						union all
+						select member_id, end_time, chargeSeq order_id, pay_money money from c_charging_order where charging_status ='noPay'
+					) a  on m.id = a.member_id	
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   
+			 AND DATE_FORMAT(a.end_time,'%Y-%m') = DATE_FORMAT(date_sub(CURRENT_DATE(),interval 1 month) ,'%Y-%m')
+			 GROUP BY Day(a.end_time)
+	</select>
+	
+	<!-- 退款金额 -->
+	<select id="getAllTodayRefundData"   resultMap="BaseResultMap" parameterType="java.util.Map">
+			SELECT 
+					IFNULL(TRUNCATE(SUM(a.money)/100,2),0)todayCnt,hour(a.last_handle_time)currDate  
+			FROM 	
+				x_member m
+				 right JOIN 
+					x_member_refund_log a ON m.id = a.member_id
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   
+			 AND a.last_handle_time = DATE_FORMAT(current_date(),"%Y-%m-%d") and   a.`status` = 3
+			 GROUP BY HOUR(a.last_handle_time)
+	</select>
+	<select id="getAllYesterdayRefundData"    resultMap="BaseResultMap" parameterType="java.util.Map">
+			SELECT  
+				IFNULL(TRUNCATE(SUM( a.money)/100,2),0)yesterdayCnt,HOUR(a.last_handle_time) currTime 
+			FROM 	
+				x_member m
+				 right JOIN 
+					x_member_refund_log a ON m.id = a.member_id
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  and a.`status` = 3 
+			 AND a.last_handle_time = DATE_FORMAT(DATE_SUB(current_date(),INTERVAL 1 DAY),"%Y-%m-%d")
+			 GROUP BY HOUR(a.last_handle_time)  
+	</select>
+	<select id="getAllThisMonthRefundData"  resultMap="BaseResultMap" parameterType="java.util.Map">
+			SELECT 
+				IFNULL(TRUNCATE(SUM(a.money)/100,2),0)thisMonthCnt,Day(a.last_handle_time)currDate  
+			FROM 
+				x_member m
+				right JOIN 
+					x_member_refund_log a ON m.id = a.member_id
+			 WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   and a.`status` = 3
+			 AND DATE_FORMAT(a.last_handle_time,'%Y-%m') = DATE_FORMAT(current_date(),'%Y-%m')
+			 GROUP BY Day(a.last_handle_time)
+	</select>
+	<select id="getAllLastMonthRefundData"  resultMap="BaseResultMap" parameterType="java.util.Map">
+		    SELECT 
+				IFNULL(TRUNCATE(SUM(a.money)/100,2),0)lastMonthCnt,Day(a.last_handle_time)currDate  
+			FROM 
+				x_member m
+				right JOIN 
+					x_member_refund_log a ON m.id = a.member_id
+			WHERE 	m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />   and a.`status` = 3
+			 	AND DATE_FORMAT(a.last_handle_time,'%Y-%m') = DATE_FORMAT(date_sub(CURRENT_DATE(),interval 1 month) ,'%Y-%m')
+			GROUP BY Day(a.last_handle_time)
+	</select>
+	
+	
+	<select id="getAllTodayChargeData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT( DISTINCT a.member_id)todayCnt,HOUR(a.trade_time)currTime 
+		FROM  
+			x_member_charge_log a ,x_member m  
+		WHERE 
+			a.member_id =m.id AND a.trade_status=0 
+			AND DATE_FORMAT(a.trade_time,'%Y-%m-%d')= DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+			AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" /> 
+		Group by HOUR(a.trade_time)
+	</select>
+	
+	<select id="getAllYesterdayChargeData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT( DISTINCT a.member_id)yesterdayCnt,a.hour currTime 
+		FROM  
+			x_member_count_detail a ,x_member m  
+		WHERE 
+			a.member_id =m.id AND DATE_FORMAT(a.count_time, '%Y-%m-%d')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 DAY ), '%Y-%m-%d') 
+			AND m.member_level <![CDATA[ != ]]>'account' AND (a.count_type = 3 OR a.count_type = 4 ) <include refid="sql_where_cQuery" /> 
+		Group by a.hour
+	</select>
+	
+	<select id="getAllThisMonthChargeData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT( DISTINCT a.member_id)thisMonthCnt,Day(a.trade_time)currDate 
+		FROM  
+			x_member_charge_log a ,x_member m  
+		WHERE 
+			a.member_id =m.id AND a.trade_status=0  and 
+			DATE_FORMAT( a.trade_time, '%Y-%m') = DATE_FORMAT(sysdate() , '%Y-%m') 
+			AND m.member_level <![CDATA[ != ]]>'account' <include refid="sql_where_mQuery" />  
+		GROUP BY Day(a.trade_time)
+	</select>
+	
+	<select id="getAllLastMonthChargeData" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT 
+			COUNT( DISTINCT a.member_id)lastMonthCnt,Day(a.count_time)currDate 
+		FROM  
+			x_member_count_detail a ,x_member m  
+		WHERE 
+			a.member_id =m.id  AND (a.count_type = 3 OR a.count_type = 4) 
+			AND DATE_FORMAT(a.count_time, '%Y-%m')  = DATE_FORMAT(date_sub(curdate(),interval 1 MONTH) , '%Y-%m')  
+			<include refid="sql_where_cQuery" />  
+		GROUP BY Day(a.count_time)
+	</select>
+		
+	<select id="queryCostMoneyList" resultMap="BaseResultMap">
+				SELECT
+					m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,a.order_id AS order_number,
+					date(a.pay_time)count_time,HOUR(a.pay_time)hour,a.money, 6  count_type ,NOW() create_time
+				FROM 
+					x_member m  RIGHT JOIN
+					( 
+						select member_id, pay_time, order_id ,  (select _pay.pay_money from x_time_share_pay _pay where _pay.order_id = x_time_share_pay_log.order_id)  money,pay_status from x_time_share_pay_log where  pay_status = 1
+						union all 
+						select member_id, pay_time, order_id , pay_money money,pay_status from  x_day_rent_order_pay_log where  pay_status = 1
+						union all 
+						select member_id, pay_time, order_id , pay_money money,pay_status from c_charging_order_pay_log where  pay_status = 1
+					)  a 	
+					ON  a.member_id = m.id 
+				where 
+					m.member_level != 'account' 
+					AND a.pay_time<![CDATA[ >= ]]>(SELECT DATE(MAX(create_time)) FROM x_member_count_detail)
+		 			AND a.pay_time<![CDATA[ < ]]>CURDATE() 
+	</select>
+	
+	<select id="queryRefundMoneyList" resultMap="BaseResultMap">
+			select 
+			   m.id member_id,m.city_code,m.level_code member_level,IF(m.enterprise_id,1,0)member_type,l.id AS order_number,
+			  date(l.last_handle_time)count_time,HOUR(l.last_handle_time)hour,l.money,	8 count_type ,NOW() create_time
+			from
+				 x_member m	RIGHT JOIN 	x_member_refund_log l ON m.id = l.member_id
+			where 
+				m.member_level != 'account'  and l.`status` = 3
+			 	and  l.last_handle_time <![CDATA[ >= ]]> (SELECT DATE(MAX(create_time)) FROM x_member_count_detail) 
+			 	and l.last_handle_time <![CDATA[ < ]]> CURDATE() 
+	</select>
+	
+</mapper>   

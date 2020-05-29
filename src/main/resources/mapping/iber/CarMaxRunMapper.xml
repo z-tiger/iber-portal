@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.car.CarMaxRunMapper" >
+	<resultMap type="com.iber.portal.model.car.CarMaxRun" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="max_number" property="maxNumber"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	<select id="selectAllRecords" resultMap="BaseResultMap">
+		select id, max_number, create_time from x_car_max_run
+	</select>
+	<delete id="deleteRecord">
+		delete from x_car_max_run
+	</delete>
+	<insert id="insertRecord" parameterType="com.iber.portal.model.car.CarMaxRun">
+		insert into x_car_max_run(max_number, create_time) values(#{maxNumber}, #{createTime})
+	</insert>
+</mapper>

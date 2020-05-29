@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="quartz_transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>	
+	
+	<bean id="quertz_executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+         <property name="corePoolSize" value="10" />
+         <property name="maxPoolSize" value="100" />
+         <property name="queueCapacity" value="500" />
+    </bean>
+    
+	<bean id="startQuertz" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="configLocation" value="classpath:/quartz.properties" />
+        <property name="dataSource" ref="dataSource" />
+        <property name="transactionManager" ref="quartz_transactionManager" />
+        <property name="schedulerName" value="luckcloud_quartzScheduler" />
+        <property name="overwriteExistingJobs" value="true" />
+        <property name="startupDelay" value="1"/>
+        <property name="applicationContextSchedulerContextKey" value="applicationContext" /> 
+        <property name="jobFactory">
+            <bean class="com.iber.portal.quartz.AutowiringSpringBeanJobFactory" />
+        </property>
+		<property name="triggers">
+			<list>
+				<ref bean="timeCancelOrderTrigger" />   
+				<ref bean="warnInfoTrigger" />
+				<ref bean="wzQueryTrigger" />
+				<ref bean="insuranceTrigger" />   
+				<ref bean="dayRentCancelOrderTrigger" />
+				<ref bean="longRentCancelOrderTrigger" />
+				<ref bean="carAnnualInspectionTrigger"/>
+				<!--<ref bean="chargingOrderTimeOutTrigger"/>-->
+				<ref bean="memberDriverIdcardValidityTrigger"/>
+				<ref bean="insertStatisticDatasTrigger"/>
+
+				<ref bean="memberContributionDeductionTrigger"/>
+				<ref bean="insertMaxRunningCarTrigger"/>
+				<ref bean="carAndParkDistanceTrigger"/>
+				<!--<ref bean="employeeCreateTrigger"/>-->
+				<ref bean="remindChargingTrigger"/>
+				<ref bean="updateCarOnlineTrigger"/>
+				<ref bean="memberContributionTrigger"/>
+				<ref bean="splitHistoryTablesTrigger"/> 
+				<ref bean="memberContributionIncreaseTrigger"/>
+				
+				<ref bean="longOrderWarnTrigger"/>			
+				<ref bean="orderLongTimeNoPayTrigger"/>	
+				<ref bean="untreatedWzRecordTrigger"/>
+				<ref bean="accidentNotHandleTrigger"/>
+				<ref bean="parkIsRunTrigger"/>
+				<ref bean="restBatteryRemindLessThanThirtyPercentTrigger"/>
+				<ref bean="restBatteryRemindLessThanSixtyPercentTrigger"/>
+				<ref bean="attendedLongTimeTrigger"/>
+				<ref bean="memberLevelCouponGiveTrigger"/>
+				<ref bean="carLongTimeNotRunWarnTrigger"/>
+				<ref bean="UpdateCouponItemStatusTrigger"/>
+				<ref bean="carGetuiStatusSupportTrigger"/>
+				<ref bean="wzLongTimeUndisposedTrigger"/>
+				<ref bean="zotyePaidTimeShareOrderReturnBalanceSupportTrigger"/>
+				<ref bean="stopChargingExceptIberCarSupportTrigger"/>
+				<ref bean="longRentDelaySupportTrigger"/>
+				<ref bean="LongRentBeforeExpireWarnTrigger"/>
+				<ref bean="carRunReportTrigger"/>
+				<ref bean="taskPoolTrigger"/>
+				<ref bean="carRemindTostartTrigger"/>
+			</list>
+		</property>
+		<property name="jobDetails">
+            <list>
+                <ref bean="timeCancelOrderTask" /> 
+                <ref bean="warnInfoTask" />
+                <ref bean="wzQueryTask" />
+                <ref bean="insuranceTask" /> 
+                <ref bean="dayRentCancelOrderTask" />
+                <ref bean="longRentCancelOrderTask" />
+                <ref bean="carAnnualInspectionTask"/> 
+                <!-- <ref bean="chargingOrderTimeOutTask"/> -->
+                <ref bean="memberDriverIdcardValidityTask"/> 
+                <ref bean="insertStatisticDatasTask"/> 
+                
+                <ref bean="memberContributionDeductionTask"/> 
+                <ref bean="insertMaxRunningCarTask"/> 
+                <ref bean="carAndParkDistanceTask"/>
+                <!--<ref bean="employeeCreateTask"/>-->
+                <ref bean="remindChargingTask"/>
+                <ref bean="updateCarOnlineTask"/>
+                <ref bean="memberContributionTask"/>
+                <ref bean="splitHistoryTablesTask"/> 
+                <ref bean="memberContributionIncreaseTask"/>
+                 
+                <ref bean="longOrderWarnTask"/>
+                <ref bean="orderLongTimeNoPayTask"/>
+                <ref bean="untreatedWzRecordTask"/>
+                <ref bean="accidentNotHandleTask"/>
+                <ref bean="parkIsRunTask"/>
+                <ref bean="restBatteryRemindLessThanThirtyPercentTask"/>
+                <ref bean="restBatteryRemindLessThanSixtyPercentTask"/>
+				<ref bean="attendedLongTimeTask"/>
+                <ref bean="memberLevelCouponGiveTask"/>
+                <ref bean="carLongTimeNotRunWarnTask"/>
+                <ref bean="UpdateCouponItemStatusTask"/>
+                <ref bean="carGetuiStatusSupportTask"/>
+				<ref bean="wzLongTimeUndisposedTask"/>
+				<ref bean="zotyePaidTimeShareOrderReturnBalanceSupportTask"/>
+				<ref bean="stopChargingExceptIberCarSupportTask"/>
+				<ref bean="longRentDelaySupportTask"/>
+				<ref bean="LongRentBeforeExpireWarnTask"/>
+				<ref bean="carRunReportTask"/>
+				<ref bean="taskPoolTask"/>
+				<ref bean="carRemindTostartTask"/>
+            </list>
+        </property>
+        <property name="taskExecutor" ref="quertz_executor" />      
+	</bean>
+	
+	<!-- 定时取消订单 -->
+	<bean id="timeCancelOrderTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.OrderTimeOutSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="timeCancelOrderTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="timeCancelOrderTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			<!-- <value>*/5 * * * * ?</value> -->
+			<value>0 */10 * * * ?</value> <!-- 2分钟执行一次 -->
+		</property>
+	</bean>
+	
+	<!-- 预警模型分析 -->
+	<bean id="warnInfoTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.WarnInfoSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="warnInfoTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="warnInfoTask" />
+		</property>
+		<!--cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次-->
+		<property name="cronExpression">
+			<!--<value>*/5 * * * * ?</value>5分钟执行一次-->
+			<value>0 */5 * * * ?</value>
+		</property>
+	</bean>
+	
+	
+	<!-- 违章查询 -->
+	<bean id="wzQueryTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.WZQuerySupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="wzQueryTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="wzQueryTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5天执行一次 -->
+		<property name="cronExpression">
+			<value>0 0 0 ? * 2,5</value> <!-- 每周一和周四各查一次 -->
+			 <!-- <value>0 0 0 1/5 * ?</value> -->  <!-- 5天执行一次 -->
+		</property>
+	</bean>
+	
+		
+	<!-- 保险到期提醒 -->
+	<bean id="insuranceTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.InsuranceSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="insuranceTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="insuranceTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			<!-- <value>*/5 * * * * ?</value> -->
+			<value>0 0 6 * * ?</value> <!-- 每天2点执行一次 -->
+		</property>
+	</bean>
+	
+	<!-- 定时取消日租订单 -->
+	<bean id="dayRentCancelOrderTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.DayRentOrderTimeOutSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="dayRentCancelOrderTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="dayRentCancelOrderTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			<!-- <value>*/5 * * * * ?</value> -->
+			<value>0 */10 * * * ?</value> <!-- 5分钟执行一次 -->
+		</property>
+	</bean>
+	
+	<!-- 定时取消长租订单 -->
+	<bean id="longRentCancelOrderTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.LongRentOrderTimeOutSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="longRentCancelOrderTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="longRentCancelOrderTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			<value>0 */5 * * * ?</value> <!-- 5分钟执行一次 -->
+		</property>
+	</bean>
+	
+	
+	<!-- 定时查询车辆年检时间 -->
+	<bean id="carAnnualInspectionTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.CarAnnualInspectionSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="carAnnualInspectionTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean" >
+		<property name="jobDetail">
+			<ref bean="carAnnualInspectionTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			 <!-- <value>*/5 * * * * ?</value> -->
+			<value>0 1 0 * * ?</value> 
+		</property>
+	</bean>
+	
+	
+	<!-- 定时取消充电预约订单 -->
+	<bean id="chargingOrderTimeOutTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.ChargingOrderTimeOutSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>
+    <bean id="chargingOrderTimeOutTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="chargingOrderTimeOutTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			<!-- <value>*/5 * * * * ?</value> -->
+			<value>0 */20 * * * ?</value> <!-- 2分钟执行一次 -->
+		</property>
+	</bean>
+	
+	<!-- 会员驾驶证到期提醒 -->
+	<bean id="memberDriverIdcardValidityTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.MemberDriverIdcardValiditySupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="memberDriverIdcardValidityTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="memberDriverIdcardValidityTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5秒执行一次 -->
+		<property name="cronExpression">
+			<value>0 0 1 1 * ?</value> <!-- 每月1号一点执行一次 -->
+		</property>
+	</bean>
+	
+	
+	<!-- 定时收集运营分析平台总体情况分析统计数据，并保持数据 -->
+	<bean id="insertStatisticDatasTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.InsertStatisticOverallDatasSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="insertStatisticDatasTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="insertStatisticDatasTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每天0点执行一次 -->
+		<property name="cronExpression">
+			<value>0 0 3 * * ?</value>
+		</property>
+	</bean> 
+	
+	<!-- 每月1号更新会员的贡献值和等级编码 -->
+	<bean id="memberContributionUpdatingTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.MemberContributionUpdatingSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="memberContributionUpdatingTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="memberContributionUpdatingTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 0 1 * ?</value>
+			<!-- <value>0 0/1 * * * ?</value> -->
+		</property>
+	</bean>
+	
+	<!-- 每天定时统计七天未支付订单，然后扣除对应会员的贡献值 -->
+	<bean id="memberContributionDeductionTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.MemberContributionDeductionSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="memberContributionDeductionTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="memberContributionDeductionTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<!-- <value>0 0/1 * * * ?</value> -->
+			<value>0 0 1 * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 定时统计最大运营车辆总数 -->
+	<bean id="insertMaxRunningCarTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.InsertMaxRunningCarSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="insertMaxRunningCarTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="insertMaxRunningCarTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每小时执行一次 -->
+		<property name="cronExpression">
+			<value>0 0 0/1 * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 车辆所在位置与车辆所属网点距离预警 -->
+	<bean id="carAndParkDistanceTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.CarAndParkDistanceSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="carAndParkDistanceTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="carAndParkDistanceTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每小时执行一次 -->
+		<property name="cronExpression">
+			<value>0 */30 * * * ?</value>
+		</property>
+	</bean>
+	<!--员工端定时job-->
+	<bean  id="employeeCreateTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.EmployeeCreateTaskSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="employeeCreateTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="employeeCreateTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5分钟执行一次 -->
+		<property name="cronExpression">
+			<value>0 */5 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 车辆低电量时提醒用车会员给车充电 -->
+	<bean  id="remindChargingTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.RemindChargingSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="remindChargingTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="remindChargingTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5分钟执行一次 -->
+		<property name="cronExpression">
+			<value>0 */30 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- IBPD-206 定时任务判断充电车辆电量达到设置百分比时，车辆自动上线，更新车辆状态 -->
+	<bean  id="updateCarOnlineTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.UpdateCarOnlineSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="updateCarOnlineTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="updateCarOnlineTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每5分钟执行一次 -->
+		<property name="cronExpression">
+			<value>0 */30 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 每月一号查询用户驾龄大于2year的并且未添加贡献值以及不再黑名单中的用户 添加500贡献值 -->
+	<bean id="memberContributionTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.MemberContributedSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="memberContributionTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="memberContributionTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 0 1 * ?</value> 
+		</property>
+	</bean>
+	
+	<!-- 定时查cmd、car_run_log、sys_warn等历史表，各表如果记录数超过sysParam中的配置数，则进行分表  -->
+	<bean  id="splitHistoryTablesTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.SplitHistoryTablesSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="splitHistoryTablesTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="splitHistoryTablesTask" />
+		</property>
+		<property name="cronExpression">
+			<!-- <value>0 0 0/5 * * ?</value> -->
+			<value>0 5 0/12 * * ?</value>
+		</property>
+	</bean>
+	
+	<bean id="memberContributionIncreaseTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.MemberContributedIncrease" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="memberContributionIncreaseTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="memberContributionIncreaseTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 2 1 * ?</value>
+		</property>
+	</bean>
+
+	<!-- 超长订单预警  -->	
+	<bean id="longOrderWarnTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.LongOrderWarnSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="longOrderWarnTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="longOrderWarnTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 */20 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 统计未支付订单  -->	
+	<bean id="orderLongTimeNoPayTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.OrderLongTimeNoPaySupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="orderLongTimeNoPayTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="orderLongTimeNoPayTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 1 * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 统计违章记录  -->	
+	<bean id="untreatedWzRecordTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.UntreatedWzRecordSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="untreatedWzRecordTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="untreatedWzRecordTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 2 * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 统计车辆事故记录  -->	
+	<bean id="accidentNotHandleTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.AccidentNotHandleSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="accidentNotHandleTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="accidentNotHandleTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 3 * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 车辆运营状态更新  -->	
+	<bean id="parkIsRunTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.ParkIsRunSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>	
+    <bean id="parkIsRunTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="parkIsRunTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 */10 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 低电量提醒（低于30）  -->
+	<bean id="restBatteryRemindLessThanThirtyPercentTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.RestBatteryRemindLessThanThirtyPercentSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>
+    <bean id="restBatteryRemindLessThanThirtyPercentTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="restBatteryRemindLessThanThirtyPercentTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 */30 * * * ?</value>
+		</property>
+	</bean>
+
+	<!-- 低电量提醒（低于50）  -->
+	<bean id="restBatteryRemindLessThanSixtyPercentTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.iber.portal.quartz.RestBatteryRemindLessThanSixtyPercentSupport" />
+        <property name="requestsRecovery" value="false"/>
+    </bean>
+    <bean id="restBatteryRemindLessThanSixtyPercentTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="restBatteryRemindLessThanSixtyPercentTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  -->
+		<property name="cronExpression">
+			<value>0 0 */1 * * ?</value>
+		</property>
+	</bean>
+	<!--违章救援订单提醒-->
+	<bean id="attendedLongTimeTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.AttendedOrderLongTimeSupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="attendedLongTimeTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="attendedLongTimeTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 4 * * ?</value>
+		</property>
+	</bean>
+	<!-- 四星、五星赠送优惠卷 -->
+	<bean id="memberLevelCouponGiveTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.MemberLevelCouponGiveSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="memberLevelCouponGiveTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="memberLevelCouponGiveTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每个月1号 12:00:00 执行-->
+		<property name="cronExpression">
+			<value>0 0 0 1 * ?</value>
+		</property>
+	</bean>
+	<!-- 系统自动判断优惠券活动开启和结束 -->
+	<bean id="UpdateCouponItemStatusTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.UpdateCouponItemStatusSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="UpdateCouponItemStatusTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="UpdateCouponItemStatusTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每天 凌晨12:00:00 执行-->
+		<property name="cronExpression">
+			<!--<value>0 0 0 * * ?</value>-->
+			<value>0 */2 * * * ?</value>
+		</property>
+	</bean>
+	<!-- 车辆长时间未行驶，平台预警 -->
+	<bean id="carLongTimeNotRunWarnTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.CarLongTimeNotRunWarnSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="carLongTimeNotRunWarnTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="carLongTimeNotRunWarnTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每个月1号 12:00:00 执行-->
+		<property name="cronExpression">
+			<value>0 0 */2 * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 车辆长时间未行驶，平台预警 -->
+	<bean id="carGetuiStatusSupportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.CarGetuiStatusSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="carGetuiStatusSupportTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="carGetuiStatusSupportTask" />
+		</property>
+		<!-- cron表达式 (秒 分 小时 日 月 星期)  每个月1号 12:00:00 执行-->
+		<property name="cronExpression">
+			<value>0 */10 * * * ?</value>
+		</property>
+	</bean>
+
+	<!--违章救援订单提醒-->
+	<bean id="wzLongTimeUndisposedTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.WZLongTimeUndisposed" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="wzLongTimeUndisposedTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="wzLongTimeUndisposedTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 2 * * ?</value>
+		</property>
+	</bean>
+	
+		<!--众泰车返现-->
+	<bean id="zotyePaidTimeShareOrderReturnBalanceSupportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.ZOTYEPaidTimeShareOrderReturnBalanceSupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+		<bean id="zotyePaidTimeShareOrderReturnBalanceSupportTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="zotyePaidTimeShareOrderReturnBalanceSupportTask" />
+		</property>
+		<property name="cronExpression">
+        <!-- 0 15 10 ? * MON-FRI -->
+			<!-- <value>0 0 0 * * ?</value> -->
+			 <value>0 0 3 * * ?</value> 
+		</property>
+	</bean>
+
+
+	<bean id="stopChargingExceptIberCarSupportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.StopChargingExceptIberCarSupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+		<bean id="stopChargingExceptIberCarSupportTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="stopChargingExceptIberCarSupportTask" />
+		</property>
+		<property name="cronExpression">
+<!-- 	<value>*/10 * * * * ?</value> -->
+			<value>0 */2 * * * ?</value>
+		</property>
+	</bean>
+
+	<bean id="longRentDelaySupportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.LongRentDelaySupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="longRentDelaySupportTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="longRentDelaySupportTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */2 * * * ?</value>
+		</property>
+	</bean>
+	
+	<!-- 日租/续租到期前第一次第二次提醒 -->
+	<bean id="LongRentBeforeExpireWarnTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.LongRentBeforeExpireWarnSupport" />
+        <property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="LongRentBeforeExpireWarnTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="LongRentBeforeExpireWarnTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */10 * * * ?</value>
+		</property>
+	</bean>
+
+
+	<!--车辆运营状态报告-->
+	<bean id="carRunReportTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.CarStatusReportSupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="carRunReportTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="carRunReportTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 */6 * * ?</value>
+		</property>
+	</bean>
+
+	<!--任务池-->
+	<bean id="taskPoolTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.TaskPoolSupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="taskPoolTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="taskPoolTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */10 * * * ?</value>
+		</property>
+	</bean>
+
+	<!--小电瓶电量过低提醒启动车辆充电-->
+	<bean id="carRemindTostartTask" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.iber.portal.quartz.CarRemindTostartSupport" />
+		<property name="requestsRecovery" value="false"/>
+	</bean>
+	<bean id="carRemindTostartTrigger" class="com.iber.portal.quartz.PersistableCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="carRemindTostartTask" />
+		</property>
+		<property name="cronExpression">
+			<value>0 */20 * * * ?</value>
+		</property>
+	</bean>
+</beans>

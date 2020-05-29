@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.overall.OverallPileMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.overall.OverallPile">
+		<id column="id" property="id" />
+		<result column="pile_num" property="pileNum" />
+		<result column="malfunction_num" property="malfunctionNum" />
+		<result column="online_num" property="onlineNum" />
+		<result column="order_money" property="orderMoney" />
+		<result column="pay_money" property="payMoney" />
+		<result column="order_member_num" property="orderMemberNum" />
+		<result column="order_num" property="orderNum" />
+		<result column="charging_count" property="chargingCount" />
+		<result column="charging_member_num" property="chargingMemberNum" />
+		<result column="charging_amount" property="chargingAmount" />
+		<result column="charging_timelong" property="chargingTimelong" />
+		<result column="date_time" property="dateTime" />
+		<result column="equipment_type" property="equipmentType" />
+		<result column="connector_type" property="connectorType" />
+		<result column="city_code" property="cityCode" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, pile_num, malfunction_num, online_num, order_money,
+		pay_money,
+		order_member_num, order_num,
+		charging_count,
+		charging_member_num, charging_amount, charging_timelong, date_time,
+		equipment_type, connector_type, city_code, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from bi_overall_pile
+		where id = #{id }
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		bi_overall_pile
+		where id = #{id }
+	</delete>
+	<insert id="insert" parameterType="com.iber.portal.model.overall.OverallPile">
+		insert into bi_overall_pile
+		(id, pile_num, malfunction_num,
+		online_num, order_money, pay_money,
+		order_member_num, order_num, charging_count,
+		charging_member_num,
+		charging_amount, charging_timelong,
+		date_time, equipment_type,
+		connector_type,
+		city_code, create_time)
+		values (#{id }, #{pileNum },
+		#{malfunctionNum },
+		#{onlineNum }, #{orderMoney }, #{payMoney },
+		#{orderMemberNum }, #{orderNum }, #{chargingCount },
+		#{chargingMemberNum }, #{chargingAmount }, #{chargingTimelong },
+		#{dateTime }, #{equipmentType }, #{connectorType },
+		#{cityCode },
+		#{createTime })
+	</insert>
+	<insert id="insertSelective" parameterType="com.iber.portal.model.overall.OverallPile">
+		insert into bi_overall_pile
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="pileNum != null">
+				pile_num,
+			</if>
+			<if test="malfunctionNum != null">
+				malfunction_num,
+			</if>
+			<if test="onlineNum != null">
+				online_num,
+			</if>
+			<if test="orderMoney != null">
+				order_money,
+			</if>
+			<if test="payMoney != null">
+				pay_money,
+			</if>
+			<if test="orderMemberNum != null">
+				order_member_num,
+			</if>
+			<if test="orderNum != null">
+				order_num,
+			</if>
+			<if test="chargingCount != null">
+				charging_count,
+			</if>
+			<if test="chargingMemberNum != null">
+				charging_member_num,
+			</if>
+			<if test="chargingAmount != null">
+				charging_amount,
+			</if>
+			<if test="chargingTimelong != null">
+				charging_timelong,
+			</if>
+			<if test="dateTime != null">
+				date_time,
+			</if>
+			<if test="equipmentType != null">
+				equipment_type,
+			</if>
+			<if test="connectorType != null">
+				connector_type,
+			</if>
+			<if test="cityCode != null">
+				city_code,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id },
+			</if>
+			<if test="pileNum != null">
+				#{pileNum },
+			</if>
+			<if test="malfunctionNum != null">
+				#{malfunctionNum },
+			</if>
+			<if test="onlineNum != null">
+				#{onlineNum },
+			</if>
+			<if test="orderMoney != null">
+				#{orderMoney },
+			</if>
+			<if test="payMoney != null">
+				#{payMoney },
+			</if>
+			<if test="orderMemberNum != null">
+				#{orderMemberNum },
+			</if>
+			<if test="orderNum != null">
+				#{orderNum },
+			</if>
+			<if test="chargingCount != null">
+				#{chargingCount },
+			</if>
+			<if test="chargingMemberNum != null">
+				#{chargingMemberNum },
+			</if>
+			<if test="chargingAmount != null">
+				#{chargingAmount },
+			</if>
+			<if test="chargingTimelong != null">
+				#{chargingTimelong },
+			</if>
+			<if test="dateTime != null">
+				#{dateTime },
+			</if>
+			<if test="equipmentType != null">
+				#{equipmentType },
+			</if>
+			<if test="connectorType != null">
+				#{connectorType },
+			</if>
+			<if test="cityCode != null">
+				#{cityCode },
+			</if>
+			<if test="createTime != null">
+				#{createTime },
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.overall.OverallPile">
+		update bi_overall_pile
+		<set>
+			<if test="pileNum != null">
+				pile_num = #{pileNum },
+			</if>
+			<if test="malfunctionNum != null">
+				malfunction_num = #{malfunctionNum },
+			</if>
+			<if test="onlineNum != null">
+				online_num = #{onlineNum },
+			</if>
+			<if test="orderMoney != null">
+				order_money = #{orderMoney },
+			</if>
+			<if test="payMoney != null">
+				pay_money = #{payMoney },
+			</if>
+			<if test="orderMemberNum != null">
+				order_member_num = #{orderMemberNum },
+			</if>
+			<if test="orderNum != null">
+				order_num = #{orderNum },
+			</if>
+			<if test="chargingCount != null">
+				charging_count = #{chargingCount },
+			</if>
+			<if test="chargingMemberNum != null">
+				charging_member_num = #{chargingMemberNum },
+			</if>
+			<if test="chargingAmount != null">
+				charging_amount = #{chargingAmount },
+			</if>
+			<if test="chargingTimelong != null">
+				charging_timelong = #{chargingTimelong },
+			</if>
+			<if test="dateTime != null">
+				date_time = #{dateTime },
+			</if>
+			<if test="equipmentType != null">
+				equipment_type = #{equipmentType },
+			</if>
+			<if test="connectorType != null">
+				connector_type = #{connectorType },
+			</if>
+			<if test="cityCode != null">
+				city_code = #{cityCode },
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime },
+			</if>
+		</set>
+		where id = #{id }
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.overall.OverallPile">
+		update
+		bi_overall_pile
+		set pile_num = #{pileNum },
+		malfunction_num =
+		#{malfunctionNum },
+		online_num = #{onlineNum },
+		order_money =
+		#{orderMoney },
+		pay_money = #{payMoney },
+		order_member_num =
+		#{orderMemberNum },
+		order_num = #{orderNum },
+		charging_count =
+		#{chargingCount },
+		charging_member_num = #{chargingMemberNum },
+		charging_amount = #{chargingAmount },
+		charging_timelong =
+		#{chargingTimelong },
+		date_time = #{dateTime },
+		equipment_type =
+		#{equipmentType },
+		connector_type = #{connectorType },
+		city_code =
+		#{cityCode },
+		create_time = #{createTime }
+		where id = #{id }
+	</update>
+
+	<!-- 查询指定时间currentTime充电桩数 -->
+	<select id="selectInitPileNum" resultMap="BaseResultMap">
+		select
+		p.city_code,e.equipment_type, c.connector_type,COUNT(DISTINCT
+		e.id) pile_num , #{currentTime}
+		date_time
+		from
+		c_equipment_info e INNER
+		JOIN c_connector_info c on e.id = c.equipment_id LEFT JOIN
+		x_park p ON
+		e.station_id = p.id
+		where
+		date(e.create_time) <![CDATA[ <= ]]>
+		#{currentTime}
+		GROUP BY p.city_code, e.equipment_type ,
+		c.connector_type
+	</select>
+
+	<!-- 查询已完成充电 订单数据 -->
+	<select id="selectInitFinishOrderInfo" resultMap="BaseResultMap">
+		select
+			o.city_code, e.equipment_type, 
+			c.connector_type ,
+			SUM(o.order_money)  order_money , 
+			SUM(o.pay_money) pay_money ,
+			COUNT(o.id) charging_count, 
+			COUNT(DISTINCT o.member_id) charging_member_num ,
+			SUM(o.charging_amount) charging_amount, 
+			SUM(charging_time)	charging_timelong,
+			#{currentTime} date_time
+		from
+			c_charging_order o 
+			LEFT JOIN c_equipment_info e ON o.equipment_id = e.id 
+			LEFT JOIN c_connector_info c ON o.connector_id = c.id
+		where
+			o.charging_status = 'finish' 
+			and date(o.end_time) = #{currentTime}
+		GROUP BY
+			o.city_code,
+			e.equipment_type, 
+			c.connector_type
+	</select>
+
+	<!-- 获取电桩预约记录 -->
+	<select id="selectInitAllOrderInfo" resultMap="BaseResultMap">
+		select
+			o.city_code,e.equipment_type , c.connector_type ,
+			COUNT(o.id) order_num,
+			COUNT(DISTINCT o.member_id) order_member_num,
+			#{currentTime} date_time
+		from
+			c_charging_order o
+			LEFT JOIN c_equipment_info e ON o.equipment_id = e.id
+			LEFT JOIN c_connector_info c ON o.connector_id = c.id
+		where
+			date(o.create_time) = #{currentTime}
+		GROUP BY
+			o.city_code,
+			e.equipment_type,
+			c.connector_type
+	</select>
+
+	<!-- 批量插上数据 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		<if test="list != null and list.size() > 0">
+			INSERT INTO bi_overall_pile ( pile_num, malfunction_num,
+			online_num,
+			order_money, pay_money, order_member_num, order_num,
+			charging_count,
+			charging_member_num, charging_amount,
+			charging_timelong, date_time,
+			equipment_type, connector_type, city_code, create_time)
+			<trim prefix=" values " suffixOverrides=",">
+				<foreach collection="list" item="item" index="index"
+					separator=",">
+					<trim prefix="(" suffix=")" suffixOverrides=",">
+						<choose>
+							<when test="item.pileNum != null and item.pileNum != '' ">
+								#{item.pileNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+						<choose>
+							<when
+								test="item.malfunctionNum != null and item.malfunctionNum != '' ">
+								#{item.malfunctionNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.onlineNum != null and item.onlineNum != '' ">
+								#{item.onlineNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.orderMoney != null and item.orderMoney != '' ">
+								#{item.orderMoney},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.payMoney != null and item.payMoney != '' ">
+								#{item.payMoney},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when
+								test="item.orderMemberNum != null and item.orderMemberNum != '' ">
+								#{item.orderMemberNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.orderNum != null and item.orderNum != '' ">
+								#{item.orderNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.chargingCount != null and item.chargingCount != '' ">
+								#{item.chargingCount},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when
+								test="item.chargingMemberNum != null and item.chargingMemberNum != '' ">
+								#{item.chargingMemberNum},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when
+								test="item.chargingAmount != null and item.chargingAmount != '' ">
+								#{item.chargingAmount},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when
+								test="item.chargingTimelong != null and item.chargingTimelong != '' ">
+								#{item.chargingTimelong},
+							</when>
+							<otherwise>0,</otherwise>
+						</choose>
+
+						<choose>
+							<when test="item.dateTime != null  ">
+								#{item.dateTime},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.equipmentType != null ">
+								#{item.equipmentType},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.connectorType != null ">
+								#{item.connectorType},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						<choose>
+							<when test="item.cityCode != null  ">
+								#{item.cityCode},
+							</when>
+							<otherwise>null,</otherwise>
+						</choose>
+						#{item.createTime}
+					</trim>
+				</foreach>
+			</trim>
+		</if>
+	</insert>
+	
+	<!-- 查询充电桩统计记录数 -->
+	<select id="getPileRecords" resultType="java.lang.Integer">
+		select count(1) from
+		bi_overall_pile
+	</select>
+</mapper>

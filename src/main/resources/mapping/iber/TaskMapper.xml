@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.task.TaskMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.task.TaskInfo" >
+	<result column="id" property="id"/>
+	<result column="employee_id" property="employeeId"/>
+	<result column="begin_park_id" property="beginParkId"/>
+	<result column="end_park_id" property="endParkId"/>
+	<result column="lpn" property="lpn"/>
+	<result column="task_begin_time" property="taskBeginTime"/>
+	<result column="predict_done_time" property="predictDoneTime"/>
+	<result column="task_explain" property="taskExplain"/>
+	<result column="task_level" property="taskLevel"/>
+	<result column="task_type" property="taskType"/>
+	<result column="done_remark" property="doneRemark"/>
+	<result column="status" property="status"/>
+	<result column="done_time" property="doneTime"/>
+	<result column="create_id" property="createId"/>
+	<result column="create_time" property="createTime"/>
+	<result column="update_id" property="updateId"/>
+	<result column="update_time" property="updateTime"/>
+	<result column="city_code" property="cityCode"/>
+	<result column="employee_leader" property="employeeLeader"/>
+	<result column="employee_name" property="employeeName"/>
+	<result column="task_name" property="taskName"/>
+	<result column="grid_name" property="gridName"/>
+	<result column="task_level_name" property="taskLevelName"/>
+	<result column="city_name" property="cityName"/>
+	<result column="time_limit" property="timeLimit"/>
+	<result column="task_type_name" property="taskTypeName"/>
+	<result column="begin_park_name" property="beginParkName"/>
+	<result column="end_park_name" property="endParkName"/>
+	<result column="lpn_id" property="lpnId"/>
+	<result column="grid_id" property="gridId"/>
+	<result column="member_id" property="memberId"/>
+	<result column="address" property="address"/>
+	<result column="deadline" property="deadline"/>
+	<result column="score" property="score"/>
+	<result column="photoUrl" property="photoUrl"/>
+    <result column="planMileage" property="planMileage"/>
+</resultMap>
+
+<resultMap type="com.iber.portal.model.task.TaskType" id="TaskTypeResultMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+</resultMap>
+
+<resultMap type="com.iber.portal.model.task.Lpn" id="LpnResultMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="status" column="status"/>
+</resultMap>
+
+<resultMap type="com.iber.portal.model.task.TaskGrade" id="TaskGradeResultMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>
+</resultMap>
+<resultMap type="com.iber.portal.model.task.EmployeeLeaders" id="EmployeeLeadersResultMap">
+	<result property="type" column="type"/>
+	<result property="identifyLabel" column="identifyLabel"/>
+	<result property="employeeLeaders" column="employeeLeaders"/>
+</resultMap>
+<resultMap type="com.iber.portal.model.task.ParkName" id="ParkNameResultMap">
+	<result property="id" column="id"/>
+	<result property="name" column="name"/>	
+	<result property="status" column="status"/>
+	<result property="is_run" column="isRun"/>
+	<result property="enterpriseId" column="enterprise_id"/>
+</resultMap>
+       
+<!-- task_info table all fields -->
+<sql id="Base_Column_List" >
+	 id,employee_id,begin_park_id,end_park_id,lpn,task_begin_time,task_explain,task_level,task_type,done_remark,done_time,create_id,create_time,update_id,update_time,city_code,task_name,member_id,address,status
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.task.TaskInfo" useGeneratedKeys="true" keyProperty="id">
+  insert into e_task_info(employee_id,begin_park_id,end_park_id,lpn,task_explain,task_level,task_type,status,create_id,create_time,city_code,time_limit,task_name,member_id,longitude,latitude,address,deadline)
+ values(#{employeeId},#{beginParkId},#{endParkId},#{lpn},#{taskExplain},#{taskLevel},#{taskType},#{status},#{createId},#{createTime},#{cityCode},#{timeLimit},#{taskName},#{memberId},#{longitude},#{latitude},#{address},#{deadline})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete 	 from task_info where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey">
+	update e_task_info set city_code=#{cityCode},lpn=#{lpn},employee_id=#{employeeId},time_limit=#{timeLimit},begin_park_id=#{beginParkId},end_park_id=#{endParkId},lpn=#{lpn},task_explain=#{taskExplain},task_level=#{taskLevel},task_type=#{taskType},update_time=#{updateTime},update_id=#{updateId},task_name=#{taskName},
+	member_id = #{memberId},latitude = #{latitude},longitude = #{longitude},address = #{address},deadline=#{deadline} where id=#{id}
+</update>
+
+<!-- 根据id查询 任务信息表 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from e_task_info where id = #{id}
+</select>
+
+<!-- 任务信息表 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from (SELECT 
+		(SELECT name FROM x_city c WHERE code = t.city_code) city_name,
+		(SELECT name FROM e_employee_info e WHERE id = t.employee_id) employee_name,
+		(SELECT name FROM e_task_level WHERE id = t.task_level) task_level_name,
+		(SELECT group_concat(name) FROM e_employee_info WHERE id in (SELECT employee_id FROM e_employee_gridding_relation WHERE gridding_id = (SELECT gridding_id from e_employee_gridding_relation eg WHERE eg.employee_id = t.employee_id) and is_manager = 1)) employee_leader,
+		g.name grid_name,t.status,t.task_explain,t.done_remark,t.task_name from e_employee_gridding_relation eg JOIN e_task_info t on t.employee_id = eg.employee_id
+ 	JOIN e_gridding_info g on g.id = eg.gridding_id
+ 	where 1 = 1 and eg.employee_id in <include refid="selectName"/>
+ 	<if test="taskName != null and taskName != ''">
+				and t.task_name = #{taskName}
+	</if>
+	<if test="cityCode != null and cityCode != ''">
+				and t.city_code = #{cityCode}
+	</if>) tmp
+</select>
+<select id="getTotalTasksCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+	select count(1) from e_task_info t where 1=1
+     <if test="name != null and name != ''">
+ 	    and t.employee_id in (SELECT id FROM e_employee_info WHERE name LIKE concat('%',#{name,jdbcType=VARCHAR},'%'))
+ 	</if>
+ 	<if test="taskName != null and taskName != ''">
+				and t.task_name like concat('%', #{taskName},'%')
+	</if>
+	<if test="cityCode != null and cityCode != ''">
+				and t.city_code = #{cityCode}
+	</if>
+	<if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+		and t.done_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+	</if>
+	<if test="status != null and status != ''">
+				and t.status = #{status}
+	</if>
+	<if test="taskType!=null and taskType!=''">
+	     <if test="taskType==1">
+			 and t.task_type in ('1','3','6')
+		 </if>
+		 <if test="taskType==5">
+			 and t.task_type =#{taskType}
+		 </if>
+		 <if test="taskType==0">
+			 and t.task_type in ('2','4')
+		</if>
+	</if>
+</select> 	
+<!-- 查询任务信息表列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	SELECT 
+		(SELECT name FROM x_city c WHERE code = t.city_code) city_name,
+		(SELECT name FROM e_employee_info e WHERE id = t.employee_id) employee_name,
+		(SELECT name FROM e_task_level WHERE id = t.task_level) task_level_name,
+		(select name FROM e_task_type where id = t.task_type) task_type_name,
+		(select name from x_park where id = t.begin_park_id) begin_park_name,
+		(select name from x_park where id = t.end_park_id) end_park_name,
+		(select id from x_car_run where lpn = t.lpn) lpn_id,
+		case when task_type='1' then (SELECT group_concat(name) FROM e_employee_info WHERE id in 
+		     (SELECT employee_id FROM e_employee_gridding_relation WHERE gridding_id = 
+		         (SELECT gridding_id from e_employee_gridding_relation eg WHERE eg.employee_id = t.employee_id) and is_manager = 1)
+		) end as employee_leader,
+		case WHEN task_type='1' then (SELECT `name` from e_gridding_info i LEFT JOIN e_employee_gridding_relation r on r.gridding_id=i.id where r.employee_id = t.employee_id) end as grid_name,
+		case WHEN task_type='1' then (SELECT i.id from e_gridding_info i LEFT JOIN e_employee_gridding_relation r on r.gridding_id=i.id where r.employee_id = t.employee_id) end as grid_id, 
+		t.id,t.employee_id,t.status,t.task_explain,t.done_remark,t.task_name,t.lpn,t.create_time,t.done_time,t.task_begin_time,t.update_time,
+		t.time_limit,t.begin_park_id,t.task_level,t.task_type,t.end_park_id ,t.city_code,t.deadline deadline,ifnull(format(sum(ets.score)/10,1),0) as score,ets.task_check_uri as photoUrl,t.planMileage planMileage
+    from e_task_info t
+	left join e_task_score ets on ets.task_id = t.id
+ 	where 1= 1 
+ 	<if test="name != null and name != ''">
+ 	    and t.employee_id in (SELECT id FROM e_employee_info WHERE name LIKE concat('%',#{name,jdbcType=VARCHAR},'%'))
+ 	</if>
+ 	<if test="taskName != null and taskName != ''">
+				and t.task_name like concat('%', #{taskName},'%')
+	</if>
+	<if test="cityCode != null and cityCode != ''">
+				and t.city_code = #{cityCode}
+	</if>
+	<if test="status != null and status != ''">
+				and t.status = #{status}
+	</if>
+	<if test="queryDateFrom != null and queryDateFrom !='' and queryDateTo != null and queryDateTo !='' ">
+		and t.done_time BETWEEN #{queryDateFrom,jdbcType=TIMESTAMP} AND #{queryDateTo,jdbcType=TIMESTAMP}
+	</if>
+	<if test="taskType!=null and taskType!=''">
+	     <if test="taskType==1">
+			 and t.task_type in ('1','3','6')
+		 </if>
+		 <if test="taskType==5">
+			 and t.task_type =#{taskType}
+		 </if>
+		 <if test="taskType==0">
+			 and t.task_type in ('2','4')
+		 </if>
+	</if>
+	group by t.id
+	order by t.create_time DESC 
+	<if test="from !=null and to != null">
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</if>
+</select>
+<sql id="selectName">
+	(SELECT id FROM e_employee_info 
+	<if test="name != null and name != ''">
+		WHERE name LIKE "%"#{name,jdbcType=VARCHAR}"%"
+	</if>)
+</sql>
+
+<select id="selectAllTaskType" resultMap="TaskTypeResultMap">
+  	select id,name from e_task_type
+</select>
+
+<select id="selectAllLpn" resultMap="LpnResultMap">
+	select id,lpn name from x_car_run where status not in ('ordered','useCar','return')
+</select>
+
+<select id="queryTotalLpns" resultMap="LpnResultMap">
+<!-- 	select id,lpn name from x_car_run  -->
+<!-- 不包含关闭的车辆 -->
+<!-- select id,lpn name from x_car_run r where not EXISTS (SELECT c.lpn from x_car c where c.lpn = r.lpn and c.status = 0) -->
+SELECT r.id,r.lpn name FROM x_car c INNER JOIN x_car_run r ON r.lpn = c.lpn where c.status = 1
+</select>
+
+<select id="selectAllTaskGrade" resultMap="TaskGradeResultMap">
+	select id,name from e_task_level 
+</select>
+
+<select id="selectAllPark" resultMap="ParkNameResultMap">
+	<!-- 不包含关闭的网点 -->
+	select p.id,p.name,p.enterprise_id from x_park p where 
+	 case 
+	    when p.status= 0 and p.is_run = 1 then p.status = 1 and p.is_run = 0 
+	    when p.status= 1 and p.is_run = 1 then p.status = 1
+	    else p.status= 1 and p.is_run = 0 end
+</select>
+
+<select id="selectByTaskType" resultMap="TaskTypeResultMap">
+	select id,name from e_task_type where id = #{taskTypeStr}
+</select>
+
+<select id="getRecords" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select  <include refid="Base_Column_List"/>
+	from e_task_info where lpn=#{lpn,jdbcType=VARCHAR} ORDER BY create_time DESC LIMIT 0,1
+</select>  	
+
+<insert id="insertChargingRecords" parameterType="com.iber.portal.model.task.TaskInfo" >
+  insert into e_task_info(employee_id,begin_park_id,lpn,task_level,task_type,status,city_code,create_time)
+ values(#{employeeId},#{beginParkId},#{lpn},#{taskLevel},#{taskType},#{status},#{cityCode},#{createTime})
+</insert>
+
+<select id="selectByTaskTypeAndLpn" resultType="java.lang.Integer">
+	select count(1) from e_task_info where task_type = #{taskType} and lpn = #{lpn} and status in('1','2') 
+</select>
+<select id="selectCarTaskInfo" resultType="java.lang.Integer">
+	select count(1) from e_task_info where task_type = #{taskType} and lpn = #{lpn} and status in('1','2') and id != #{id}
+</select>
+<!-- 未处理的任务 -->
+<select id="selectNONByTaskTypeAndLpn" resultMap="BaseResultMap">
+	select * from e_task_info where task_type = #{taskType} and lpn = #{lpn} and status in('1','2')  limit 1 
+</select>
+
+<update id="updateStatus">
+	update e_task_info set status = #{status}  where  id=#{id} 
+</update>
+<update id="updateTaskStatusToFinish">
+	update e_task_info set status = '3',done_time = now(),done_remark= #{result}
+	<if test="status==1">
+		,task_begin_time=now()
+	</if>
+	where id =
+	(select id from (select id from e_task_info e where e.task_type = #{taskType} and e.status != '3' and e.lpn = #{lpn}) tab limit 1) 
+</update>
+<select id="getRescueRecordByLpn" resultMap="BaseResultMap">
+	select  <include refid="Base_Column_List"/>
+	from e_task_info where lpn=#{lpn} and task_type = #{taskType} and status != '3' LIMIT 1
+</select> 
+<select id="selectNonTaskRecords" resultType="java.lang.Integer">
+	select count(1) from e_task_info where employee_id = #{empId} and status in('1','2')  
+</select>
+</mapper>   

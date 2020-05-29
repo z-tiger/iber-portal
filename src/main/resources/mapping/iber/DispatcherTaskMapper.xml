@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.dispatch.DispatcherTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.dispatch.DispatcherTask" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dispatcher_id" property="dispatcherId" jdbcType="INTEGER" />
+    <result column="task_desc" property="taskDesc" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="src_alert_id" property="srcAlertId" jdbcType="INTEGER" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="name" property="dispatcherName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    a.id, a.dispatcher_id, a.task_desc, a.status, a.create_time, a.order_id, a.src_alert_id, a.create_by ,b.name
+  </sql>
+  
+   <sql id="Base_Column_List_Record" >
+    count(1) counts
+   </sql> 
+  
+    <sql id="Base_Column_Record_Exist" >
+    a.id, a.dispatcher_id, a.task_desc, a.status, a.create_time, a.order_id, a.src_alert_id, a.create_by
+  </sql>
+   
+    <select id="selectByPrimaryId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_Record_Exist" />
+    from x_dispatcher_task a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select> 
+  
+    <select id="selectBySrcAlertId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_Record_Exist" />
+    from x_dispatcher_task a
+    where a.src_alert_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_dispatcher_task
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_dispatcher_task
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.dispatch.DispatcherTask" >
+    insert into x_dispatcher_task (id, dispatcher_id, task_desc, 
+      status, create_time, order_id, 
+      src_alert_id, create_by)
+    values (#{id,jdbcType=INTEGER}, #{dispatcherId,jdbcType=INTEGER}, #{taskDesc,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{orderId,jdbcType=VARCHAR}, 
+      #{srcAlertId,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.dispatch.DispatcherTask" >
+    insert into x_dispatcher_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dispatcherId != null" >
+        dispatcher_id,
+      </if>
+      <if test="taskDesc != null" >
+        task_desc,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="srcAlertId != null" >
+        src_alert_id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dispatcherId != null" >
+        #{dispatcherId,jdbcType=INTEGER},
+      </if>
+      <if test="taskDesc != null" >
+        #{taskDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="srcAlertId != null" >
+        #{srcAlertId,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.dispatch.DispatcherTask" >
+    update x_dispatcher_task
+    <set >
+      <if test="dispatcherId != null" >
+        dispatcher_id = #{dispatcherId,jdbcType=INTEGER},
+      </if>
+      <if test="taskDesc != null" >
+        task_desc = #{taskDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="srcAlertId != null" >
+        src_alert_id = #{srcAlertId,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.dispatch.DispatcherTask" >
+    update x_dispatcher_task
+    set dispatcher_id = #{dispatcherId,jdbcType=INTEGER},
+      task_desc = #{taskDesc,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      src_alert_id = #{srcAlertId,jdbcType=INTEGER},
+      create_by = #{createBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByDispatcherTaskList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from x_dispatcher_task a
+      LEFT JOIN x_member b ON a.dispatcher_id=b.id
+     <trim prefixOverrides="and" >
+       <where>
+		   <if test="status  != null and status  != ''" >
+                and a.status = #{status,jdbcType=INTEGER}
+              </if>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>        
+	   </where> 
+    </trim>
+      ORDER BY a.create_time DESC
+      limit #{page, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+   </select>
+  
+   
+   <select id="selectByDispatcherTaskRecords" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_Record" />
+     from x_dispatcher_task a
+     LEFT JOIN x_member b ON a.dispatcher_id=b.id
+     <trim prefixOverrides="and" >
+       <where>
+		   <if test="status  != null and status  != ''" >
+                and a.status = #{status,jdbcType=INTEGER}
+              </if>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>        
+	   </where> 
+    </trim>
+  </select>
+
+
+  <select id="selectByPrimaryKeyExcel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+     from x_dispatcher_task a
+     LEFT JOIN x_member b ON a.dispatcher_id=b.id
+     <trim prefixOverrides="and" >
+       <where>
+		   <if test="status  != null and status  != ''" >
+                and a.status = #{status,jdbcType=INTEGER}
+              </if>  
+		    <if test="beginTime != null and beginTime != ''" >
+		        <![CDATA[and a.create_time >= #{beginTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>
+		    <if test="endTime != null and endTime != ''" >
+		       <![CDATA[and a.create_time<=  #{endTime,jdbcType=TIMESTAMP}  ]]> 
+		    </if>        
+	   </where> 
+    </trim>
+      ORDER BY a.create_time DESC
+   </select>
+
+
+</mapper>

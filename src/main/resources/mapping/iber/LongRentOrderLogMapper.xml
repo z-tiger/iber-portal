@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.longRent.LongRentOrderLogMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.longRent.LongRentOrderLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="action_start_time" property="actionStartTime" jdbcType="TIMESTAMP" />
+    <result column="action_end_time" property="actionEndTime" jdbcType="TIMESTAMP" />
+    <result column="action_park_id" property="actionParkId" jdbcType="INTEGER" />
+    <result column="action_type" property="actionType" jdbcType="VARCHAR" />
+    <result column="action_mny" property="actionMny" jdbcType="INTEGER" />
+    <result column="term_date" property="termDate" jdbcType="VARCHAR" />
+    <result column="discount_mny" property="discountMny" jdbcType="INTEGER" />
+    <result column="pay_mny" property="payMny" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="trane_no" property="traneNo" jdbcType="VARCHAR" />
+    <result column="deposit_mny" property="depositMny" jdbcType="INTEGER" />
+    <result column="vehicle_mny" property="vehicleMny" jdbcType="INTEGER" />
+    <result column="premium_mny" property="premiumMny" jdbcType="INTEGER" />
+    <result column="non_deductible_mny" property="nonDeductibleMny" jdbcType="INTEGER" />
+    <result column="counter_mny" property="counterMny" jdbcType="INTEGER" />
+    <result column="time_out_time" property="timeOutTime" jdbcType="VARCHAR" />
+    <result column="time_out_mny" property="timeOutMny" jdbcType="INTEGER" />
+    <result column="different_places_mny" property="differentPlacesMny" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_by" property="lastModifyBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, action_start_time, action_end_time, action_park_id, action_type, action_mny, 
+    term_date, discount_mny, pay_mny, pay_type, trane_no, deposit_mny, vehicle_mny, premium_mny, 
+    non_deductible_mny, counter_mny, time_out_time, time_out_mny, different_places_mny, 
+    create_time, create_by, last_modify_time, last_modify_by
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_long_rent_order_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_long_rent_order_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.longRent.LongRentOrderLog" >
+    insert into x_long_rent_order_log (id, order_id, action_start_time, 
+      action_end_time, action_park_id, action_type, 
+      action_mny, term_date, discount_mny, 
+      pay_mny, pay_type, trane_no, 
+      deposit_mny, vehicle_mny, premium_mny, 
+      non_deductible_mny, counter_mny, time_out_time, 
+      time_out_mny, different_places_mny, create_time, 
+      create_by, last_modify_time, last_modify_by
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{actionStartTime,jdbcType=TIMESTAMP}, 
+      #{actionEndTime,jdbcType=TIMESTAMP}, #{actionParkId,jdbcType=INTEGER}, #{actionType,jdbcType=VARCHAR}, 
+      #{actionMny,jdbcType=INTEGER}, #{termDate,jdbcType=VARCHAR}, #{discountMny,jdbcType=INTEGER}, 
+      #{payMny,jdbcType=INTEGER}, #{payType,jdbcType=VARCHAR}, #{traneNo,jdbcType=VARCHAR}, 
+      #{depositMny,jdbcType=INTEGER}, #{vehicleMny,jdbcType=INTEGER}, #{premiumMny,jdbcType=INTEGER}, 
+      #{nonDeductibleMny,jdbcType=INTEGER}, #{counterMny,jdbcType=INTEGER}, #{timeOutTime,jdbcType=VARCHAR}, 
+      #{timeOutMny,jdbcType=INTEGER}, #{differentPlacesMny,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{lastModifyTime,jdbcType=TIMESTAMP}, #{lastModifyBy,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.longRent.LongRentOrderLog" >
+    insert into x_long_rent_order_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="actionStartTime != null" >
+        action_start_time,
+      </if>
+      <if test="actionEndTime != null" >
+        action_end_time,
+      </if>
+      <if test="actionParkId != null" >
+        action_park_id,
+      </if>
+      <if test="actionType != null" >
+        action_type,
+      </if>
+      <if test="actionMny != null" >
+        action_mny,
+      </if>
+      <if test="termDate != null" >
+        term_date,
+      </if>
+      <if test="discountMny != null" >
+        discount_mny,
+      </if>
+      <if test="payMny != null" >
+        pay_mny,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="traneNo != null" >
+        trane_no,
+      </if>
+      <if test="depositMny != null" >
+        deposit_mny,
+      </if>
+      <if test="vehicleMny != null" >
+        vehicle_mny,
+      </if>
+      <if test="premiumMny != null" >
+        premium_mny,
+      </if>
+      <if test="nonDeductibleMny != null" >
+        non_deductible_mny,
+      </if>
+      <if test="counterMny != null" >
+        counter_mny,
+      </if>
+      <if test="timeOutTime != null" >
+        time_out_time,
+      </if>
+      <if test="timeOutMny != null" >
+        time_out_mny,
+      </if>
+      <if test="differentPlacesMny != null" >
+        different_places_mny,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time,
+      </if>
+      <if test="lastModifyBy != null" >
+        last_modify_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="actionStartTime != null" >
+        #{actionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actionEndTime != null" >
+        #{actionEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actionParkId != null" >
+        #{actionParkId,jdbcType=INTEGER},
+      </if>
+      <if test="actionType != null" >
+        #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionMny != null" >
+        #{actionMny,jdbcType=INTEGER},
+      </if>
+      <if test="termDate != null" >
+        #{termDate,jdbcType=VARCHAR},
+      </if>
+      <if test="discountMny != null" >
+        #{discountMny,jdbcType=INTEGER},
+      </if>
+      <if test="payMny != null" >
+        #{payMny,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="traneNo != null" >
+        #{traneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="depositMny != null" >
+        #{depositMny,jdbcType=INTEGER},
+      </if>
+      <if test="vehicleMny != null" >
+        #{vehicleMny,jdbcType=INTEGER},
+      </if>
+      <if test="premiumMny != null" >
+        #{premiumMny,jdbcType=INTEGER},
+      </if>
+      <if test="nonDeductibleMny != null" >
+        #{nonDeductibleMny,jdbcType=INTEGER},
+      </if>
+      <if test="counterMny != null" >
+        #{counterMny,jdbcType=INTEGER},
+      </if>
+      <if test="timeOutTime != null" >
+        #{timeOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="timeOutMny != null" >
+        #{timeOutMny,jdbcType=INTEGER},
+      </if>
+      <if test="differentPlacesMny != null" >
+        #{differentPlacesMny,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null" >
+        #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyBy != null" >
+        #{lastModifyBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.longRent.LongRentOrderLog" >
+    update x_long_rent_order_log
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="actionStartTime != null" >
+        action_start_time = #{actionStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actionEndTime != null" >
+        action_end_time = #{actionEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actionParkId != null" >
+        action_park_id = #{actionParkId,jdbcType=INTEGER},
+      </if>
+      <if test="actionType != null" >
+        action_type = #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionMny != null" >
+        action_mny = #{actionMny,jdbcType=INTEGER},
+      </if>
+      <if test="termDate != null" >
+        term_date = #{termDate,jdbcType=VARCHAR},
+      </if>
+      <if test="discountMny != null" >
+        discount_mny = #{discountMny,jdbcType=INTEGER},
+      </if>
+      <if test="payMny != null" >
+        pay_mny = #{payMny,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="traneNo != null" >
+        trane_no = #{traneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="depositMny != null" >
+        deposit_mny = #{depositMny,jdbcType=INTEGER},
+      </if>
+      <if test="vehicleMny != null" >
+        vehicle_mny = #{vehicleMny,jdbcType=INTEGER},
+      </if>
+      <if test="premiumMny != null" >
+        premium_mny = #{premiumMny,jdbcType=INTEGER},
+      </if>
+      <if test="nonDeductibleMny != null" >
+        non_deductible_mny = #{nonDeductibleMny,jdbcType=INTEGER},
+      </if>
+      <if test="counterMny != null" >
+        counter_mny = #{counterMny,jdbcType=INTEGER},
+      </if>
+      <if test="timeOutTime != null" >
+        time_out_time = #{timeOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="timeOutMny != null" >
+        time_out_mny = #{timeOutMny,jdbcType=INTEGER},
+      </if>
+      <if test="differentPlacesMny != null" >
+        different_places_mny = #{differentPlacesMny,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyBy != null" >
+        last_modify_by = #{lastModifyBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.longRent.LongRentOrderLog" >
+    update x_long_rent_order_log
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      action_start_time = #{actionStartTime,jdbcType=TIMESTAMP},
+      action_end_time = #{actionEndTime,jdbcType=TIMESTAMP},
+      action_park_id = #{actionParkId,jdbcType=INTEGER},
+      action_type = #{actionType,jdbcType=VARCHAR},
+      action_mny = #{actionMny,jdbcType=INTEGER},
+      term_date = #{termDate,jdbcType=VARCHAR},
+      discount_mny = #{discountMny,jdbcType=INTEGER},
+      pay_mny = #{payMny,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      trane_no = #{traneNo,jdbcType=VARCHAR},
+      deposit_mny = #{depositMny,jdbcType=INTEGER},
+      vehicle_mny = #{vehicleMny,jdbcType=INTEGER},
+      premium_mny = #{premiumMny,jdbcType=INTEGER},
+      non_deductible_mny = #{nonDeductibleMny,jdbcType=INTEGER},
+      counter_mny = #{counterMny,jdbcType=INTEGER},
+      time_out_time = #{timeOutTime,jdbcType=VARCHAR},
+      time_out_mny = #{timeOutMny,jdbcType=INTEGER},
+      different_places_mny = #{differentPlacesMny,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      last_modify_by = #{lastModifyBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

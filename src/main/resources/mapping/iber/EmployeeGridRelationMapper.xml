@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iber.portal.dao.dispatcher.EmployeeGridRelationMapper" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.iber.portal.model.dispatcher.EmployeeGridRelation" >
+	<result column="id" property="id"/>
+	<result column="gridding_id" property="gridId"/>
+	<result column="employee_id" property="employeeId"/>
+	<result column="is_manager" property="isManager"/>
+</resultMap>
+
+<resultMap id="GriddingInfoMap" type="com.iber.portal.model.dispatcher.Grid" >
+	<result column="id" property="id"/>
+	<result column="name" property="name"/>
+</resultMap>
+       
+<!-- gridding_park_relation table all fields -->
+<sql id="Base_Column_List" >
+	 id,gridding_id,employee_id,is_manager
+</sql>
+
+<!-- 插入记录 -->
+<insert id="insert" parameterType="com.iber.portal.model.dispatcher.EmployeeGridRelation">
+  insert into e_employee_gridding_relation (gridding_id,employee_id,is_manager)
+ values(#{gridId},#{employeeId},#{isManager})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	delete from e_employee_gridding_relation where id = #{id}
+</delete>
+
+<!-- 更新 -->
+<update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+	update e_employee_gridding_relation set gridding_id=#{gridding_id},employee_id=#{employeeId} where id=#{id}
+</update>
+
+<!-- 根据id查询 网格网点关系表 -->
+<select id="selectByPrimaryKey"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select <include refid="Base_Column_List" /> 
+	 from e_employee_gridding_relation where id = #{id}
+</select>
+
+<!-- 网格网点关系表 列表总数-->
+<select id="getAllNum" resultType="java.lang.Integer"  parameterType="java.util.Map">
+	select count(1) from e_employee_gridding_relation where 1=1 
+ 
+ 
+</select>
+  	
+<!-- 查询网格网点关系表列表 -->
+<select id="queryPageList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+	select 
+	<include refid="Base_Column_List"/>
+	from e_employee_gridding_relation where 1 =1 
+	
+	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	 
+</select>
+
+<select id="selectEmployeeGridRelationByGridId" resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List"/>
+	from e_employee_gridding_relation
+	where gridding_id = #{gridId}
+</select>
+
+<delete id="batchDeleteEmployeeByGridId">
+	delete from e_employee_gridding_relation
+	where gridding_id = #{id}
+</delete>
+
+<delete id="deleteEmployeeByEmployeeId">
+	delete from e_employee_gridding_relation where employee_id = #{id}
+</delete>
+  	
+<select id="getAllGriddingInfo" parameterType="java.lang.String" resultMap="GriddingInfoMap">
+    select  id,name  from e_gridding_info where 1=1 
+    <if test="cityCode !=null and cityCode!=''">
+    	and  city_code =#{cityCode,jdbcType=VARCHAR}
+    </if>
+</select>
+<update id="updateEmpGridRealtion">
+    update e_employee_gridding_relation set is_manager=#{isManager} where employee_id=#{id}
+</update>
+</mapper>   

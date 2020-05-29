@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.invoice.MemberMailInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.invoice.MemberMailInfo" >
+    <id column="id" property="id"   />
+    <result column="member_id" property="memberId"   />
+    <result column="area" property="area"   />
+    <result column="address" property="address"   />
+    <result column="receiver" property="receiver"   />
+    <result column="phone" property="phone"   />
+    <result column="email" property="email"   />
+    <result column="code" property="code"   />
+    <result column="order_type" property="orderType"   />
+    <result column="create_time" property="createTime"   />
+    <result column="status" property="status"   />
+    <result column="province" property="province"   />
+    <result column="city" property="city"   />
+  </resultMap>
+  <resultMap type="com.iber.portal.vo.memberMail.MemberMailInfoVO" id="BaseResultVOMap" extends="BaseResultMap">
+  	<result column="memberName" property="memberName"/>
+  	<result column="memberPhone" property="memberPhone"/>
+  	<result column="areaName" property="areaName"/>
+  	<result column="cityName" property="cityName"/>
+  	<result column="layer" property="layer"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, area,city,province, address, receiver, phone, email, code, order_type, create_time, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_member_mail_info
+    where id = #{id }
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_member_mail_info
+    where id = #{id }
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.invoice.MemberMailInfo" >
+    insert into x_member_mail_info (id, member_id, area, city, province,
+      address, receiver, phone, 
+      email, code,order_type, create_time, 
+      status)
+    values (#{id }, #{memberId }, #{area }, #{city }, #{province }, 
+      #{address }, #{receiver }, #{phone }, 
+      #{email }, #{code },#{order_type }, #{createTime }, 
+      #{status })
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.invoice.MemberMailInfo" >
+    insert into x_member_mail_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id },
+      </if>
+      <if test="memberId != null" >
+        #{memberId },
+      </if>
+      <if test="area != null" >
+        #{area },
+      </if>
+      <if test="city != null" >
+        #{city },
+      </if>
+      <if test="province != null" >
+        #{province },
+      </if>
+      <if test="address != null" >
+        #{address },
+      </if>
+      <if test="receiver != null" >
+        #{receiver },
+      </if>
+      <if test="phone != null" >
+        #{phone },
+      </if>
+      <if test="email != null" >
+        #{email },
+      </if>
+      <if test="code != null" >
+        #{code },
+      </if>
+      <if test="orderType != null" >
+        #{orderType },
+      </if>
+      <if test="createTime != null" >
+        #{createTime },
+      </if>
+      <if test="status != null" >
+        #{status },
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.invoice.MemberMailInfo" >
+    update x_member_mail_info
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId },
+      </if>
+      <if test="area != null" >
+        area = #{area },
+      </if>
+      <if test="city != null" >
+        city = #{city },
+      </if>
+      <if test="province != null" >
+        province = #{province },
+      </if>
+      <if test="address != null" >
+        address = #{address },
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver },
+      </if>
+      <if test="phone != null" >
+        phone = #{phone },
+      </if>
+      <if test="email != null" >
+        email = #{email },
+      </if>
+      <if test="code != null" >
+        code = #{code },
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType },
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime },
+      </if>
+      <if test="status != null" >
+        status = #{status },
+      </if>
+    </set>
+    where id = #{id }
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.invoice.MemberMailInfo" >
+    update x_member_mail_info
+    set member_id = #{memberId },
+      area = #{area },
+      city = #{city },
+      province = #{province },
+      address = #{address },
+      receiver = #{receiver },
+      phone = #{phone },
+      email = #{email },
+      code = #{code },
+      order_type = #{orderType },
+      create_time = #{createTime },
+      status = #{status }
+    where id = #{id }
+  </update>
+  
+  <select id="queryPageList" parameterType="java.util.Map" resultMap="BaseResultVOMap">
+  	 select 
+  	 	mi.*,m.name memberName, m.phone memberPhone,
+  	 	(select name from x_city where  code = m.city_code ) cityName , 
+  	 	concat(province,city,area )  areaName  
+  	 from x_member_mail_info mi LEFT JOIN x_member m on mi.member_id = m.id where 1=1 
+  	 <if test=" name != null and name != '' ">
+  	 	and m.name like concat('%',#{name },'%') 
+  	 </if>
+  	 <if test=" phone != null and phone != '' ">
+  	 	and m.phone like concat('%',#{phone },'%') 
+  	 </if>
+  	 <if test="cityCode != null and cityCode != '' ">
+  	 	and m.city_code = #{cityCode }
+  	 </if>
+  	 <!-- <if test=" orderType != null and orderType != '' ">
+  	 	and mi.order_type = #{orderType}
+  	 </if> -->
+  	 <if test="offset != null and rows != null">
+  	 limit #{offset} ,#{rows} 
+  	 </if>
+  </select>
+  <select id="getAllNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+  select count(1) from x_member_mail_info mi LEFT JOIN x_member m on mi.member_id = m.id where 1=1 
+  	 <if test=" name != null and name != '' ">
+  	 	and m.name like concat('%',#{name },'%') 
+  	 </if>
+  	 <if test=" phone != null and phone != '' ">
+  	 	and m.phone like concat('%',#{phone },'%') 
+  	 </if>
+  	 <if test="cityCode != null and cityCode != '' ">
+  	 	and m.city_code = #{cityCode }
+  	 </if>
+  	 <!-- <if test=" orderType != null and orderType != '' ">
+  	 	and mi.order_type = #{orderType}
+  	 </if> -->
+  </select>
+</mapper>

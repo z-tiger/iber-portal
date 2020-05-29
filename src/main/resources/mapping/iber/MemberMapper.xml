@@ -1,0 +1,1315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.base.MemberMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.base.Member">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="idcard" property="idcard" jdbcType="VARCHAR" />
+		<result column="driver_idcard" property="driverIdcard"
+			jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="head_photo_url" property="headPhotoUrl"
+			jdbcType="VARCHAR" />
+		<result column="driver_idcard_photo_url" property="driverIdcardPhotoUrl"
+			jdbcType="VARCHAR" />
+		<result column="idcard_photo_url" property="idcardPhotoUrl"
+			jdbcType="VARCHAR" />
+		<result column="finger_print" property="fingerPrint" jdbcType="VARCHAR" />
+		<result column="tbox_finger_print" property="tboxFingerPrint" jdbcType="VARCHAR" />
+		<result column="register_ip" property="registerIp" jdbcType="VARCHAR" />
+		<result column="register_category" property="registerCategory"
+			jdbcType="VARCHAR" />
+		<result column="accout_status" property="accoutStatus"
+			jdbcType="VARCHAR" />
+		<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="enterprise_name" property="enterpriseName"
+			jdbcType="VARCHAR" />
+		<result column="enterprise_id" property="enterpriseId"
+			jdbcType="INTEGER" />
+		<result column="member_level" property="memberLevel" jdbcType="VARCHAR" />
+		<result column="enterprise_check_status" property="enterpriseCheckStatus"
+			jdbcType="VARCHAR" />
+		<result column="is_drive" property="isDrive" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="driver_idcard_validity_time" property="driverIdcardValidityTime"
+			jdbcType="TIMESTAMP" />
+		<result column="driver_idcard_update" property="driverIdcardUpdate"
+			jdbcType="INTEGER" />
+		<result column="latest_contributed_val" property="latestContributedVal"  />
+		<result column="level_code" property="levelCode" jdbcType="INTEGER" />
+        <result column="driver_idCard_time" property="driverIdCardTime" jdbcType="TIMESTAMP" />
+        <result column="examine_time" property="examineTime" jdbcType="TIMESTAMP" />
+        <result column="contributedVal" property="contributedVal" jdbcType="INTEGER"/>
+        <result column="examine_id" property="examineId" jdbcType="INTEGER"/>
+        <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP"/><!-- 资料上传时间 -->
+        <result column="refuse_reason" property="refuseReason" jdbcType="VARCHAR" /><!-- 拒绝原因 -->
+        <result column="drewOnceCoupon" property="drewOnceCoupon" jdbcType="INTEGER" />
+        <result column="inviter" property="inviter"  />
+        <result column="deposit" property="deposit"/>
+  		<result column="refund_money" property="refundMoney"/>
+  		<result column="require_deposit" property="requireDeposit"/>
+        <result column="face_id" property="faceId" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="EnterpriseMemberVo"
+		type="com.iber.portal.vo.enterprise.EnterpriseMemberVo" extends="BaseResultMap">
+		<result column="money" property="money" jdbcType="INTEGER" />
+		<!--<result column="deposit" property="deposit" jdbcType="INTEGER" />-->
+		<result column="integral" property="integral" jdbcType="INTEGER" />
+		<result column="quota" property="quota" jdbcType="INTEGER" />
+		<result column="quota_use_money" property="quotaUseMoney" jdbcType="INTEGER" />
+		<result column="quota_month" property="quotaMonth" jdbcType="INTEGER" />
+		<result column="quota_date_time" property="quotaDateTime" jdbcType="TIMESTAMP" />
+		<result column="total_recharge" property="totalRecharge" jdbcType="INTEGER" />
+		<result column="account_money" property="accountMoney" jdbcType="INTEGER" />
+		<result column="member_all_avail" property="memberAllAvail" jdbcType="INTEGER" />
+		<result column="member_avail" property="memberAvail" jdbcType="INTEGER" />
+
+	</resultMap>
+
+	<resultMap id="memberTotalVoMap" type="com.iber.portal.model.member.MemberTotalVo">
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="memberTotal" property="memberTotal" jdbcType="INTEGER" />
+		<result column="level_code" property="levelCode" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap type="com.iber.portal.model.member.MemberContributedDetail" id="memberContributeItemMap">
+  		<id column="id" property="id" jdbcType="INTEGER"/>
+  		<result column="member_id" property="memberId" jdbcType="INTEGER"/>
+  		<result column="type" property="type" jdbcType="VARCHAR"/>
+  		<result column="contributed_val_delta" property="contributedValDelta"/>
+  		<result column="obj_id" property="objId" jdbcType="VARCHAR"/>
+  		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+  	</resultMap>
+  	
+<!--   	<resultMap type="com.iber.portal.model.base.MemberExtendVo" id="memberResultMap" extends="BaseResultMap"> -->
+<!--   		<result column="deposit" property="deposit"/> -->
+<!--   		<result column="refund_money" property="refundMoney"/> -->
+<!--   		<result column="require_deposit" property="requireDeposit"/> -->
+<!--   	</resultMap> -->
+
+	<!-- 根据 layer来进行不同的统计 -->
+	<sql id="sql_chooseByLevel">
+		<choose>
+			<when test="level== 2 ">
+				AND m.city_code IN (SELECT CODE FROM x_city WHERE
+				p_id =(SELECT id FROM
+				x_city WHERE
+				code=#{cityCode,jdbcType=VARCHAR}))
+			</when>
+			<otherwise>
+				AND city_code=#{cityCode,jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+	</sql>
+
+	<sql id="Base_Column_List">
+		id, name, sex, password, phone, email, idcard,
+		driver_idcard, status,
+		head_photo_url,
+		driver_idcard_photo_url,
+		idcard_photo_url, finger_print, register_ip, register_category,
+		accout_status, city_code, enterprise_id, member_level,
+		enterprise_check_status, is_drive, create_time, remark,
+		driver_idcard_validity_time,driver_idcard_update,
+		latest_contributed_val, level_code,driver_idCard_time,drewOnceCoupon,inviter,
+		face_id
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_member
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		x_member
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.iber.portal.model.base.Member"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into x_member (id, name,
+		sex,
+		password, phone, email,
+		idcard, driver_idcard, status,
+		head_photo_url, driver_idcard_photo_url, idcard_photo_url,
+		finger_print, register_ip, register_category,
+		accout_status, city_code,
+		enterprise_id,
+		member_level, enterprise_check_status,
+		is_drive,create_time, remark
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{sex,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{idcard,jdbcType=VARCHAR},
+		#{driverIdcard,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{headPhotoUrl,jdbcType=VARCHAR},
+		#{driverIdcardPhotoUrl,jdbcType=VARCHAR},
+		#{idcardPhotoUrl,jdbcType=VARCHAR},
+		#{fingerPrint,jdbcType=VARCHAR},
+		#{registerIp,jdbcType=VARCHAR}, #{registerCategory,jdbcType=VARCHAR},
+		#{accoutStatus,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR},
+		#{enterpriseId,jdbcType=INTEGER},
+		#{memberLevel,jdbcType=VARCHAR},
+		#{enterpriseCheckStatus,jdbcType=VARCHAR},
+		#{isDrive,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.iber.portal.model.base.Member"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into x_member
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="idcard != null">
+				idcard,
+			</if>
+			<if test="driverIdcard != null">
+				driver_idcard,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="headPhotoUrl != null">
+				head_photo_url,
+			</if>
+			<if test="driverIdcardPhotoUrl != null">
+				driver_idcard_photo_url,
+			</if>
+			<if test="idcardPhotoUrl != null">
+				idcard_photo_url,
+			</if>
+			<if test="fingerPrint != null">
+				finger_print,
+			</if>
+			<if test="registerIp != null">
+				register_ip,
+			</if>
+			<if test="registerCategory != null">
+				register_category,
+			</if>
+			<if test="accoutStatus != null">
+				accout_status,
+			</if>
+			<if test="cityCode != null">
+				city_code,
+			</if>
+			<if test="enterpriseId != null">
+				enterprise_id,
+			</if>
+			<if test="memberLevel != null">
+				member_level,
+			</if>
+			<if test="enterpriseCheckStatus != null">
+				enterprise_check_status,
+			</if>
+			<if test="isDrive != null">
+				is_drive,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="driverIdCardTime != null">
+				driver_idCard_time,
+			</if>
+			<if test="inviter != null">
+				inviter,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="idcard != null">
+				#{idcard,jdbcType=VARCHAR},
+			</if>
+			<if test="driverIdcard != null">
+				#{driverIdcard,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="headPhotoUrl != null">
+				#{headPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="driverIdcardPhotoUrl != null">
+				#{driverIdcardPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="idcardPhotoUrl != null">
+				#{idcardPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="fingerPrint != null">
+				#{fingerPrint,jdbcType=VARCHAR},
+			</if>
+			<if test="registerIp != null">
+				#{registerIp,jdbcType=VARCHAR},
+			</if>
+			<if test="registerCategory != null">
+				#{registerCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="accoutStatus != null">
+				#{accoutStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null">
+				#{cityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseId != null">
+				#{enterpriseId,jdbcType=INTEGER},
+			</if>
+			<if test="memberLevel != null">
+				#{memberLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseCheckStatus != null">
+				#{enterpriseCheckStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isDrive != null">
+				#{isDrive,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="driverIdCardTime != null">
+				#{driverIdCardTime},
+			</if>
+			<if test="inviter != null">
+				#{inviter},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.base.Member">
+		update x_member
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="idcard != null">
+				idcard = #{idcard,jdbcType=VARCHAR},
+			</if>
+			<if test="driverIdcard != null">
+				driver_idcard = #{driverIdcard,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="headPhotoUrl != null">
+				head_photo_url = #{headPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="driverIdcardPhotoUrl != null">
+				driver_idcard_photo_url =
+				#{driverIdcardPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="idcardPhotoUrl != null">
+				idcard_photo_url = #{idcardPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="fingerPrint != null">
+				finger_print = #{fingerPrint,jdbcType=VARCHAR},
+			</if>
+			<if test="registerIp != null">
+				register_ip = #{registerIp,jdbcType=VARCHAR},
+			</if>
+			<if test="registerCategory != null">
+				register_category = #{registerCategory,jdbcType=VARCHAR},
+			</if>
+			<if test="accoutStatus != null">
+				accout_status = #{accoutStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null">
+				city_code = #{cityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseId != null">
+				enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+			</if>
+			<if test="memberLevel != null">
+				member_level = #{memberLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseCheckStatus != null">
+				enterprise_check_status =
+				#{enterpriseCheckStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isDrive != null">
+				is_drive = #{isDrive,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="driverIdcardValidityTime != null and driverIdcardValidityTime !='' ">
+				driver_idcard_validity_time =
+				#{driverIdcardValidityTime,jdbcType=VARCHAR} ,
+			</if>
+			<if test="driverIdCardTime != null and driverIdCardTime != ''">
+				driver_idCard_time = #{driverIdCardTime},
+			</if>
+			<if test="levelCode != null and levelCode != '' ">
+				level_code = #{levelCode},
+			</if>
+			<if test="driverIdcardUpdate != null and driverIdcardUpdate != ''">
+				driver_idcard_update = #{driverIdcardUpdate},
+			</if>
+			<if test="inviter != null and inviter != ''">
+				inviter = #{inviter}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.iber.portal.model.base.Member">
+		update x_member
+		set name = #{name,jdbcType=VARCHAR},
+		sex = #{sex,jdbcType=VARCHAR},
+		password = #{password,jdbcType=VARCHAR},
+		phone =
+		#{phone,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		idcard =
+		#{idcard,jdbcType=VARCHAR},
+		driver_idcard =
+		#{driverIdcard,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR},
+		head_photo_url = #{headPhotoUrl,jdbcType=VARCHAR},
+		driver_idcard_photo_url = #{driverIdcardPhotoUrl,jdbcType=VARCHAR},
+		idcard_photo_url = #{idcardPhotoUrl,jdbcType=VARCHAR},
+		finger_print =
+		#{fingerPrint,jdbcType=VARCHAR},
+		register_ip =
+		#{registerIp,jdbcType=VARCHAR},
+		register_category =
+		#{registerCategory,jdbcType=VARCHAR},
+		accout_status =
+		#{accoutStatus,jdbcType=VARCHAR},
+		city_code =
+		#{cityCode,jdbcType=VARCHAR},
+		enterprise_id =
+		#{enterpriseId,jdbcType=INTEGER},
+		member_level =
+		#{memberLevel,jdbcType=VARCHAR},
+		enterprise_check_status =
+		#{enterpriseCheckStatus,jdbcType=VARCHAR},
+		is_drive =
+		#{isDrive,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		level_code = #{levelCode}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectDetailByPhone" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_member where phone = #{phone,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDetailByIdcard" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_member where idcard = #{idcard,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDetailByIdcard4List" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_member where idcard = #{idcard,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDetailByEmail" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from x_member where email = #{email,jdbcType=VARCHAR}
+	</select>
+
+		<select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+        a.face_id,
+		a.id, a.name, a.sex, a.password, a.phone, a.email, a.idcard,a.refuse_reason,
+		a.driver_idcard, a.status,
+		a.head_photo_url,
+		a.driver_idcard_photo_url,
+		a.idcard_photo_url, a.finger_print, a.tbox_finger_print, a.register_ip, a.register_category,
+		a.accout_status, a.city_code, a.enterprise_id, a.member_level,
+		a.enterprise_check_status, a.is_drive, a.create_time, a.remark,
+		a.driver_idcard_validity_time,a.driver_idcard_update,
+		a.latest_contributed_val, a.level_code,a.driver_idCard_time,a.upload_time,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		(select contributedVal from x_member_card d where d.member_id = a.id) contributedVal,
+		ifnull((select deposit_value FROM x_member_deposit WHERE member_level = a.level_code),100000) require_deposit,
+		ifnull((select money from x_member_refund_log where member_id = a.id and status in('1','5') order by create_time desc limit 1),0) refund_money,
+		c.deposit
+		from
+		x_member a left join x_member_card c on a.id = c.member_id
+	    where 1=1 		
+				<if test="cityCode != null and cityCode !='' and cityCode !='00' ">
+					and a.city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and a.phone = #{phone,jdbcType=VARCHAR} 
+				</if>
+				<if test="status != null and status !='' ">
+					<choose>
+						<when test="status =='experience'">
+							and a.status = #{status}  
+						</when>
+						<otherwise>
+							and a.status != "experience"  
+						</otherwise>
+					</choose>
+				</if>
+				<if test=" bt != null and bt!=''">
+					and a.upload_time &gt;= #{bt,jdbcType=TIMESTAMP} 
+				</if>
+				<if test="et != null and et !=''">
+				    and a.upload_time &lt;= #{et,jdbcType=TIMESTAMP}
+				</if>
+				<!-- and status &lt;&gt; 'experience' -->
+                <!-- and a.member_level &lt;&gt;'account' -->
+		<if test="driverIdcardValidityTime != null and driverIdcardValidityTime !='' ">
+			order by a.driver_idcard_validity_time asc
+		</if>
+		<if test="driverIdcardValidityTime == null">
+			order by a.create_time desc
+		</if>
+		<if test="offset != null and rows !=null">
+		limit #{offset,jdbcType=INTEGER} , #{rows,jdbcType=INTEGER} 
+		</if>
+	</select>
+
+	<select id="selectAllRecords" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from x_member where 1=1
+				<if test="cityCode != null and cityCode !='' and cityCode !='00'">
+					and city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test="status != null and status !='' ">
+					<choose>
+						<when test="status =='experience'">
+							and status = #{status}  
+						</when>
+						<otherwise>
+							and status != "experience"  
+						</otherwise>
+					</choose>
+				</if>
+				<if test=" bt != null and bt!=''">
+					and upload_time &gt;= #{bt,jdbcType=TIMESTAMP} 
+				</if>
+				<if test="et != null and et !=''">
+				    and upload_time &lt;= #{et,jdbcType=TIMESTAMP}
+				</if>
+                <!-- and status &lt;&gt; 'experience'  and  -->
+                <!-- and member_level &lt;&gt;'account' -->
+	</select>
+
+	<select id="selectExamineAll" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		,  refuse_reason , upload_time,
+		(select name from x_city c where c.code = a.city_code) city_name
+		from
+		x_member a
+		<trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' and cityCode !='00'">
+					and city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test=" bt != null and bt!='' and et != null and et !='' ">
+					and (upload_time &gt;= #{bt,jdbcType=TIMESTAMP} and
+					upload_time &lt;=
+					#{et,jdbcType=TIMESTAMP})
+				</if>
+				and status = 'experience' and ( remark is null or remark = '' )
+				and
+				idcard_photo_url is not null and driver_idcard_photo_url is not
+				null
+				and driver_idcard_photo_url &lt;&gt; '' and idcard_photo_url
+				&lt;&gt;
+				''
+				and member_level &lt;&gt;'account' 
+			</where>
+		</trim>
+		order by create_time desc
+		limit #{offset,jdbcType=INTEGER} ,
+		#{rows,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectExamineAllRecords" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from x_member
+		<trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' and cityCode !='00'">
+					and city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				<if test=" bt != null and bt!='' and et != null and et !='' ">
+					and (upload_time &gt;= #{bt,jdbcType=TIMESTAMP} and
+					upload_time &lt;=
+					#{et,jdbcType=TIMESTAMP})
+				</if>
+				and status = 'experience' and ( remark is null or remark = '' )
+				and
+				idcard_photo_url is not null and driver_idcard_photo_url is not
+				null
+				and driver_idcard_photo_url &lt;&gt; '' and idcard_photo_url
+				&lt;&gt;
+				''
+				and member_level &lt;&gt;'account'
+			</where>
+		</trim>
+	</select>
+
+
+
+
+	<update id="restPassword">
+		update x_member set password =
+		#{password,jdbcType=VARCHAR} where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="resetDrewOnceCouponStatus">
+		update x_member set drewOnceCoupon = 0 where drewOnceCoupon = 1
+	</update>
+
+	<update id="deleteFingerprint">
+		update x_member set finger_print = null where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+    <!--删除人脸-->
+    <update id="deleteFace">
+        update x_member set face_id = null WHERE id =  #{id}
+    </update>
+
+	<update id="memberExamineSave">
+		update x_member set
+		<trim suffixOverrides=",">
+			<if test="refuseReason != null and refuseReason !='' ">
+				refuse_reason = #{refuseReason,jdbcType=VARCHAR} ,
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR} ,
+			</if>
+			<if test="status != null and status !='' ">
+				status = #{status,jdbcType=VARCHAR} ,
+			</if>
+			<if test="name != null and name !='' ">
+				name = #{name,jdbcType=VARCHAR} ,
+			</if>
+			<if test="idcard != null and idcard !='' ">
+				idcard = #{idcard,jdbcType=VARCHAR} ,
+			</if>
+			<if test="driverIdcard != null and driverIdcard !='' ">
+				driver_idcard = #{driverIdcard,jdbcType=VARCHAR} ,
+			</if>
+			<if test="dirverIdCardTime != null and dirverIdCardTime !='' ">
+				driver_idcard_time = #{dirverIdCardTime,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="driverIdcardValidityTime != null">
+				driver_idcard_validity_time =
+				#{driverIdcardValidityTime,jdbcType=VARCHAR} ,
+			</if>
+			<if test="examineTime != null">
+				examine_time = #{examineTime} ,
+			</if>
+			<if test="examineId != null">
+				examine_id = #{examineId},
+			</if>
+			driver_idcard_update = #{driverIdcardUpdate,jdbcType=INTEGER} ,
+			sex = #{sex,jdbcType=VARCHAR}
+
+		</trim>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!--<select id="selectEnterpriseAll" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select * from (
+		select
+		<include refid="Base_Column_List" />
+		,
+		(select name from x_city c where c.code = a.city_code) city_name,
+		(select enterprise_name from x_enterprise e JOIN x_enterprise_member_department_relation re
+        ON re.enterprise_id JOIN x_member m ON m.id=re.member_id WHERE a.id=m.id)
+		enterprise_name
+		from x_member a
+		<trim prefixOverrides="and">
+			<where>
+				<if test="cityCode != null and cityCode !='' ">
+					and city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="name != null and name != '' ">
+					and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="phone != null and phone !='' ">
+					and phone = #{phone,jdbcType=VARCHAR}
+				</if>
+				and enterprise_id is not null and member_level &lt;&gt;'account'
+			</where>
+		</trim>
+		) x where 1=1
+		<if test="enterpriseName != null and enterpriseName != '' ">
+			and x.enterprise_name like
+			CONCAT('%',#{enterpriseName,jdbcType=VARCHAR},'%')
+		</if>
+		order by x.create_time desc
+		limit #{offset,jdbcType=INTEGER} ,
+		#{rows,jdbcType=INTEGER}
+	</select>-->
+
+    <!--<select id="selectEnterpriseAllRecords" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select count(1) from (
+        select
+        <include refid="Base_Column_List" />
+        ,
+        (select name from x_city c where c.code = a.city_code) city_name,
+        (select enterprise_name from x_enterprise t where t.id =
+        a.enterprise_id)
+        enterprise_name
+        from x_member a
+        <trim prefixOverrides="and">
+            <where>
+                <if test="cityCode != null and cityCode !='' ">
+                    and city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                <if test="name != null and name != '' ">
+                    and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="phone != null and phone !='' ">
+                    and phone = #{phone,jdbcType=VARCHAR}
+                </if>
+                and enterprise_id is not null and member_level &lt;&gt;'account'
+            </where>
+        </trim>
+        ) x where 1=1
+        <if test="enterpriseName != null and enterpriseName != '' ">
+            and x.enterprise_name like
+            CONCAT('%',#{enterpriseName,jdbcType=VARCHAR},'%')
+        </if>
+    </select>-->
+    <select id="selectEnterpriseAll" resultMap="BaseResultMap"
+            parameterType="java.util.Map">
+        select
+        a.id, a.name, a.sex, password, a.phone
+        , a.email, a.idcard, driver_idcard, a.status, head_photo_url
+        , driver_idcard_photo_url, idcard_photo_url, finger_print, register_ip, register_category
+        , accout_status, a.city_code, e.id as enterprise_id, member_level, enterprise_check_status
+        , is_drive, a.create_time, a.remark, driver_idcard_validity_time, driver_idcard_update
+        , latest_contributed_val, level_code, driver_idCard_time, drewOnceCoupon, inviter
+        , face_id
+        ,(select name from x_city c where c.code = a.city_code) city_name
+        , e.enterprise_name
+        from x_member a JOIN x_enterprise_member_department_relation re on re.member_id = a.id
+        JOIN x_enterprise e ON e.id = re.enterprise_id
+        <trim prefixOverrides="and">
+            <where>
+                1=1
+                and member_level &lt;&gt;'account'
+                <if test="cityCode != null and cityCode !='' ">
+                    and a.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                <if test="name != null and name != '' ">
+                    and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="phone != null and phone !='' ">
+                    and a.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="enterpriseName != null and enterpriseName != '' ">
+                    and e.enterprise_name like
+                    CONCAT('%',#{enterpriseName,jdbcType=VARCHAR},'%')
+                </if>
+            </where>
+        </trim>
+        order by a.create_time desc
+        limit #{offset,jdbcType=INTEGER} ,
+        #{rows,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectEnterpriseAllRecords" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select COUNT(1)
+        from x_member a JOIN x_enterprise_member_department_relation re on re.member_id = a.id
+        JOIN x_enterprise e ON e.id = re.enterprise_id
+        <trim prefixOverrides="and">
+            <where>
+                1=1
+                and member_level &lt;&gt;'account'
+                <if test="cityCode != null and cityCode !='' ">
+                    and a.city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>
+                <if test="name != null and name != '' ">
+                    and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="phone != null and phone !='' ">
+                    and a.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="enterpriseName != null and enterpriseName != '' ">
+                    and e.enterprise_name like
+                    CONCAT('%',#{enterpriseName,jdbcType=VARCHAR},'%')
+                </if>
+            </where>
+        </trim>
+    </select>
+
+
+
+	<select id="selectEnterpriseAccount" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from x_member
+		where enterprise_id = #{enterpriseId,jdbcType=INTEGER}
+		and member_level =
+		'account'
+	</select>
+
+	<select id="selectEnterpriseMemberAll" resultMap="EnterpriseMemberVo"
+		parameterType="java.util.Map">
+		select
+		a.id,a.NAME,a.sex,a.PASSWORD,a.phone,a.email,a.idcard,a.driver_idcard,a.STATUS,a.head_photo_url,
+		a.driver_idcard_photo_url,a.idcard_photo_url,a.finger_print,a.register_ip,a.register_category,
+		a.accout_status,a.city_code,a.enterprise_id,a.member_level,a.enterprise_check_status,a.is_drive,
+		a.create_time,a.remark,b.money,b.deposit,b.integral,b.quota,b.quota_use_money,b.quota_month,b.quota_date_time
+		,e.total_recharge,e.account_money
+		,re.member_all_avail ,re.member_avail
+		from x_member a LEFT JOIN x_member_card b on a.id = b.member_id
+		JOIN x_enterprise_member_department_relation re ON re.member_id= a.id
+		JOIN x_enterprise e ON re.enterprise_id =e.id
+		where
+		e.id = #{enterpriseId,jdbcType=INTEGER} and a.member_level
+		&lt;&gt;'account'
+		order by a.create_time desc
+		limit
+		#{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectEnterpriseMemberAllNum" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from x_member m
+		JOIN x_enterprise_member_department_relation re ON m.id = re.member_id
+		JOIN x_enterprise e ON e.id = re.enterprise_id
+		where e.id =
+		#{enterpriseId,jdbcType=INTEGER} and m.member_level
+		&lt;&gt;'account'
+	</select>
+
+	<update id="updateMemberAccountStatus">
+		update x_member set accout_status =
+		#{accoutStatus,jdbcType=VARCHAR} where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据id查会员手机号 -->
+	<select id="getPhoneById" parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+		select phone from x_member where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据会员id 设置其企业id为null（用于企业管理移除会员） -->
+	<update id="removeEnterpriseId" parameterType="java.lang.Integer">
+		update x_member
+		set enterprise_id = null where id=#{id}
+	</update>
+
+	<select id="selectMemberDriverIdcardValidity" resultMap="BaseResultMap">
+		select *
+		from x_member where DATE_ADD(SYSDATE(), INTERVAL 30 DAY) >=
+		driver_idcard_validity_time
+		and (driver_idcard_update is null or driver_idcard_update = 0)
+	</select>
+
+	<!--查询各省的会员数 -->
+	<select id="queryAllMemberNums" resultMap="memberTotalVoMap">
+		SELECT x.name,x.code,IFNULL(t.memberTotal,0)memberTotal FROM x_city x
+		LEFT JOIN (SELECT x.name,x.code,b.memberTotal FROM (SELECT
+		x.p_id,SUM(a.memberTotal)memberTotal FROM
+		(SELECT
+		SUM(1)memberTotal,city_code FROM x_member where <![CDATA[member_level <>'account']]>
+		GROUP BY city_code
+		HAVING city_code NOT IN ('') AND city_code NOT IN
+		('110000','310000','120000','500000'))a,x_city x WHERE a.city_code
+		=x.code GROUP BY x.p_id)b,x_city x WHERE x.id =b.p_id
+		UNION ALL
+		SELECT
+		x.name,x.code,c.memberTotal
+		FROM (SELECT SUM(1)memberTotal,city_code
+		FROM x_member where<![CDATA[member_level <>'account']]>
+		GROUP BY city_code HAVING city_code NOT IN ('') AND city_code IN
+		('110000','310000','120000','500000'))c,x_city x WHERE
+		x.code=c.city_code)t ON x.code=t.code
+		WHERE x.layer='2'
+		<if test="cityCode != null and cityCode != '' ">
+			AND x.code =#{cityCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!--查询各省下级城市的会员数 -->
+	<select id="queryCityAllMemberNums" resultMap="memberTotalVoMap"
+		parameterType="java.lang.String">
+		SELECT x.name,x.code,IFNULL(a.memberTotal,0)memberTotal FROM
+		x_city x
+		LEFT JOIN (SELECT SUM(1)memberTotal,city_code FROM x_member where<![CDATA[member_level <>'account']]>
+		GROUP BY city_code HAVING city_code NOT IN(''))a ON x.code
+		=a.city_code
+		WHERE layer='3' AND x.p_id IN (SELECT id FROM x_city WHERE
+		code
+		=#{cityCode,jdbcType=VARCHAR})
+	</select>
+
+	<!--查询会员数根据cityCode(全国和地区) -->
+	<select id="getMemberTotal" resultMap="memberTotalVoMap"
+		parameterType="java.lang.String">
+		SELECT count(1)memberTotal
+		FROM x_member WHERE <![CDATA[member_level <>'account']]>
+		<if test="cityCode != null and cityCode != '' ">
+			AND city_code =#{cityCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 通过会员等级来统计会员总数 -->
+	<select id="getMemberTotalByLevel" resultMap="memberTotalVoMap"
+		parameterType="java.util.Map">
+		SELECT IFNULL(a.memberTotal,0)memberTotal, b.level_code,b.name FROM
+		(SELECT  IFNULL(count(1),0) memberTotal,m.level_code  FROM  x_member m WHERE <![CDATA[  m.member_level <>'account']]> 
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		GROUP BY m.level_code)a
+	    RIGHT JOIN x_member_level b 
+		ON a.level_code=b.level_code  order by b.level_code 
+	</select>
+
+	<!-- 通过会员类型来统计会员总数 -->
+	<select id="getMemberTotalByType" resultMap="memberTotalVoMap"
+		parameterType="java.util.Map">
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member m,x_member_level l
+		WHERE m.level_code=l.level_code
+		AND enterprise_id IS NOT NULL <![CDATA[ AND m.member_level <>'account']]>
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member
+		m,x_member_level l WHERE
+		m.level_code=l.level_code
+		AND enterprise_id IS
+		NULL <![CDATA[ AND m.member_level <>'account']]>
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+	</select>
+
+	<!-- 通过会员状态来统计会员总数 -->
+	<select id="getMemberTotalByStatus" resultMap="memberTotalVoMap"
+		parameterType="java.util.Map">
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member m,x_member_level l
+		WHERE m.level_code=l.level_code 
+	<![CDATA[ AND m.member_level <>'account' AND STATUS <>'experience']]>
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member
+		m,x_member_level l WHERE
+		m.level_code=l.level_code 
+	 <![CDATA[ AND m.member_level <>'account' AND STATUS ='experience']]>
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+	</select>
+
+	<!-- 通过消费类型统计消费会员总数 -->
+	<select id="getExpenseMember" resultMap="memberTotalVoMap"
+		parameterType="java.util.Map">
+		SELECT IFNULL(count(1),0) memberTotal FROM x_time_share_order m WHERE
+		STATUS NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_day_rent_order m
+		WHERE
+		order_status NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM c_charging_order m
+		WHERE
+		charging_status NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+	</select>
+
+	<!-- 通过会员类型统计消费会员数 -->
+	<select id="getExpenseMemberByType" resultMap="memberTotalVoMap"
+		parameterType="java.util.Map">
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member WHERE
+		enterprise_id IS NOT NULL
+		AND id IN (SELECT member_id FROM
+		x_time_share_order m WHERE STATUS NOT IN
+		('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		)
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member WHERE
+		enterprise_id IS
+		NOT NULL
+		AND id IN (SELECT member_id FROM
+		x_day_rent_order m WHERE order_status
+		NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		)
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member WHERE
+		enterprise_id IS
+		NOT NULL
+		AND id IN (SELECT member_id FROM
+		c_charging_order m WHERE charging_status
+		NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		)
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member WHERE
+		enterprise_id IS
+		NULL
+		AND id IN (SELECT member_id FROM
+		x_time_share_order m WHERE STATUS NOT IN
+		('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		)
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member WHERE
+		enterprise_id IS
+		NULL
+		AND id IN (SELECT member_id FROM x_day_rent_order
+		m WHERE order_status
+		NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		)
+		UNION ALL
+		SELECT IFNULL(count(1),0) memberTotal FROM x_member WHERE
+		enterprise_id IS
+		NULL
+		AND id IN (SELECT member_id FROM c_charging_order
+		m WHERE charging_status
+		NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+			<include refid="sql_chooseByLevel" />
+		</if>
+		)
+	</select>
+	
+	<!-- 通过会员等级统计消费会员总数 -->
+ <select id="getExpenseMemberByLevel" resultMap="memberTotalVoMap" parameterType="java.util.Map" >
+	SELECT x.level_code,IFNULL(b.memberTotal,0)memberTotal  FROM x_member_level x LEFT JOIN 
+	(SELECT a.level_code ,sum(memberTotal)memberTotal  FROM (SELECT count(1)memberTotal,level_code  FROM x_member  m WHERE  id IN 
+	(SELECT member_id FROM x_time_share_order m WHERE   STATUS NOT IN ('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+        	<include refid="sql_chooseByLevel" />
+    	</if>
+	) GROUP BY level_code
+	UNION ALL 
+	SELECT count(1) memberTotal,level_code  FROM x_member m   WHERE id IN (SELECT member_id FROM x_day_rent_order  WHERE   order_status NOT IN 
+	('cancel','finish')
+		<if test="cityCode != null and cityCode != '' ">
+       	 	<include refid="sql_chooseByLevel" />
+    	</if>
+	) GROUP BY level_code
+	UNION ALL 
+	SELECT count(1) memberTotal,level_code  FROM x_member m  WHERE id IN (SELECT member_id FROM c_charging_order  WHERE   charging_status  NOT IN
+	 ('cancel','finish')
+	 	<if test="cityCode != null and cityCode != '' ">
+        	<include refid="sql_chooseByLevel" />
+    	</if>
+	 ) GROUP BY level_code
+	)a GROUP BY a.level_code)b  ON x.level_code =b.level_code  ORDER BY  x.level_code  
+ </select>
+ 
+ <!-- 通过会员状态统计消费会员总数 -->
+ <select id="getExpenseMemberByStatus" resultMap="memberTotalVoMap" parameterType="java.util.Map" >
+	SELECT SUM(memberTotal)memberTotal FROM  (SELECT IFNULL(count(1),0) memberTotal   FROM x_member m WHERE   1 = 1
+	AND id IN (SELECT member_id FROM x_time_share_order m WHERE   STATUS NOT IN ('cancel','finish')
+	<if test="cityCode != null and cityCode != '' ">
+        <include refid="sql_chooseByLevel" />
+    </if> 
+	 )
+	UNION ALL 
+	SELECT IFNULL(count(1),0) memberTotal   FROM x_member m  WHERE 1 = 1
+	 AND id IN (SELECT member_id FROM x_day_rent_order m WHERE   order_status NOT IN ('cancel','finish')
+	<if test="cityCode != null and cityCode != '' ">
+        <include refid="sql_chooseByLevel" />
+    </if>
+	 )
+	UNION ALL 
+	SELECT IFNULL(count(1),0) memberTotal   FROM x_member m WHERE   STATUS ='ready' 
+	AND id IN (SELECT member_id FROM c_charging_order m WHERE   charging_status  NOT IN ('cancel','finish')
+	<if test="cityCode != null and cityCode != '' ">
+        <include refid="sql_chooseByLevel" />
+    </if>
+	))a
+	UNION ALL 
+	SELECT IFNULL(count(1),0) memberTotal   FROM x_member m  WHERE  STATUS ='experience' 
+	 AND id IN (SELECT member_id FROM c_charging_order m WHERE   charging_status NOT IN ('cancel','finish')
+	 <if test="cityCode != null and cityCode != '' ">
+        <include refid="sql_chooseByLevel" />
+     </if>
+	 )
+ </select>
+
+	<!-- 更新会员的贡献值 -->
+	<update id="updateContributedVal">
+		UPDATE x_member m
+		INNER JOIN x_member_card c ON c.member_id = m.id
+		SET m.latest_contributed_val = c.contributedVal
+	</update>
+
+	<!-- 更新会员的等级 -->
+	<update id="updateLevelCode" parameterType="java.util.List">
+		UPDATE x_member m
+		SET m.level_code =
+		CASE
+		<foreach collection="list" index="index" item="item">
+			<if test="item.integralDownlimit != null and item.integralUpLimit != null ">
+				<![CDATA[ 
+				WHEN m.latest_contributed_val >= #{item.integralDownlimit}
+					AND m.latest_contributed_val <= #{item.integralUpLimit}
+					THEN #{item.levelCode}		
+				]]>
+			</if>
+			<if test="item.integralUpLimit == null ">
+				<![CDATA[ 
+					WHEN m.latest_contributed_val >= (SELECT MAX(integral_down_limit) FROM x_member_level)
+					 THEN (SELECT MAX(level_code) FROM x_member_level)
+				 ]]>
+			</if>
+
+		</foreach>
+		ELSE (SELECT MIN(level_code) FROM x_member_level)
+		END
+	</update>
+
+    <select id="selectMemberContributeItemByType" resultMap="memberContributeItemMap">
+	 	select id, member_id, type, contributed_val_delta, obj_id, create_time
+	 	from x_member_contributed_detail
+	 	<where>
+	 		<if test="type!=null and type != ''">
+	 			type = #{type}
+	 		</if>
+	 	</where>
+	 	limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+ 	</select>
+ 
+	 <select id="getAllNum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from x_member_contributed_detail
+		<where>
+	 	<if test="type!=null and type != ''">
+	 		type = #{type}
+	 	</if>
+	 	</where>
+	 </select>
+	 <select id="examineIdcardRecord" resultType="java.lang.Integer" parameterType="java.lang.String">
+	 select count(1) from x_member where status != 'experience' and idcard=#{idcard,jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+	 	select <include refid="Base_Column_List"/> from x_member where name like concat("%",#{name},"%")
+	 </select>
+	 <select id="queryMemberDriving2Year" resultMap="BaseResultMap">
+		 select 
+		 <include refid="Base_Column_List"/> from x_member 
+		 where DATE_ADD(driver_idCard_time,INTERVAL 1 YEAR) <![CDATA[<]]>SYSDATE() 
+		 AND  id not in(select DISTINCT  member_id from x_member_contributed_detail where type = 'DRIVING_1_YEAR' )  
+		 and level_code > 0
+	 </select>
+	 
+	 <update id="updateLevelCodeById" >
+	 	update x_member set level_code = #{levelCode} where id= #{memberId}
+	 </update>
+	 
+	 <select id="queryExists" parameterType="java.util.Map" resultType="int">
+	 	SELECT COUNT(1) FROM x_member WHERE 1 = 1
+	 		<choose>
+	 			<when test="type == 1 ">
+	 				AND phone = #{value} 
+	 			</when>
+	 			<when test="type == 2 ">
+	 				AND idcard = #{value} 
+	 			</when>
+	 		</choose>
+	 	 AND id <![CDATA[ <> ]]> #{id} 
+	 </select>
+    <select id="queryMemberByOrderId" resultType="com.iber.portal.model.base.Member">
+		select xm.* from x_member as xm where id =(
+		select xtso.member_id from x_time_share_order xtso
+		where xtso.order_id = #{orderId})
+	</select>
+	<select id="selectFourFiveStar" resultMap="BaseResultMap">
+	 	select <include refid="Base_Column_List"/> from x_member where level_code in(4,5) and phone is not null;  
+	 </select>
+
+    <sql id="examinList_sql">
+        <trim prefixOverrides="and">
+            <where>
+                <!--<if test="cityCode != null and cityCode !='' and cityCode !='00'">
+                    and city_code = #{cityCode,jdbcType=VARCHAR}
+                </if>-->
+                <if test="name != null and name != '' ">
+                    and a.member_name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="phone != null and phone !='' ">
+                    and a.new_phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+                </if>
+                <if test=" bt != null and bt!='' and et != null and et !='' ">
+                    and (a.create_time &gt;= #{bt,jdbcType=TIMESTAMP} and
+                    a.create_time &lt;=
+                    #{et,jdbcType=TIMESTAMP})
+                </if>
+                and verified_status = '0'
+                and
+                idcard_photo_url is not null and driver_idcard_photo_url is not
+                null
+                and driver_idcard_photo_url &lt;&gt; '' and idcard_photo_url &lt;&gt; ''
+            </where>
+        </trim>
+    </sql>
+    <select id="selectLostNoExamineList" resultType="java.util.Map" parameterType="map">
+        select id,old_phone,new_phone as phone  ,member_name as name ,idcard,driver_idcard,
+        idcard_photo_url,driver_idcard_photo_url,pre_member_detail,next_member_detail
+        ,pre_member_card_detail,next_member_card_detail,verified_status
+        ,refuse_reason,user_id,create_time,verified_time
+        from  x_lost_phoneno_application a
+        <include refid="examinList_sql"/>
+        order by create_time desc
+        limit #{offset,jdbcType=INTEGER} ,
+        #{rows,jdbcType=INTEGER}
+    </select>
+    <select id="selectLostNoExamineTotal" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM   x_lost_phoneno_application a
+        <include refid="examinList_sql"/>
+    </select>
+
+
+    <update id="deleteTboxFingerPrint">
+		update x_member set tbox_finger_print = ''
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByCityCode" resultType="java.util.Map">
+		SELECT id,phone FROM x_member WHERE city_code = #{cityCode}
+	</select>
+
+	<select id="selectByPhoneList" resultType="java.util.Map">
+		SELECT id,phone FROM x_member WHERE phone in
+		<foreach collection="list" open="(" separator="," close=")" item="phone" index="index">
+			#{phone}
+		</foreach>
+	</select>
+
+	<select id="selectAllReady" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/>
+		FROM x_member WHERE status <![CDATA[<>]]> 'experience'
+	</select>
+
+</mapper>

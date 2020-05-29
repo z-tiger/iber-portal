@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.enterprise.EnterpriseUseCarApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.enterprise.EnterpriseUseCarApply" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="lpn" property="lpn" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="interviewee" property="interviewee" jdbcType="VARCHAR" />
+    <result column="interviewee_phone" property="intervieweePhone" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="next_handler_id" property="nextHandlerId" jdbcType="INTEGER" />
+    <result column="highest_estimated_cost" property="highestEstimatedCost" jdbcType="INTEGER" />
+    <result column="lowest_estimated_cost" property="lowestEstimatedCost" jdbcType="INTEGER" />
+    <result column="reject_reason" property="rejectReason" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="TINYINT" />
+  </resultMap>
+
+    <resultMap id="UseCarApplyMap" type="com.iber.portal.vo.enterprise.EnterpriseUseCarApplyVo" extends="BaseResultMap">
+        <result column="enterprise_name" property="enterpriseName"></result>
+        <result column="memberName" property="memberName"></result>
+        <result column="memberPhone" property="memberPhone"></result>
+        <result column="checkMemberName" property="checkMemberName"></result>
+        <result column="useTime" property="useTime" jdbcType="BIGINT"></result>
+        <result column="applyCityName" property="applyCityName"></result>
+        <result column="useTime" property="actualCityName"></result>
+        <result column="is_enterprise_use_car" property="orderType"></result>
+    </resultMap>
+  <sql id="Base_Column_List" >
+    id, enterprise_id, member_id, lpn, status, city_code, start_time, end_time, interviewee,
+    interviewee_phone, reason, create_time, update_time, update_user_id, update_user, 
+    order_id, remark, next_handler_id, highest_estimated_cost, lowest_estimated_cost, 
+    reject_reason, pay_status
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from x_enterprise_use_car_apply
+        where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectEnterpriseUseCarApplyList" parameterType="map" resultMap="UseCarApplyMap">
+        SELECT
+        ly.id, ly.enterprise_id, ly.member_id, ly.lpn, ly.status, ly.city_code, ly.start_time, ly.end_time, interviewee,
+        interviewee_phone, ly.reason, ly.create_time, ly.update_time, ly.update_user_id, ly.update_user,
+        ly.order_id, ly.remark, next_handler_id, ly.highest_estimated_cost,ly.lowest_estimated_cost,
+        ly.reject_reason, ly.pay_status
+        ,o.is_enterprise_use_car as orderType
+        ,m.name  as memberName,m.phone as memberPhone
+        ,(SELECT name FROM x_member m WHERE m.id = ly.next_handler_id) as checkMemberName
+        ,e.enterprise_name as enterpriseName
+        ,(SELECT name FROM x_city c WHERE c.code = ly.city_code) as applyCityName
+        ,(SELECT UNIX_TIMESTAMP(ord.end_time)-UNIX_TIMESTAMP(ord.begin_time) FROM x_time_share_order ord WHERE ord.order_id = ly.order_id ) as useTime
+        FROM x_enterprise_use_car_apply ly
+        LEFT JOIN x_member m ON ly.member_id = m.id
+        LEFT JOIN x_enterprise e ON ly.enterprise_id =e.id
+        LEFT JOIN x_time_share_order o ON o.order_id =ly.order_id
+        <trim prefixOverrides="and" >
+            <where>
+                <if test="memberName !=null and memberName !=''">
+                    and m.name like CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="enterpriseName !=null and enterpriseName !=''">
+                    and e.enterprise_name like CONCAT('%',#{enterpriseName,jdbcType=VARCHAR},'%')
+                </if>
+                <!--<if test="orderType !=null and orderType !=''">
+                    and o.is_enterprise_use_car = #{orderType}
+                </if>-->
+                <if test="phone !=null and phone !=''">
+                    and m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="checkStatus !=null and checkStatus !=''">
+                    and ly.status = #{checkStatus}
+                </if>
+            </where>
+        </trim>
+        order by ly.create_time desc
+        limit #{pageNumber},#{pageSize}
+    </select>
+    <select id="selectEnterpriseCarApplyListNumber" resultType="java.lang.Integer" parameterType="map">
+        SELECT count(1)
+        FROM x_enterprise_use_car_apply ly
+        LEFT JOIN x_member m ON ly.member_id = m.id
+        LEFT JOIN x_enterprise e ON ly.enterprise_id =e.id
+        LEFT JOIN x_time_share_order o ON o.order_id =ly.order_id
+        <trim prefixOverrides="and" >
+            <where>
+                <if test="memberName !=null and memberName !=''">
+                    and m.name like CONCAT('%',#{memberName,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="enterpriseName !=null and enterpriseName !=''">
+                    and e.enterprise_name like CONCAT('%',#{enterpriseName,jdbcType=VARCHAR},'%')
+                </if>
+               <!-- <if test="orderType !=null and orderType !=''">
+                    and o.is_enterprise_use_car = #{orderType}
+                </if>-->
+                <if test="phone !=null and phone !=''">
+                    and m.phone like CONCAT('%',#{phone,jdbcType=VARCHAR},'%')
+                </if>
+                <if test="checkStatus !=null and checkStatus !=''">
+                    and ly.status = #{checkStatus}
+                </if>
+            </where>
+        </trim>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from x_enterprise_use_car_apply
+        where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.enterprise.EnterpriseUseCarApply" >
+    insert into x_enterprise_use_car_apply (id, enterprise_id, member_id, 
+      lpn, status, city_code, 
+      start_time, end_time, interviewee, 
+      interviewee_phone, reason, create_time, 
+      update_time, update_user_id, update_user, 
+      order_id, remark, next_handler_id, 
+      highest_estimated_cost, lowest_estimated_cost, 
+      reject_reason, pay_status)
+    values (#{id,jdbcType=INTEGER}, #{enterpriseId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, 
+      #{lpn,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{cityCode,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{interviewee,jdbcType=VARCHAR}, 
+      #{intervieweePhone,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, 
+      #{orderId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{nextHandlerId,jdbcType=INTEGER}, 
+      #{highestEstimatedCost,jdbcType=INTEGER}, #{lowestEstimatedCost,jdbcType=INTEGER}, 
+      #{rejectReason,jdbcType=VARCHAR}, #{payStatus,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.enterprise.EnterpriseUseCarApply" >
+    insert into x_enterprise_use_car_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="lpn != null" >
+        lpn,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="interviewee != null" >
+        interviewee,
+      </if>
+      <if test="intervieweePhone != null" >
+        interviewee_phone,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="nextHandlerId != null" >
+        next_handler_id,
+      </if>
+      <if test="highestEstimatedCost != null" >
+        highest_estimated_cost,
+      </if>
+      <if test="lowestEstimatedCost != null" >
+        lowest_estimated_cost,
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="enterpriseId != null" >
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="interviewee != null" >
+        #{interviewee,jdbcType=VARCHAR},
+      </if>
+      <if test="intervieweePhone != null" >
+        #{intervieweePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="nextHandlerId != null" >
+        #{nextHandlerId,jdbcType=INTEGER},
+      </if>
+      <if test="highestEstimatedCost != null" >
+        #{highestEstimatedCost,jdbcType=INTEGER},
+      </if>
+      <if test="lowestEstimatedCost != null" >
+        #{lowestEstimatedCost,jdbcType=INTEGER},
+      </if>
+      <if test="rejectReason != null" >
+        #{rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.enterprise.EnterpriseUseCarApply" >
+    update x_enterprise_use_car_apply
+    <set >
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="lpn != null" >
+        lpn = #{lpn,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="interviewee != null" >
+        interviewee = #{interviewee,jdbcType=VARCHAR},
+      </if>
+      <if test="intervieweePhone != null" >
+        interviewee_phone = #{intervieweePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="nextHandlerId != null" >
+        next_handler_id = #{nextHandlerId,jdbcType=INTEGER},
+      </if>
+      <if test="highestEstimatedCost != null" >
+        highest_estimated_cost = #{highestEstimatedCost,jdbcType=INTEGER},
+      </if>
+      <if test="lowestEstimatedCost != null" >
+        lowest_estimated_cost = #{lowestEstimatedCost,jdbcType=INTEGER},
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason = #{rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.enterprise.EnterpriseUseCarApply" >
+    update x_enterprise_use_car_apply
+    set enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      lpn = #{lpn,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      interviewee = #{interviewee,jdbcType=VARCHAR},
+      interviewee_phone = #{intervieweePhone,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      next_handler_id = #{nextHandlerId,jdbcType=INTEGER},
+      highest_estimated_cost = #{highestEstimatedCost,jdbcType=INTEGER},
+      lowest_estimated_cost = #{lowestEstimatedCost,jdbcType=INTEGER},
+      reject_reason = #{rejectReason,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectApplyRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	select
+  		COUNT(1)
+  	from 
+  		x_enterprise_use_car_apply
+  	where 1=1 
+  	<if test="enterpriseId != null and enterpriseId !='' ">
+  		and enterprise_id = #{enterpriseId}
+  	</if>	
+  	<if test="memberId != null and memberId != '' ">
+  	 	and member_id = #{memberId} 
+  	</if>
+  	<if test="orderId != null and orderId != '' ">
+  	 	and order_id = #{orderId} 
+  	</if>
+  </select>
+</mapper>

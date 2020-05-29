@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.timeShare.TimeShareCancelMapper" >
+  <resultMap id="BaseResultMap" type="com.iber.portal.model.timeShare.TimeShareCancel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="cancel_num" property="cancelNum" jdbcType="INTEGER" />
+    <result column="charging_cancel_num" property="chargingCancelNum" jdbcType="INTEGER" />
+    <result column="sys_charging_cancel_num" property="sysChargingCancelNum" jdbcType="INTEGER" />
+    <result column="contin_no_wz_num" property="continNoWzNum" jdbcType="INTEGER" />
+    <result column="contin_no_rescue_num" property="continNoRescueNum" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="latestNoWzOrdEndTime" property="latestNoWzOrdEndTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+    
+  <resultMap id="memberResultMap" type="com.iber.portal.vo.timeShare.TimeShareCancelVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="memberName" jdbcType="INTEGER" />
+    <result column="cityName" property="cityName" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="INTEGER" />
+    <result column="cancel_num" property="cancelNum" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="memberCancelResultMap" type="com.iber.portal.vo.timeShare.TimeShareCancelVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="memberName" jdbcType="INTEGER" />
+    <result column="cityName" property="cityName" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="INTEGER" />
+    <result column="cancel_num" property="cancelNum" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="chargingCancelNum" property="chargingCancelNum" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, member_id, cancel_num, create_time, charging_cancel_num, sys_charging_cancel_num, 
+    contin_no_wz_num, contin_no_rescue_num, latestNoWzOrdEndTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_time_share_cancel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x_time_share_cancel
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.iber.portal.model.timeShare.TimeShareCancel" >
+    insert into x_time_share_cancel (id, member_id, cancel_num, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{cancelNum,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iber.portal.model.timeShare.TimeShareCancel" >
+    insert into x_time_share_cancel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="cancelNum != null" >
+        cancel_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="latestNoWzOrdEndTime != null" >
+        latestNoWzOrdEndTime,
+      </if>
+      <if test="continNoWzNum != null or continNoWzNum == 0" >
+        contin_no_wz_num,
+      </if>
+      <if test="continNoRescueNum != null or continNoRescueNum == 0" >
+        contin_no_rescue_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="cancelNum != null" >
+        #{cancelNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latestNoWzOrdEndTime != null" >
+        #{latestNoWzOrdEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="continNoWzNum != null or continNoWzNum == 0" >
+        continNoWzNum,
+      </if>
+      <if test="continNoRescueNum != null or continNoRescueNum == 0" >
+        continNoRescueNum,
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.timeShare.TimeShareCancel" >
+    update x_time_share_cancel
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="cancelNum != null" >
+        cancel_num = #{cancelNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latestNoWzOrdEndTime != null" >
+        latestNoWzOrdEndTime = #{latestNoWzOrdEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="continNoWzNum != null or continNoWzNum == 0" >
+        contin_no_wz_num = #{continNoWzNum},
+      </if>
+      <if test="continNoRescueNum != null or continNoRescueNum == 0" >
+        contin_no_rescue_num = #{continNoRescueNum},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.timeShare.TimeShareCancel" >
+    update x_time_share_cancel
+    set member_id = #{memberId,jdbcType=INTEGER},
+      cancel_num = #{cancelNum,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT
+		count(1)
+	FROM
+		x_time_share_cancel c,
+		x_member m
+	WHERE
+		c.member_id = m.id
+	 <if test="cityCode != null" >
+		and m.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if> 
+	 <if test="phoneNumber != null" >
+		and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+	 </if> 
+	 <if test="memberName != null" >
+       and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+     </if> 	
+  </select>
+  <select id="getAll" resultMap="memberCancelResultMap" parameterType="java.util.Map">
+	SELECT
+		c.id ,
+		c.cancel_num,
+		c.create_time,
+		m.`name`,
+		m.phone,
+		( SELECT c.NAME FROM x_city c WHERE c.code = m.city_code ) cityName ,
+		(c.charging_cancel_num+c.sys_charging_cancel_num) chargingCancelNum
+	FROM
+		x_time_share_cancel c,
+		x_member m
+	WHERE
+		c.member_id = m.id
+	 <if test="cityCode != null" >
+		and m.city_code = #{cityCode,jdbcType=VARCHAR}
+	 </if>
+	 <if test="phoneNumber != null" >
+		and m.phone = #{phoneNumber,jdbcType=VARCHAR}
+	 </if>  
+	 <if test="memberName != null" >
+       and m.name LIKE CONCAT(CONCAT('%', #{memberName,jdbcType=VARCHAR}),'%') 
+     </if> 	
+	limit #{offset,jdbcType=INTEGER}, #{rows,jdbcType=INTEGER}
+  </select>
+  
+  	<!-- 重置约车订单取消次数 -->
+   <update id="resetMemberCancelCarOrderCount" parameterType="java.lang.Integer">
+    update x_time_share_cancel
+    set 
+      cancel_num = 0
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  	<!-- 重置约充电订单次数 -->
+   <update id="resetMemberCancelCharingOrderCount" parameterType="java.lang.Integer" >
+    update x_time_share_cancel
+    set charging_cancel_num = 0,
+    	 sys_charging_cancel_num = 0 
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--  重置某会员的连续无违章或无救援的用车次数  -->
+  <update id="resetContinNoWzOrRescueNumByMemberId" parameterType="java.lang.Integer" >
+    update x_time_share_cancel
+    set contin_no_wz_num = 0,
+    	 contin_no_rescue_num = 0 
+    		where member_id = #{memberId}
+  </update>
+  
+  <!--  增加连续无违章的用车次数   -->
+  <update id="increContinNoWzNum" parameterType="java.lang.Integer">
+  	UPDATE x_time_share_cancel 
+		SET contin_no_wz_num = IFNULL(contin_no_wz_num, 0) + 1 
+			WHERE member_id = #{memberId}
+  </update>
+  
+  <!--  增加连续无救援的用车次数   -->
+  <update id="increContinNoRescueNum" parameterType="java.lang.Integer">
+  	UPDATE x_time_share_cancel 
+		SET contin_no_rescue_num = IFNULL(contin_no_rescue_num, 0) + 1 
+			WHERE member_id = #{memberId}
+  </update>
+  
+  <!--  增加连续无违章与救援的用车次数   -->
+  <update id="increContinNoWzAndRescueNum" parameterType="java.lang.Integer">
+  	UPDATE x_time_share_cancel 
+		SET contin_no_wz_num = IFNULL(contin_no_wz_num, 0) + 1 ,
+		 contin_no_rescue_num = IFNULL(contin_no_rescue_num, 0) + 1 
+			WHERE member_id = #{memberId}
+  </update>
+  
+  <select id="queryTimeShareCancelByMemberId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x_time_share_cancel
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select> 
+  
+</mapper>

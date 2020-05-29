@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.iber.portal.dao.ad.StartUpPageMapper">
+	<resultMap id="BaseResultMap" type="com.iber.portal.model.ad.StartUpPage" >
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="title" property="title" jdbcType="VARCHAR"/>
+		<result column="url" property="url" jdbcType="VARCHAR"/>
+		<result column="size" property="size" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+		<result column="start_time"  property="startTime"  jdbcType="TIMESTAMP"/>
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+		<result column="is_show" property="isShow" jdbcType="INTEGER"/>
+		<result column="link_url" property="linkUrl" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List" >
+		id,title,size,create_time,update_time,start_time,end_time,is_show,link_url
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select <include refid="Base_Column_List"/> from x_start_up_page where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    	delete from x_start_up_page where id = #{id,jdbcType=INTEGER}
+  	</delete>
+  	<insert id="insert" parameterType="com.iber.portal.model.ad.StartUpPage">
+  	  	insert into x_start_up_page (id, name,title,size, create_time,update_time,start_time,end_time,is_show,link_url
+      	)
+    	values (#{id,jdbcType=INTEGER},#{title,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},#{size,jdbcType=VARCHAR},
+    			#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{startTime,jdbcType=TIMESTAMP},
+    			#{endTime,jdbcType=TIMESTAMP},#{isShow,jdbcType=INTEGER},#{linkUrl,jdbcType=VARCHAR}
+      	)
+  	</insert>
+  	<insert id="insertSelective" parameterType="com.iber.portal.model.ad.StartUpPage" >
+    	insert into x_start_up_page
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+			  	id,
+			</if>
+	  		<if test="title != null">
+	  			title,
+	  		</if>
+	  		<if test="url != null">
+	  			url,
+	  		</if>
+	  		<if test="size != null">
+	  			size,
+	  		</if>
+	  		<if test="createTime != null">
+	  			create_time,
+	  		</if>
+	  		<if test="updateTime != null">
+	  			update_time,
+	  		</if>
+	  		<if test="startTime != null">
+	  			start_time,
+	  		</if>
+	  		<if test="endTime != null">
+	  			end_time,
+	  		</if>
+	  		<if test="isShow != null">
+	  			is_show,
+	  		</if>
+	  		<if test="linkUrl != null">
+	  			link_url,
+	  		</if>
+	    </trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+	      	<if test="id != null">
+	  			#{id,jdbcType=INTEGER},
+	  		</if>
+	  		<if test="title != null">
+	  			#{title,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="url != null">
+	  			#{url,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="size != null">
+	  			#{size,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="createTime != null">
+	  			#{createTime,jdbcType=TIMESTAMP},
+	  		</if>
+	  		<if test="updateTime != null">
+	  			#{updateTime,jdbcType=TIMESTAMP},
+	  		</if>
+	  		<if test="startTime != null">
+	  			#{startTime,jdbcType=TIMESTAMP},
+	  		</if>
+	  		<if test="endTime != null">
+	  			#{endTime,jdbcType=TIMESTAMP},
+	  		</if>
+	  		<if test="isShow != null">
+	  			#{isShow,jdbcType=INTEGER},
+	  		</if>
+	  		<if test="linkUrl != null">
+	  			#{linkUrl,jdbcType=VARCHAR},
+	  		</if>
+	    </trim>
+  </insert>
+  	<update id="updateByPrimaryKeySelective" parameterType="com.iber.portal.model.ad.StartUpPage" >
+ 		update x_start_up_page 
+ 		<set>
+ 			<if test="title != null">
+ 				title = #{title,jdbcType=VARCHAR},
+ 			</if>
+ 			<if test="url != null">
+  				url = #{url,jdbcType=VARCHAR},
+  			</if>
+  			<if test="size != null">
+  				size = #{size,jdbcType=VARCHAR},
+  			</if>
+  			<if test="createTime != null">
+  				create_time = #{createTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="updateTime != null">
+  				update_time = #{updateTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="startTime != null">
+  				start_time = #{startTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="endTime != null">
+  				end_time = #{endTime,jdbcType=TIMESTAMP},
+  			</if>
+  			<if test="isShow != null">
+  				is_show = #{isShow,jdbcType=INTEGER},
+  			</if>
+  			<if test="linkUrl != null">
+  				link_url = #{linkUrl,jdbcType=VARCHAR},
+  			</if>
+ 		</set>
+ 		  where id = #{id,jdbcType=INTEGER}
+  	</update>
+  	 <update id="updateByPrimaryKey" parameterType="com.iber.portal.model.ad.StartUpPage" >
+  	 	update x_start_up_page
+	    	set 
+		      title = #{title,jdbcType=VARCHAR},
+		      url = #{url,jdbcType=VARCHAR},
+		      size = #{size,jdbcType=VARCHAR},
+		      create_time = #{createTime,jdbcType=TIMESTAMP},
+		      update_time = #{updateTime,jdbcType=TIMESTAMP},
+		      start_time = #{startTime,jdbcType=TIMESTAMP},
+		      end_time = #{endTime,jdbcType=TIMESTAMP},
+		      is_show = #{isShow,jdbcType=INTEGER},
+		      link_url = #{linkUrl,jdbcType=VARCHAR}
+	    where id = #{id,jdbcType=INTEGER}
+  	 </update>
+  	<sql id="start_up_list">
+  		id,title,url,size,start_time,end_time,link_url,create_time
+  	</sql>
+  	<select id="getAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		select <include refid="start_up_list"/> from x_start_up_page where 1 = 1
+  		<if test="title != null and title != ''">
+  			and title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+  		</if>
+  		<if test="queryDateFrom != null and queryDateFrom != ''">
+  			and start_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+  		</if>
+  		<if test="queryDateTo != null and queryDateTo != ''">
+  			and start_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+  		</if>
+  		order by start_time DESC limit #{from,jdbcType=INTEGER}, #{to,jdbcType=INTEGER}
+  	</select>
+  	
+  	<select id="getAllNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+  		select count(1) from (select <include refid="start_up_list"/> from x_start_up_page) t where 1 = 1
+  		<if test="title != null and title != ''">
+  			and t.title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+  		</if>
+  		<if test="queryDateFrom != null and queryDateFrom != ''">
+  			and t.start_time &gt;= #{queryDateFrom,jdbcType=VARCHAR}
+  		</if>
+  		<if test="queryDateTo != null and queryDateTo != ''">
+  			and t.start_time &lt;= #{queryDateTo,jdbcType=VARCHAR}
+  		</if>
+  	</select>
+ 
+  	<select id="getStartTime" resultType="java.lang.Integer" parameterType="string">
+  		select count(1) from x_start_up_page where 
+  		<if test="from != null and from != ''">
+  			start_time = #{from,jdbcType=VARCHAR}
+  		</if>  
+  	</select>
+  	<select id="getEndTime" resultType="java.lang.Integer" parameterType="string">
+  		select count(1) from x_start_up_page where 
+  		<if test="to != null and to != ''">
+  			end_time = #{to,jdbcType=VARCHAR}
+  		</if>  
+  	</select>
+
+</mapper>
